@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
+#include_directories(${SDL_INCLUDE_DIR})
+
 add_executable(CubA4Loader ${PROJECT_SOURCE_DIR}/CubA4Loader/src/main.cpp)
 
 #target_link_libraries (CubA4Loader INTERFACE ModBase)
@@ -8,6 +10,10 @@ add_executable(CubA4Loader ${PROJECT_SOURCE_DIR}/CubA4Loader/src/main.cpp)
 target_link_libraries (CubA4Loader ModBase)
 target_link_libraries (CubA4Loader RenderBase)
 
+target_include_directories(CubA4Loader PUBLIC ${SDL_INCLUDE_DIR})
+
+
+message(STATUS ${SDL_INCLUDE_DIR})
 #target_include_directories(CubA4Loader PUBLIC $<INTERFACE_INCLUDE_DIRECTORIES:include>)
 
 #target_include_directories(CubA4Loader INTERFACE ModBase)
