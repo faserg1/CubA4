@@ -4,6 +4,8 @@ project (CubA4 C CXX)
 set (CMAKE_CXX_STANDARD 11)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/build)
+
 #prepare config
 include (Arch.cmake)
 
@@ -24,3 +26,6 @@ add_subdirectory (ModLoader)
 #executables
 add_subdirectory (CubA4Loader)
 add_subdirectory (CubA4Server)
+
+#special
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CubA4Loader)
