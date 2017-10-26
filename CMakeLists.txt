@@ -18,5 +18,9 @@ add_subdirectory (RenderBase)
 #Standard mods
 add_subdirectory (ModVanilla)
 
-#prepare mods
+#prepare mod loader
+add_subdirectory (ModLoader)
+
+#executables
 add_subdirectory (CubA4Loader)
+add_subdirectory (CubA4Server)

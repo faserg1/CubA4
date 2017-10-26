@@ -4,7 +4,7 @@ set(ModBaseHeaders
 	${PROJECT_SOURCE_DIR}/ModBase/include/ModInfo.hpp)
 
 add_library(ModBase INTERFACE)
-target_include_directories(ModBase INTERFACE include/...)
+target_include_directories(ModBase INTERFACE include)
 target_sources(ModBase INTERFACE ${ModBaseHeaders})
 
 #Visibility for IDE

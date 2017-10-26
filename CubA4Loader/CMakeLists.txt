@@ -22,3 +22,5 @@ target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main)
 
 #target_include_directories(CubA4Loader INTERFACE ModBase)
 #target_include_directories(CubA4Loader INTERFACE RenderBase)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CubA4Loader)
