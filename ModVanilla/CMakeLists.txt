@@ -6,5 +6,5 @@ set(ModVanillaHeaders
 set(ModVanillaSources 
 	${PROJECT_SOURCE_DIR}/ModVanilla/src/ModVanilla.cpp)
 	
-add_library(ModVanilla ${ModVanillaHeaders} ${ModVanillaSources})
+add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources})
 #target_include_directories(ModVanilla PUBLIC include/...)

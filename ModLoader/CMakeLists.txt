@@ -5,7 +5,7 @@ set (ModLoaderHeadersPath ${CMAKE_CURRENT_LIST_DIR}/include)
 set (ModLoaderHeaders include/ModLoaderLibrary.hpp)
 set (ModLoaderSources src/common.cpp)
 
-add_library(ModLoader ${ModLoaderHeaders} ${ModLoaderSources})
+add_library(ModLoader SHARED ${ModLoaderHeaders} ${ModLoaderSources})
 
 target_include_directories(ModLoader PRIVATE ${BOOST_INCLUDE_DIR})
 target_include_directories(ModLoader PRIVATE ${CMAKE_CURRENT_LIST_DIR})

@@ -17,3 +17,12 @@ find_library(vulkan-1 PATHS ${VULKAN_SDK_LIB} NO_DEFAULT_PATH)
 
 target_include_directories(CubA4Loader PRIVATE ${SDL_INCLUDE_DIR})
 target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main vulkan-1)
+
+if (WIN32)
+	set (SDL2_DLL "${SDL_LIBRARY_DIR}/SDL2.dll")
+	
+	add_custom_command(TARGET CubA4Loader POST_BUILD
+	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_DLL} ${COPY_DLL_OUTPUT_DIR}
+	)
+endif (WIN32)
+
