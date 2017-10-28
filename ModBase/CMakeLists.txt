@@ -5,7 +5,6 @@ set(ModBaseHeaders
 
 add_library(ModBase INTERFACE)
 target_include_directories(ModBase INTERFACE include)
-target_sources(ModBase INTERFACE ${ModBaseHeaders})
 
 #Visibility for IDE
 add_custom_target(ModBaseProject SOURCES ${ModBaseHeaders})
