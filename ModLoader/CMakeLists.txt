@@ -29,8 +29,3 @@ target_include_directories(ModLoader PUBLIC ${MOD_BASE_INCLUDE_DIRECTORIES})
 
 #set defines for library export
 target_compile_definitions(ModLoader PRIVATE MOD_LOADER_LIBRARY)
-
-#testing
-
-get_target_property(MOD_LOADER_INCLUDE_DIRECTORIES ModLoader INTERFACE_INCLUDE_DIRECTORIES)
-message(${MOD_LOADER_INCLUDE_DIRECTORIES})

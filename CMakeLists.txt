@@ -4,7 +4,13 @@ project (CubA4 C CXX)
 set (CMAKE_CXX_STANDARD 11)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(BUILD_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/bin)
+set(CUBA4_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/built)
+
+set(BIN_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/bin) 
+set(MOD_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/mods)
+set(RENDER_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/render)
+
+set(BUILD_OUTPUT_DIRECTORY ${BIN_BUILD_OUTPUT_DIRECTORY})
 
 #prepare config
 include (Arch.cmake)
@@ -30,6 +36,9 @@ add_subdirectory (ModVanilla)
 
 #prepare mod loader
 add_subdirectory (ModLoader)
+
+#prepare renderer
+add_subdirectory(RenderVulkan)
 
 #executables
 add_subdirectory (CubA4Loader)

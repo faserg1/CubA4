@@ -1,0 +1,4 @@
+#ifndef RENDER_ENGINE_HPP
+#define RENDER_ENGINE_HPP
+
+#endif // RENDER_ENGINE_HPP

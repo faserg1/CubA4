@@ -8,3 +8,10 @@ set(ModVanillaSources
 	
 add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources})
 #target_include_directories(ModVanilla PUBLIC include/...)
+
+#set output directory
+set_target_properties( ModVanilla
+    PROPERTIES
+    BUILD_OUTPUT_DIRECTORY "${MOD_BUILD_OUTPUT_DIRECTORY}"
+	RUNTIME_OUTPUT_DIRECTORY "${MOD_BUILD_OUTPUT_DIRECTORY}"
+)
