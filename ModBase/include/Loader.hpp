@@ -4,40 +4,46 @@
 
 #include <type_traits>
 #include <stdexcept>
+#include "ExportHelper.hpp"
 #include "ModInfo.hpp"
 
 class ModInfoContainer final
 {
-	friend class RegisterMod;
-	static ::CubA4::Mod::ModInfo *modInfo_ = nullptr;
-	static void registerMod(::CubA4::Mod::ModInfo *modInfo)
+	template <class TModType>
+	friend class RegisterModHelper;
+	//
+	static void *modInfo_;
+	inline static void registerMod(::CubA4::mod::ModInfo *modInfo)
 	{
 		if (modInfo_ != nullptr)
 			throw std::runtime_error("Cannot register mod twice!");
-		modInfo_ = modInfo;
+		modInfo_ = (void *) modInfo;
 	}
 public:
-	static ::CubA4::Mod::ModInfo *getModInfo() nothrow
+	inline static ::CubA4::mod::ModInfo *getModInfo()
 	{
-		return modInfo_;
+		return (::CubA4::mod::ModInfo *) modInfo_;
 	}
 };
 
 template <class TModType>
-class RegisterMod final
+class RegisterModHelper final
 {
-	static_assert(std::is_base_of<::CubA4::Mod::ModInfo, TModType>::value,
+	static_assert(std::is_base_of<::CubA4::mod::ModInfo, TModType>::value,
 		"Cannot register mod with invalid base class. Must be ModInfo.");
-	static_assert(std::is_same<RegisterMod, ::RegisterMod>::value, "Include must not be in namespaces.");
+	static_assert(std::is_same<RegisterModHelper<TModType>, ::RegisterModHelper<TModType> >::value, "Include must not be in namespaces.");
 public:
-	RegisterMod()
+	RegisterModHelper()
 	{
 		auto mod = new TModType();
 		ModInfoContainer::registerMod(mod);
 	}
 };
 
-extern "C" GetModInfo()
+extern "C"
 {
-	return ModInfoContainer::getModInfo();
+	LIBRARY_EXPORT CubA4::mod::ModInfo  *getModInfo()
+	{
+		return ModInfoContainer::getModInfo();
+	}
 }
