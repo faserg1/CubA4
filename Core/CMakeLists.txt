@@ -4,10 +4,12 @@ set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 
 set(CoreHeaders
+	${CoreIncludeDir}/CoreConfig.hpp
 	${CoreIncludeDir}/Core.hpp
 )
 
-set(CoreSources 
+set(CoreSources
+	${CoreSourceDir}/CoreConfig.cpp 
 	${CoreSourceDir}/Core.cpp
 )
 	

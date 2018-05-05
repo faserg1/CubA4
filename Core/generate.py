@@ -6,6 +6,25 @@ import os
 
 GEN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 
+def insert_text(source, text, index):
+	return source[:index] + text + source[index:]
+
+def insert_line(file_path, str, pos):
+	full_file = ""
+	with open(file_path, "r") as file:
+		full_file = file.read()
+	full_file = insert_text(full_file, str, pos)
+	
+	with open(file_path, "w") as file:
+		file.write(full_file)
+
+def find_line_by_pattern(file_path, compiled_re):
+	full_file = ""
+	with open(file_path, "r") as file:
+		full_file = file.read()
+	match = compiled_re.search(full_file)
+	return match.end(0)
+		
 def generate_class(name):
 	header_file_name = name + ".hpp"
 	source_file_name = name + ".cpp"
@@ -54,31 +73,17 @@ def add_class_to_list(name):
 	source_file_name = name + ".cpp"
 
 	list_file_name = os.path.join(GEN_FOLDER, "CMakeLists.txt")
-	header_defines_re = re.compile("set\\w*\\(\\w*CoreHeaders")
-	source_defines_re = re.compile("set\\w*\\(\\w*CoreSources ")
+	header_defines_re = re.compile("(set\\w*\\(\\w*CoreHeaders)")
+	source_defines_re = re.compile("(set\\w*\\(\\w*CoreSources)")
 	
-	with open(list_file_name, "r+") as list_file:
-		list_file.seek(0, 0)
-		while True:
-			line = list_file.readline()
-			if not len(line):
-				break
-			m_headers = header_defines_re.match(line)
-			m_sources = source_defines_re.match(line)
-			if m_headers:
-				current_pos = list_file.tell()
-				list_file.seek(current_pos)
-				print(list_file.tell())
-				list_file.write("\t${CoreIncludeDir}/"  + header_file_name + "\n\r")
-				list_file.seek(current_pos)
-				print(list_file.tell())
-			if m_sources:
-				current_pos = list_file.tell()
-				list_file.seek(current_pos)
-				print(list_file.tell())
-				list_file.write("\t${CoreSourceDir}/"  + source_file_name + "\n\r")
-				list_file.seek(current_pos)
-				print(list_file.tell())
+	to_write_header = "\n\t${CoreIncludeDir}/"  + header_file_name
+	to_write_source = "\n\t${CoreSourceDir}/"  + source_file_name
+	
+	write_headers = find_line_by_pattern(list_file_name, header_defines_re)		
+	insert_line(list_file_name, to_write_header, write_headers)
+	
+	write_sources = find_line_by_pattern(list_file_name, source_defines_re)	
+	insert_line(list_file_name, to_write_source, write_sources)
 
 def print_help():
 	print("To generate class, type `generate class <class name>`")

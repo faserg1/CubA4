@@ -12,3 +12,8 @@ Core::~Core()
 
 }
 
+std::shared_ptr<CoreConfigBase> Core::getConfig()
+{
+	return config_;
+}
+

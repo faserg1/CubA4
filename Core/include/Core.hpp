@@ -8,12 +8,18 @@ namespace CubA4
 {
 	namespace core
 	{
+		class CoreConfig;
+
 		class CORE_LIBRARY_EXPORT Core :
 			public virtual CoreBase
 		{
 		public:
 			explicit Core();
 			~Core();
+
+			std::shared_ptr<CoreConfigBase> getConfig();
+		private:
+			std::shared_ptr<CoreConfig> config_;
 		};
 	}
 }
