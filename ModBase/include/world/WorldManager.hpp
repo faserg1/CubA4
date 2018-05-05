@@ -9,9 +9,10 @@ namespace CubA4
 		{
 		public:
 			virtual ~WorldManager() {}
-		}
+		protected:
+			explicit WorldManager() {}
+		};
 	}
 }
-
 
 #endif // WORLD_MANAGER_HPP

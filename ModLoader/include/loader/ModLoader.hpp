@@ -9,6 +9,8 @@ namespace CubA4
 	{
 		class MOD_LOADER_SHARED ModLoader
 		{
+			struct Private;
+			Private *data_;
 		public:
 			ModLoader();
 			virtual ~ModLoader();

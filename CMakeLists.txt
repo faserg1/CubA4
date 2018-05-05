@@ -28,8 +28,12 @@ if (WIN32)
 endif (WIN32)
 
 #prepare interfaces
+add_subdirectory (CoreBase)
 add_subdirectory (ModBase)
 add_subdirectory (RenderBase)
+
+#core
+add_subdirectory (Core)
 
 #Standard mods
 add_subdirectory (ModVanilla)
@@ -38,7 +42,7 @@ add_subdirectory (ModVanilla)
 add_subdirectory (ModLoader)
 
 #prepare renderer
-add_subdirectory(RenderVulkan)
+add_subdirectory (RenderVulkan)
 
 #executables
 add_subdirectory (CubA4Loader)

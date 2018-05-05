@@ -11,7 +11,7 @@ namespace CubA4
 		class RenderLoader final
 		{
 			struct Private;
-			const char *const importSymbolName;
+			const char *const importSymbolName_;
 			Private *data_;
 
 			RenderInfo *currentRenderInfo_;

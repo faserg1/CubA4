@@ -1,5 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
 
+link_directories(
+#third party
+	${SDL_LIBRARY_DIR}
+	${VULKAN_SDK_LIB}
+	${STEAM_AUDIO_LIBRARY_DIR}
+	${Boost_LIBRARY_DIRS})
+
 set(SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src) 
 
 set(CubA4LoaderSources 
@@ -8,18 +15,16 @@ set(CubA4LoaderSources
 	${SOURCE_DIR}/render/RenderLoader.cpp
 	)
 
-
-link_directories(
-#third party
-	${SDL_LIBRARY_DIR}
-	${VULKAN_SDK_LIB}
-	${STEAM_AUDIO_LIBRARY_DIR}
-	${Boost_LIBRARY_DIRS})
-
-	
 add_executable(CubA4Loader ${CubA4LoaderSources})
 
 #libs
+get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(CubA4Loader PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
+
+get_target_property(CORE_INCLUDE_DIRECTORIES Core INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(CubA4Loader PRIVATE ${CORE_INCLUDE_DIRECTORIES})
+target_link_libraries(CubA4Loader PRIVATE Core)
+
 get_target_property(MOD_LOADER_INCLUDE_DIRECTORIES ModLoader INTERFACE_INCLUDE_DIRECTORIES)
 target_include_directories(CubA4Loader PRIVATE ${MOD_LOADER_INCLUDE_DIRECTORIES})
 target_link_libraries(CubA4Loader PRIVATE ModLoader)
@@ -56,3 +61,4 @@ if (WIN32)
 	)
 endif (WIN32)
 
+set_target_properties(CubA4Loader PROPERTIES FOLDER "Executables")

@@ -11,7 +11,7 @@ struct RenderLoader::Private
 };
 
 RenderLoader::RenderLoader() :
-	importSymbolName("getRenderInfo"),
+	importSymbolName_("getRenderInfo"),
 	data_(nullptr),
 	currentRenderInfo_(nullptr)
 {
@@ -40,14 +40,14 @@ RenderLoader::RenderLoader() :
 			//todo: вывести ошибку
 			continue;
 		}
-		if (!library.has(importSymbolName))
+		if (!library.has(importSymbolName_))
 		{
 			//todo: вывести ошибку
 			library.unload();
 			continue;
 		}
-		auto symbolLoad = library.get<RenderInfo *()>(importSymbolName);
-		auto renderInfo = symbolLoad();
+		auto getRenderInfo = library.get<RenderInfo *()>(importSymbolName_);
+		auto renderInfo = getRenderInfo();
 		data_->renderLibraries.insert(std::make_pair(renderInfo, library));
 	}
 }

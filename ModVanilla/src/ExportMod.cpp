@@ -1,5 +1,11 @@
-#include <Loader.hpp>
 #include "ModVanilla.hpp"
+#include <ModExportHelper.hpp>
 
-RegisterModHelper<CubA4::mod::ModVanilla> mod;
+extern "C"
+{
+	MOD_LIBRARY_EXPORT ::CubA4::mod::ModInfo *getModInfo()
+	{
+		return new ::CubA4::mod::ModVanilla();
+	}
+}
 

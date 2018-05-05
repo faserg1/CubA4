@@ -7,7 +7,7 @@ namespace CubA4
 {
 	namespace render
 	{
-		class VulkanInfo : public RenderInfo
+		class VulkanInfo : public virtual RenderInfo
 		{
 		public:
 			VulkanInfo();

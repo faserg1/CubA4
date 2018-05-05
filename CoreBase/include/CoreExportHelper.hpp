@@ -2,9 +2,9 @@
 #define EXPORT_HELPER_HPP
 
 #if defined (_MSC_VER) || defined(__MINGW32)
-#define LIBRARY_EXPORT __declspec(dllexport) 
+#define CORE_LIBRARY_EXPORT __declspec(dllexport) 
 #else
-#define LIBRARY_EXPORT __attribute__((visibility("default")))
+#define CORE_LIBRARY_EXPORT __attribute__((visibility("default")))
 #endif
 
 #endif // EXPORT_HELPER_HPP

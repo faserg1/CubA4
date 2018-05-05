@@ -22,3 +22,5 @@ set_target_properties( ModVanilla
     BUILD_OUTPUT_DIRECTORY "${MOD_BUILD_OUTPUT_DIRECTORY}"
 	RUNTIME_OUTPUT_DIRECTORY "${MOD_BUILD_OUTPUT_DIRECTORY}"
 )
+
+set_target_properties(ModVanilla PROPERTIES FOLDER "Mods")

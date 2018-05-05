@@ -27,3 +27,5 @@ set_target_properties( RenderVulkan
     BUILD_OUTPUT_DIRECTORY "${RENDER_BUILD_OUTPUT_DIRECTORY}"
     RUNTIME_OUTPUT_DIRECTORY "${RENDER_BUILD_OUTPUT_DIRECTORY}"
 )
+
+set_target_properties(RenderVulkan PROPERTIES FOLDER "Render")
