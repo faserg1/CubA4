@@ -12,7 +12,7 @@ namespace CubA4
 		public:
 			VulkanInfo();
 			~VulkanInfo();
-			std::string getRenderEngineName() const override;
+			std::string getRenderEngineId() const override;
 			RenderEngine *getRenderEngine() override;
 		};
 	}

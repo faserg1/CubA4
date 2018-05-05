@@ -12,7 +12,7 @@ VulkanInfo::~VulkanInfo()
 
 }
 
-std::string CubA4::render::VulkanInfo::getRenderEngineName() const
+std::string CubA4::render::VulkanInfo::getRenderEngineId() const
 {
 	return "Vulkan";
 }

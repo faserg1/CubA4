@@ -14,7 +14,7 @@ namespace CubA4
 		{
 		public:
 			virtual ~RenderInfo() {}
-			virtual std::string getRenderEngineName() const = 0;
+			virtual std::string getRenderEngineId() const = 0;
 			virtual RenderEngine *getRenderEngine() = 0;
 			//virtual int64_t getSDLWindowFlags() = 0;
 		};

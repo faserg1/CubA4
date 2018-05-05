@@ -20,6 +20,10 @@ target_include_directories(Core INTERFACE include)
 get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
 target_include_directories(Core PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
 
+#third-party library
+target_include_directories(Core PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(Core PRIVATE Boost::filesystem)
+
 #set output directory
 set_target_properties(Core
     PROPERTIES
