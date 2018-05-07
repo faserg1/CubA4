@@ -2,6 +2,7 @@
 #define RENDER_LOADER_HPP
 
 #include <vector>
+#include <memory>
 #include <RenderInfo.hpp>
 
 namespace CubA4
@@ -12,7 +13,7 @@ namespace CubA4
 		{
 			struct Private;
 			const char *const importSymbolName_;
-			Private *data_;
+			std::shared_ptr<Private> data_;
 
 			RenderInfo *currentRenderInfo_;
 		public:

@@ -9,12 +9,38 @@ link_directories(
 
 set(SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src) 
 
+set(CubA4LoaderRenderDir ${SOURCE_DIR}/render)
+set(CubA4LoaderAppDir ${SOURCE_DIR}/app)
+set(CubA4LoaderWindowDir ${SOURCE_DIR}/window)
+
+set(CubA4LoaderRenderSources
+	${CubA4LoaderRenderDir}/RenderLoader.hpp
+	${CubA4LoaderRenderDir}/RenderLoader.cpp
+)
+set(CubA4LoaderAppSources
+	${CubA4LoaderAppDir}/CubA4Main.hpp
+	${CubA4LoaderAppDir}/CubA4Main.cpp
+)
+set(CubA4LoaderWindowSources
+	${CubA4LoaderWindowDir}/Window.hpp
+	${CubA4LoaderWindowDir}/Window.cpp
+)
+
 set(CubA4LoaderSources 
 	${SOURCE_DIR}/main.cpp
-	${SOURCE_DIR}/render/RenderLoader.hpp
-	${SOURCE_DIR}/render/RenderLoader.cpp
-	)
+	${CubA4LoaderRenderSources}
+	${CubA4LoaderAppSources}
+	${CubA4LoaderWindowSources}
+)
 
+if (MSVC)
+
+source_group("Header Files\\render" FILES ${CubA4LoaderRenderSources})
+source_group("Header Files\\app" FILES ${CubA4LoaderAppSources})
+source_group("Header Files\\window" FILES ${CubA4LoaderWindowSources})
+
+endif(MSVC)
+	
 add_executable(CubA4Loader ${CubA4LoaderSources})
 
 #libs

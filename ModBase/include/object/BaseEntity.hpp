@@ -1,15 +1,20 @@
 #ifndef BASE_ENTITY_HPP
 #define BASE_ENTITY_HPP
 
+#include "BaseObject.hpp"
+
 namespace CubA4
 {
-	namespace entity
+	namespace object
 	{
-		class BaseEntity
+		class BaseEntity :
+			public virtual BaseObject
 		{
 		public:
 			virtual ~BaseEntity() {}
-		}
+		protected:
+			explicit BaseEntity() {}
+		};
 	}
 }
 

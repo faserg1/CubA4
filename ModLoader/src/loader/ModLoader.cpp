@@ -9,10 +9,10 @@ struct ModLoader::Private
 
 ModLoader::ModLoader()
 {
-	data_ = new Private();
+	data_ = std::make_shared<Private>();
 }
 
 ModLoader::~ModLoader()
 {
-	delete data_;
+	
 }

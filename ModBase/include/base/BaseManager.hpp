@@ -9,7 +9,7 @@ namespace CubA4
 		{
 		public:
 			virtual ~BaseManager() {}
-		}
+		};
 	}
 }
 

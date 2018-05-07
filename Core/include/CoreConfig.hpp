@@ -20,6 +20,8 @@ namespace CubA4
 			void setRenderEngineId(const std::string &renderEngineId) override;
 			std::string getMainFeatiresModId() const override;
 			void setMainFeaturesModId(const std::string &modId) override;
+			unsigned short getWorldChunkSize() override;
+			void setWorldChunkSize(unsigned short size) override;
 
 			void reload() override;
 		private:

@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 2.8)
 set(ModBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ModBaseIncludeDirBase ${ModBaseIncludeDir}/base)
 set(ModBaseIncludeDirContainer ${ModBaseIncludeDir}/container)
-set(ModBaseIncludeDirEntity ${ModBaseIncludeDir}/entity)
+set(ModBaseIncludeDirObject ${ModBaseIncludeDir}/object)
 set(ModBaseIncludeDirWorld ${ModBaseIncludeDir}/world)
 
 set(ModBaseHeaderBase 
@@ -12,26 +12,34 @@ set(ModBaseHeaderBase
 set(ModBaseHeaderContainer
 	${ModBaseIncludeDirContainer}/BaseContainer.hpp
 )	
-set(ModBaseHeaderEntity
-	${ModBaseIncludeDirEntity}/BaseEntity.hpp
+set(ModBaseHeaderObject
+	${ModBaseIncludeDirObject}/BaseObject.hpp
+	${ModBaseIncludeDirObject}/BaseEntity.hpp
+	${ModBaseIncludeDirObject}/BaseBlock.hpp
+	${ModBaseIncludeDirObject}/BaseItem.hpp
 )
 set(ModBaseHeaderWorld
-	${ModBaseIncludeDirWorld}/WorldManager.hpp
+	${ModBaseIncludeDirWorld}/WorldProvider.hpp
 	${ModBaseIncludeDirWorld}/World.hpp
 	${ModBaseIncludeDirWorld}/WorldSubscriber.hpp
+	${ModBaseIncludeDirWorld}/Chunk.hpp
 )
 
-#source_group("Header Files\\base" FILES ${ModBaseHeaderBase})
-#source_group("Header Files\\container" FILES ${ModBaseHeaderContainer})
-#source_group("Header Files\\entity" FILES ${ModBaseHeaderEntity})
-#source_group("Header Files\\world" FILES ${ModBaseHeaderWorld})
+if (MSVC)
+
+source_group("Header Files\\base" FILES ${ModBaseHeaderBase})
+source_group("Header Files\\container" FILES ${ModBaseHeaderContainer})
+source_group("Header Files\\object" FILES ${ModBaseHeaderObject})
+source_group("Header Files\\world" FILES ${ModBaseHeaderWorld})
+
+endif(MSVC)
 
 set(ModBaseHeaders 
 	${ModBaseIncludeDir}/ModExportHelper.hpp
 	${ModBaseIncludeDir}/ModInfo.hpp
 	${ModBaseHeaderBase}
 	${ModBaseHeaderContainer}
-	${ModBaseHeaderEntity}
+	${ModBaseHeaderObject}
 	${ModBaseHeaderWorld}
 )
 

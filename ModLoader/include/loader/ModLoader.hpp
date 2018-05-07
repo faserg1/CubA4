@@ -2,6 +2,7 @@
 #define LOADER_MOD_LOADER
 
 #include <ModLoaderLibrary.hpp>
+#include <memory>
 
 namespace CubA4
 {
@@ -10,7 +11,7 @@ namespace CubA4
 		class MOD_LOADER_SHARED ModLoader
 		{
 			struct Private;
-			Private *data_;
+			std::shared_ptr<Private> data_;
 		public:
 			ModLoader();
 			virtual ~ModLoader();

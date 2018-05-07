@@ -7,13 +7,15 @@ namespace CubA4
 {
 	namespace render
 	{
-		class VulkanInfo : public virtual RenderInfo
+		class VulkanInfo :
+			public virtual RenderInfo
 		{
 		public:
 			VulkanInfo();
 			~VulkanInfo();
 			std::string getRenderEngineId() const override;
 			RenderEngine *getRenderEngine() override;
+			int64_t getSDLWindowFlags() const override;
 		};
 	}
 }

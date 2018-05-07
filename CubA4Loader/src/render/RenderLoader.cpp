@@ -1,6 +1,7 @@
 #include "RenderLoader.hpp"
 #include <boost/dll.hpp>
 #include <map>
+#include <stdexcept>
 
 using namespace CubA4::render;
 
@@ -12,10 +13,9 @@ struct RenderLoader::Private
 
 RenderLoader::RenderLoader() :
 	importSymbolName_("getRenderInfo"),
-	data_(nullptr),
 	currentRenderInfo_(nullptr)
 {
-	data_ = new Private;
+	data_ = std::make_shared<RenderLoader::Private>(RenderLoader::Private());
 	using namespace boost::filesystem;
 	path rednerFolder = current_path() / "render";
 	recursive_directory_iterator renderFolderIterator(rednerFolder), end;
@@ -54,7 +54,6 @@ RenderLoader::RenderLoader() :
 
 RenderLoader::~RenderLoader()
 {
-	delete data_;
 }
 
 std::vector<RenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
@@ -69,6 +68,10 @@ std::vector<RenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
 
 void CubA4::render::RenderLoader::setCurrentRenderInfo(RenderInfo *renderInfo)
 {
+	//data_->renderLibraries.clear();
+	if (currentRenderInfo_)
+		throw std::runtime_error("Shut the fuck up!");
+	currentRenderInfo_ = renderInfo;
 	//TODO:
 	//Проверить, не выбрана ли уже библиотека рендеринга
 	//Если выбрана, выбросить ошибку

@@ -7,7 +7,8 @@
 using namespace CubA4::core;
 
 constexpr char *renderEngineIdKey = "core.render.engine_id";
-constexpr char *mainFeatiresModId = "core.mods.main_features_mod_id";
+constexpr char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
+constexpr char *worldChunkSizeKey = "core.world.chunk_size";
 
 CoreConfig::CoreConfig()
 {
@@ -47,12 +48,23 @@ void CoreConfig::setRenderEngineId(const std::string &renderEngineId)
 
 std::string CoreConfig::getMainFeatiresModId() const
 {
-	return configTree_->get<std::string>(mainFeatiresModId, "");
+	return configTree_->get<std::string>(mainFeatiresModIdKey, "");
 }
 
 void CoreConfig::setMainFeaturesModId(const std::string &modId)
 {
-	configTree_->put(mainFeatiresModId, modId);
+	configTree_->put(mainFeatiresModIdKey, modId);
+	flushConfig();
+}
+
+unsigned short CubA4::core::CoreConfig::getWorldChunkSize()
+{
+	return configTree_->get<unsigned short>(worldChunkSizeKey, 0);
+}
+
+void CubA4::core::CoreConfig::setWorldChunkSize(unsigned short size)
+{
+	configTree_->put(worldChunkSizeKey, size);
 	flushConfig();
 }
 

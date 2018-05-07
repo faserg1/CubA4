@@ -2,18 +2,22 @@
 #define WOLRD_HPP
 
 #include <string>
+#include "../object/BaseObject.hpp"
 
 namespace CubA4
 {
 	namespace world
 	{
-		class World
+		class WorldSubscriber;
+
+		class World :
+			public virtual CubA4::object::BaseObject
 		{
 		public:
 			virtual ~World() {}
 
-			virtual std::string getId() const = 0;
-			virtual std::wstring getName() const = 0;
+			virtual void subscribe(WorldSubscriber *subscriber) = 0;
+			virtual void unsubscribe(WorldSubscriber *subscriber) = 0;
 		protected:
 			explicit World() {}
 		};
