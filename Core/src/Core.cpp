@@ -13,7 +13,7 @@ Core::~Core()
 
 }
 
-std::shared_ptr<CoreConfigBase> Core::getConfig()
+std::shared_ptr<ICoreConfig> Core::getConfig()
 {
 	return config_;
 }

@@ -1,5 +1,5 @@
-#ifndef CORECONFIGBASE_HPP
-#define CORECONFIGBASE_HPP
+#ifndef ICORECONFIG_HPP
+#define ICORECONFIG_HPP
 
 #include <string>
 
@@ -8,7 +8,7 @@ namespace CubA4
 	namespace core
 	{
 		//Пока делаем простую реализацию
-		class CoreConfigBase
+		class ICoreConfig
 		{
 		public:
 			virtual std::string getRenderEngineId() const = 0;
@@ -20,11 +20,11 @@ namespace CubA4
 
 			virtual void reload() = 0;
 
-			virtual ~CoreConfigBase() {}
+			virtual ~ICoreConfig() {}
 		protected:
-			explicit CoreConfigBase() {}
+			explicit ICoreConfig() {}
 		};
 	}
 }
 
-#endif // CORECONFIGBASE_HPP
+#endif // ICORECONFIG_HPP

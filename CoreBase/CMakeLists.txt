@@ -4,8 +4,8 @@ set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 
 set(CoreBaseHeaders
 	${CoreBaseIncludeDir}/CoreExportHelper.hpp
-	${CoreBaseIncludeDir}/CoreBase.hpp
-	${CoreBaseIncludeDir}/CoreConfigBase.hpp
+	${CoreBaseIncludeDir}/ICore.hpp
+	${CoreBaseIncludeDir}/ICoreConfig.hpp
 	)
 
 add_library(CoreBase INTERFACE)

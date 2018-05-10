@@ -1,7 +1,7 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include <CoreBase.hpp>
+#include <ICore.hpp>
 #include <CoreExportHelper.hpp>
 
 namespace CubA4
@@ -11,13 +11,13 @@ namespace CubA4
 		class CoreConfig;
 
 		class CORE_LIBRARY_EXPORT Core :
-			public virtual CoreBase
+			public virtual ICore
 		{
 		public:
 			explicit Core();
 			~Core();
 
-			std::shared_ptr<CoreConfigBase> getConfig();
+			std::shared_ptr<ICoreConfig> getConfig();
 		private:
 			std::shared_ptr<CoreConfig> config_;
 		};

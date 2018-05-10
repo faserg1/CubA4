@@ -1,7 +1,7 @@
 #ifndef CORECONFIG_HPP
 #define CORECONFIG_HPP
 
-#include <CoreConfigBase.hpp>
+#include <ICoreConfig.hpp>
 #include <memory>
 #include <boost/property_tree/ptree.hpp>
 
@@ -10,7 +10,7 @@ namespace CubA4
 	namespace core
 	{
 		class CoreConfig :
-			public virtual CoreConfigBase
+			public virtual ICoreConfig
 		{
 		public:
 			explicit CoreConfig();

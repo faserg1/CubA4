@@ -3,7 +3,7 @@
 #include "../render/RenderLoader.hpp"
 #include "../window/Window.hpp"
 #include <Core.hpp>
-#include <CoreConfigBase.hpp>
+#include <ICoreConfig.hpp>
 #include <stdexcept>
 
 using namespace CubA4::app;
