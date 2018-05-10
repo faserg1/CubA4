@@ -1,14 +1,14 @@
-#ifndef MOD_VANILLA_HPP
-#define MOD_VANILLA_HPP
+#ifndef MODVANILLA_HPP
+#define MODVANILLA_HPP
 
-#include <ModInfo.hpp>
+#include <IModInfo.hpp>
 
 namespace CubA4
 {
 	namespace mod
 	{
 		class ModVanilla :
-			public virtual ModInfo
+			public virtual IModInfo
 		{
 		public:
 			std::string getIdName() override;
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // MOD_VANILLA_HPP
+#endif // MODVANILLA_HPP

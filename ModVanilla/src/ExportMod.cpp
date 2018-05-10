@@ -3,7 +3,7 @@
 
 extern "C"
 {
-	MOD_LIBRARY_EXPORT ::CubA4::mod::ModInfo *getModInfo()
+	MOD_LIBRARY_EXPORT ::CubA4::mod::IModInfo *getModInfo()
 	{
 		return new ::CubA4::mod::ModVanilla();
 	}

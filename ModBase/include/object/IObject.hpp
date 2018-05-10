@@ -1,5 +1,5 @@
-#ifndef BASEOBJECT_HPP
-#define BASEOBJECT_HPP
+#ifndef IOBJECT_HPP
+#define IOBJECT_HPP
 
 #include <string>
 #include <cstdint>
@@ -8,19 +8,19 @@ namespace CubA4
 {
 	namespace object
 	{
-		class BaseObject
+		class IObject
 		{
 		public:
-			virtual ~BaseObject() {}
+			virtual ~IObject() {}
 
 			//Получает уникальный идентификатор объекта
 			virtual std::string getId() = 0;
 			virtual int64_t getMappedId() = 0;
 			virtual std::wstring getName() = 0;
 		protected:
-			explicit BaseObject() {}
+			explicit IObject() {}
 		};
 	}
 }
 
-#endif // BASEOBJECT_HPP
+#endif // IOBJECT_HPP

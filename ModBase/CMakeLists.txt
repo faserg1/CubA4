@@ -7,22 +7,22 @@ set(ModBaseIncludeDirObject ${ModBaseIncludeDir}/object)
 set(ModBaseIncludeDirWorld ${ModBaseIncludeDir}/world)
 
 set(ModBaseHeaderBase 
-	${ModBaseIncludeDirBase}/BaseManager.hpp
+	${ModBaseIncludeDirBase}/IManager.hpp
 )
 set(ModBaseHeaderContainer
-	${ModBaseIncludeDirContainer}/BaseContainer.hpp
+	${ModBaseIncludeDirContainer}/IContainer.hpp
 )	
 set(ModBaseHeaderObject
-	${ModBaseIncludeDirObject}/BaseObject.hpp
-	${ModBaseIncludeDirObject}/BaseEntity.hpp
-	${ModBaseIncludeDirObject}/BaseBlock.hpp
-	${ModBaseIncludeDirObject}/BaseItem.hpp
+	${ModBaseIncludeDirObject}/IObject.hpp
+	${ModBaseIncludeDirObject}/IEntity.hpp
+	${ModBaseIncludeDirObject}/IBlock.hpp
+	${ModBaseIncludeDirObject}/IItem.hpp
 )
 set(ModBaseHeaderWorld
-	${ModBaseIncludeDirWorld}/WorldProvider.hpp
-	${ModBaseIncludeDirWorld}/World.hpp
-	${ModBaseIncludeDirWorld}/WorldSubscriber.hpp
-	${ModBaseIncludeDirWorld}/Chunk.hpp
+	${ModBaseIncludeDirWorld}/IWorldProvider.hpp
+	${ModBaseIncludeDirWorld}/IWorld.hpp
+	${ModBaseIncludeDirWorld}/IWorldSubscriber.hpp
+	${ModBaseIncludeDirWorld}/IChunk.hpp
 )
 
 if (MSVC)
@@ -36,7 +36,7 @@ endif(MSVC)
 
 set(ModBaseHeaders 
 	${ModBaseIncludeDir}/ModExportHelper.hpp
-	${ModBaseIncludeDir}/ModInfo.hpp
+	${ModBaseIncludeDir}/IModInfo.hpp
 	${ModBaseHeaderBase}
 	${ModBaseHeaderContainer}
 	${ModBaseHeaderObject}

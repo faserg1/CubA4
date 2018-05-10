@@ -1,5 +1,5 @@
-#ifndef MOD_INFO_HPP
-#define MOD_INFO_HPP
+#ifndef IMODINFO_HPP
+#define IMODINFO_HPP
 
 #include <string>
 
@@ -7,17 +7,19 @@ namespace CubA4
 {
 	namespace mod
 	{
-		class ModInfo
+		class IModInfo
 		{
 		public:
-			virtual ~ModInfo() {}
+			virtual ~IModInfo() {}
 			
 			virtual std::string getIdName() = 0;
 			virtual std::wstring getName() = 0;
 			
 			virtual void getVersion(int16_t &major, int16_t &minor, int16_t &patch) = 0;
+		protected:
+			explicit IModInfo() {}
 		};
 	}
 }
 
-#endif // MOD_INFO_HPP
+#endif // IMODINFO_HPP
