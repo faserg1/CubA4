@@ -34,6 +34,7 @@ add_subdirectory (RenderBase)
 
 #core
 add_subdirectory (Core)
+add_subdirectory (Network)
 
 #Standard mods
 add_subdirectory (ModVanilla)
