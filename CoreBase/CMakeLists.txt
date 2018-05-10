@@ -6,6 +6,9 @@ set(CoreBaseHeaders
 	${CoreBaseIncludeDir}/CoreExportHelper.hpp
 	${CoreBaseIncludeDir}/ICore.hpp
 	${CoreBaseIncludeDir}/ICoreConfig.hpp
+	${CoreBaseIncludeDir}/LogCommon.hpp
+	${CoreBaseIncludeDir}/ILoggerTagged.hpp
+	${CoreBaseIncludeDir}/ILogger.hpp
 	)
 
 add_library(CoreBase INTERFACE)
