@@ -30,7 +30,7 @@ void AppMain::loadRender()
 	auto renderInfos = renderLoader_->getRenderInfoCollection();
 	if (!renderInfos.size())
 		throw std::runtime_error("No render engines!");
-	CubA4::render::RenderInfo *choosedRenderInfo = nullptr;
+	CubA4::render::IRenderInfo *choosedRenderInfo = nullptr;
 	for (auto renderInfo : renderInfos)
 	{
 		auto name = renderInfo->getRenderEngineId();

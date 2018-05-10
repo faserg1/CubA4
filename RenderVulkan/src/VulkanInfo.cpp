@@ -14,17 +14,17 @@ VulkanInfo::~VulkanInfo()
 
 }
 
-std::string CubA4::render::VulkanInfo::getRenderEngineId() const
+std::string VulkanInfo::getRenderEngineId() const
 {
 	return "Vulkan";
 }
 
-RenderEngine * CubA4::render::VulkanInfo::getRenderEngine()
+IRenderEngine *VulkanInfo::getRenderEngine()
 {
 	return nullptr;
 }
 
-int64_t CubA4::render::VulkanInfo::getSDLWindowFlags() const
+int64_t VulkanInfo::getSDLWindowFlags() const
 {
 	return SDL_WINDOW_VULKAN;
 }

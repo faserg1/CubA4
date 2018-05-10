@@ -7,7 +7,7 @@ using namespace CubA4::render;
 
 struct RenderLoader::Private
 {
-	std::map<RenderInfo *, boost::dll::shared_library> renderLibraries;
+	std::map<IRenderInfo *, boost::dll::shared_library> renderLibraries;
 	boost::dll::shared_library currentLibrary;
 };
 
@@ -46,7 +46,7 @@ RenderLoader::RenderLoader() :
 			library.unload();
 			continue;
 		}
-		auto getRenderInfo = library.get<RenderInfo *()>(importSymbolName_);
+		auto getRenderInfo = library.get<IRenderInfo *()>(importSymbolName_);
 		auto renderInfo = getRenderInfo();
 		data_->renderLibraries.insert(std::make_pair(renderInfo, library));
 	}
@@ -56,9 +56,9 @@ RenderLoader::~RenderLoader()
 {
 }
 
-std::vector<RenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
+std::vector<IRenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
 {
-	std::vector<RenderInfo*> ri;
+	std::vector<IRenderInfo*> ri;
 	for (auto pair : data_->renderLibraries)
 	{
 		ri.push_back(pair.first);
@@ -66,7 +66,7 @@ std::vector<RenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
 	return ri;
 }
 
-void CubA4::render::RenderLoader::setCurrentRenderInfo(RenderInfo *renderInfo)
+void CubA4::render::RenderLoader::setCurrentRenderInfo(IRenderInfo *renderInfo)
 {
 	//data_->renderLibraries.clear();
 	if (currentRenderInfo_)
@@ -81,7 +81,7 @@ void CubA4::render::RenderLoader::setCurrentRenderInfo(RenderInfo *renderInfo)
 	//Словарь можно очистить
 }
 
-RenderInfo * CubA4::render::RenderLoader::getCurrentRenderInfo()
+IRenderInfo * CubA4::render::RenderLoader::getCurrentRenderInfo()
 {
 	return currentRenderInfo_;
 }

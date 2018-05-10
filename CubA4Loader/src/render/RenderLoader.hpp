@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include <RenderInfo.hpp>
+#include <IRenderInfo.hpp>
 
 namespace CubA4
 {
@@ -15,14 +15,14 @@ namespace CubA4
 			const char *const importSymbolName_;
 			std::shared_ptr<Private> data_;
 
-			RenderInfo *currentRenderInfo_;
+			IRenderInfo *currentRenderInfo_;
 		public:
 			RenderLoader();
 			~RenderLoader();
 
-			std::vector<RenderInfo *> getRenderInfoCollection();
-			void setCurrentRenderInfo(RenderInfo *renderInfo);
-			RenderInfo *getCurrentRenderInfo();
+			std::vector<IRenderInfo *> getRenderInfoCollection();
+			void setCurrentRenderInfo(IRenderInfo *renderInfo);
+			IRenderInfo *getCurrentRenderInfo();
 		};
 	}
 }

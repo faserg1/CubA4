@@ -4,8 +4,8 @@ set(RenderBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 
 set(RenderBaseHeaders 
 	${RenderBaseIncludeDir}/RenderExportHelper.hpp
-	${RenderBaseIncludeDir}/RenderInfo.hpp
-	${RenderBaseIncludeDir}/RenderEngine.hpp
+	${RenderBaseIncludeDir}/IRenderInfo.hpp
+	${RenderBaseIncludeDir}/IRenderEngine.hpp
 	)
 
 add_library(RenderBase INTERFACE)
