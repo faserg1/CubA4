@@ -5,7 +5,7 @@ namespace CubA4
 {
 	namespace core
 	{
-		enum class LogSourceSystem
+		enum class LogSourceSystem : char
 		{
 			Core,
 			Network,
@@ -14,7 +14,7 @@ namespace CubA4
 			App,
 		};
 		
-		enum class LogLevel
+		enum class LogLevel : char
 		{
 			Debug,
 			Info,

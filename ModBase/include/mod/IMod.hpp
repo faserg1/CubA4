@@ -5,7 +5,7 @@ namespace CubA4
 {
 	namespace mod
 	{
-		enum class ModState
+		enum class ModState : char
 		{
 			NotLoaded, ///< Найден, не загружен
 			Preloaded, ///< Известна информация о моде, а также получен интерфейс мода
@@ -15,7 +15,6 @@ namespace CubA4
 			Configurated, ///< Мод сконфигурирован
 			Done, ///< Мод проверил своё состояние и готов к использованию
 			Preunloaded, ///< Мод подготовлен к выгрузке, освободил все свои ресурсы
-			ErrorState, ///< В процессе загрузки мода произошла ошибка
 		};
 
 		class IModLinker;
