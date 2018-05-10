@@ -3,10 +3,10 @@ cmake_minimum_required (VERSION 2.8)
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 
 set(ModVanillaHeaders 
-	${ModVanillaSourceDir}/ModVanilla.hpp)
+	${ModVanillaSourceDir}/ModVanillaInfo.hpp)
 
 set(ModVanillaSources 
-	${ModVanillaSourceDir}/ModVanilla.cpp
+	${ModVanillaSourceDir}/ModVanillaInfo.cpp
 	${ModVanillaSourceDir}/ExportMod.cpp
 	)
 	

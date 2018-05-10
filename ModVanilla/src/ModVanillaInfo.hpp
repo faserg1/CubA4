@@ -1,5 +1,5 @@
-#ifndef MODVANILLA_HPP
-#define MODVANILLA_HPP
+#ifndef MODVANILLAINFO_HPP
+#define MODVANILLAINFO_HPP
 
 #include <IModInfo.hpp>
 
@@ -7,7 +7,7 @@ namespace CubA4
 {
 	namespace mod
 	{
-		class ModVanilla :
+		class ModVanillaInfo :
 			public virtual IModInfo
 		{
 		public:
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODVANILLA_HPP
+#endif // MODVANILLAINFO_HPP

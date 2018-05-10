@@ -3,12 +3,14 @@
 
 #include <ModLoaderLibrary.hpp>
 #include <memory>
+#include <mod/IModLoader.hpp>
 
 namespace CubA4
 {
 	namespace mod_loader
 	{
-		class MOD_LOADER_SHARED ModLoader
+		class MOD_LOADER_SHARED ModLoader : 
+			public virtual CubA4::mod::IModLoader
 		{
 			struct Private;
 			std::shared_ptr<Private> data_;
