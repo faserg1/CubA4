@@ -7,6 +7,7 @@ import copy
 
 from .cppfile import CppFile
 from .lineutil import *
+from .cmd_line import CmdLineParser
 		
 def generate_guard(file, name):
 	upper_file_name = name.upper() + "_HPP"
@@ -21,13 +22,13 @@ def generate_namespaces(file, namespaces):
 		namespace_close = "}"
 		file.add_lines(namespace_open, namespace_close)
 
-f = CppFile()
-generate_guard(f, "NiceAndWelcome")
-generate_namespaces(f, ["CubA4", "core"])
-print(f.to_string())
-	
-def generate_namespaces(file, namespaces):
-	pass
+parser = CmdLineParser(None, None)
+parser.parse()
+		
+#f = CppFile()
+#generate_guard(f, "NiceAndWelcome")
+#generate_namespaces(f, ["CubA4", "core"])
+#print(f.to_string())
 
 #def generate_class(name, project_folder, namespaces):
 #	header_file_name = name + ".hpp"
