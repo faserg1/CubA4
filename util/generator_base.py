@@ -11,32 +11,11 @@ class GeneratorBase:
 		self._module_name = module_name
 		self._dry_run = False
 	
+	#Options
+	
 	def set_dry_run(self, dry_run):
 		self._dry_run = dry_run
-	
-	def _generate_guard(self, file):
-		name = self._get_name()
-		upper_file_name = name.upper() + "_HPP"
-		header_guard_starts = "#ifndef " + upper_file_name + "\n"
-		header_guard_define = "#define " + upper_file_name + "\n"
-		header_guard_ends = "#endif // " + upper_file_name + "\n"
-		file.add_lines(header_guard_starts + header_guard_define, header_guard_ends, False, True)
-
-	def _get_namespaces(self):
-		return copy.deepcopy(self._full_name[:-1])
 		
-	def _get_name(self):
-		return self._full_name[-1]
-		
-	def _generate_namespaces(self, file):
-		namespaces = self._get_namespaces()
-		for namespace in namespaces:
-			namespace_open = "namespace " + namespace + "\n{"
-			namespace_close = "}"
-			file.add_lines(namespace_open, namespace_close)
-	
-	#Class
-	
 	def set_virtual_destructor(self, is_virtual):
 		self._virtual_dtr = is_virtual
 		
@@ -46,19 +25,68 @@ class GeneratorBase:
 	def set_empty_destructor(self, is_empty):
 		self._dtr_empty_realization = is_empty
 		
+	#Generations
+	
+	def _generate_guard(self, file):
+		name = self._get_name()
+		upper_file_name = name.upper() + "_HPP"
+		header_guard_starts = "#ifndef " + upper_file_name + "\n"
+		header_guard_define = "#define " + upper_file_name + "\n"
+		header_guard_ends = "#endif // " + upper_file_name + "\n"
+		file.add_lines(header_guard_starts + header_guard_define, header_guard_ends, False, True)
+		
+	def _generate_namespaces(self, file):
+		namespaces = self._get_namespaces()
+		for namespace in namespaces:
+			namespace_open = "namespace " + namespace + "\n{"
+			namespace_close = "}"
+			file.add_lines(namespace_open, namespace_close)
+		
 	def _generate_class_proto(self, file):
 		name = self._get_name()
 	
-		header_class_define = "class " + name + "\n{\n"
-		header_class_public = "public:\n"
-		header_class_protected = "protected:\n"
-		header_class_private = "private:\n"
-		header_class_ends = "};"
+		class_define = "class " + name + "\n{\n"
+		class_public = "public:\n"
+		class_protected = "protected:\n"
+		class_private = "private:\n"
+		class_ends = "};"
 		
-		header_class_ctr = "\t" + "explicit " + name + "()" + ("{}" if self._ctr_empty_realization else ";") + "\n"
-		header_class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + ("{}" if self._dtr_empty_realization else ";") + "\n"
+		class_ctr = "\t" + "explicit " + name + "()" + (" {}" if self._ctr_empty_realization else ";") + "\n"
+		class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + (" {}" if self._dtr_empty_realization else ";") + "\n"
+		
+		class_open = class_define + class_public
+		if self._ctr_access == "public":
+			class_open += class_ctr
+		if self._dtr_access == "public":
+			class_open += class_dtr
+		
+		class_open += class_protected
+			
+		if self._ctr_access == "protected":
+			class_open += class_ctr
+		if self._dtr_access == "protected":
+			class_open += class_dtr
+		
+		class_open += class_private
+		
+		if self._ctr_access == "private":
+			class_open += class_ctr
+		if self._dtr_access == "private":
+			class_open += class_dtr
+		
+		class_close = class_ends
+		
+		file.add_lines(class_open, class_close)
 	
-	#Base
+	#Getters
+	
+	def _get_namespaces(self):
+		return copy.deepcopy(self._full_name[:-1])
+		
+	def _get_name(self):
+		return self._full_name[-1]
+	
+	#Saver
 	
 	def _write_file(self, file, file_path):
 		str = file.to_string()
@@ -89,6 +117,8 @@ class GeneratorBase:
 		
 	def _add_to_git(self, file_path):
 		subprocess.call(["git", "add", file_path])
+	
+	#Members
 	
 	_full_name = ""
 	_module_name = ""

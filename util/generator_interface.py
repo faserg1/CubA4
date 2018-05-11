@@ -7,7 +7,7 @@ class GeneratorInterface(GeneratorBase):
 	def __init__(self, full_name, module_name):
 		super().__init__(full_name, module_name)
 		self._file_hpp = CppFile()
-		self.set_virtual_destructor(False)
+		self.set_virtual_destructor(True)
 		self.set_empty_constructor(True)
 		self.set_empty_destructor(True)
 		
