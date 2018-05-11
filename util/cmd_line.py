@@ -31,10 +31,10 @@ class CmdLineParser:
 		return name.split(".")
 		
 	def _parse_cls(self, full_name, module, params):
-		print(full_name, module, params)
+		self._cls_func(full_name, module, params)
 	
 	def _parse_ifc(self, full_name, module, params):
-		pass
+		self._ifc_func(full_name, module, params)
 	
 	_cls_func = None
 	_ifc_func = None
