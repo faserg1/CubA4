@@ -2,3 +2,5 @@ build/*
 Win32/*
 bin/*
 built/*
+
+__pycache__
