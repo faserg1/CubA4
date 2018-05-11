@@ -144,6 +144,8 @@ class GeneratorBase:
 		namespaces = self._get_namespaces()
 		if namespaces[0] == "CubA4":
 			namespaces = namespaces[1:]
+		if namespaces[0] == self._module_name.lower():
+			namespaces = namespaces[1:]
 		return os.path.join(folder, *namespaces)
 		
 	def _get_put_folder(self, folder):
