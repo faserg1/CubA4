@@ -10,6 +10,15 @@ class GeneratorBase:
 		self._full_name = full_name
 		self._module_name = module_name
 		self._dry_run = False
+		self._virtual_dtr = False
+		self._ctr_empty_realization = False
+		self._dtr_empty_realization = False
+		self._ctr_access = "public"
+		self._dtr_access = "public"
+		self._header_folder = "include"
+		self._source_folder = "src"
+		self._header_ext = ".hpp"
+		self._source_ext = ".cpp"
 	
 	#Options
 	
@@ -30,6 +39,12 @@ class GeneratorBase:
 		
 	def set_access_destructor(self, access):
 		self._dtr_access = access
+		
+	def set_header_folder(self, folder):
+		self._header_folder = folder
+		
+	def set_source_folder(self, folder):
+		self._source_folder = folder
 		
 	#Generations
 	
@@ -83,6 +98,28 @@ class GeneratorBase:
 		class_close = class_ends
 		
 		file.add_lines(class_open, class_close)
+		
+	def _generate_cpp(self, file):
+		name = self._get_name()
+		#Get relatve file path to header
+		relative_folder_header = self._get_relative_namespace_folder(self._header_folder)
+		relative_folder_source = self._get_relative_namespace_folder(self._source_folder)
+		include_folder = os.path.relpath(relative_folder_header, relative_folder_source)
+		include_header = os.path.join(include_folder, name + self._header_ext)
+		#always unix style
+		include_header = include_header.replace("\\", "/")
+		#Generate
+		include_line = "#include \"" + include_header + "\"\n"
+		using_namespace_line = "using namespace " + ("::".join(self._get_namespaces())) + ";\n"
+		head_open = include_line + using_namespace_line
+		file.add_lines(head_open, "", False, True)
+		source_open = ""
+		if not self._ctr_empty_realization:
+			ctr_open = name + "::" + name + "()\n{\n\t\n}"
+			file.add_lines(ctr_open, "", False, True)
+		if not self._dtr_empty_realization:
+			dtr_open = name + "::~" + name + "()\n{\n\t\n}"
+			file.add_lines(dtr_open, "", False, True)
 	
 	#Getters
 	
@@ -91,6 +128,16 @@ class GeneratorBase:
 		
 	def _get_name(self):
 		return self._full_name[-1]
+		
+	def _get_relative_namespace_folder(self, folder):
+		namespaces = self._get_namespaces()
+		if namespaces[0] == "CubA4":
+			namespaces = namespaces[1:]
+		return os.path.join(folder, *namespaces)
+		
+	def _get_put_folder(self, folder):
+		relative_folder = self._get_relative_namespace_folder(folder)
+		return os.path.join(self._cwd, self._module_name, relative_folder)
 	
 	#Saver
 	
@@ -100,11 +147,7 @@ class GeneratorBase:
 			file_handle.write(str)
 	
 	def _save_to(self, file, ext, folder):
-		root_folder = os.path.join(self._cwd, self._module_name, folder)
-		namespaces = self._get_namespaces()
-		if namespaces[0] == "CubA4":
-			namespaces = namespaces[1:]
-		put_to_folder = os.path.join(root_folder, *namespaces)
+		put_to_folder = self._get_put_folder(folder)
 		if not os.path.exists(put_to_folder):
 			print("Creating directory \"" + put_to_folder + "\"")
 			if not self._dry_run:
@@ -115,11 +158,11 @@ class GeneratorBase:
 			self._write_file(file, file_path)
 			self._add_to_git(file_path)
 
-	def _save_to_include(self, file, ext):
-		self._save_to(file, ext, "include")
+	def _save_header(self, file):
+		self._save_to(file, self._header_ext, self._header_folder)
 		
-	def _save_to_src(self, file, ext):
-		self._save_to(file, ext, "src")
+	def _save_source(self, file):
+		self._save_to(file, self._source_ext, self._source_folder)
 		
 	def _add_to_git(self, file_path):
 		subprocess.call(["git", "add", file_path])
@@ -135,3 +178,7 @@ class GeneratorBase:
 	_dtr_empty_realization = False
 	_ctr_access = "public"
 	_dtr_access = "public"
+	_header_folder = "include"
+	_source_folder = "src"
+	_header_ext = ".hpp"
+	_source_ext = ".cpp"

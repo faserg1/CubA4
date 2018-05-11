@@ -17,6 +17,6 @@ class GeneratorInterface(GeneratorBase):
 		self._generate_class_proto(self._file_hpp)
 		
 	def save(self):
-		self._save_to_include(self._file_hpp, ".hpp")
+		self._save_to_include(self._file_hpp)
 		
 	_file_hpp = None

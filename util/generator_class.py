@@ -13,13 +13,16 @@ class GeneratorClass(GeneratorBase):
 		self.set_empty_destructor(False)
 	
 	def generate(self):
+		#Header
 		self._generate_guard(self._file_hpp)
 		self._generate_namespaces(self._file_hpp)
 		self._generate_class_proto(self._file_hpp)
+		#Source
+		self._generate_cpp(self._file_cpp)
 		
 	def save(self):
-		self._save_to_include(self._file_hpp, ".hpp")
-		self._save_to_src(self._file_cpp, ".cpp")
+		self._save_header(self._file_hpp)
+		self._save_source(self._file_cpp)
 	
 	_file_hpp = None
 	_file_cpp = None

@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
 
 class CppFile:
+	def __init__(self):
+		self._lines = []
+		self._current_line = 0
+		self._indent_count = 0
+
 	def add_lines(self, lines_open, lines_close, add_indent = True, add_lines = False):
 		ar_lines_open = [line.replace("\n", "").replace("\r", "") for line in lines_open.splitlines()]
 		ar_lines_close = [line.replace("\n", "").replace("\r", "") for line in lines_close.splitlines()]
-		
+		#open
 		for line in ar_lines_open:
 			self._lines.insert(self._current_line, "\t" * self._indent_count + line + "\n")
 			self._current_line += 1
-		if add_lines:
+		if add_lines and len(ar_lines_open) > 0:
 			self._lines.insert(self._current_line, "\t" * self._indent_count + "\n")
 			self._current_line += 1
+		#close
 		for line in ar_lines_close:
 			self._lines.insert(self._current_line, "\t" * self._indent_count + line + "\n")
-		if add_lines:
+		if add_lines and len(ar_lines_close) > 0:
 			self._lines.insert(self._current_line, "\t" * self._indent_count + "\n")
+		#indent
 		if add_indent:
 			self._indent_count += 1
 			
