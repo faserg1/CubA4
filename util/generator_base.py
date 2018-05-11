@@ -19,6 +19,9 @@ class GeneratorBase:
 		self._source_folder = "src"
 		self._header_ext = ".hpp"
 		self._source_ext = ".cpp"
+		
+		self._header_saved_to = ""
+		self._source_saved_to = ""
 	
 	#Options
 	
@@ -45,6 +48,14 @@ class GeneratorBase:
 		
 	def set_source_folder(self, folder):
 		self._source_folder = folder
+		
+	#Results
+	
+	def header_saved_to(self):
+		return self._header_saved_to
+		
+	def source_saved_to(self):
+		return self._source_saved_to
 		
 	#Generations
 	
@@ -157,12 +168,15 @@ class GeneratorBase:
 		if not self._dry_run:
 			self._write_file(file, file_path)
 			self._add_to_git(file_path)
+		return file_path
 
 	def _save_header(self, file):
-		self._save_to(file, self._header_ext, self._header_folder)
-		
+		header_abs = self._save_to(file, self._header_ext, self._header_folder)
+		self._header_saved_to = os.path.relpath(header_abs, os.path.join(self._cwd, self._module_name))
+	
 	def _save_source(self, file):
-		self._save_to(file, self._source_ext, self._source_folder)
+		source_abs = self._save_to(file, self._source_ext, self._source_folder)
+		self._source_saved_to = os.path.relpath(source_abs, os.path.join(self._cwd, self._module_name))
 		
 	def _add_to_git(self, file_path):
 		subprocess.call(["git", "add", file_path])
@@ -182,3 +196,6 @@ class GeneratorBase:
 	_source_folder = "src"
 	_header_ext = ".hpp"
 	_source_ext = ".cpp"
+	
+	_header_saved_to = ""
+	_source_saved_to = ""

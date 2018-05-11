@@ -8,6 +8,7 @@ import copy
 from .cmd_line import CmdLineParser
 from .generator_class import GeneratorClass
 from .generator_interface import GeneratorInterface
+from .cmake_patcher import CMakePatcher
 
 def generate_common(generator, params):
 	if "--dry-run" in params:
@@ -36,12 +37,16 @@ def generate_class(full_name, module, params):
 		generator.set_empty_destructor(True)
 	generator.generate()
 	generator.save()
+	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	patcher.patch()
 	
 def generate_interface(full_name, module, params):
 	generator = GeneratorInterface(full_name, module)
 	generate_common(generator, params)
 	generator.generate()
 	generator.save()
+	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	patcher.patch()
 
 parser = CmdLineParser(generate_class, generate_interface)
 parser.parse()
