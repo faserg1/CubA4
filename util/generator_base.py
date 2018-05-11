@@ -35,6 +35,31 @@ class GeneratorBase:
 			namespace_close = "}"
 			file.add_lines(namespace_open, namespace_close)
 	
+	#Class
+	
+	def set_virtual_destructor(self, is_virtual):
+		self._virtual_dtr = is_virtual
+		
+	def set_empty_constructor(self, is_empty):
+		self._ctr_empty_realization = is_empty
+	
+	def set_empty_destructor(self, is_empty):
+		self._dtr_empty_realization = is_empty
+		
+	def _generate_class_proto(self, file):
+		name = self._get_name()
+	
+		header_class_define = "class " + name + "\n{\n"
+		header_class_public = "public:\n"
+		header_class_protected = "protected:\n"
+		header_class_private = "private:\n"
+		header_class_ends = "};"
+		
+		header_class_ctr = "\t" + "explicit " + name + "()" + ("{}" if self._ctr_empty_realization else ";") + "\n"
+		header_class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + ("{}" if self._dtr_empty_realization else ";") + "\n"
+	
+	#Base
+	
 	def _write_file(self, file, file_path):
 		str = file.to_string()
 		with open(file_path, "w") as file_handle:
@@ -69,3 +94,8 @@ class GeneratorBase:
 	_module_name = ""
 	_cwd = ""
 	_dry_run = False
+	_virtual_dtr = False
+	_ctr_empty_realization = False
+	_dtr_empty_realization = False
+	_ctr_access = "public"
+	_dtr_access = "public"
