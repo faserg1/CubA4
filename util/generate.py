@@ -12,6 +12,18 @@ from .generator_interface import GeneratorInterface
 def generate_common(generator, params):
 	if "--dry-run" in params:
 		generator.set_dry_run(True)
+	if "--ctr:public" in params:
+		generator.set_access_constructor("public")
+	if "--ctr:public" in params:
+		generator.set_access_constructor("protected")
+	if "--ctr:public" in params:
+		generator.set_access_constructor("private")
+	if "--dtr:public" in params:
+		generator.set_access_destructor("public")
+	if "--dtr:public" in params:
+		generator.set_access_destructor("protected")
+	if "--dtr:public" in params:
+		generator.set_access_destructor("private")
 
 def generate_class(full_name, module, params):
 	generator = GeneratorClass(full_name, module)

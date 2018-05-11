@@ -25,6 +25,12 @@ class GeneratorBase:
 	def set_empty_destructor(self, is_empty):
 		self._dtr_empty_realization = is_empty
 		
+	def set_access_constructor(self, access):
+		self._ctr_access = access
+		
+	def set_access_destructor(self, access):
+		self._dtr_access = access
+		
 	#Generations
 	
 	def _generate_guard(self, file):
