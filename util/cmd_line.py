@@ -10,12 +10,27 @@ class CmdLineParser:
 	def help(self):
 		print("Usage:")
 		print("gen.py class|interface <name> <module> [params]")
-		print("")
-		print("<name> -- Class or interface name with namespaces, separeted with dot (`.`).")
-		print("<module> -- Module, where to place class or interface.")
+		print("Where:")
+		print("<name> — Class or interface name with namespaces, separeted with dot (`.`).")
+		print("<module> — Module, where to place class or interface.")
+		print("Parameters:")
+		print("--dry-run — Not add files at really, but do work.")
+		print("--ctr:<access_mod> — Set access modifier to constructor.")
+		print("--dtr:<access_mod> — Set access modifier to desctructor.")
+		print("--dtr:virtual — Desctructor will be virtual.")
+		print("--ctr:empty — Set empty realization in header to constructor.")
+		print("--dtr:empty — Set empty realization in header to desctructor.")
 	
 	def parse(self):
+		if len(sys.argv) == 2:
+			arg = sys.argv[1]
+			if arg == "--help":
+				self.help()
+			elif arg == "--author":
+				print("Ookami")
+			return
 		if len(sys.argv) < 4:
+			print("Invalid usage!")
 			self.help()
 			return
 		type = sys.argv[1]

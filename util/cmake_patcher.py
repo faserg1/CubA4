@@ -34,10 +34,11 @@ class CMakePatcher:
 	#Helper functions
 	
 	def _cmake_starts(self):
-		self._cmake_begin_index = self._find(RE_BEGIN)
-		if self._cmake_begin_index < 0:
+		find_result = self._find(RE_BEGIN)
+		if not find_result:
 			self._insert(0, "cmake_minimum_required (VERSION 2.8)\n")
-			self._cmake_begin_index = self._find(RE_BEGIN)
+			find_result = self._find(RE_BEGIN).end
+		self._cmake_begin_index = find_result.end
 	
 	def _convert_folders(self, folders):
 		full_folders = ""
@@ -74,55 +75,75 @@ class CMakePatcher:
 		full_name = self._full_folders_name(folders)
 		pattern = RE_NC_P + "set\\s*\\(\\s*" + full_name + "\\s+.*\\)"
 		re_folder = re.compile(pattern)
-		index = self._find(re_folder)
-		if index < 0:
+		result = self._find(re_folder)
+		if not result:
 			last_folder = folders[-1]
 			last_folder_path = "${" + self._prev_folder_name(folders) + "}/" + last_folder
 			self._insert(index_after, "set(" + full_name + " " + last_folder_path + ")")
-			return self._find(re_folder)
-		return index
-	
-	def _last_appearance(self, folders):
-		folder_var = "\\${" + self._full_folders_name(folders) + "}"
-		do_not_search_pattern = "(?!\\.h(pp)?)(?!\\.c(pp)?)"
-		pattern = folder_var + "(\\w|/)+" + do_not_search_pattern + ".*\n*\\s*\\)"
-		rc = re.compile(pattern)
-		return last_appearance(self._cmake_text, rc)
+			return self._find(re_folder).end
+		return result.end
 	
 	def _last_dir(self):
 		pattern = RE_NC_P + "set\\s*\\(\\s*" + self._module_name + "\\w+" + "Dir.+\\)"
 		rc = re.compile(pattern)
-		return last_appearance(self._cmake_text, rc)
+		result = last_appearance(self._cmake_text, rc)
+		if not result:
+			return 0
+		return result.end
 	
-	def _files(self, folders, set, index_after):
+	def _file_set(self, folders, set, index_after):
 		files_set_name = self._files_set_name(folders, set)
 		pattern = RE_NC_P + "set\\s*\\(\\s*" + files_set_name + "(.|\n)\\)"
 		rc = re.compile(pattern)
-		index = last_appearance(self._cmake_text, rc)
-		if index < 0:
+		result = last_appearance(self._cmake_text, rc)
+		if not result:
 			set_start = "set(" + files_set_name
 			index_insert = self._insert(index_after, set_start)
 			self._insert(index_insert, ")")
 			return index_insert
-		raise "Not implemented yet"
+		raise "Insert in set not implemented yet"
+		
+	def _all_files(self, set):
+		all_files_name = self._module_name + set
+		pattern = RE_NC_P + "set\\s*\\(\\s*" + all_files_name + "(.|\n)\\)"
 	
-	def _insert_files(self, file_path):
+	def _add_folders(self, file_path):
 		folders_and_file = split_path(file_path)
 		folders = folders_and_file[:-1]
-		filename = folders_and_file[-1]
 		index_after = self._cmake_begin_index
 		path_folder = []
 		for folder in folders:
 			path_folder.append(folder)
 			index_after = self._folder(path_folder, index_after)
-		index_all_dirs = self._last_dir()
-		if index_all_dirs > index_after:
-			index_after = index_all_dirs
+		return index_after, path_folder
+		
+	def _add_files(self, file_path, index_after, path_folder):
+		filename = split_path(file_path)[-1]
 		set = self._get_set_by_filename(filename)
-		index_to_insert_files = self._files(path_folder, set, index_after)
+		index_to_insert_files = self._file_set(path_folder, set, index_after)
 		folder_path = "${" + self._full_folders_name(path_folder) + "}"
 		file_path_insert = folder_path + "/" + filename
 		self._insert(index_to_insert_files, "\t" + file_path_insert)
+		
+	def _register_files(self, file_path):
+		pass
+		
+	def _add_source_group(self, file_path):
+		pass
+	
+	def _insert_files(self, file_path):
+		#add folders
+		index_after, path_folder = self._add_folders(file_path)
+		#check place for files
+		index_all_dirs = self._last_dir()
+		if index_all_dirs > index_after:
+			index_after = index_all_dirs
+		#add files
+		self._add_files(file_path, index_after, path_folder)
+		#register files
+		self._register_files(file_path)
+		#add source group (filter)
+		self._add_source_group(file_path)
 	
 	def _cmake_path(self):
 		return os.path.join(self._cwd, self._module_name, "CMakeLists.txt")

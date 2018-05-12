@@ -2,26 +2,33 @@
 
 import os
 
+class FindResult:
+	def __init__(self, start, end):
+		self.start = start
+		self.end = end
+	start = 0
+	end = 0
+
 def insert_text(source, text, index):
 	return source[:index] + text + source[index:]
 
 def find_line_by_pattern(text, compiled_re):
 	match = compiled_re.search(text)
 	if not match:
-		return -1
-	return match.end(0)
+		return
+	return FindResult(match.start(0), match.end(0))
 
 def last_appearance(text, compiled_re):
 	results = compiled_re.finditer(text)
 	if not results:
-		return -1
+		return
 	match = None
 	for match in results:
 		pass
 	last_result = match
 	if not last_result:
-		return -1
-	return last_result.end(0)
+		return
+	return FindResult(last_result.start(0), last_result.end(0))
 	
 def camel_case(input_str, first_drop = False):
 	output_str = ""
