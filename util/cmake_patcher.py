@@ -4,7 +4,13 @@ import os
 import re
 from .lineutil import *
 
+#CMakefile: ignore comments in regex (pattern)
 RE_NC_P = "(?!^#)"
+#CMakefile: start with set (pattern)
+RE_SET_P = "set\\s*\\(\\s*"
+#CMkaefile: end of set (pattern)
+RE_SET_END_P = "(.|\n)*?\\)"
+#CMakefile: begin of the file
 RE_BEGIN = re.compile(RE_NC_P + "cmake_minimum_required\\s*\\(VERSION.*\\)")
 
 class CMakePatcher:
@@ -58,22 +64,22 @@ class CMakePatcher:
 		#ignore "src" or "include" dirs
 		return self._module_name + set + self._convert_folders(folders[1:])
 	
-	def _get_set_by_filename(self, filename):
+	def _get_set_by_filename(self, filename, plural = False):
 		header_ends = [".h", ".hpp"]
 		source_ends = [".c", ".cpp"]
 		for header_end in header_ends:
 			if filename.endswith(header_end):
-				return "Header"
+				return "Header" + ("s" if plural else "")
 		for source_end in source_ends:
 			if filename.endswith(source_end):
-				return "Source"
+				return "Source" + ("s" if plural else "")
 		raise "Unknown set"
 	
 	#Search and paste functions
 		
 	def _folder(self, folders, index_after):
 		full_name = self._full_folders_name(folders)
-		pattern = RE_NC_P + "set\\s*\\(\\s*" + full_name + "\\s+.*\\)"
+		pattern = RE_NC_P + RE_SET_P + full_name + "\\s+.*\\)"
 		re_folder = re.compile(pattern)
 		result = self._find(re_folder)
 		if not result:
@@ -84,28 +90,24 @@ class CMakePatcher:
 		return result.end
 	
 	def _last_dir(self):
-		pattern = RE_NC_P + "set\\s*\\(\\s*" + self._module_name + "\\w+" + "Dir.+\\)"
+		pattern = RE_NC_P + RE_SET_P + self._module_name + "\\w+" + "Dir.+\\)"
 		rc = re.compile(pattern)
-		result = last_appearance(self._cmake_text, rc)
+		result = self._last_appearance(rc)
 		if not result:
 			return 0
 		return result.end
 	
 	def _file_set(self, folders, set, index_after):
 		files_set_name = self._files_set_name(folders, set)
-		pattern = RE_NC_P + "set\\s*\\(\\s*" + files_set_name + "(.|\n)\\)"
+		pattern = RE_NC_P + RE_SET_P + files_set_name + "\\s" + RE_SET_END_P
 		rc = re.compile(pattern)
-		result = last_appearance(self._cmake_text, rc)
+		result = self._last_appearance(rc)
 		if not result:
 			set_start = "set(" + files_set_name
 			index_insert = self._insert(index_after, set_start)
 			self._insert(index_insert, ")")
 			return index_insert
 		raise "Insert in set not implemented yet"
-		
-	def _all_files(self, set):
-		all_files_name = self._module_name + set
-		pattern = RE_NC_P + "set\\s*\\(\\s*" + all_files_name + "(.|\n)\\)"
 	
 	def _add_folders(self, file_path):
 		folders_and_file = split_path(file_path)
@@ -126,7 +128,14 @@ class CMakePatcher:
 		self._insert(index_to_insert_files, "\t" + file_path_insert)
 		
 	def _register_files(self, file_path):
-		pass
+		filename = split_path(file_path)[-1]
+		set = self._get_set_by_filename(filename, True)
+		pattern = RE_NC_P + RE_SET_P + self._module_name + set + RE_SET_END_P
+		rc = re.compile(pattern)
+		result = self._last_appearance(rc)
+		if not result:
+			raise "Adding sets is not implemented yet"
+		#check if set exists
 		
 	def _add_source_group(self, file_path):
 		pass
@@ -166,6 +175,9 @@ class CMakePatcher:
 			text = "\n" + text
 		self._cmake_text = insert_text(self._cmake_text, text, index)
 		return index + len(text)
+		
+	def _last_appearance(self, rc):
+		return last_appearance(self._cmake_text, rc)
 	
 	_cmake_text = ""
 	_module_name = ""
