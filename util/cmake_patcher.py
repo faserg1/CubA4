@@ -88,10 +88,23 @@ class CMakePatcher:
 		pattern = folder_var + "(\\w|/)+" + do_not_search_pattern + ".*\n*\\s*\\)"
 		rc = re.compile(pattern)
 		return last_appearance(self._cmake_text, rc)
-		
-	def _files(self, folders, set):
+	
+	def _last_dir(self):
+		pattern = RE_NC_P + "set\\s*\\(\\s*" + self._module_name + "\\w+" + "Dir.+\\)"
+		rc = re.compile(pattern)
+		return last_appearance(self._cmake_text, rc)
+	
+	def _files(self, folders, set, index_after):
 		files_set_name = self._files_set_name(folders, set)
-		print(files_set_name)
+		pattern = RE_NC_P + "set\\s*\\(\\s*" + files_set_name + "(.|\n)\\)"
+		rc = re.compile(pattern)
+		index = last_appearance(self._cmake_text, rc)
+		if index < 0:
+			set_start = "set(" + files_set_name
+			index_insert = self._insert(index_after, set_start)
+			self._insert(index_insert, ")")
+			return index_insert
+		raise "Not implemented yet"
 	
 	def _insert_files(self, file_path):
 		folders_and_file = split_path(file_path)
@@ -102,8 +115,14 @@ class CMakePatcher:
 		for folder in folders:
 			path_folder.append(folder)
 			index_after = self._folder(path_folder, index_after)
+		index_all_dirs = self._last_dir()
+		if index_all_dirs > index_after:
+			index_after = index_all_dirs
 		set = self._get_set_by_filename(filename)
-		self._files(path_folder, set)
+		index_to_insert_files = self._files(path_folder, set, index_after)
+		folder_path = "${" + self._full_folders_name(path_folder) + "}"
+		file_path_insert = folder_path + "/" + filename
+		self._insert(index_to_insert_files, "\t" + file_path_insert)
 	
 	def _cmake_path(self):
 		return os.path.join(self._cwd, self._module_name, "CMakeLists.txt")
@@ -125,7 +144,7 @@ class CMakePatcher:
 		if on_new_line:
 			text = "\n" + text
 		self._cmake_text = insert_text(self._cmake_text, text, index)
-		return self._cmake_text
+		return index + len(text)
 	
 	_cmake_text = ""
 	_module_name = ""
