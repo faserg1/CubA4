@@ -31,7 +31,7 @@ class CMakePatcher:
 	def set_dry_run(self, dry_run):
 		self._dry_run = dry_run
 	
-	#Private
+	#Helper functions
 	
 	def _cmake_starts(self):
 		self._cmake_begin_index = self._find(RE_BEGIN)
@@ -53,6 +53,23 @@ class CMakePatcher:
 			return self._full_folders_name(folders[:-1])
 		return "CMAKE_CURRENT_LIST_DIR"
 
+	def _files_set_name(self, folders, set):
+		#ignore "src" or "include" dirs
+		return self._module_name + set + self._convert_folders(folders[1:])
+	
+	def _get_set_by_filename(self, filename):
+		header_ends = [".h", ".hpp"]
+		source_ends = [".c", ".cpp"]
+		for header_end in header_ends:
+			if filename.endswith(header_end):
+				return "Header"
+		for source_end in source_ends:
+			if filename.endswith(source_end):
+				return "Source"
+		raise "Unknown set"
+	
+	#Search and paste functions
+		
 	def _folder(self, folders, index_after):
 		full_name = self._full_folders_name(folders)
 		pattern = RE_NC_P + "set\\s*\\(\\s*" + full_name + "\\s+.*\\)"
@@ -71,16 +88,22 @@ class CMakePatcher:
 		pattern = folder_var + "(\\w|/)+" + do_not_search_pattern + ".*\n*\\s*\\)"
 		rc = re.compile(pattern)
 		return last_appearance(self._cmake_text, rc)
+		
+	def _files(self, folders, set):
+		files_set_name = self._files_set_name(folders, set)
+		print(files_set_name)
 	
 	def _insert_files(self, file_path):
 		folders_and_file = split_path(file_path)
 		folders = folders_and_file[:-1]
-		file = folders_and_file[-1]
+		filename = folders_and_file[-1]
 		index_after = self._cmake_begin_index
 		path_folder = []
 		for folder in folders:
 			path_folder.append(folder)
 			index_after = self._folder(path_folder, index_after)
+		set = self._get_set_by_filename(filename)
+		self._files(path_folder, set)
 	
 	def _cmake_path(self):
 		return os.path.join(self._cwd, self._module_name, "CMakeLists.txt")
