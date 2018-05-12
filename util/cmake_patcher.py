@@ -75,6 +75,13 @@ class CMakePatcher:
 				return "Source" + ("s" if plural else "")
 		raise "Unknown set"
 	
+	def _files_set_name_by_path(self, file_path):
+		folders_and_file = split_path(file_path)
+		folders = folders_and_file[:-1]
+		filename = folders_and_file[-1]
+		set = self._get_set_by_filename(filename)
+		return self._files_set_name(folders, set)
+	
 	#Search and paste functions
 		
 	def _folder(self, folders, index_after):
@@ -129,13 +136,21 @@ class CMakePatcher:
 		
 	def _register_files(self, file_path):
 		filename = split_path(file_path)[-1]
-		set = self._get_set_by_filename(filename, True)
-		pattern = RE_NC_P + RE_SET_P + self._module_name + set + RE_SET_END_P
+		set_reg = self._get_set_by_filename(filename, True)
+		pattern = RE_NC_P + RE_SET_P + self._module_name + set_reg + RE_SET_END_P
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if not result:
 			raise "Adding sets is not implemented yet"
 		#check if set exists
+		sub = self._cmake_text[result.start:result.end]
+		files_set_name_var = "${" + self._files_set_name_by_path(file_path) + "}"
+		if files_set_name_var in sub:
+			#exists, do nothing
+			pass
+		else:
+			#not exists, need to add
+			self._insert(result.end-2, "\t" + files_set_name_var)
 		
 	def _add_source_group(self, file_path):
 		pass
