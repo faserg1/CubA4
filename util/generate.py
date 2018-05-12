@@ -26,6 +26,10 @@ def generate_common(generator, params):
 	if "--dtr:private" in params:
 		generator.set_access_destructor("private")
 
+def patcher_options(patcher, params):
+	if "--dry-run" in params:
+		patcher.set_dry_run(True)
+		
 def generate_class(full_name, module, params):
 	generator = GeneratorClass(full_name, module)
 	generate_common(generator, params)
@@ -38,6 +42,7 @@ def generate_class(full_name, module, params):
 	generator.generate()
 	generator.save()
 	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	patcher_options(patcher, params)
 	patcher.patch()
 	
 def generate_interface(full_name, module, params):
@@ -46,6 +51,7 @@ def generate_interface(full_name, module, params):
 	generator.generate()
 	generator.save()
 	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	patcher_options(patcher, params)
 	patcher.patch()
 
 parser = CmdLineParser(generate_class, generate_interface)

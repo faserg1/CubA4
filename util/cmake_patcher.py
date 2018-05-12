@@ -9,7 +9,7 @@ RE_BEGIN = re.compile(RE_NC_P + "cmake_minimum_required\\s*\\(VERSION.*\\)")
 
 class CMakePatcher:
 	def __init__(self, module_name, header_path, source_path):
-		self._readed_cmake = ""
+		self._cmake_text = ""
 		self._cwd = os.getcwd()
 		self._module_name = module_name
 		self._header_path = header_path
@@ -18,7 +18,20 @@ class CMakePatcher:
 	
 	def patch(self):
 		self._cmake_starts()
-		#self._root_folders()
+		self._insert_files(self._header_path)
+		self._insert_files(self._source_path)
+		if not self._dry_run:
+			self._write()
+		else:
+			print("CMake not saved: dry run.")
+			print(self._cmake_text)
+		
+	#Options
+	
+	def set_dry_run(self, dry_run):
+		self._dry_run = dry_run
+	
+	#Private
 	
 	def _cmake_starts(self):
 		self._cmake_begin_index = self._find(RE_BEGIN)
@@ -39,10 +52,11 @@ class CMakePatcher:
 		if len(folders) > 1:
 			return self._full_folders_name(folders[:-1])
 		return "CMAKE_CURRENT_LIST_DIR"
-	
+
 	def _folder(self, folders, index_after):
 		full_name = self._full_folders_name(folders)
-		re_folder = re.compile(RE_NC_P + "set\\s*\\(\\s*" + full_name + "\\s+.*/\\)")
+		pattern = RE_NC_P + "set\\s*\\(\\s*" + full_name + "\\s+.*\\)"
+		re_folder = re.compile(pattern)
 		index = self._find(re_folder)
 		if index < 0:
 			last_folder = folders[-1]
@@ -51,22 +65,51 @@ class CMakePatcher:
 			return self._find(re_folder)
 		return index
 	
+	def _last_appearance(self, folders):
+		folder_var = "\\${" + self._full_folders_name(folders) + "}"
+		do_not_search_pattern = "(?!\\.h(pp)?)(?!\\.c(pp)?)"
+		pattern = folder_var + "(\\w|/)+" + do_not_search_pattern + ".*\n*\\s*\\)"
+		rc = re.compile(pattern)
+		return last_appearance(self._cmake_text, rc)
+	
+	def _insert_files(self, file_path):
+		folders_and_file = split_path(file_path)
+		folders = folders_and_file[:-1]
+		file = folders_and_file[-1]
+		index_after = self._cmake_begin_index
+		path_folder = []
+		for folder in folders:
+			path_folder.append(folder)
+			index_after = self._folder(path_folder, index_after)
+	
+	def _cmake_path(self):
+		return os.path.join(self._cwd, self._module_name, "CMakeLists.txt")
+	
 	def _read(self):
-		cmake_path = os.path.join(self._cwd, self._module_name, "CMakeLists.txt")
+		cmake_path = self._cmake_path()
 		with open(cmake_path, "r") as cmake_file:
-			self._readed_cmake = cmake_file.read()
+			self._cmake_text = cmake_file.read()
+			
+	def _write(self):
+		cmake_path = self._cmake_path()
+		with open(cmake_path, "w") as cmake_file:
+			cmake_file.write(self._cmake_text)
 			
 	def _find(self, pattern):
-		return find_line_by_pattern(self._readed_cmake, pattern)
+		return find_line_by_pattern(self._cmake_text, pattern)
 		
-	def _insert(self, index, text):
-		self._readed_cmake = insert_text(self._readed_cmake, text, index)
-		return self._readed_cmake
+	def _insert(self, index, text, on_new_line = True):
+		if on_new_line:
+			text = "\n" + text
+		self._cmake_text = insert_text(self._cmake_text, text, index)
+		return self._cmake_text
 	
-	_readed_cmake = ""
+	_cmake_text = ""
 	_module_name = ""
 	_header_path = ""
 	_source_path = ""
 	_cwd = ""
+	
+	_dry_run = False
 	
 	_cmake_begin_index = 0
