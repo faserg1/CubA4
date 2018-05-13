@@ -54,3 +54,6 @@ def split_path(path):
 				parts.append(path)
 			break
 	return parts[::-1]
+	
+def var_to_pattern(text):
+	return text.replace("$", "\\$").replace("{", "\\{").replace("}", "\\}")

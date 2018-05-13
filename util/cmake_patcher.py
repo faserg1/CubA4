@@ -8,8 +8,13 @@ from .lineutil import *
 RE_NC_P = "(?!^#)"
 #CMakefile: start with set (pattern)
 RE_SET_P = "set\\s*\\(\\s*"
-#CMkaefile: end of set (pattern)
-RE_SET_END_P = "(.|\n)*?\\)"
+#CMakefile: end of cmake expression (pattern)
+RE_END_P = "(.|\n)*?\\)"
+#CMakefile: start with source group
+RE_SG_P = "source_group\\s\\(\\s"
+RE_SG_SEP = "${SOURCE_GROUP_SEP}"
+RE_SG_HS = "${SOURCE_GROUP_HEADER_START}"
+RE_SG_SS = "${SOURCE_GROUP_SOURCE_START}"
 #CMakefile: begin of the file
 RE_BEGIN = re.compile(RE_NC_P + "cmake_minimum_required\\s*\\(VERSION.*\\)")
 
@@ -24,8 +29,10 @@ class CMakePatcher:
 	
 	def patch(self):
 		self._cmake_starts()
-		self._insert_files(self._header_path)
-		self._insert_files(self._source_path)
+		if self._header_path:
+			self._insert_files(self._header_path)
+		if self._source_path:
+			self._insert_files(self._source_path)
 		if not self._dry_run:
 			self._write()
 		else:
@@ -82,6 +89,21 @@ class CMakePatcher:
 		set = self._get_set_by_filename(filename)
 		return self._files_set_name(folders, set)
 	
+	def _index_before_end_to_insert(self, result):
+		index_back_shift = 0
+		for index in range(result.start, result.end)[::-1]:
+			index_back_shift += 1
+			symb = self._cmake_text[index]
+			if symb == ")" or symb == "\n":
+				continue
+			elif not symb.isspace():
+				index_back_shift -= 1
+				break
+		return result.end - index_back_shift
+	
+	def _dtir(self, result):
+		print(self._cmake_text[result.start:result.end])
+	
 	#Search and paste functions
 		
 	def _folder(self, folders, index_after):
@@ -103,10 +125,18 @@ class CMakePatcher:
 		if not result:
 			return 0
 		return result.end
+		
+	def _last_source_group(self):
+		pattern = RE_NC_P + RE_SG_P + RE_END_P
+		rc = re.compile(pattern)
+		result = self._last_appearance(rc)
+		if not result:
+			return 0
+		return result.end
 	
 	def _file_set(self, folders, set, index_after):
 		files_set_name = self._files_set_name(folders, set)
-		pattern = RE_NC_P + RE_SET_P + files_set_name + "\\s" + RE_SET_END_P
+		pattern = RE_NC_P + RE_SET_P + files_set_name + "\\s" + RE_END_P
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if not result:
@@ -114,7 +144,7 @@ class CMakePatcher:
 			index_insert = self._insert(index_after, set_start)
 			self._insert(index_insert, ")")
 			return index_insert
-		raise "Insert in set not implemented yet"
+		return self._index_before_end_to_insert(result)
 	
 	def _add_folders(self, file_path):
 		folders_and_file = split_path(file_path)
@@ -137,7 +167,7 @@ class CMakePatcher:
 	def _register_files(self, file_path):
 		filename = split_path(file_path)[-1]
 		set_reg = self._get_set_by_filename(filename, True)
-		pattern = RE_NC_P + RE_SET_P + self._module_name + set_reg + RE_SET_END_P
+		pattern = RE_NC_P + RE_SET_P + self._module_name + set_reg + RE_END_P
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if not result:
@@ -147,13 +177,38 @@ class CMakePatcher:
 		files_set_name_var = "${" + self._files_set_name_by_path(file_path) + "}"
 		if files_set_name_var in sub:
 			#exists, do nothing
-			pass
+			return result.end
 		else:
 			#not exists, need to add
-			self._insert(result.end-2, "\t" + files_set_name_var)
+			index_insert = self._index_before_end_to_insert(result) 
+			index_now = self._insert(index_insert, "\t" + files_set_name_var)
+			length = index_now - index_insert
+			return result.end + length
 		
-	def _add_source_group(self, file_path):
-		pass
+	def _add_source_group(self, file_path, index_after):
+		folders_and_file = split_path(file_path)
+		folders = folders_and_file[1:-1]
+		filename = folders_and_file[-1]
+		set = self._get_set_by_filename(filename)
+		sg_set = RE_SG_HS if set == "Header" else RE_SG_SS
+		pattern = RE_NC_P + RE_SG_P + var_to_pattern(sg_set)
+		for folder in folders[:-1]:
+			pattern += folder + var_to_pattern(RE_SG_SEP)
+		pattern += folders[-1]
+		rc = re.compile(pattern)
+		result = self._last_appearance(rc)
+		if result:
+			self._dtir(result)
+			return
+		index_last_group = self._last_source_group()
+		if index_last_group > index_after:
+			index_after = index_last_group
+		sg = "source_group(\"" + sg_set
+		for folder in folders[:-1]:
+			sg += folder + RE_SG_SEP
+		files_set_name_var = "${" + self._files_set_name_by_path(file_path) + "}"
+		sg += folders[-1] + "\" FILES " + files_set_name_var + ")"
+		self._insert(index_after, sg)
 	
 	def _insert_files(self, file_path):
 		#add folders
@@ -165,9 +220,9 @@ class CMakePatcher:
 		#add files
 		self._add_files(file_path, index_after, path_folder)
 		#register files
-		self._register_files(file_path)
+		index_after = self._register_files(file_path)
 		#add source group (filter)
-		self._add_source_group(file_path)
+		self._add_source_group(file_path, index_after)
 	
 	def _cmake_path(self):
 		return os.path.join(self._cwd, self._module_name, "CMakeLists.txt")
