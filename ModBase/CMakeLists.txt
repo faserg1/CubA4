@@ -1,51 +1,47 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(ModBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
-set(ModBaseIncludeDirBase ${ModBaseIncludeDir}/base)
-set(ModBaseIncludeDirContainer ${ModBaseIncludeDir}/container)
-set(ModBaseIncludeDirException ${ModBaseIncludeDir}/exception)
-set(ModBaseIncludeDirMod ${ModBaseIncludeDir}/mod)
-set(ModBaseIncludeDirObject ${ModBaseIncludeDir}/object)
-set(ModBaseIncludeDirWorld ${ModBaseIncludeDir}/world)
+set(ModBaseIncludeBaseDir ${ModBaseIncludeDir}/base)
+set(ModBaseIncludeContainerDir ${ModBaseIncludeDir}/container)
+set(ModBaseIncludeExceptionDir ${ModBaseIncludeDir}/exception)
+set(ModBaseIncludeModDir ${ModBaseIncludeDir}/mod)
+set(ModBaseIncludeObjectDir ${ModBaseIncludeDir}/object)
+set(ModBaseIncludeWorldDir ${ModBaseIncludeDir}/world)
 
 set(ModBaseHeaderBase 
-	${ModBaseIncludeDirBase}/IManager.hpp
+	${ModBaseIncludeBaseDir}/IManager.hpp
 )
 set(ModBaseHeaderContainer
-	${ModBaseIncludeDirContainer}/IContainer.hpp
+	${ModBaseIncludeContainerDir}/IContainer.hpp
 )
 set(ModBaseHeaderException
-	${ModBaseIncludeDirException}/IModException.hpp
-	${ModBaseIncludeDirException}/IModLoadException.hpp
-	${ModBaseIncludeDirException}/IModRuntimeException.hpp
+	${ModBaseIncludeExceptionDir}/IModException.hpp
+	${ModBaseIncludeExceptionDir}/IModLoadException.hpp
+	${ModBaseIncludeExceptionDir}/IModRuntimeException.hpp
 )
 set(ModBaseHeaderMod
-	${ModBaseIncludeDirMod}/IModLoader.hpp
-	${ModBaseIncludeDirMod}/IMod.hpp
+	${ModBaseIncludeModDir}/IModLoader.hpp
+	${ModBaseIncludeModDir}/IMod.hpp
 )
 set(ModBaseHeaderObject
-	${ModBaseIncludeDirObject}/IObject.hpp
-	${ModBaseIncludeDirObject}/IEntity.hpp
-	${ModBaseIncludeDirObject}/IBlock.hpp
-	${ModBaseIncludeDirObject}/IItem.hpp
+	${ModBaseIncludeObjectDir}/IObject.hpp
+	${ModBaseIncludeObjectDir}/IEntity.hpp
+	${ModBaseIncludeObjectDir}/IBlock.hpp
+	${ModBaseIncludeObjectDir}/IItem.hpp
 )
 set(ModBaseHeaderWorld
-	${ModBaseIncludeDirWorld}/IWorldProvider.hpp
-	${ModBaseIncludeDirWorld}/IWorld.hpp
-	${ModBaseIncludeDirWorld}/IWorldSubscriber.hpp
-	${ModBaseIncludeDirWorld}/IChunk.hpp
+	${ModBaseIncludeWorldDir}/IWorldProvider.hpp
+	${ModBaseIncludeWorldDir}/IWorld.hpp
+	${ModBaseIncludeWorldDir}/IWorldSubscriber.hpp
+	${ModBaseIncludeWorldDir}/IChunk.hpp
 )
 
-if (MSVC)
-
-source_group("Header Files\\base" FILES ${ModBaseHeaderBase})
-source_group("Header Files\\container" FILES ${ModBaseHeaderContainer})
-source_group("Header Files\\exception" FILES ${ModBaseHeaderException})
-source_group("Header Files\\mod" FILES ${ModBaseHeaderMod})
-source_group("Header Files\\object" FILES ${ModBaseHeaderObject})
-source_group("Header Files\\world" FILES ${ModBaseHeaderWorld})
-
-endif(MSVC)
+source_group("${SOURCE_GROUP_HEADER_START}base" FILES ${ModBaseHeaderBase})
+source_group("${SOURCE_GROUP_HEADER_START}container" FILES ${ModBaseHeaderContainer})
+source_group("${SOURCE_GROUP_HEADER_START}exception" FILES ${ModBaseHeaderException})
+source_group("${SOURCE_GROUP_HEADER_START}mod" FILES ${ModBaseHeaderMod})
+source_group("${SOURCE_GROUP_HEADER_START}object" FILES ${ModBaseHeaderObject})
+source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${ModBaseHeaderWorld})
 
 set(ModBaseHeaders 
 	${ModBaseIncludeDir}/ModExportHelper.hpp
