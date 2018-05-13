@@ -1,15 +1,22 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
+
+set(CoreBaseHeaderLogging
+	${CoreBaseIncludeLoggingDir}/LogCommon.hpp
+	${CoreBaseIncludeLoggingDir}/ILoggerTagged.hpp
+	${CoreBaseIncludeLoggingDir}/ILogger.hpp
+)
 
 set(CoreBaseHeaders
+	${CoreBaseHeaderLogging}
 	${CoreBaseIncludeDir}/CoreExportHelper.hpp
 	${CoreBaseIncludeDir}/ICore.hpp
 	${CoreBaseIncludeDir}/ICoreConfig.hpp
-	${CoreBaseIncludeDir}/LogCommon.hpp
-	${CoreBaseIncludeDir}/ILoggerTagged.hpp
-	${CoreBaseIncludeDir}/ILogger.hpp
-	)
+)
+
+source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreBaseHeaderLogging})
 
 add_library(CoreBase INTERFACE)
 target_include_directories(CoreBase INTERFACE include)
