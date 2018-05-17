@@ -10,6 +10,8 @@ class GeneratorInterface(GeneratorBase):
 		self.set_virtual_destructor(True)
 		self.set_empty_constructor(True)
 		self.set_empty_destructor(True)
+		if self._ctr_access == "public":
+			self.set_access_constructor("protected")
 		
 	def generate(self):
 		self._generate_guard(self._file_hpp)
