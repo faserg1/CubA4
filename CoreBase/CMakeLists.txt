@@ -5,6 +5,7 @@ set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
 set(CoreBaseHeaderConfig
 	${CoreBaseIncludeConfigDir}/IFilePaths.hpp
+	${CoreBaseIncludeConfigDir}/ICoreConfig.hpp
 )
 
 set(CoreBaseHeaderLogging
@@ -17,7 +18,6 @@ set(CoreBaseHeaders
 	${CoreBaseHeaderLogging}
 	${CoreBaseIncludeDir}/CoreExportHelper.hpp
 	${CoreBaseIncludeDir}/ICore.hpp
-	${CoreBaseIncludeDir}/ICoreConfig.hpp
 	${CoreBaseHeaderConfig}
 )
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreBaseHeaderConfig})

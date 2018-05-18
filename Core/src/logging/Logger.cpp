@@ -13,10 +13,11 @@ namespace CubA4
 		{
 			class LoggerStreams
 			{
+				friend class CubA4::core::logging::Logger;
+
 				boost::iostreams::stream_buffer<boost::iostreams::file_sink> buf_;
 				std::ostream out_;
-
-				friend class Logger;
+			public:
 				LoggerStreams(std::string filePath) : buf_(filePath), out_(&buf_)
 				{
 

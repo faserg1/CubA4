@@ -1,10 +1,10 @@
-#include "../include/CoreConfig.hpp"
+#include "../../include/config/CoreConfig.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <stdexcept>
 
-using namespace CubA4::core;
+using namespace CubA4::core::config;
 
 constexpr char *renderEngineIdKey = "core.render.engine_id";
 constexpr char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
@@ -57,12 +57,12 @@ void CoreConfig::setMainFeaturesModId(const std::string &modId)
 	flushConfig();
 }
 
-unsigned short CubA4::core::CoreConfig::getWorldChunkSize()
+unsigned short CoreConfig::getWorldChunkSize()
 {
 	return configTree_->get<unsigned short>(worldChunkSizeKey, 0);
 }
 
-void CubA4::core::CoreConfig::setWorldChunkSize(unsigned short size)
+void CoreConfig::setWorldChunkSize(unsigned short size)
 {
 	configTree_->put(worldChunkSizeKey, size);
 	flushConfig();
@@ -73,7 +73,7 @@ void CoreConfig::reload()
 	boost::property_tree::json_parser::read_json(native_config_path_, *configTree_);
 }
 
-void CubA4::core::CoreConfig::flushConfig()
+void CoreConfig::flushConfig()
 {
 	boost::property_tree::json_parser::write_json(native_config_path_, *configTree_);
 }

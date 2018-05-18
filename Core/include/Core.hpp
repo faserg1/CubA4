@@ -8,7 +8,11 @@ namespace CubA4
 {
 	namespace core
 	{
-		class CoreConfig;
+		namespace config
+		{
+			class CoreConfig;
+		}
+		
 
 		class CORE_LIBRARY_EXPORT Core :
 			public virtual ICore
@@ -17,9 +21,10 @@ namespace CubA4
 			explicit Core();
 			~Core();
 
-			std::shared_ptr<ICoreConfig> getConfig();
+			std::shared_ptr<config::ICoreConfig> getConfig() override;
+			std::shared_ptr<const config::IFilePaths> getPaths() override;
 		private:
-			std::shared_ptr<CoreConfig> config_;
+			std::shared_ptr<config::CoreConfig> config_;
 		};
 	}
 }

@@ -7,12 +7,17 @@ namespace CubA4
 {
 	namespace core
 	{
-		class ICoreConfig;
+		namespace config
+		{
+			class IFilePaths;
+			class ICoreConfig;
+		}
 
 		class ICore
 		{
 		public:
-			virtual std::shared_ptr<ICoreConfig> getConfig() = 0;
+			virtual std::shared_ptr<config::ICoreConfig> getConfig() = 0;
+			virtual std::shared_ptr<const config::IFilePaths> getPaths() = 0;
 
 			virtual ~ICore() {}
 		protected:
