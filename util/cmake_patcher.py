@@ -11,7 +11,7 @@ RE_SET_P = "set\\s*\\(\\s*"
 #CMakefile: end of cmake expression (pattern)
 RE_END_P = "(.|\n)*?\\)"
 #CMakefile: start with source group
-RE_SG_P = "source_group\\s\\(\\s"
+RE_SG_P = "source_group\\s*\\(\\s*"
 RE_SG_SEP = "${SOURCE_GROUP_SEP}"
 RE_SG_HS = "${SOURCE_GROUP_HEADER_START}"
 RE_SG_SS = "${SOURCE_GROUP_SOURCE_START}"
@@ -191,14 +191,15 @@ class CMakePatcher:
 		filename = folders_and_file[-1]
 		set = self._get_set_by_filename(filename)
 		sg_set = RE_SG_HS if set == "Header" else RE_SG_SS
-		pattern = RE_NC_P + RE_SG_P + var_to_pattern(sg_set)
+		pattern = RE_NC_P + RE_SG_P
+		source_group_path = var_to_pattern(sg_set)
 		for folder in folders[:-1]:
-			pattern += folder + var_to_pattern(RE_SG_SEP)
-		pattern += folders[-1]
+			source_group_path += folder + var_to_pattern(RE_SG_SEP)
+		source_group_path += folders[-1]
+		pattern += "\"?" + source_group_path + "\"?"
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if result:
-			self._dtir(result)
 			return
 		index_last_group = self._last_source_group()
 		if index_last_group > index_after:
