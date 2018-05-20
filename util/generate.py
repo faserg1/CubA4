@@ -9,6 +9,7 @@ from .cmd_line import CmdLineParser
 from .generator_class import GeneratorClass
 from .generator_interface import GeneratorInterface
 from .cmake_patcher import CMakePatcher
+from .lineutil import *
 
 def generate_common(generator, params):
 	if "--dry-run" in params:
@@ -25,6 +26,13 @@ def generate_common(generator, params):
 		generator.set_access_destructor("protected")
 	if "--dtr:private" in params:
 		generator.set_access_destructor("private")
+	for param in params:
+		header_folder = check_exists_and_get(param, "--header-folder:")
+		if header_folder:
+			generator.set_header_folder(header_folder)
+		source_folder = check_exists_and_get(param, "--source-folder:")
+		if source_folder:
+			generator.set_source_folder(source_folder)
 
 def patcher_options(patcher, params):
 	if "--dry-run" in params:

@@ -20,6 +20,8 @@ class CmdLineParser:
 		print("--dtr:virtual — Desctructor will be virtual.")
 		print("--ctr:empty — Set empty realization in header to constructor.")
 		print("--dtr:empty — Set empty realization in header to desctructor.")
+		print("--header-folder:<folder> — Set empty realization in header to desctructor.")
+		print("--source-folder:<folder> — Set empty realization in header to desctructor.")
 	
 	def parse(self):
 		if len(sys.argv) == 2:

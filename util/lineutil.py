@@ -57,3 +57,8 @@ def split_path(path):
 	
 def var_to_pattern(text):
 	return text.replace("$", "\\$").replace("{", "\\{").replace("}", "\\}")
+	
+def check_exists_and_get(source, target):
+	if source.startswith(target):
+		after = source[len(target):]
+		return after if len(after) else None
