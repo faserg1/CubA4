@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-	CubA4::app::AppMain appMain;
+	CubA4::app::AppMain appMain(argc, argv);
 
 	return appMain.exec();
 }

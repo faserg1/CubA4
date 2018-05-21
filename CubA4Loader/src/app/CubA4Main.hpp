@@ -25,7 +25,7 @@ namespace CubA4
 		class AppMain
 		{
 		public:
-			explicit AppMain();
+			explicit AppMain(int argc, const char *const argv[]);
 
 			int exec();
 		private:

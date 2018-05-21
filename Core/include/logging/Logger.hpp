@@ -22,14 +22,25 @@ namespace CubA4
 				public virtual ILogger
 			{
 			public:
-				explicit Logger();
+				static std::shared_ptr <ILogger> create(std::string logsPath);
 				~Logger();
+
+				void log(LogSourceSystem system, const std::string &tag,
+					LogLevel level, const std::string &message) override;
+
+				ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) override;
 			protected:
+				explicit Logger(std::string logsPath);
+
+				virtual std::string getTagString(LogSourceSystem system);
+				virtual std::string getLevelString(LogLevel level);
+				virtual std::string getTimeString(const char *format);
 			private:
 				std::string getNextLogName();
 				void openLogStream();
-				std::unique_ptr<LoggerStreams> stream_;
-				std::shared_ptr<const config::IFilePaths> paths_;
+				std::shared_ptr<LoggerStreams> stream_;
+				const std::string logsPath_;
+				std::weak_ptr<ILogger> this_;
 			};
 		}
 	}

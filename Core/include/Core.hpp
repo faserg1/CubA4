@@ -18,13 +18,16 @@ namespace CubA4
 			public virtual ICore
 		{
 		public:
-			explicit Core();
+			explicit Core(int argc, const char *const argv[]);
 			~Core();
 
+			const std::shared_ptr<const config::IFilePaths> getPaths() override;
 			std::shared_ptr<config::ICoreConfig> getConfig() override;
-			std::shared_ptr<const config::IFilePaths> getPaths() override;
+			std::shared_ptr<logging::ILogger> getLogger() override;
 		private:
+			const std::shared_ptr<const config::IFilePaths> paths_;
 			std::shared_ptr<config::CoreConfig> config_;
+			std::shared_ptr<logging::ILogger> logger_;
 		};
 	}
 }

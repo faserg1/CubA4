@@ -13,19 +13,30 @@ set(CubA4LoaderRenderDir ${SOURCE_DIR}/render)
 set(CubA4LoaderAppDir ${SOURCE_DIR}/app)
 set(CubA4LoaderWindowDir ${SOURCE_DIR}/window)
 
-set(CubA4LoaderRenderSources
+set(CubA4LoaderRenderHeaders
 	${CubA4LoaderRenderDir}/RenderLoader.hpp
+)
+set(CubA4LoaderRenderSources
 	${CubA4LoaderRenderDir}/RenderLoader.cpp
 )
-set(CubA4LoaderAppSources
+set(CubA4LoaderAppHeaders
 	${CubA4LoaderAppDir}/CubA4Main.hpp
+)
+set(CubA4LoaderAppSources
 	${CubA4LoaderAppDir}/CubA4Main.cpp
 )
-set(CubA4LoaderWindowSources
+set(CubA4LoaderWindowHeaders
 	${CubA4LoaderWindowDir}/Window.hpp
+)
+set(CubA4LoaderWindowSources
 	${CubA4LoaderWindowDir}/Window.cpp
 )
-
+set(CubA4LoaderHeaders
+	${SOURCE_DIR}/main.cpp
+	${CubA4LoaderRenderHeaders}
+	${CubA4LoaderAppHeaders}
+	${CubA4LoaderWindowHeaders}
+)
 set(CubA4LoaderSources 
 	${SOURCE_DIR}/main.cpp
 	${CubA4LoaderRenderSources}
@@ -33,15 +44,14 @@ set(CubA4LoaderSources
 	${CubA4LoaderWindowSources}
 )
 
-if (MSVC)
-
-source_group("Header Files\\render" FILES ${CubA4LoaderRenderSources})
-source_group("Header Files\\app" FILES ${CubA4LoaderAppSources})
-source_group("Header Files\\window" FILES ${CubA4LoaderWindowSources})
-
-endif(MSVC)
+source_group("${SOURCE_GROUP_HEADER_START}render" FILES ${CubA4LoaderRenderHeaders})
+source_group("${SOURCE_GROUP_SOURCE_START}render" FILES ${CubA4LoaderRenderSources})
+source_group("${SOURCE_GROUP_HEADER_START}app" FILES ${CubA4LoaderAppHeaders})
+source_group("${SOURCE_GROUP_SOURCE_START}app" FILES ${CubA4LoaderAppSources})
+source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${CubA4LoaderWindowHeaders})
+source_group("${SOURCE_GROUP_SOURCE_START}window" FILES ${CubA4LoaderWindowSources})
 	
-add_executable(CubA4Loader ${CubA4LoaderSources})
+add_executable(CubA4Loader ${CubA4LoaderHeaders} ${CubA4LoaderSources})
 
 #libs
 get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)

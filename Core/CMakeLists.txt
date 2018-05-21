@@ -14,9 +14,11 @@ set(CoreHeaderLogging
 )
 set(CoreSourceConfig
 	${CoreSourceConfigDir}/CoreConfig.cpp
+	${CoreSourceConfigDir}/FilePaths.cpp
 )
 set(CoreHeaderConfig
 	${CoreIncludeConfigDir}/CoreConfig.hpp
+	${CoreIncludeConfigDir}/FilePaths.hpp
 )
 
 set(CoreHeaders

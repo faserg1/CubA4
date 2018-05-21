@@ -5,12 +5,15 @@
 #include <Core.hpp>
 #include <config/ICoreConfig.hpp>
 #include <stdexcept>
+#include <logging/ILogger.hpp>
 
 using namespace CubA4::app;
 
-AppMain::AppMain()
+AppMain::AppMain(int argc, const char *const argv[]) :
+	core_(std::make_shared<CubA4::core::Core>(CubA4::core::Core(argc, argv)))
 {
-	core_ = std::make_shared<CubA4::core::Core>(CubA4::core::Core());
+	using namespace CubA4::core::logging;
+	core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Info, "CubA4 Loader start.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(CubA4::render::RenderLoader());
 }
 
