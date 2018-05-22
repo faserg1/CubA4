@@ -171,6 +171,7 @@ class CMakePatcher:
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if not result:
+			print(pattern)
 			raise "Adding sets is not implemented yet"
 		#check if set exists
 		sub = self._cmake_text[result.start:result.end]

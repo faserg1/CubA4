@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 
 class CmdLineParser:
 	def __init__(self, gen_class_func, gen_interface_func):
@@ -30,6 +31,7 @@ class CmdLineParser:
 				self.help()
 			elif arg == "--author":
 				print("Ookami")
+			self.help()
 			return
 		if len(sys.argv) < 4:
 			print("Invalid usage!")
@@ -39,11 +41,24 @@ class CmdLineParser:
 		full_name = self._parse_name(sys.argv[2])
 		module = sys.argv[3]
 		params = sys.argv[4:]
+		if not self._check(type, full_name, module):
+			return
 		if type == "class":
 			self._parse_cls(full_name, module, params)
 		elif type == "interface":
 			self._parse_ifc(full_name, module, params)
+	
+	def _check(self, type, full_name, module):
+		if type != "class" and type != "interface":
+			print("Invalid type <" + type + ">!")
+			return False
+		path_module = os.path.join(os.getcwd(), module)
+		if not os.path.exists(path_module) or not os.path.isdir(path_module):
+			print("Module <" + module + "> not found.")
+			return False
+		return True
 		
+	
 	def _parse_name(self, name):
 		return name.split(".")
 		
