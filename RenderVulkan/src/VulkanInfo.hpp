@@ -14,7 +14,7 @@ namespace CubA4
 			VulkanInfo();
 			~VulkanInfo();
 			std::string getRenderEngineId() const override;
-			IRenderEngine *getRenderEngine() override;
+			std::shared_ptr<engine::IRenderEngine> getRenderEngine() override;
 			int64_t getSDLWindowFlags() const override;
 		};
 	}

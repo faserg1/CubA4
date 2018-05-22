@@ -19,7 +19,7 @@ std::string VulkanInfo::getRenderEngineId() const
 	return "Vulkan";
 }
 
-IRenderEngine *VulkanInfo::getRenderEngine()
+std::shared_ptr<engine::IRenderEngine> VulkanInfo::getRenderEngine()
 {
 	return nullptr;
 }
