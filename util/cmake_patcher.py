@@ -195,11 +195,14 @@ class CMakePatcher:
 		source_group_path = var_to_pattern(sg_set)
 		for folder in folders[:-1]:
 			source_group_path += folder + var_to_pattern(RE_SG_SEP)
+		if not len(folders):
+			return
 		source_group_path += folders[-1]
 		pattern += "\"?" + source_group_path + "\"?"
 		rc = re.compile(pattern)
 		result = self._last_appearance(rc)
 		if result:
+			#Adding in root, no need to add source group
 			return
 		index_last_group = self._last_source_group()
 		if index_last_group > index_after:
