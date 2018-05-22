@@ -15,7 +15,7 @@ namespace CubA4
 				public virtual ICoreConfig
 			{
 			public:
-				explicit CoreConfig();
+				explicit CoreConfig(std::string configsPath);
 				~CoreConfig();
 
 				std::string getRenderEngineId() const;

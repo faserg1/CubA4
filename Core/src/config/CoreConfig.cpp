@@ -10,16 +10,16 @@ constexpr char *renderEngineIdKey = "core.render.engine_id";
 constexpr char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
 constexpr char *worldChunkSizeKey = "core.world.chunk_size";
 
-CoreConfig::CoreConfig()
+CoreConfig::CoreConfig(std::string configsPath)
 {
-	auto configPathDirectory = boost::filesystem::current_path() / "config";
-	auto configPath = configPathDirectory / "core.json";
+	auto configPathsDirectory = boost::filesystem::path(configsPath);
+	auto configPath = configPathsDirectory / "core.json";
 
-	if (!boost::filesystem::exists(configPathDirectory))
+	if (!boost::filesystem::exists(configPathsDirectory))
 	{
-		boost::filesystem::create_directory(configPathDirectory);
+		boost::filesystem::create_directory(configPathsDirectory);
 	}
-	else if (!boost::filesystem::is_directory(configPathDirectory))
+	else if (!boost::filesystem::is_directory(configPathsDirectory))
 	{
 		throw std::runtime_error("`config` is not a directory!");
 	}

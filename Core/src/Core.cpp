@@ -8,7 +8,7 @@ using namespace CubA4::core;
 Core::Core(int argc, const char *const argv[]) :
 	paths_(std::make_shared<config::FilePaths>(config::FilePaths(argc, argv)))
 {
-	config_ = std::make_shared<config::CoreConfig>(config::CoreConfig());
+	config_ = std::make_shared<config::CoreConfig>(config::CoreConfig(paths_->configPath()));
 	logger_ = logging::Logger::create(paths_->logsPath());
 }
 

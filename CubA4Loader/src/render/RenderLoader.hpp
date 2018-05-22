@@ -17,7 +17,7 @@ namespace CubA4
 
 			IRenderInfo *currentRenderInfo_;
 		public:
-			RenderLoader();
+			RenderLoader(std::string renderPath);
 			~RenderLoader();
 
 			std::vector<IRenderInfo *> getRenderInfoCollection();

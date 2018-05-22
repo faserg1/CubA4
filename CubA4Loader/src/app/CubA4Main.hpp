@@ -7,7 +7,7 @@ namespace CubA4
 {
 	namespace core
 	{
-		class Core;
+		class ICore;
 	}
 
 	namespace render
@@ -35,7 +35,7 @@ namespace CubA4
 			void loop();
 
 			bool running_;
-			std::shared_ptr<CubA4::core::Core> core_;
+			std::shared_ptr<CubA4::core::ICore> core_;
 			std::shared_ptr<CubA4::render::RenderLoader> renderLoader_;
 			std::shared_ptr<CubA4::window::Window> window_;
 		};
