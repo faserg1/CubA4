@@ -28,6 +28,10 @@ namespace CubA4
 				}
 				~LoggerStreams()
 				{
+					flush();
+				}
+				void flush()
+				{
 					out_.flush();
 				}
 			};
@@ -72,7 +76,7 @@ std::shared_ptr<ILogger> Logger::create(std::string logsPath)
 
 Logger::~Logger()
 {
-	
+	stream_->flush();
 }
 
 void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message)

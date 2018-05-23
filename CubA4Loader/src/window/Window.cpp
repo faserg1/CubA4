@@ -1,10 +1,13 @@
 #include "Window.hpp"
 #include <SDL_video.h>
+#include <stdexcept>
 using namespace CubA4::window;
 
 Window::Window(int sizeX, int sizeY, int64_t additionalSDLWindowFlags)
 {
 	window_ = SDL_CreateWindow("CubA4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, sizeX, sizeY, SDL_WINDOW_SHOWN | additionalSDLWindowFlags);
+	if (!window_)
+		throw std::runtime_error("Window creation failed!");
 }
 
 Window::~Window()

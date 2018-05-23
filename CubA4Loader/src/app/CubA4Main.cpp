@@ -22,7 +22,9 @@ int AppMain::exec()
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	loadRender();
-	createWindow();
+	if (!createWindow())
+		// TODO: [OOKAMI] В ядро положить коды ошибок
+		return 1;
 	loop();
 	SDL_Quit();
 	return 0;
@@ -52,10 +54,20 @@ void AppMain::loadRender()
 	}
 }
 
-void AppMain::createWindow()
+bool AppMain::createWindow()
 {
 	auto *renderInfo = renderLoader_->getCurrentRenderInfo();
-	window_ = CubA4::window::Window::createWindow(1024, 720, renderInfo->getSDLWindowFlags());
+	try
+	{
+		window_ = CubA4::window::Window::createWindow(1024, 720, renderInfo->getSDLWindowFlags());
+	}
+	catch (std::exception &ex)
+	{
+		using namespace CubA4::core::logging;
+		core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Critical, ex.what());
+		return false;
+	}
+	return true;
 }
 
 void AppMain::initRender()

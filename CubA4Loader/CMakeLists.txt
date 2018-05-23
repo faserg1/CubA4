@@ -1,4 +1,52 @@
 cmake_minimum_required (VERSION 2.8)
+set(CubA4LoaderSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(CubA4LoaderSourceAppDir ${CubA4LoaderSourceDir}/app)
+set(CubA4LoaderSourceRenderDir ${CubA4LoaderSourceDir}/render)
+set(CubA4LoaderSourceWindowDir ${CubA4LoaderSourceDir}/window)
+
+
+set(CubA4LoaderSourceApp
+	${CubA4LoaderSourceAppDir}/AppInfo.cpp
+	${CubA4LoaderSourceAppDir}/CubA4Main.cpp
+	${CubA4LoaderSourceAppDir}/AppVersion.cpp
+)
+set(CubA4LoaderHeaderApp
+	${CubA4LoaderSourceAppDir}/AppInfo.hpp
+	${CubA4LoaderSourceAppDir}/CubA4Main.hpp
+	${CubA4LoaderSourceAppDir}/AppVersion.hpp
+)
+
+set(CubA4LoaderHeaderRender
+	${CubA4LoaderSourceRenderDir}/RenderLoader.hpp
+)
+set(CubA4LoaderSourceRender
+	${CubA4LoaderSourceRenderDir}/RenderLoader.cpp
+)
+set(CubA4LoaderHeaderWindow
+	${CubA4LoaderSourceWindowDir}/Window.hpp
+)
+set(CubA4LoaderSourceWindow
+	${CubA4LoaderSourceWindowDir}/Window.cpp
+)
+set(CubA4LoaderHeaders
+	${CubA4LoaderSourceDir}/main.cpp
+	${CubA4LoaderHeaderRender}
+	${CubA4LoaderHeaderWindow}
+	${CubA4LoaderHeaderApp}
+)
+set(CubA4LoaderSources 
+	${CubA4LoaderSourceDir}/main.cpp
+	${CubA4LoaderSourceRender}
+	${CubA4LoaderSourceWindow}
+	${CubA4LoaderSourceApp}
+)
+
+source_group("${SOURCE_GROUP_HEADER_START}render" FILES ${CubA4LoaderHeaderRender})
+source_group("${SOURCE_GROUP_SOURCE_START}render" FILES ${CubA4LoaderSourceRender})
+source_group("${SOURCE_GROUP_HEADER_START}app" FILES ${CubA4LoaderHeaderApp})
+source_group("${SOURCE_GROUP_SOURCE_START}app" FILES ${CubA4LoaderSourceApp})
+source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${CubA4LoaderHeaderWindow})
+source_group("${SOURCE_GROUP_SOURCE_START}window" FILES ${CubA4LoaderSourceWindow})
 
 link_directories(
 #third party
@@ -7,50 +55,6 @@ link_directories(
 	${STEAM_AUDIO_LIBRARY_DIR}
 	${Boost_LIBRARY_DIRS})
 
-set(SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src) 
-
-set(CubA4LoaderRenderDir ${SOURCE_DIR}/render)
-set(CubA4LoaderAppDir ${SOURCE_DIR}/app)
-set(CubA4LoaderWindowDir ${SOURCE_DIR}/window)
-
-set(CubA4LoaderRenderHeaders
-	${CubA4LoaderRenderDir}/RenderLoader.hpp
-)
-set(CubA4LoaderRenderSources
-	${CubA4LoaderRenderDir}/RenderLoader.cpp
-)
-set(CubA4LoaderAppHeaders
-	${CubA4LoaderAppDir}/CubA4Main.hpp
-)
-set(CubA4LoaderAppSources
-	${CubA4LoaderAppDir}/CubA4Main.cpp
-)
-set(CubA4LoaderWindowHeaders
-	${CubA4LoaderWindowDir}/Window.hpp
-)
-set(CubA4LoaderWindowSources
-	${CubA4LoaderWindowDir}/Window.cpp
-)
-set(CubA4LoaderHeaders
-	${SOURCE_DIR}/main.cpp
-	${CubA4LoaderRenderHeaders}
-	${CubA4LoaderAppHeaders}
-	${CubA4LoaderWindowHeaders}
-)
-set(CubA4LoaderSources 
-	${SOURCE_DIR}/main.cpp
-	${CubA4LoaderRenderSources}
-	${CubA4LoaderAppSources}
-	${CubA4LoaderWindowSources}
-)
-
-source_group("${SOURCE_GROUP_HEADER_START}render" FILES ${CubA4LoaderRenderHeaders})
-source_group("${SOURCE_GROUP_SOURCE_START}render" FILES ${CubA4LoaderRenderSources})
-source_group("${SOURCE_GROUP_HEADER_START}app" FILES ${CubA4LoaderAppHeaders})
-source_group("${SOURCE_GROUP_SOURCE_START}app" FILES ${CubA4LoaderAppSources})
-source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${CubA4LoaderWindowHeaders})
-source_group("${SOURCE_GROUP_SOURCE_START}window" FILES ${CubA4LoaderWindowSources})
-	
 add_executable(CubA4Loader ${CubA4LoaderHeaders} ${CubA4LoaderSources})
 
 #libs

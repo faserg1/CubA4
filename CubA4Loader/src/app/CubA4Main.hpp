@@ -30,7 +30,7 @@ namespace CubA4
 			int exec();
 		private:
 			void loadRender();
-			void createWindow();
+			bool createWindow();
 			void initRender();
 			void loop();
 
