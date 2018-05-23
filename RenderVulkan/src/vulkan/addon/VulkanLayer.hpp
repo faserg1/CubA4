@@ -1,6 +1,8 @@
 #ifndef VULKANLAYER_HPP
 #define VULKANLAYER_HPP
 
+#include "IVulkanInstanceAddon.hpp"
+
 namespace CubA4
 {
 	namespace render
