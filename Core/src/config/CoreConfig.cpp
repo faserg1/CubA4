@@ -25,7 +25,7 @@ CoreConfig::CoreConfig(std::string configsPath)
 	}
 
 	native_config_path_ = configPath.string();
-	configTree_ = std::make_shared<boost::property_tree::ptree>(boost::property_tree::ptree());
+	configTree_ = std::make_shared<boost::property_tree::ptree>();
 	if (boost::filesystem::exists(configPath))
 		reload();
 }

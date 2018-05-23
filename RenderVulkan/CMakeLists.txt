@@ -7,13 +7,14 @@ set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
 set(RenderVulkanHeaderVulkanAddon
-	${RenderVulkanSourceVulkanAddonDir}/IVulkanInstanceAddon.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanLayer.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanSDLExtension.hpp
 )
 set(RenderVulkanSourceVulkanAddon
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanLayer.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.cpp

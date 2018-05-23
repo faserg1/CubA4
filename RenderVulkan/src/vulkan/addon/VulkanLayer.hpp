@@ -1,7 +1,7 @@
 #ifndef VULKANLAYER_HPP
 #define VULKANLAYER_HPP
 
-#include "IVulkanInstanceAddon.hpp"
+#include "VulkanInstanceAddon.hpp"
 
 namespace CubA4
 {
@@ -9,9 +9,10 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			namespace layer
+			namespace addon
 			{
-				class VulkanLayer
+				class VulkanLayer :
+					public VulkanInstanceAddon
 				{
 				public:
 					explicit VulkanLayer();

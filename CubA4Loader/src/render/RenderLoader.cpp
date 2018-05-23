@@ -15,7 +15,7 @@ RenderLoader::RenderLoader(std::string renderPath) :
 	importSymbolName_("getRenderInfo"),
 	currentRenderInfo_(nullptr)
 {
-	data_ = std::make_shared<RenderLoader::Private>(RenderLoader::Private());
+	data_ = std::make_shared<RenderLoader::Private>();
 	using namespace boost::filesystem;
 	path rednerFolder = path(renderPath);
 	recursive_directory_iterator renderFolderIterator(rednerFolder), end;

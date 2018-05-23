@@ -15,16 +15,19 @@ namespace CubA4
 			
 			namespace addon
 			{
-				class IVulkanInstanceAddon
+				class VulkanInstanceAddon
 				{
 				public:
-					virtual ~IVulkanInstanceAddon() {}
+					virtual ~VulkanInstanceAddon() {}
 					
 					virtual std::vector<std::string> names() const = 0;
 					virtual void init(std::shared_ptr<VulkanInstance> instance) = 0;
 					virtual void destroy(std::shared_ptr<VulkanInstance> instance) = 0;
+
+					bool available() const;
 				protected:
-					explicit IVulkanInstanceAddon() {}
+					virtual std::vector<std::string> allNames() const = 0;
+					explicit VulkanInstanceAddon() {}
 				private:
 				};
 			}

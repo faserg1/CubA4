@@ -31,6 +31,7 @@ namespace CubA4
 				ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) override;
 			protected:
 				explicit Logger(std::string logsPath);
+				Logger(const Logger &) = delete;
 
 				virtual std::string getTagString(LogSourceSystem system);
 				virtual std::string getLevelString(LogLevel level);

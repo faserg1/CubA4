@@ -1,7 +1,8 @@
 #ifndef VULKANEXTENSION_HPP
 #define VULKANEXTENSION_HPP
 
-#include "IVulkanInstanceAddon.hpp"
+#include "VulkanInstanceAddon.hpp"
+#include <memory>
 
 namespace CubA4
 {
@@ -11,13 +12,19 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanExtension
+				struct VulkanExtensionPrivate;
+
+				class VulkanExtension :
+					public VulkanInstanceAddon
 				{
 				public:
-					explicit VulkanExtension();
+					
 					~VulkanExtension();
 				protected:
+					explicit VulkanExtension();
+					std::vector<std::string> allNames() const override;
 				private:
+					std::shared_ptr<VulkanExtensionPrivate> data_;
 				};
 			}
 		}

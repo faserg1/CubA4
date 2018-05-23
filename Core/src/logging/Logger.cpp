@@ -69,7 +69,8 @@ Logger::Logger(std::string logsPath) :
 
 std::shared_ptr<ILogger> Logger::create(std::string logsPath)
 {
-	auto ptr = std::make_shared<Logger>(Logger(logsPath));
+	//Make shared не сработает в приватной/защищенной области видимости
+	auto ptr = std::shared_ptr<Logger>(new Logger(logsPath));
 	ptr->this_ = ptr;
 	return ptr;
 }
