@@ -21,8 +21,8 @@ namespace CubA4
 					virtual ~VulkanInstanceAddon() {}
 					
 					virtual std::vector<std::string> names() const = 0;
-					virtual void init(std::shared_ptr<VulkanInstance> instance) = 0;
-					virtual void destroy(std::shared_ptr<VulkanInstance> instance) = 0;
+					virtual void init(std::shared_ptr<const VulkanInstance> instance) = 0;
+					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;
 
 					bool available() const;
 				protected:

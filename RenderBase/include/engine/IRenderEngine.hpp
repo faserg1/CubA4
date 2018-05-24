@@ -5,6 +5,11 @@
 
 namespace CubA4
 {
+	namespace window
+	{
+		class IWindow;
+	}
+
 	namespace render
 	{
 		namespace engine
@@ -14,7 +19,7 @@ namespace CubA4
 			public:
 				virtual ~IRenderEngine() {}
 
-				virtual void init() = 0;
+				virtual void init(std::shared_ptr<window::IWindow> window) = 0;
 				virtual void destroy() = 0;
 			protected:
 				explicit IRenderEngine() {}

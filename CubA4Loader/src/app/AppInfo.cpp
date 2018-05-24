@@ -7,7 +7,8 @@ namespace
 	AppVersion appVersion;
 }
 
-AppInfo::AppInfo()
+AppInfo::AppInfo() :
+	name_("CubA4 Loader"), wname_(L"CubA4 Загрузчик")
 {
 	
 }
@@ -22,12 +23,12 @@ const CubA4::core::info::IVersion &AppInfo::version() const
 	return appVersion;
 }
 
-std::string AppInfo::name() const
+const std::string &AppInfo::name() const
 {
-	return "CubA4 Loader";
+	return name_;
 }
 
-std::wstring AppInfo::locName() const
+const std::wstring &AppInfo::locName() const
 {
-	return L"CubA4 Загрузчик";
+	return wname_;
 }

@@ -8,6 +8,11 @@ namespace CubA4
 	namespace core
 	{
 		class ICore;
+
+		namespace info
+		{
+			class IApplicationInfo;
+		}
 	}
 
 	namespace render
@@ -30,12 +35,15 @@ namespace CubA4
 			int exec();
 		private:
 			void loadRender();
+			void unloadRender();
 			bool createWindow();
 			void initRender();
+			void destroyRender();
 			void loop();
 
 			bool running_;
 			std::shared_ptr<CubA4::core::ICore> core_;
+			std::shared_ptr<CubA4::core::info::IApplicationInfo> info_;
 			std::shared_ptr<CubA4::render::RenderLoader> renderLoader_;
 			std::shared_ptr<CubA4::window::Window> window_;
 		};

@@ -1,7 +1,9 @@
 #include "CubA4Main.hpp"
 #include <SDL.h>
+#include "AppInfo.hpp"
 #include "../render/RenderLoader.hpp"
 #include "../window/Window.hpp"
+#include <engine/IRenderEngine.hpp>
 #include <Core.hpp>
 #include <config/ICoreConfig.hpp>
 #include <stdexcept>
@@ -11,7 +13,8 @@
 using namespace CubA4::app;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
-	core_(std::make_shared<CubA4::core::Core>(argc, argv))
+	core_(std::make_shared<CubA4::core::Core>(argc, argv)),
+	info_(std::make_shared<AppInfo>())
 {
 	using namespace CubA4::core::logging;
 	core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Info, "CubA4 Loader start.");
@@ -25,7 +28,10 @@ int AppMain::exec()
 	if (!createWindow())
 		// TODO: [OOKAMI] В ядро положить коды ошибок
 		return 1;
+	initRender();
 	loop();
+	destroyRender();
+	unloadRender();
 	SDL_Quit();
 	return 0;
 }
@@ -37,6 +43,7 @@ void AppMain::loadRender()
 	if (!renderInfos.size())
 		throw std::runtime_error("No render engines!");
 	CubA4::render::IRenderInfo *choosedRenderInfo = nullptr;
+	CubA4::render::IRenderInfo *finalRenderInfo = nullptr;
 	for (auto renderInfo : renderInfos)
 	{
 		auto name = renderInfo->getRenderEngineId();
@@ -44,14 +51,25 @@ void AppMain::loadRender()
 		{
 			choosedRenderInfo = renderInfo;
 			renderLoader_->setCurrentRenderInfo(renderInfo);
+			finalRenderInfo = choosedRenderInfo;
+			break;
 		}
 	}
 	if (!choosedRenderInfo)
 	{
 		auto *renderInfo = renderInfos[0];
+		finalRenderInfo = renderInfo;
 		config->setRenderEngineId(renderInfo->getRenderEngineId());
 		renderLoader_->setCurrentRenderInfo(renderInfo);
 	}
+	if (!finalRenderInfo)
+		throw std::runtime_error("Cannot find render library!");
+	finalRenderInfo->init(info_);
+}
+
+void  AppMain::unloadRender()
+{
+	// TODO: [OOKAMI] unload render library
 }
 
 bool AppMain::createWindow()
@@ -72,7 +90,15 @@ bool AppMain::createWindow()
 
 void AppMain::initRender()
 {
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->init(window_);
 	//Send fucking surface to render info and create fucking render engine
+}
+
+void AppMain::destroyRender()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->destroy();
 }
 
 void AppMain::loop()

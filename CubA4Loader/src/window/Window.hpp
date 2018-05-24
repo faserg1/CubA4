@@ -3,14 +3,14 @@
 
 #include <cstdint>
 #include <memory>
-
-struct SDL_Window;
+#include <window/IWindow.hpp>
 
 namespace CubA4
 {
 	namespace window
 	{
-		class Window final
+		class Window final :
+			public virtual IWindow
 		{
 		public:
 			static std::shared_ptr<Window> createWindow(int sizeX, int sizeY, int64_t additionalSDLWindowFlags);

@@ -15,10 +15,12 @@ namespace CubA4
 			~AppInfo();
 			
 			const CubA4::core::info::IVersion &version() const override;
-			std::string name() const override;
-			std::wstring locName() const override;
+			const std::string &name() const override;
+			const std::wstring &locName() const override;
 		protected:
 		private:
+			std::string name_;
+			std::wstring wname_;
 		};
 	}
 }

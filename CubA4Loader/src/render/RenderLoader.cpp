@@ -56,7 +56,7 @@ RenderLoader::~RenderLoader()
 {
 }
 
-std::vector<IRenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
+std::vector<IRenderInfo*> RenderLoader::getRenderInfoCollection()
 {
 	std::vector<IRenderInfo*> ri;
 	for (auto pair : data_->renderLibraries)
@@ -66,7 +66,7 @@ std::vector<IRenderInfo*> CubA4::render::RenderLoader::getRenderInfoCollection()
 	return ri;
 }
 
-void CubA4::render::RenderLoader::setCurrentRenderInfo(IRenderInfo *renderInfo)
+void RenderLoader::setCurrentRenderInfo(IRenderInfo *renderInfo)
 {
 	//data_->renderLibraries.clear();
 	if (currentRenderInfo_)
@@ -81,7 +81,7 @@ void CubA4::render::RenderLoader::setCurrentRenderInfo(IRenderInfo *renderInfo)
 	//Словарь можно очистить
 }
 
-IRenderInfo * CubA4::render::RenderLoader::getCurrentRenderInfo()
+IRenderInfo *RenderLoader::getCurrentRenderInfo()
 {
 	return currentRenderInfo_;
 }

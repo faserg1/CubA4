@@ -1,7 +1,11 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(RenderBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(RenderBaseIncludeWindowDir ${RenderBaseIncludeDir}/window)
 set(RenderBaseIncludeEngineDir ${RenderBaseIncludeDir}/engine)
+set(RenderBaseHeaderWindow
+	${RenderBaseIncludeWindowDir}/IWindow.hpp
+)
 set(RenderBaseHeaderEngine
 	${RenderBaseIncludeEngineDir}/IRenderEngine.hpp
 )
@@ -10,8 +14,10 @@ set(RenderBaseHeaders
 	${RenderBaseIncludeDir}/RenderExportHelper.hpp
 	${RenderBaseIncludeDir}/IRenderInfo.hpp
 	${RenderBaseHeaderEngine}
+	${RenderBaseHeaderWindow}
 	)
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderBaseHeaderEngine})
+source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${RenderBaseHeaderWindow})
 
 add_library(RenderBase INTERFACE)
 target_include_directories(RenderBase INTERFACE include)
