@@ -8,6 +8,10 @@ namespace CubA4
 {
 	namespace core
 	{
+		namespace logging
+		{
+			class ILogger;
+		}
 		namespace info
 		{
 			class IApplicationInfo;
@@ -32,7 +36,8 @@ namespace CubA4
 				public virtual IRenderEngine
 			{
 			public:
-				explicit VulkanRenderEngine(std::shared_ptr<const core::info::IApplicationInfo> info);
+				explicit VulkanRenderEngine(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<core::logging::ILogger> logger);
+				explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
 				~VulkanRenderEngine();
 
 				void init(std::shared_ptr<window::IWindow> window) override;
@@ -40,6 +45,7 @@ namespace CubA4
 			protected:
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
+				std::shared_ptr<core::logging::ILogger> logger_;
 				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;
 				std::shared_ptr<const vulkan::VulkanInstance> instance_;
 				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> addons_;

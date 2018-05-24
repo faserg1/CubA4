@@ -2,6 +2,7 @@
 #define VULKANDEBUGEXTENSION_HPP
 
 #include "VulkanExtension.hpp"
+#include <memory>
 
 namespace CubA4
 {
@@ -19,6 +20,8 @@ namespace CubA4
 		{
 			namespace addon
 			{
+				struct VulkanDebugExtensionData;
+
 				class VulkanDebugExtension :
 					public VulkanExtension
 				{
@@ -27,10 +30,13 @@ namespace CubA4
 					~VulkanDebugExtension();
 
 					std::vector<std::string> names() const;
-					void init(std::shared_ptr<VulkanInstance> instance);
-					void destroy(std::shared_ptr<VulkanInstance> instance);
+					void init(std::shared_ptr<const VulkanInstance> instance);
+					void destroy(std::shared_ptr<const VulkanInstance> instance);
 				protected:
 				private:
+					void fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance);
+
+					std::shared_ptr<VulkanDebugExtensionData> data_;
 					std::shared_ptr<core::logging::ILoggerTagged> loggerTagged_;
 				};
 			}

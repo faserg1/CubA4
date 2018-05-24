@@ -14,10 +14,11 @@ VulkanInfo::~VulkanInfo()
 
 }
 
-void VulkanInfo::init(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info)
+void VulkanInfo::init(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<CubA4::core::logging::ILogger> logger)
 {
 	info_ = info;
-	engine_ = std::make_shared<engine::VulkanRenderEngine>(info_);
+	logger_ = logger;
+	engine_ = std::make_shared<engine::VulkanRenderEngine>(info_, logger);
 }
 
 void VulkanInfo::destroy()

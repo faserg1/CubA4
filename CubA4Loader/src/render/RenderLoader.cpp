@@ -54,6 +54,10 @@ RenderLoader::RenderLoader(std::string renderPath) :
 
 RenderLoader::~RenderLoader()
 {
+	for (auto pair : data_->renderLibraries)
+	{
+		delete pair.first;
+	}
 }
 
 std::vector<IRenderInfo*> RenderLoader::getRenderInfoCollection()
