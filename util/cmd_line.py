@@ -23,6 +23,7 @@ class CmdLineParser:
 		print("--dtr:empty — Set empty realization in header to desctructor.")
 		print("--header-folder:<folder> — Set empty realization in header to desctructor.")
 		print("--source-folder:<folder> — Set empty realization in header to desctructor.")
+		print("--module-namespace — Will not ignore module namespace")
 	
 	def parse(self):
 		if len(sys.argv) == 2:

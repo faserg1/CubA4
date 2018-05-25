@@ -19,6 +19,7 @@ class GeneratorBase:
 		self._source_folder = "src"
 		self._header_ext = ".hpp"
 		self._source_ext = ".cpp"
+		self._module_namespace = False
 		
 		self._header_saved_to = ""
 		self._source_saved_to = ""
@@ -48,6 +49,9 @@ class GeneratorBase:
 		
 	def set_source_folder(self, folder):
 		self._source_folder = folder
+		
+	def set_module_namespace(self, use):
+		self._module_namespace = use
 		
 	#Results
 	
@@ -142,11 +146,15 @@ class GeneratorBase:
 		
 	def _get_relative_namespace_folder(self, folder):
 		namespaces = self._get_namespaces()
+		#project namespace
 		if namespaces[0] == "CubA4":
 			namespaces = namespaces[1:]
-		module = self._module_name.lower()
-		if namespaces[0] == module or module.startswith(namespaces[0]):
-			namespaces = namespaces[1:]
+		#module namespace
+		if not self._module_namespace:
+			module = self._module_name.lower()
+			if namespaces[0] == module or module.startswith(namespaces[0]):
+				namespaces = namespaces[1:]
+		#total
 		return os.path.join(folder, *namespaces)
 		
 	def _get_put_folder(self, folder):
@@ -199,6 +207,7 @@ class GeneratorBase:
 	_source_folder = "src"
 	_header_ext = ".hpp"
 	_source_ext = ".cpp"
+	_module_namespace = False
 	
 	_header_saved_to = ""
 	_source_saved_to = ""

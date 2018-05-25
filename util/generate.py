@@ -26,6 +26,8 @@ def generate_common(generator, params):
 		generator.set_access_destructor("protected")
 	if "--dtr:private" in params:
 		generator.set_access_destructor("private")
+	if "--module-namespace" in params:
+		generator.set_module_namespace(True)
 	for param in params:
 		header_folder = check_exists_and_get(param, "--header-folder:")
 		if header_folder:
