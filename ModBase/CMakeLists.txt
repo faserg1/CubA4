@@ -22,6 +22,7 @@ set(ModBaseHeaderException
 set(ModBaseHeaderMod
 	${ModBaseIncludeModDir}/IModLoader.hpp
 	${ModBaseIncludeModDir}/IMod.hpp
+	${ModBaseIncludeModDir}/IModLinker.hpp
 )
 set(ModBaseHeaderObject
 	${ModBaseIncludeObjectDir}/IObject.hpp
