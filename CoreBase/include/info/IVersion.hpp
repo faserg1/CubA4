@@ -12,7 +12,6 @@ namespace CubA4
 			class IVersion
 			{
 			public:
-				virtual ~IVersion() {}
 				virtual unsigned short major() const = 0;
 				virtual unsigned short minor() const = 0;
 				virtual unsigned short patch() const = 0;
@@ -23,6 +22,7 @@ namespace CubA4
 				virtual std::string to_string() const = 0;
 			protected:
 				explicit IVersion() {}
+				virtual ~IVersion() {}
 			private:
 			};
 		}
