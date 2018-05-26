@@ -1,13 +1,47 @@
 #include "./VulkanLayer.hpp"
+#include <vulkan/vulkan.h>
+#include <stdexcept>
 using namespace CubA4::render::vulkan::addon;
 
-VulkanLayer::VulkanLayer()
+namespace CubA4
 {
-	
+	namespace render
+	{
+		namespace vulkan
+		{
+			namespace addon
+			{
+				struct VulkanLayerPrivate
+				{
+					std::vector<VkLayerProperties> layers;
+				};
+			}
+		}
+	}
+}
+
+VulkanLayer::VulkanLayer() :
+	data_(std::make_shared<VulkanLayerPrivate>())
+{
+	uint32_t layersCount = 0;
+	if (vkEnumerateInstanceLayerProperties(&layersCount, nullptr) != VK_SUCCESS)
+		throw std::runtime_error("Unable to enumerate instance layers.");
+	data_->layers.resize(layersCount);
+	if (vkEnumerateInstanceLayerProperties(&layersCount, data_->layers.data()) != VK_SUCCESS)
+		throw std::runtime_error("Unable to enumerate instance layers.");
 }
 
 VulkanLayer::~VulkanLayer()
 {
 	
+}
+
+std::vector<std::string> CubA4::render::vulkan::addon::VulkanLayer::allNames() const
+{
+	std::vector<std::string> all;
+	all.reserve(data_->layers.size());
+	for (VkLayerProperties &layerProp : data_->layers)
+		all.push_back(layerProp.layerName);
+	return all;
 }
 

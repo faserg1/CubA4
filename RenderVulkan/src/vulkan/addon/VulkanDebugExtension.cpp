@@ -52,11 +52,15 @@ void VulkanDebugExtension::init(std::shared_ptr<const VulkanInstance> instance)
 	callback.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	callback.pNext = nullptr;
 	callback.flags = 0;
-	callback.messageType =
+	callback.messageSeverity =
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+	callback.messageType = 
+		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	auto logCallback = [](
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
 		VkDebugUtilsMessageTypeFlagsEXT messageType,

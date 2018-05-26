@@ -12,6 +12,7 @@ set(RenderVulkanHeaderVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanSDLExtension.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanStandardValidationLayer.hpp
 )
 set(RenderVulkanSourceVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.cpp
@@ -19,6 +20,7 @@ set(RenderVulkanSourceVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanSDLExtension.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanStandardValidationLayer.cpp
 )
 set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.cpp

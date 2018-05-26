@@ -6,6 +6,7 @@
 
 #include "../vulkan/addon/VulkanSDLExtension.hpp"
 #include "../vulkan/addon/VulkanDebugExtension.hpp"
+#include "../vulkan/addon/VulkanStandardValidationLayer.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -44,6 +45,9 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 
 	auto vkDebugExt = std::make_shared<VulkanDebugExtension>(logger_);
 	addExt(vkDebugExt);
+
+	auto vkStdLayer = std::make_shared<VulkanStandardValidationLayer>();
+	addLayer(vkStdLayer);
 
 	instance_ = instanceBuilder_->build();
 	std::for_each(addons_.begin(), addons_.end(), [this](std::shared_ptr<VulkanInstanceAddon> addon) {addon->init(instance_); });
