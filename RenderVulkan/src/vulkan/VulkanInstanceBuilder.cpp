@@ -77,7 +77,7 @@ std::shared_ptr<const VulkanInstance> VulkanInstanceBuilder::build()
 
 void VulkanInstanceBuilder::destroy(std::shared_ptr<const VulkanInstance> instance)
 {
-	auto vkInst = instance->get();
+	auto vkInst = instance->getInstance();
 	vkDestroyInstance(vkInst, nullptr);
 }
 

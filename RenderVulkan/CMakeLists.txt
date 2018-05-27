@@ -25,10 +25,12 @@ set(RenderVulkanSourceVulkanAddon
 set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.cpp
 	${RenderVulkanSourceVulkanDir}/VulkanInstanceBuilder.cpp
+	${RenderVulkanSourceVulkanDir}/VulkanSurface.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.hpp
 	${RenderVulkanSourceVulkanDir}/VulkanInstanceBuilder.hpp
+	${RenderVulkanSourceVulkanDir}/VulkanSurface.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/VulkanRenderEngine.cpp

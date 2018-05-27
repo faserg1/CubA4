@@ -15,6 +15,8 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
+			class VulkanSurface;
+
 			namespace addon
 			{
 				class VulkanSDLExtension :
@@ -27,9 +29,12 @@ namespace CubA4
 					std::vector<std::string> names() const override;
 					void init(std::shared_ptr<const VulkanInstance> instance) override;
 					void destroy(std::shared_ptr<const VulkanInstance> instance) override;
+
+					std::shared_ptr<const VulkanSurface> getSurface() const;
 				protected:
 				private:
 					std::shared_ptr<window::IWindow> window_;
+					std::shared_ptr<VulkanSurface> surface_;
 				};
 			}
 		}

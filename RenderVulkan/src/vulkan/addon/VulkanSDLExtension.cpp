@@ -1,4 +1,6 @@
 #include "./VulkanSDLExtension.hpp"
+#include "../VulkanSurface.hpp"
+#include "../VulkanInstance.hpp"
 #include <window/IWindow.hpp>
 #include <vulkan/vulkan.h>
 #include <SDL_vulkan.h>
@@ -31,8 +33,20 @@ std::vector<std::string> VulkanSDLExtension::names() const
 
 void VulkanSDLExtension::init(std::shared_ptr<const VulkanInstance> instance)
 {
+	VkSurfaceKHR nativeSurface;
+	if (!SDL_Vulkan_CreateSurface(window_->getSDLWindow(), instance->getInstance(), &nativeSurface))
+		throw std::runtime_error("Cant create surface!");
+	surface_ = std::make_shared<VulkanSurface>(nativeSurface);
 }
 
 void VulkanSDLExtension::destroy(std::shared_ptr<const VulkanInstance> instance)
 {
+	vkDestroySurfaceKHR(instance->getInstance(), surface_->getSurface(), nullptr);
+	surface_.reset();
+}
+
+
+std::shared_ptr<const VulkanSurface> VulkanSDLExtension::getSurface() const
+{
+	return surface_;
 }

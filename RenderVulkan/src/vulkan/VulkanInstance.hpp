@@ -14,7 +14,7 @@ namespace CubA4
 			public:
 				explicit VulkanInstance(VkInstance instance);
 				~VulkanInstance();
-				VkInstance get() const;
+				VkInstance getInstance() const;
 			protected:
 				
 			private:

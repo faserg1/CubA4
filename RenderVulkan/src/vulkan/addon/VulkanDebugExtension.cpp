@@ -89,18 +89,18 @@ void VulkanDebugExtension::init(std::shared_ptr<const VulkanInstance> instance)
 	};
 	callback.pfnUserCallback = logCallback;
 	callback.pUserData = (void *) &(*loggerTagged_);
-	data_->createDebugUtils(instance->get(), &callback, nullptr, &data_->messeger);
+	data_->createDebugUtils(instance->getInstance(), &callback, nullptr, &data_->messeger);
 }
 
 void VulkanDebugExtension::destroy(std::shared_ptr<const VulkanInstance> instance)
 {
-	data_->destroyDebugUtils(instance->get(), data_->messeger, nullptr);
+	data_->destroyDebugUtils(instance->getInstance(), data_->messeger, nullptr);
 	data_->messeger = {};
 }
 
 void VulkanDebugExtension::fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance)
 {
-	auto vkInstance = instance->get();
+	auto vkInstance = instance->getInstance();
 	data_->createDebugUtils = getVkFuncInstancePtr(vkInstance, vkCreateDebugUtilsMessengerEXT);
 	data_->destroyDebugUtils = getVkFuncInstancePtr(vkInstance, vkDestroyDebugUtilsMessengerEXT);
 }

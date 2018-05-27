@@ -12,7 +12,7 @@ VulkanInstance::~VulkanInstance()
 	
 }
 
-VkInstance VulkanInstance::get() const
+VkInstance VulkanInstance::getInstance() const
 {
 	return instance_;
 }
