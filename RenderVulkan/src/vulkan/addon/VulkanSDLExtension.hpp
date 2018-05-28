@@ -20,7 +20,7 @@ namespace CubA4
 			namespace addon
 			{
 				class VulkanSDLExtension :
-					public VulkanExtension
+					public VulkanInstanceExtension
 				{
 				public:
 					explicit VulkanSDLExtension(std::shared_ptr<window::IWindow> window);

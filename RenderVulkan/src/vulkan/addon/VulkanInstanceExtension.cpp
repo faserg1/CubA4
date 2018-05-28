@@ -21,7 +21,7 @@ namespace CubA4
 	}
 }
 
-VulkanExtension::VulkanExtension() :
+VulkanInstanceExtension::VulkanInstanceExtension() :
 	data_(std::make_shared<VulkanExtensionPrivate>())
 {
 	uint32_t extCount = 0;
@@ -32,7 +32,7 @@ VulkanExtension::VulkanExtension() :
 		throw std::runtime_error("Unable to enumerate instance extensions.");
 }
 
-std::vector<std::string> VulkanExtension::allNames() const
+std::vector<std::string> VulkanInstanceExtension::allNames() const
 {
 	std::vector<std::string> all;
 	all.reserve(data_->extensions.size());
@@ -41,7 +41,7 @@ std::vector<std::string> VulkanExtension::allNames() const
 	return all;
 }
 
-VulkanExtension::~VulkanExtension()
+VulkanInstanceExtension::~VulkanInstanceExtension()
 {
 	
 }
