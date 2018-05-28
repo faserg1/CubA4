@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <chrono>
 #include <iomanip>
+#include <cstdio>
+#include <cmath>
 using namespace CubA4::core::logging;
 
 namespace CubA4
@@ -81,8 +83,8 @@ Logger::~Logger()
 }
 
 void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message)
-{	
-	std::string logMsg = "[" + getLevelString(level) + ":" + getTagString(system) + ":" + tag + "]{" + getTimeString("%x-%X") + "} " + message + "\n";
+{
+	std::string logMsg = "[" + getLevelString(level) + ":" + getTagString(system) + ":" + tag + "]{" + getTimeString("%x-%X:%%k") + "} " + message + "\n";
 	stream_->out_.write(logMsg.c_str(), logMsg.size());
 }
 
@@ -138,7 +140,15 @@ std::string CubA4::core::logging::Logger::getTimeString(const char *format)
 	const int len = std::strftime(buffer, bufferSize, format, localTime);
 	if (!len)
 		throw std::runtime_error("Cannot format time!");
-	return std::string(buffer, len);
+	std::string result(buffer, len);
+	auto posFind = result.find("%k");
+	if (posFind != result.npos)
+	{
+		const auto formatMs = "%." + std::to_string((unsigned) ::log10(CLOCKS_PER_SEC) + 1) + "u";
+		snprintf(buffer, bufferSize, formatMs.data(), clock() / CLOCKS_PER_SEC);
+		result = result.replace(posFind, 2, buffer);
+	}
+	return result;
 }
 
 std::string Logger::getNextLogName()

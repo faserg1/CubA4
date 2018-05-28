@@ -83,8 +83,8 @@ void VulkanDebugExtension::init(std::shared_ptr<const VulkanInstance> instance)
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
 			level = LogLevel::Debug;
 			break;
-			loggerTagged->log(level, pCallbackData->pMessage);
 		}
+		loggerTagged->log(level, pCallbackData->pMessage);
 		return VK_FALSE;
 	};
 	callback.pfnUserCallback = logCallback;
