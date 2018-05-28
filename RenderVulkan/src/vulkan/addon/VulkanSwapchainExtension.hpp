@@ -1,7 +1,7 @@
-#ifndef VULKANSTANDARTVALIDATIONLAYER_HPP
-#define VULKANSTANDARTVALIDATIONLAYER_HPP
+#ifndef VULKANSWAPCHAINEXTENSION_HPP
+#define VULKANSWAPCHAINEXTENSION_HPP
 
-#include "VulkanInstanceLayer.hpp"
+#include "VulkanInstanceExtension.hpp"
 
 namespace CubA4
 {
@@ -11,12 +11,12 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanStandardValidationLayer :
-					public VulkanInstanceLayer
+				class VulkanSwapchainExtension :
+					public VulkanExtension
 				{
 				public:
-					explicit VulkanStandardValidationLayer();
-					~VulkanStandardValidationLayer();
+					explicit VulkanSwapchainExtension();
+					~VulkanSwapchainExtension();
 
 					std::vector<std::string> names() const override;
 					void init(std::shared_ptr<const VulkanInstance> instance) override;
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANSTANDARTVALIDATIONLAYER_HPP
+#endif // VULKANSWAPCHAINEXTENSION_HPP

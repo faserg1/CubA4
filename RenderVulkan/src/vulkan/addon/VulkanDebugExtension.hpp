@@ -1,7 +1,7 @@
 #ifndef VULKANDEBUGEXTENSION_HPP
 #define VULKANDEBUGEXTENSION_HPP
 
-#include "VulkanExtension.hpp"
+#include "VulkanInstanceExtension.hpp"
 #include <memory>
 
 namespace CubA4

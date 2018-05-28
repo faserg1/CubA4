@@ -1,11 +1,12 @@
 #include "./VulkanRenderEngine.hpp"
 #include "../vulkan/VulkanInstance.hpp"
 #include "../vulkan/VulkanInstanceBuilder.hpp"
-#include "../vulkan/addon/VulkanLayer.hpp"
-#include "../vulkan/addon/VulkanExtension.hpp"
+#include "../vulkan/addon/VulkanInstanceLayer.hpp"
+#include "../vulkan/addon/VulkanInstanceExtension.hpp"
 
 #include "../vulkan/addon/VulkanSDLExtension.hpp"
 #include "../vulkan/addon/VulkanDebugExtension.hpp"
+#include "../vulkan/addon/VulkanSwapchainExtension.hpp"
 #include "../vulkan/addon/VulkanStandardValidationLayer.hpp"
 
 #include <algorithm>
@@ -34,7 +35,7 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 		instanceBuilder_->addExtension(*ext);
 		addons_.push_back(ext);
 	};
-	auto addLayer = [=](std::shared_ptr<VulkanLayer> layer)
+	auto addLayer = [=](std::shared_ptr<VulkanInstanceLayer> layer)
 	{
 		instanceBuilder_->addLayer(*layer);
 		addons_.push_back(layer);
@@ -45,6 +46,9 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 
 	auto vkDebugExt = std::make_shared<VulkanDebugExtension>(logger_);
 	addExt(vkDebugExt);
+
+	auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>();
+	addExt(vkSwapChainExt);
 
 	auto vkStdLayer = std::make_shared<VulkanStandardValidationLayer>();
 	addLayer(vkStdLayer);

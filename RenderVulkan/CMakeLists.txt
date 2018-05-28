@@ -8,19 +8,29 @@ set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
 set(RenderVulkanHeaderVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.hpp
-	${RenderVulkanSourceVulkanAddonDir}/VulkanLayer.hpp
-	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceLayer.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanSDLExtension.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanStandardValidationLayer.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanSwapchainExtension.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanAddon.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceAddon.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceLayer.hpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceExtension.hpp
 )
 set(RenderVulkanSourceVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.cpp
-	${RenderVulkanSourceVulkanAddonDir}/VulkanLayer.cpp
-	${RenderVulkanSourceVulkanAddonDir}/VulkanExtension.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceLayer.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanDebugExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanSDLExtension.cpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanStandardValidationLayer.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanSwapchainExtension.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanAddon.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceAddon.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceLayer.cpp
+	${RenderVulkanSourceVulkanAddonDir}/VulkanDeviceExtension.cpp
 )
 set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.cpp

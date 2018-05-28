@@ -1,13 +1,17 @@
 #include "./VulkanInstanceAddon.hpp"
-#include <algorithm>
 using namespace CubA4::render::vulkan::addon;
 
-bool CubA4::render::vulkan::addon::VulkanInstanceAddon::available() const
+VulkanInstanceAddon::VulkanInstanceAddon()
 {
-	auto all = allNames();
-	auto required = names();
-	//Всё это необходимо отсортировать, прежде чем искать
-	std::sort(all.begin(), all.end());
-	std::sort(required.begin(), required.end());
-	return std::includes(all.begin(), all.end(), required.begin(), required.end());
+
+}
+
+VulkanInstanceAddon::~VulkanInstanceAddon()
+{
+
+}
+
+VulkanAddonType VulkanInstanceAddon::type() const
+{
+	return VulkanAddonType::Instance;
 }

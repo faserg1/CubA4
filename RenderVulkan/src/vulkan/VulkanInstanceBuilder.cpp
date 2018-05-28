@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <info/IApplicationInfo.hpp>
 #include <info/IVersion.hpp>
-#include "addon/VulkanExtension.hpp"
-#include "addon/VulkanLayer.hpp"
+#include "addon/VulkanInstanceExtension.hpp"
+#include "addon/VulkanInstanceLayer.hpp"
 #include "VulkanInstance.hpp"
 using namespace CubA4::render::vulkan;
 using namespace CubA4::core::info;
@@ -41,7 +41,7 @@ VulkanInstanceBuilder::~VulkanInstanceBuilder()
 	
 }
 
-void VulkanInstanceBuilder::addLayer(addon::VulkanLayer &layer)
+void VulkanInstanceBuilder::addLayer(addon::VulkanInstanceLayer &layer)
 {
 	if (!layer.available())
 		throw std::runtime_error("Extension is not available");

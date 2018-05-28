@@ -1,9 +1,8 @@
 #ifndef IVULKANINSTANCEADDON_HPP
 #define IVULKANINSTANCEADDON_HPP
 
-#include <string>
-#include <vector>
 #include <memory>
+#include "VulkanAddon.hpp"
 
 namespace CubA4
 {
@@ -15,19 +14,16 @@ namespace CubA4
 			
 			namespace addon
 			{
-				class VulkanInstanceAddon
+				class VulkanInstanceAddon :
+					public VulkanAddon
 				{
 				public:
-					virtual ~VulkanInstanceAddon() {}
-					
-					virtual std::vector<std::string> names() const = 0;
+					VulkanAddonType type() const override;
 					virtual void init(std::shared_ptr<const VulkanInstance> instance) = 0;
-					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;
-
-					bool available() const;
+					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;	
 				protected:
-					virtual std::vector<std::string> allNames() const = 0;
-					explicit VulkanInstanceAddon() {}
+					explicit VulkanInstanceAddon();
+					virtual ~VulkanInstanceAddon();
 				private:
 				};
 			}

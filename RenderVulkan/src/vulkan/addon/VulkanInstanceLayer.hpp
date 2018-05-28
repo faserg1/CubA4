@@ -14,12 +14,12 @@ namespace CubA4
 			{
 				struct VulkanLayerPrivate;
 
-				class VulkanLayer :
+				class VulkanInstanceLayer :
 					public VulkanInstanceAddon
 				{
 				public:
-					explicit VulkanLayer();
-					~VulkanLayer();
+					explicit VulkanInstanceLayer();
+					~VulkanInstanceLayer();
 				protected:
 					std::vector<std::string> allNames() const override;
 				private:
