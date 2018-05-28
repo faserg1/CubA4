@@ -14,14 +14,14 @@ namespace CubA4
 			{
 				struct VulkanExtensionPrivate;
 
-				class VulkanExtension :
+				class VulkanInstanceExtension :
 					public VulkanInstanceAddon
 				{
 				public:
 					
-					~VulkanExtension();
+					~VulkanInstanceExtension();
 				protected:
-					explicit VulkanExtension();
+					explicit VulkanInstanceExtension();
 					std::vector<std::string> allNames() const override;
 				private:
 					std::shared_ptr<VulkanExtensionPrivate> data_;

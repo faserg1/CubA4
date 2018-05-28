@@ -49,7 +49,7 @@ void VulkanInstanceBuilder::addLayer(addon::VulkanInstanceLayer &layer)
 	layers_.insert(layers_.end(), names.begin(), names.end());
 }
 
-void VulkanInstanceBuilder::addExtension(addon::VulkanExtension &extension)
+void VulkanInstanceBuilder::addExtension(addon::VulkanInstanceExtension &extension)
 {
 	if (!extension.available())
 		throw std::runtime_error("Extension is not available");

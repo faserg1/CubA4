@@ -23,7 +23,7 @@ namespace CubA4
 				struct VulkanDebugExtensionData;
 
 				class VulkanDebugExtension :
-					public VulkanExtension
+					public VulkanInstanceExtension
 				{
 				public:
 					explicit VulkanDebugExtension(std::shared_ptr<core::logging::ILogger> logger);

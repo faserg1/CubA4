@@ -22,7 +22,7 @@ namespace CubA4
 			namespace addon
 			{
 				class VulkanInstanceLayer;
-				class VulkanExtension;
+				class VulkanInstanceExtension;
 			}
 
 			class VulkanInstance;
@@ -36,7 +36,7 @@ namespace CubA4
 				~VulkanInstanceBuilder();
 
 				void addLayer(addon::VulkanInstanceLayer &layer);
-				void addExtension(addon::VulkanExtension &extension);
+				void addExtension(addon::VulkanInstanceExtension &extension);
 				std::shared_ptr<const VulkanInstance> build();
 				void destroy(std::shared_ptr<const VulkanInstance> instance);
 			protected:

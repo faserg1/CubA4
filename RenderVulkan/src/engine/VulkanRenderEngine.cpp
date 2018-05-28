@@ -30,7 +30,7 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 {
 	if (instance_)
 		throw std::runtime_error("Already initialized");
-	auto addExt = [=](std::shared_ptr<VulkanExtension> ext)
+	auto addExt = [=](std::shared_ptr<VulkanInstanceExtension> ext)
 	{
 		instanceBuilder_->addExtension(*ext);
 		addons_.push_back(ext);
@@ -47,8 +47,9 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 	auto vkDebugExt = std::make_shared<VulkanDebugExtension>(logger_);
 	addExt(vkDebugExt);
 
-	auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>();
-	addExt(vkSwapChainExt);
+	//FIXME: [OOKAMI] Device extension
+	/*auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>();
+	addExt(vkSwapChainExt);*/
 
 	auto vkStdLayer = std::make_shared<VulkanStandardValidationLayer>();
 	addLayer(vkStdLayer);
