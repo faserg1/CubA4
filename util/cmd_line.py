@@ -38,6 +38,12 @@ class CmdLineParser:
 			print("Invalid usage!")
 			self.help()
 			return
+		req_params = sys.argv[1:4]
+		for req_param in req_params:
+			if req_param.startswith("--"):
+				print("Invalid usage!")
+				self.help()
+				return
 		type = sys.argv[1]
 		full_name = self._parse_name(sys.argv[2])
 		module = sys.argv[3]
