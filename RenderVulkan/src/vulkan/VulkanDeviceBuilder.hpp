@@ -2,6 +2,8 @@
 #define VULKANDEVICEBUILDER_HPP
 
 #include <memory>
+#include <vector>
+#include <string>
 
 namespace CubA4
 {
@@ -38,6 +40,9 @@ namespace CubA4
 				std::shared_ptr<VulkanDeviceBuilderData> data_;
 				std::shared_ptr<const VulkanInstance> instance_;
 				std::weak_ptr<const VulkanSurface> surface_;
+
+				std::vector<std::string> extensions_;
+				std::vector<std::string> layers_;
 			};
 		}
 	}
