@@ -45,6 +45,10 @@ void VulkanSDLExtension::destroy(std::shared_ptr<const VulkanInstance> instance)
 	surface_.reset();
 }
 
+void VulkanSDLExtension::added(VulkanInstanceBuilder &builder)
+{
+
+}
 
 std::shared_ptr<const VulkanSurface> VulkanSDLExtension::getSurface() const
 {

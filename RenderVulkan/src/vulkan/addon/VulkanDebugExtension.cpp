@@ -98,6 +98,11 @@ void VulkanDebugExtension::destroy(std::shared_ptr<const VulkanInstance> instanc
 	data_->messeger = {};
 }
 
+void VulkanDebugExtension::added(VulkanInstanceBuilder &builder)
+{
+
+}
+
 void VulkanDebugExtension::fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance)
 {
 	auto vkInstance = instance->getInstance();

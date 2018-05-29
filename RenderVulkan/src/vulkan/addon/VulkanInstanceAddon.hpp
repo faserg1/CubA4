@@ -11,6 +11,7 @@ namespace CubA4
 		namespace vulkan
 		{
 			class VulkanInstance;
+			class VulkanInstanceBuilder;
 			
 			namespace addon
 			{
@@ -20,7 +21,8 @@ namespace CubA4
 				public:
 					VulkanAddonType type() const override;
 					virtual void init(std::shared_ptr<const VulkanInstance> instance) = 0;
-					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;	
+					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;
+					virtual void added(VulkanInstanceBuilder &builder) = 0;
 				protected:
 					explicit VulkanInstanceAddon();
 					virtual ~VulkanInstanceAddon();

@@ -21,6 +21,7 @@ namespace CubA4
 					std::vector<std::string> names() const override;
 					void init(std::shared_ptr<const VulkanInstance> instance) override;
 					void destroy(std::shared_ptr<const VulkanInstance> instance) override;
+					void added(VulkanInstanceBuilder &builder) override;
 				protected:
 				private:
 				};

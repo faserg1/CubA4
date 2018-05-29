@@ -26,3 +26,7 @@ void VulkanStandardValidationLayer::destroy(std::shared_ptr<const VulkanInstance
 {
 }
 
+void VulkanStandardValidationLayer::added(VulkanInstanceBuilder &builder)
+{
+
+}

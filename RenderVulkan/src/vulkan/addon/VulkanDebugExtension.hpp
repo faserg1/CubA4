@@ -29,9 +29,10 @@ namespace CubA4
 					explicit VulkanDebugExtension(std::shared_ptr<core::logging::ILogger> logger);
 					~VulkanDebugExtension();
 
-					std::vector<std::string> names() const;
-					void init(std::shared_ptr<const VulkanInstance> instance);
-					void destroy(std::shared_ptr<const VulkanInstance> instance);
+					std::vector<std::string> names() const override;
+					void init(std::shared_ptr<const VulkanInstance> instance) override;
+					void destroy(std::shared_ptr<const VulkanInstance> instance) override;
+					void added(VulkanInstanceBuilder &builder) override;
 				protected:
 				private:
 					void fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance);
