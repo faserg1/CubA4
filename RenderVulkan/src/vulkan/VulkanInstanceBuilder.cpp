@@ -47,6 +47,7 @@ void VulkanInstanceBuilder::addLayer(addon::VulkanInstanceLayer &layer)
 		throw std::runtime_error("Extension is not available");
 	auto names = layer.names();
 	layers_.insert(layers_.end(), names.begin(), names.end());
+	layer.added(*this);
 }
 
 void VulkanInstanceBuilder::addExtension(addon::VulkanInstanceExtension &extension)
@@ -55,6 +56,7 @@ void VulkanInstanceBuilder::addExtension(addon::VulkanInstanceExtension &extensi
 		throw std::runtime_error("Extension is not available");
 	auto names = extension.names();
 	extensions_.insert(extensions_.end(), names.begin(), names.end());
+	extension.added(*this);
 }
 
 std::shared_ptr<const VulkanInstance> VulkanInstanceBuilder::build()

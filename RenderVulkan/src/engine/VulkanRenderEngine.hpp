@@ -24,9 +24,13 @@ namespace CubA4
 		{
 			class VulkanInstance;
 			class VulkanInstanceBuilder;
+			class VulkanDevice;
+			class VulkanDeviceBuilder;
+
 			namespace addon
 			{
 				class VulkanInstanceAddon;
+				class VulkanDeviceAddon;
 			}
 		}
 
@@ -43,12 +47,21 @@ namespace CubA4
 				void init(std::shared_ptr<window::IWindow> window) override;
 				void destroy() override;
 			protected:
+				void initInstance();
+				void destroyInstance();
+
+				void initDevice();
+				void destroyDevice();
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<core::logging::ILogger> logger_;
+				std::weak_ptr<window::IWindow> window_;
 				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;
 				std::shared_ptr<const vulkan::VulkanInstance> instance_;
-				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> addons_;
+				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> instanceAddons_;
+				std::shared_ptr<vulkan::VulkanDeviceBuilder> deviceBuilder_;
+				std::shared_ptr<const vulkan::VulkanDevice> device_;
+				std::vector<std::shared_ptr<vulkan::addon::VulkanDeviceAddon>> deviceAddons_;
 			};
 		}
 	}
