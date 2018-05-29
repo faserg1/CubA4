@@ -18,6 +18,8 @@ namespace CubA4
 			protected:
 			private:
 				VkDevice device_;
+				VkQueue renderQueue;
+				VkQueue presentQueue;
 			};
 		}
 	}

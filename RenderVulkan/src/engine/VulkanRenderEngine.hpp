@@ -26,6 +26,7 @@ namespace CubA4
 			class VulkanInstanceBuilder;
 			class VulkanDevice;
 			class VulkanDeviceBuilder;
+			class VulkanSurface;
 
 			namespace addon
 			{
@@ -56,6 +57,7 @@ namespace CubA4
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<core::logging::ILogger> logger_;
 				std::weak_ptr<window::IWindow> window_;
+				std::weak_ptr<const vulkan::VulkanSurface> surface_;
 				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;
 				std::shared_ptr<const vulkan::VulkanInstance> instance_;
 				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> instanceAddons_;

@@ -61,9 +61,11 @@ void VulkanRenderEngine::initInstance()
 		instanceAddons_.push_back(layer);
 	};
 
+
+	std::shared_ptr<VulkanSDLExtension> vkSDLExt;
 	if (auto window = window_.lock())
 	{
-		auto vkSDLExt = std::make_shared<VulkanSDLExtension>(window);
+		vkSDLExt = std::make_shared<VulkanSDLExtension>(window);
 		addExt(vkSDLExt);
 	}
 	else
@@ -78,6 +80,8 @@ void VulkanRenderEngine::initInstance()
 	instance_ = instanceBuilder_->build();
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<VulkanInstanceAddon> addon) {addon->init(instance_); });
+
+	surface_ = vkSDLExt->getSurface();
 }
 
 void VulkanRenderEngine::destroyInstance()
@@ -93,7 +97,7 @@ void VulkanRenderEngine::destroyInstance()
 
 void VulkanRenderEngine::initDevice()
 {
-	deviceBuilder_ = std::make_shared<VulkanDeviceBuilder>(instance_);
+	deviceBuilder_ = std::make_shared<VulkanDeviceBuilder>(instance_, surface_);
 	//FIXME: [OOKAMI] Device extension
 	/*auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>();
 	addExt(vkSwapChainExt);*/

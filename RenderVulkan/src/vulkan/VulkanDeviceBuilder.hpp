@@ -17,12 +17,14 @@ namespace CubA4
 
 			class VulkanInstance;
 			class VulkanDevice;
+			class VulkanSurface;
 			struct VulkanDeviceBuilderData;
 
 			class VulkanDeviceBuilder
 			{
 			public:
-				explicit VulkanDeviceBuilder(std::shared_ptr<const VulkanInstance> instance);
+				explicit VulkanDeviceBuilder(std::shared_ptr<const VulkanInstance> instance,
+					std::weak_ptr<const VulkanSurface> surface);
 				~VulkanDeviceBuilder();
 
 				void addLayer(addon::VulkanDeviceLayer &layer);
@@ -31,9 +33,11 @@ namespace CubA4
 				void destroy(std::shared_ptr<const VulkanDevice> device);
 			protected:
 				void enumPhysicalDevices();
+				void choosePhysicalDevice();
 			private:
 				std::shared_ptr<VulkanDeviceBuilderData> data_;
 				std::shared_ptr<const VulkanInstance> instance_;
+				std::weak_ptr<const VulkanSurface> surface_;
 			};
 		}
 	}
