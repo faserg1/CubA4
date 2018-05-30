@@ -38,6 +38,9 @@ set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanSurface.cpp
 	${RenderVulkanSourceVulkanDir}/VulkanDevice.cpp
 	${RenderVulkanSourceVulkanDir}/VulkanDeviceBuilder.cpp
+	${RenderVulkanSourceVulkanDir}/VulkanPhysicalDevice.cpp
+	${RenderVulkanSourceVulkanDir}/Swapchain.cpp
+	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.hpp
@@ -45,12 +48,17 @@ set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanSurface.hpp
 	${RenderVulkanSourceVulkanDir}/VulkanDevice.hpp
 	${RenderVulkanSourceVulkanDir}/VulkanDeviceBuilder.hpp
+	${RenderVulkanSourceVulkanDir}/VulkanPhysicalDevice.hpp
+	${RenderVulkanSourceVulkanDir}/Swapchain.hpp
+	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/VulkanRenderEngine.cpp
+	${RenderVulkanSourceEngineDir}/VulkanPresentaion.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/VulkanRenderEngine.hpp
+	${RenderVulkanSourceEngineDir}/VulkanPresentaion.hpp
 )
 
 set(RenderVulkanHeaders

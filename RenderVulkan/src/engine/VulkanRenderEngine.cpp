@@ -98,9 +98,13 @@ void VulkanRenderEngine::destroyInstance()
 void VulkanRenderEngine::initDevice()
 {
 	deviceBuilder_ = std::make_shared<VulkanDeviceBuilder>(instance_, surface_);
-	//FIXME: [OOKAMI] Device extension
-	/*auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>();
-	addExt(vkSwapChainExt);*/
+	auto addExt = [=](std::shared_ptr<VulkanDeviceExtension> ext)
+	{
+		deviceBuilder_->addExtension(*ext);
+		deviceAddons_.push_back(ext);
+	};
+	auto vkSwapChainExt = std::make_shared<VulkanSwapchainExtension>(deviceBuilder_->getPhysicalDevice());
+	addExt(vkSwapChainExt);
 	device_ = deviceBuilder_->build();
 	std::for_each(deviceAddons_.begin(), deviceAddons_.end(),
 		[this](std::shared_ptr<VulkanDeviceAddon> addon) {addon->init(device_); });

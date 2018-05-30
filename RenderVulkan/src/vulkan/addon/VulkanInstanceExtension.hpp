@@ -12,7 +12,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanExtensionPrivate;
+				struct VulkanInstanceExtensionData;
 
 				class VulkanInstanceExtension :
 					public VulkanInstanceAddon
@@ -24,7 +24,7 @@ namespace CubA4
 					explicit VulkanInstanceExtension();
 					std::vector<std::string> allNames() const override;
 				private:
-					std::shared_ptr<VulkanExtensionPrivate> data_;
+					std::shared_ptr<VulkanInstanceExtensionData> data_;
 				};
 			}
 		}

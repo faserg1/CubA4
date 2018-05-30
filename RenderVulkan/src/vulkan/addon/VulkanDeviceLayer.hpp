@@ -15,7 +15,7 @@ namespace CubA4
 					public VulkanDeviceAddon
 				{
 				public:
-					explicit VulkanDeviceLayer();
+					explicit VulkanDeviceLayer(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
 					~VulkanDeviceLayer();
 				protected:
 				private:

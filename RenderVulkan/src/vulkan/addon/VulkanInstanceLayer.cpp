@@ -11,7 +11,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanLayerPrivate
+				struct VulkanInstanceLayerData
 				{
 					std::vector<VkLayerProperties> layers;
 				};
@@ -21,7 +21,7 @@ namespace CubA4
 }
 
 VulkanInstanceLayer::VulkanInstanceLayer() :
-	data_(std::make_shared<VulkanLayerPrivate>())
+	data_(std::make_shared<VulkanInstanceLayerData>())
 {
 	uint32_t layersCount = 0;
 	if (vkEnumerateInstanceLayerProperties(&layersCount, nullptr) != VK_SUCCESS)

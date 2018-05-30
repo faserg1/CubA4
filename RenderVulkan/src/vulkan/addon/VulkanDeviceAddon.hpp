@@ -12,6 +12,7 @@ namespace CubA4
 		{
 			class VulkanDevice;
 			class VulkanDeviceBuilder;
+			class VulkanPhysicalDevice;
 
 			namespace addon
 			{
@@ -19,7 +20,7 @@ namespace CubA4
 					public VulkanAddon
 				{
 				public:
-					explicit VulkanDeviceAddon();
+					explicit VulkanDeviceAddon(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
 					~VulkanDeviceAddon();
 
 					VulkanAddonType type() const override;
@@ -27,6 +28,7 @@ namespace CubA4
 					virtual void destroy(std::shared_ptr<const VulkanDevice> instance) = 0;
 					virtual void added(VulkanDeviceBuilder &builder) = 0;
 				protected:
+					std::weak_ptr<VulkanPhysicalDevice> physicalDevice_;
 				private:
 				};
 			}

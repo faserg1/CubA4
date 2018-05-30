@@ -12,7 +12,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanExtensionPrivate
+				struct VulkanInstanceExtensionData
 				{
 					std::vector<VkExtensionProperties> extensions;
 				};
@@ -22,7 +22,7 @@ namespace CubA4
 }
 
 VulkanInstanceExtension::VulkanInstanceExtension() :
-	data_(std::make_shared<VulkanExtensionPrivate>())
+	data_(std::make_shared<VulkanInstanceExtensionData>())
 {
 	uint32_t extCount = 0;
 	if (vkEnumerateInstanceExtensionProperties(nullptr, &extCount, nullptr) != VK_SUCCESS)

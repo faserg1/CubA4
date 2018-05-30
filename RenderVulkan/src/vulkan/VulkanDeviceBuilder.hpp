@@ -20,6 +20,7 @@ namespace CubA4
 			class VulkanInstance;
 			class VulkanDevice;
 			class VulkanSurface;
+			class VulkanPhysicalDevice;
 			struct VulkanDeviceBuilderData;
 
 			class VulkanDeviceBuilder
@@ -31,6 +32,9 @@ namespace CubA4
 
 				void addLayer(addon::VulkanDeviceLayer &layer);
 				void addExtension(addon::VulkanDeviceExtension &extension);
+
+				std::weak_ptr<VulkanPhysicalDevice> getPhysicalDevice();
+
 				std::shared_ptr<const VulkanDevice> build();
 				void destroy(std::shared_ptr<const VulkanDevice> device);
 			protected:
