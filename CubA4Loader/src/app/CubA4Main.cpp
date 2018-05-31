@@ -64,7 +64,7 @@ void AppMain::loadRender()
 	}
 	if (!finalRenderInfo)
 		throw std::runtime_error("Cannot find render library!");
-	finalRenderInfo->init(info_, core_->getLogger());
+	finalRenderInfo->init(info_, core_);
 }
 
 void  AppMain::unloadRender()

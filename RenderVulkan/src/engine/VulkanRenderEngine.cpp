@@ -1,5 +1,7 @@
 #include "./VulkanRenderEngine.hpp"
 
+#include <ICore.hpp>
+
 #include "../vulkan/VulkanInstance.hpp"
 #include "../vulkan/VulkanInstanceBuilder.hpp"
 #include "../vulkan/addon/VulkanInstanceLayer.hpp"
@@ -21,8 +23,10 @@ using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
 
-VulkanRenderEngine::VulkanRenderEngine(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<CubA4::core::logging::ILogger> logger) :
-	info_(info), logger_(logger)
+VulkanRenderEngine::VulkanRenderEngine(
+	std::shared_ptr<const CubA4::core::info::IApplicationInfo> info,
+	std::shared_ptr<const CubA4::core::ICore> core) :
+	info_(info), core_(core), logger_(core->getLogger())
 {
 	
 }

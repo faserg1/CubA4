@@ -17,17 +17,17 @@ Core::~Core()
 
 }
 
-const std::shared_ptr<const config::IFilePaths> Core::getPaths()
+const std::shared_ptr<const config::IFilePaths> Core::getPaths() const
 {
 	return paths_;
 }
 
-std::shared_ptr<config::ICoreConfig> Core::getConfig()
+std::shared_ptr<config::ICoreConfig> Core::getConfig() const
 {
 	return config_;
 }
 
-std::shared_ptr<logging::ILogger> CubA4::core::Core::getLogger()
+std::shared_ptr<logging::ILogger> CubA4::core::Core::getLogger() const
 {
 	return logger_;
 }

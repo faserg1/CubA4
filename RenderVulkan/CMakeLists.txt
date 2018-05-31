@@ -3,9 +3,16 @@ cmake_minimum_required (VERSION 2.8)
 link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceConfig
+	${RenderVulkanSourceConfigDir}/RenderConfig.cpp
+)
+set(RenderVulkanHeaderConfig
+	${RenderVulkanSourceConfigDir}/RenderConfig.hpp
+)
 set(RenderVulkanHeaderVulkanAddon
 	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceAddon.hpp
 	${RenderVulkanSourceVulkanAddonDir}/VulkanInstanceLayer.hpp
@@ -39,8 +46,8 @@ set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanDevice.cpp
 	${RenderVulkanSourceVulkanDir}/VulkanDeviceBuilder.cpp
 	${RenderVulkanSourceVulkanDir}/VulkanPhysicalDevice.cpp
-	${RenderVulkanSourceVulkanDir}/Swapchain.cpp
-	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.cpp
+	${RenderVulkanSourceVulkanDir}/VulkanSwapchain.cpp
+	${RenderVulkanSourceVulkanDir}/VulkanSwapchainBuilder.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanInstance.hpp
@@ -49,8 +56,8 @@ set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/VulkanDevice.hpp
 	${RenderVulkanSourceVulkanDir}/VulkanDeviceBuilder.hpp
 	${RenderVulkanSourceVulkanDir}/VulkanPhysicalDevice.hpp
-	${RenderVulkanSourceVulkanDir}/Swapchain.hpp
-	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.hpp
+	${RenderVulkanSourceVulkanDir}/VulkanSwapchain.hpp
+	${RenderVulkanSourceVulkanDir}/VulkanSwapchainBuilder.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/VulkanRenderEngine.cpp
@@ -66,6 +73,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderEngine}
 	${RenderVulkanHeaderVulkan}
 	${RenderVulkanHeaderVulkanAddon}
+	${RenderVulkanHeaderConfig}
 )
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 
@@ -75,12 +83,15 @@ set(RenderVulkanSources
 	${RenderVulkanSourceEngine}
 	${RenderVulkanSourceVulkan}
 	${RenderVulkanSourceVulkanAddon}
+	${RenderVulkanSourceConfig}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
 source_group("${SOURCE_GROUP_SOURCE_START}vulkan" FILES ${RenderVulkanSourceVulkan})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan${SOURCE_GROUP_SEP}addon" FILES ${RenderVulkanHeaderVulkanAddon})
 source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}addon" FILES ${RenderVulkanSourceVulkanAddon})
+source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${RenderVulkanHeaderConfig})
+source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConfig})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources})
 

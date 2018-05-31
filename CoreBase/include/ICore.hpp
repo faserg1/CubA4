@@ -21,9 +21,9 @@ namespace CubA4
 		class ICore
 		{
 		public:
-			virtual const std::shared_ptr<const config::IFilePaths> getPaths() = 0;
-			virtual std::shared_ptr<config::ICoreConfig> getConfig() = 0;
-			virtual std::shared_ptr<logging::ILogger> getLogger() = 0;
+			virtual const std::shared_ptr<const config::IFilePaths> getPaths() const = 0;
+			virtual std::shared_ptr<config::ICoreConfig> getConfig() const = 0;
+			virtual std::shared_ptr<logging::ILogger> getLogger() const = 0;
 
 			virtual ~ICore() {}
 		protected:

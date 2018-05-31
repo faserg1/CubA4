@@ -9,10 +9,7 @@ namespace CubA4
 {
 	namespace core
 	{
-		namespace logging
-		{
-			class ILogger;
-		}
+		class ICore;
 		namespace info
 		{
 			class IApplicationInfo;
@@ -30,7 +27,7 @@ namespace CubA4
 		{
 		public:
 			virtual ~IRenderInfo() {}
-			virtual void init(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<core::logging::ILogger> logger) = 0;
+			virtual void init(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<const core::ICore> core) = 0;
 			virtual void destroy() = 0;
 			virtual std::string getRenderEngineId() const = 0;
 			virtual std::shared_ptr<engine::IRenderEngine> getRenderEngine() = 0;

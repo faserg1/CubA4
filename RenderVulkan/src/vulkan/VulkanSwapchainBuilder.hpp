@@ -7,11 +7,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class SwapchainBuilder
+			class VulkanSwapchainBuilder
 			{
 			public:
-				explicit SwapchainBuilder();
-				~SwapchainBuilder();
+				explicit VulkanSwapchainBuilder();
+				~VulkanSwapchainBuilder();
 			protected:
 			private:
 			};

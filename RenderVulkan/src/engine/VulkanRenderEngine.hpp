@@ -8,6 +8,7 @@ namespace CubA4
 {
 	namespace core
 	{
+		class ICore;
 		namespace logging
 		{
 			class ILogger;
@@ -41,7 +42,7 @@ namespace CubA4
 				public virtual IRenderEngine
 			{
 			public:
-				explicit VulkanRenderEngine(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<core::logging::ILogger> logger);
+				explicit VulkanRenderEngine(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<const core::ICore> core);
 				explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
 				~VulkanRenderEngine();
 
@@ -55,6 +56,7 @@ namespace CubA4
 				void destroyDevice();
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
+				std::shared_ptr<const core::ICore> core_;
 				std::shared_ptr<core::logging::ILogger> logger_;
 				std::weak_ptr<window::IWindow> window_;
 				std::weak_ptr<const vulkan::VulkanSurface> surface_;
