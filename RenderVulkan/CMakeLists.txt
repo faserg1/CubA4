@@ -95,6 +95,8 @@ source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConf
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources})
 
+#third-party library
+
 find_library(vulkan-1 PATHS ${VULKAN_SDK_LIB} NO_DEFAULT_PATH)
 find_library(SDL2 PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -103,6 +105,9 @@ target_include_directories(RenderVulkan PRIVATE ${VULKAN_SDK_INCLUDE})
 target_include_directories(RenderVulkan PRIVATE ${SDL_INCLUDE_DIR})
 
 target_link_libraries(RenderVulkan PRIVATE vulkan-1 SDL2 SDL2main)
+
+target_include_directories(RenderVulkan PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(RenderVulkan PRIVATE Boost::filesystem)
 
 get_target_property(RENDER_BASE_INCLUDE_DIRECTORIES RenderBase INTERFACE_INCLUDE_DIRECTORIES)
 target_include_directories(RenderVulkan PUBLIC ${RENDER_BASE_INCLUDE_DIRECTORIES})
