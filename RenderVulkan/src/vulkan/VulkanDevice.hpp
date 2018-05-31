@@ -12,14 +12,16 @@ namespace CubA4
 			class VulkanDevice
 			{
 			public:
-				explicit VulkanDevice(VkDevice device, VkQueue queue);
+				explicit VulkanDevice(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue);
 				~VulkanDevice();
 
 				VkDevice getDevice() const;
+				VkPhysicalDevice getPhysicalDevice() const;
 				VkQueue getQueue() const;
 			protected:
 			private:
 				VkDevice device_;
+				VkPhysicalDevice physicalDevice_;
 				VkQueue queue_;
 			};
 		}

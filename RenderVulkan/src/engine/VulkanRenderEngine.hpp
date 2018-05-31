@@ -33,6 +33,8 @@ namespace CubA4
 			class VulkanDevice;
 			class VulkanDeviceBuilder;
 			class VulkanSurface;
+			class VulkanSwapchain;
+			class VulkanSwapchainBuilder;
 
 			namespace addon
 			{
@@ -59,6 +61,10 @@ namespace CubA4
 
 				void initDevice();
 				void destroyDevice();
+
+				void initSwapchain();
+				void rebuildSwapchain();
+				void destroySwapchain();
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<const core::ICore> core_;
@@ -67,12 +73,17 @@ namespace CubA4
 
 				std::weak_ptr<window::IWindow> window_;
 				std::weak_ptr<const vulkan::VulkanSurface> surface_;
+
 				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;
 				std::shared_ptr<const vulkan::VulkanInstance> instance_;
 				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> instanceAddons_;
+
 				std::shared_ptr<vulkan::VulkanDeviceBuilder> deviceBuilder_;
 				std::shared_ptr<const vulkan::VulkanDevice> device_;
 				std::vector<std::shared_ptr<vulkan::addon::VulkanDeviceAddon>> deviceAddons_;
+
+				std::shared_ptr<vulkan::VulkanSwapchainBuilder> swapchainBuilder_;
+				std::shared_ptr<const vulkan::VulkanSwapchain> swapchain_;
 			};
 		}
 	}

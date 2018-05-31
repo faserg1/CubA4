@@ -97,11 +97,12 @@ std::shared_ptr<const VulkanDevice> VulkanDeviceBuilder::build()
 	VkQueue queue;
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 0, &queue);
 
-	return std::make_shared<VulkanDevice>(device, queue);
+	return std::make_shared<VulkanDevice>(device, data_->choosedDevice->getPhysicalDevice(), queue);
 }
 
 void VulkanDeviceBuilder::destroy(std::shared_ptr<const VulkanDevice> device)
 {
+	vkDeviceWaitIdle(device->getDevice());
 	vkDestroyDevice(device->getDevice(), nullptr);
 }
 

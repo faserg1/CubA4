@@ -21,6 +21,9 @@
 #include "../vulkan/addon/VulkanSwapchainExtension.hpp"
 #include "../vulkan/addon/VulkanStandardValidationLayer.hpp"
 
+#include "../vulkan/VulkanSwapchain.hpp"
+#include "../vulkan/VulkanSwapchainBuilder.hpp"
+
 #include <algorithm>
 #include <stdexcept>
 using namespace CubA4::core::logging;
@@ -48,11 +51,13 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 	window_ = window;
 	initInstance();
 	initDevice();
+	initSwapchain();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine initialized.");
 }
 
 void VulkanRenderEngine::destroy()
 {
+	destroySwapchain();
 	destroyDevice();
 	destroyInstance();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
@@ -60,7 +65,8 @@ void VulkanRenderEngine::destroy()
 
 void VulkanRenderEngine::initInstance()
 {
-	instanceBuilder_ = std::make_shared<VulkanInstanceBuilder>(info_);
+	if (!instanceBuilder_)
+		instanceBuilder_ = std::make_shared<VulkanInstanceBuilder>(info_);
 	if (instance_)
 		throw std::runtime_error("Already initialized");
 	auto addExt = [=](std::shared_ptr<VulkanInstanceExtension> ext)
@@ -110,7 +116,8 @@ void VulkanRenderEngine::destroyInstance()
 
 void VulkanRenderEngine::initDevice()
 {
-	deviceBuilder_ = std::make_shared<VulkanDeviceBuilder>(instance_, surface_);
+	if (!deviceBuilder_)
+		deviceBuilder_ = std::make_shared<VulkanDeviceBuilder>(instance_, surface_);
 	auto addExt = [=](std::shared_ptr<VulkanDeviceExtension> ext)
 	{
 		deviceBuilder_->addExtension(*ext);
@@ -130,4 +137,21 @@ void VulkanRenderEngine::destroyDevice()
 	deviceAddons_.clear();
 	deviceBuilder_->destroy(device_);
 	device_.reset();
+}
+
+
+void VulkanRenderEngine::initSwapchain()
+{
+	if (!swapchainBuilder_)
+		swapchainBuilder_ = std::make_shared<VulkanSwapchainBuilder>(device_, surface_, config_);
+}
+
+void VulkanRenderEngine::rebuildSwapchain()
+{
+
+}
+
+void VulkanRenderEngine::destroySwapchain()
+{
+
 }
