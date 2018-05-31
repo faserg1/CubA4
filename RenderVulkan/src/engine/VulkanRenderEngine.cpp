@@ -144,6 +144,7 @@ void VulkanRenderEngine::initSwapchain()
 {
 	if (!swapchainBuilder_)
 		swapchainBuilder_ = std::make_shared<VulkanSwapchainBuilder>(device_, surface_, config_);
+	swapchain_ = swapchainBuilder_->build();
 }
 
 void VulkanRenderEngine::rebuildSwapchain()
@@ -153,5 +154,5 @@ void VulkanRenderEngine::rebuildSwapchain()
 
 void VulkanRenderEngine::destroySwapchain()
 {
-
+	swapchainBuilder_->destroy(swapchain_);
 }
