@@ -16,10 +16,14 @@ namespace CubA4
 			static std::shared_ptr<Window> createWindow(int sizeX, int sizeY, int64_t additionalSDLWindowFlags);
 
 			SDL_Window *getSDLWindow();
+			bool isFullscreen();
+			void setFullscreen(bool fullscreen);
+			void toggleFullscreen();
 		private:
 			explicit Window(int sizeX, int sizeY, int64_t additionalSDLWindowFlags);
 			~Window();
 
+			bool fullscreenMode_;
 			SDL_Window *window_;
 		};
 	}

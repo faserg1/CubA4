@@ -113,6 +113,11 @@ void AppMain::loop()
 			case SDL_QUIT:
 				running_ = false;
 				break;
+			//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
+			case SDL_KEYUP:
+				if (event.key.keysym.scancode = SDL_SCANCODE_F11)
+					window_->toggleFullscreen();
+				break;
 			}
 		}
 	}
