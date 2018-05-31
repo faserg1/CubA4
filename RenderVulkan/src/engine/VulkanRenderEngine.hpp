@@ -21,6 +21,11 @@ namespace CubA4
 
 	namespace render
 	{
+		namespace config
+		{
+			class IRenderConfig;
+		}
+
 		namespace vulkan
 		{
 			class VulkanInstance;
@@ -58,6 +63,8 @@ namespace CubA4
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<const core::ICore> core_;
 				std::shared_ptr<core::logging::ILogger> logger_;
+				std::shared_ptr<config::IRenderConfig> config_;
+
 				std::weak_ptr<window::IWindow> window_;
 				std::weak_ptr<const vulkan::VulkanSurface> surface_;
 				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;

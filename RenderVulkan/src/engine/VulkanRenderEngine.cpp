@@ -1,6 +1,10 @@
 #include "./VulkanRenderEngine.hpp"
 
 #include <ICore.hpp>
+#include <config/IFilePaths.hpp>
+#include <logging/ILogger.hpp>
+
+#include "../config/RenderConfig.hpp"
 
 #include "../vulkan/VulkanInstance.hpp"
 #include "../vulkan/VulkanInstanceBuilder.hpp"
@@ -19,16 +23,19 @@
 
 #include <algorithm>
 #include <stdexcept>
+using namespace CubA4::core::logging;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
+
+constexpr char *loggerTag = "ENGINE";
 
 VulkanRenderEngine::VulkanRenderEngine(
 	std::shared_ptr<const CubA4::core::info::IApplicationInfo> info,
 	std::shared_ptr<const CubA4::core::ICore> core) :
 	info_(info), core_(core), logger_(core->getLogger())
 {
-	
+	config_ = std::make_shared<config::RenderConfig>(core->getPaths()->configPath());
 }
 
 VulkanRenderEngine::~VulkanRenderEngine()
@@ -41,12 +48,14 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 	window_ = window;
 	initInstance();
 	initDevice();
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine initialized.");
 }
 
 void VulkanRenderEngine::destroy()
 {
 	destroyDevice();
 	destroyInstance();
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
 }
 
 void VulkanRenderEngine::initInstance()
