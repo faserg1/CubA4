@@ -24,6 +24,9 @@
 #include "../vulkan/VulkanSwapchain.hpp"
 #include "../vulkan/VulkanSwapchainBuilder.hpp"
 
+#include "./VulkanPresentaion.hpp"
+#include "./VulkanRender.hpp"
+
 #include <algorithm>
 #include <stdexcept>
 using namespace CubA4::core::logging;
@@ -52,11 +55,16 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 	initInstance();
 	initDevice();
 	initSwapchain();
+	initPresentation();
+	initRender();
+	setup();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine initialized.");
 }
 
 void VulkanRenderEngine::destroy()
 {
+	destroyRender();
+	destroyPresentation();
 	destroySwapchain();
 	destroyDevice();
 	destroyInstance();
@@ -155,4 +163,38 @@ void VulkanRenderEngine::rebuildSwapchain()
 void VulkanRenderEngine::destroySwapchain()
 {
 	swapchainBuilder_->destroy(swapchain_);
+	swapchain_.reset();
+}
+
+
+void VulkanRenderEngine::initPresentation()
+{
+	if (!presetation_)
+		presetation_ = std::make_shared<VulkanPresentaion>(device_, swapchain_);
+
+}
+
+void VulkanRenderEngine::destroyPresentation()
+{
+	presetation_.reset();
+}
+
+void VulkanRenderEngine::initRender()
+{
+
+}
+
+void VulkanRenderEngine::destroyRender()
+{
+	render_.reset();
+}
+
+void VulkanRenderEngine::setup()
+{
+	//TODO: [OOKAMI] настройка Presentation & Render
+}
+
+void VulkanRenderEngine::run()
+{
+	//TODO: [OOKAMI] запуск основного рендер потока
 }

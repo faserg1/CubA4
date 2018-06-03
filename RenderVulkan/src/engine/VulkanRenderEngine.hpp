@@ -45,6 +45,9 @@ namespace CubA4
 
 		namespace engine
 		{
+			class VulkanPresentaion;
+			class VulkanRender;
+
 			class VulkanRenderEngine :
 				public virtual IRenderEngine
 			{
@@ -65,6 +68,15 @@ namespace CubA4
 				void initSwapchain();
 				void rebuildSwapchain();
 				void destroySwapchain();
+
+				void initPresentation();
+				void destroyPresentation();
+
+				void initRender();
+				void destroyRender();
+
+				void setup();
+				void run();
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<const core::ICore> core_;
@@ -84,6 +96,9 @@ namespace CubA4
 
 				std::shared_ptr<vulkan::VulkanSwapchainBuilder> swapchainBuilder_;
 				std::shared_ptr<const vulkan::VulkanSwapchain> swapchain_;
+
+				std::shared_ptr<VulkanPresentaion> presetation_;
+				std::shared_ptr<VulkanRender> render_;
 			};
 		}
 	}
