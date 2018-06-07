@@ -14,6 +14,7 @@ set(BUILD_OUTPUT_DIRECTORY ${BIN_BUILD_OUTPUT_DIRECTORY})
 
 #prepare config
 include (Arch.cmake)
+include (Util.cmake)
 
 #first prepare thirdparty libraries
 include (thirdparty/thirdparty.cmake)

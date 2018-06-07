@@ -2,6 +2,6 @@ build/*
 Win32/*
 bin/*
 built/*
-./*/gen/*
+*/gen/*
 
 __pycache__

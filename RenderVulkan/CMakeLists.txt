@@ -97,7 +97,10 @@ source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}addon" FILES 
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${RenderVulkanHeaderConfig})
 source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConfig})
 
-add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources})
+add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
+source_group("resources" FILES ${irs_resources})
+
+add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 
 #third-party library
 
