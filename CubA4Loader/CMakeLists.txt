@@ -72,6 +72,10 @@ target_link_libraries(CubA4Loader PRIVATE ModLoader)
 get_target_property(RENDER_BASE_INCLUDE_DIRECTORIES RenderBase INTERFACE_INCLUDE_DIRECTORIES)
 target_include_directories(CubA4Loader PUBLIC ${RENDER_BASE_INCLUDE_DIRECTORIES})
 
+get_target_property(NETWORK_INCLUDE_DIRECTORIES Network INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(CubA4Loader PRIVATE ${NETWORK_INCLUDE_DIRECTORIES})
+target_link_libraries(CubA4Loader PRIVATE Network)
+
 #find thrid-party libraries
 find_library(SDL2 PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
