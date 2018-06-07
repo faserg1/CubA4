@@ -62,3 +62,10 @@ def check_exists_and_get(source, target):
 	if source.startswith(target):
 		after = source[len(target):]
 		return after if len(after) else None
+		
+def format_for(str, every, place):
+	total = ""
+	parts = [str[i:i+every] for i in range(0, len(str), every)]
+	for part in parts:
+		total += part + place
+	return total
