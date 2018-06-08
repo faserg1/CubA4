@@ -10,9 +10,19 @@ set(NetworkIncludeTransmitDir ${NetworkIncludeDir}/transmit)
 
 set(NetworkSourceIo
 	${NetworkSourceIoDir}/Connection.cpp
+	${NetworkSourceIoDir}/ConnectionUDP.cpp
+	${NetworkSourceIoDir}/ConnectionTCP.cpp
+	${NetworkSourceIoDir}/ListenerTCP.cpp
+	${NetworkSourceIoDir}/Listener.cpp
+	${NetworkSourceIoDir}/Factory.cpp
 )
 set(NetworkHeaderIo
 	${NetworkIncludeIoDir}/Connection.hpp
+	${NetworkIncludeIoDir}/ConnectionUDP.hpp
+	${NetworkIncludeIoDir}/ConnectionTCP.hpp
+	${NetworkIncludeIoDir}/ListenerTCP.hpp
+	${NetworkIncludeIoDir}/Listener.hpp
+	${NetworkIncludeIoDir}/Factory.hpp
 )
 set(NetworkSourceData
 	${NetworkSourceDataDir}/Packet.cpp
