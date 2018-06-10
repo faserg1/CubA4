@@ -5,6 +5,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
+#include <future>
 
 namespace CubA4
 {
@@ -25,7 +26,7 @@ namespace CubA4
 				virtual ~Connection();
 
 				virtual ConnectionProtocol protocol() = 0;
-				virtual void send(std::string data) = 0;
+				virtual std::shared_future<void> send(const std::string &data) = 0;
 				void subscribe(cReadFunc readFunc);
 			protected:
 				explicit Connection();

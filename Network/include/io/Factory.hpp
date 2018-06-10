@@ -10,26 +10,34 @@
 
 namespace CubA4
 {
+	namespace core
+	{
+		namespace logging
+		{
+			class ILogger;
+		}
+	}
+
 	namespace network
 	{
 		namespace io
 		{
-			struct FactoryData;
-
 			class LIBRARY_SHARED Factory
 			{
 			public:
-				static std::shared_ptr<Factory> instance();
+				explicit Factory(std::shared_ptr<CubA4::core::logging::ILogger> logger);
+				~Factory();
+
 				using fsConnection = std::shared_future<std::shared_ptr<Connection>>;
 				using fsListener = std::shared_future<std::shared_ptr<Listener>>;
 
+				fsConnection connect(ConnectionProtocol protocol, std::string host, unsigned short port);
 				fsConnection connect(ConnectionProtocol protocol, std::string host, std::string serviceName);
 				fsListener listen(ConnectionProtocol protocol, unsigned short port);
 			protected:
-				explicit Factory();
-				~Factory();
+				
 			private:
-				std::shared_ptr<FactoryData> data_;
+				std::shared_ptr<CubA4::core::logging::ILogger> logger_;
 			};
 		}
 	}
