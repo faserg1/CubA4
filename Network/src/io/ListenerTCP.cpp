@@ -1,6 +1,5 @@
 #include "../../include/io/ListenerTCP.hpp"
 #include "../../include/io/ConnectionTCP.hpp"
-#include <future>
 #include <logging/ILogger.hpp>
 using namespace CubA4::network::io;
 
@@ -29,13 +28,11 @@ void ListenerTCP::acceptLoop()
 {
 	while (run_)
 	{
-		auto accepterCopy = accepter_;
-		//TODO: makea sync
 		auto clientService = std::make_shared<boost::asio::io_service>();
 		auto socket = std::make_shared<boost::asio::ip::tcp::socket>(*clientService);
 		try
 		{
-			accepterCopy->accept(*socket);
+			accepter_->accept(*socket);
 		}
 		catch (boost::system::system_error &error)
 		{
@@ -45,7 +42,7 @@ void ListenerTCP::acceptLoop()
 		}
 		auto clientConnection = std::make_shared<ConnectionTCP>(clientService, socket, logger_);
 		auto subsCopy = subscribers_;
-		std::async(std::launch::async, [clientConnection, subsCopy]()
+		std::thread([clientConnection, subsCopy]()
 		{
 			for (auto subscriber : subsCopy)
 			{

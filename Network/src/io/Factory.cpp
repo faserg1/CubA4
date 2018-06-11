@@ -48,8 +48,24 @@ Factory::fsConnection Factory::connect(ConnectionProtocol protocol, std::string 
 			}
 			return std::make_shared<ConnectionTCP>(service, socket, logger_);
 		}
-		/*case CubA4::network::io::ConnectionProtocol::UDP:
-			break;*/
+		case CubA4::network::io::ConnectionProtocol::UDP:
+		{
+			boost::asio::ip::udp::resolver resolver(*service);
+			boost::asio::ip::udp::resolver::query query(host, serviceName);
+			boost::asio::ip::udp::resolver::iterator iter = resolver.resolve(query);
+			boost::asio::ip::udp::endpoint ep = *iter;
+			auto socket = std::make_shared<boost::asio::ip::udp::socket>(*service);
+			try
+			{
+				socket->open(ep.protocol());
+			}
+			catch (boost::system::system_error &error)
+			{
+				std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
+				logger_->log(CubA4::core::logging::LogSourceSystem::Network, "FACTORY", CubA4::core::logging::LogLevel::Error, msg);
+			}
+			return std::make_shared<ConnectionUDP>(service, socket, ep, logger_);
+		}
 		default:
 			throw std::runtime_error("Invalid protocol");
 		}

@@ -6,6 +6,14 @@
 
 namespace CubA4
 {
+	namespace core
+	{
+		namespace logging
+		{
+			class ILogger;
+		}
+	}
+
 	namespace network
 	{
 		namespace io
@@ -14,12 +22,20 @@ namespace CubA4
 				public Connection
 			{
 			public:
-				explicit ConnectionUDP();
+				explicit ConnectionUDP(std::shared_ptr<boost::asio::io_service> service,
+					std::shared_ptr<boost::asio::ip::udp::socket> socket,
+					boost::asio::ip::udp::endpoint endpoint,
+					std::shared_ptr<CubA4::core::logging::ILogger> logger);
 				~ConnectionUDP();
 
-				ConnectionProtocol protocol();
+				ConnectionProtocol protocol() override;
+				std::shared_future<void> send(const std::string &data) override;
 			protected:
 			private:
+				std::shared_ptr<boost::asio::io_service> service_;
+				std::shared_ptr<boost::asio::ip::udp::socket> socket_;
+				boost::asio::ip::udp::endpoint endpoint_;
+				std::shared_ptr<CubA4::core::logging::ILogger> logger_;
 			};
 		}
 	}
