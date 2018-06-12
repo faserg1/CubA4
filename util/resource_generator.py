@@ -31,9 +31,9 @@ class ResourceGenerator:
 		nstabs = "\t\t"
 		total += nstabs + "/// \\brief Получение внутренних файлов\n"
 		total += nstabs + "/// \\param[in] name Путь к файлу\n"
-		total += nstabs + "/// \\param[out] ptr указатель на начало файла\n"
-		total += nstabs + "/// \\return Длинну файла, если файл найден. Иначе 0.\n"
-		total += nstabs + "long findFile(char *name, void *&ptr);\n"
+		total += nstabs + "/// \\param[out] size Размер файла\n"
+		total += nstabs + "/// \\return Указатель на начало файла, если файл найден. Иначе nullptr.\n"
+		total += nstabs + "void *findFile(char *name, size_t size);\n"
 		total += "\t}\n}\n\n"
 		total += "#endif // IRS_HPP\n"
 		filename = os.path.join(self._gen_path, "irs.hpp")
@@ -50,7 +50,24 @@ class ResourceGenerator:
 			irs_cpp.write(total)
 		
 	def _generate_irs_headers_hpp(self, files):
-		total = ""
+		total = "#include <map>\n"
+		total += "#include <string>\n\n"
+		total += "namespace\n{\n\tstruct IrsFileInfo\n\t{\n"
+		total += "\t\tsize_t offset;\n"
+		total += "\t\tsize_t filesize;\n"
+		total += "\t};\n"
+		total += "\tstd::map<std::string, IrsFileInfo> info =\n\t{\n"
+		offset = 0
+		root = self._rf.get_root()
+		get_size = lambda fname: os.stat(os.path.join(root, fname)).st_size
+		for file in files:
+			total += "\t\t{"
+			total += "\"" + file.replace("\\", "/") + "\", "
+			size = get_size(file)
+			total += "{" + str(offset) + ", " + str(size) + "}"
+			total += "},\n"
+			offset += size
+		total += "\t};\n}\n"
 		filename = os.path.join(self._gen_path, "irs-headers.hpp")
 		with open(filename, "w") as irs_headers:
 			irs_headers.write(total)
