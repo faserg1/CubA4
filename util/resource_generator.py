@@ -33,7 +33,7 @@ class ResourceGenerator:
 		total += nstabs + "/// \\param[in] name Путь к файлу\n"
 		total += nstabs + "/// \\param[out] size Размер файла\n"
 		total += nstabs + "/// \\return Указатель на начало файла, если файл найден. Иначе nullptr.\n"
-		total += nstabs + "void *findFile(char *name, size_t size);\n"
+		total += nstabs + "const void *findFile(const char *name, size_t &size);\n"
 		total += "\t}\n}\n\n"
 		total += "#endif // IRS_HPP\n"
 		filename = os.path.join(self._gen_path, "irs.hpp")
@@ -44,7 +44,16 @@ class ResourceGenerator:
 		total = "#include \"irs.hpp\"\n"
 		total += "#include \"irs-headers.hpp\"\n"
 		total += "#include \"irs-data.hpp\"\n\n"
-		total += "using namespace CubA4::irs;\n"
+		total += "const void *CubA4::irs::findFile(const char *name, size_t &size)\n{\n"
+		total += "\tconst unsigned char *ptr = data;\n"
+		total += "\tsize = 0;\n"
+		total += "\tauto iter = info.find(name);\n"
+		total += "\tif (iter == info.end())\n"
+		total += "\t\treturn nullptr;\n"
+		total += "\tsize = iter->second.filesize;\n"
+		total += "\tptr += iter->second.offset;\n"
+		total += "\treturn ptr;\n"
+		total += "}\n"
 		filename = os.path.join(self._gen_path, "irs.cpp")
 		with open(filename, "w") as irs_cpp:
 			irs_cpp.write(total)
@@ -56,7 +65,7 @@ class ResourceGenerator:
 		total += "\t\tsize_t offset;\n"
 		total += "\t\tsize_t filesize;\n"
 		total += "\t};\n"
-		total += "\tstd::map<std::string, IrsFileInfo> info =\n\t{\n"
+		total += "\tconst std::map<std::string, IrsFileInfo> info =\n\t{\n"
 		offset = 0
 		root = self._rf.get_root()
 		get_size = lambda fname: os.stat(os.path.join(root, fname)).st_size
