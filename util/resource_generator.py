@@ -15,8 +15,6 @@ class ResourceGenerator:
 		
 	def generate(self):
 		files = self._rf.get_files()
-		if not len(files):
-			return
 		if not os.path.exists(self._gen_path):
 			os.makedirs(self._gen_path)
 		self._generate_irs_hpp()
