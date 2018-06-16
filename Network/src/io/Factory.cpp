@@ -27,7 +27,7 @@ Factory::fsConnection Factory::connect(ConnectionProtocol protocol, std::string 
 {
 	return std::async(std::launch::async, [this](ConnectionProtocol protocol, std::string host, std::string serviceName) -> std::shared_ptr<Connection>
 	{
-		auto service = std::make_shared<boost::asio::io_service>();
+		auto service = std::make_shared<boost::asio::io_context>();
 		switch (protocol)
 		{
 		case CubA4::network::io::ConnectionProtocol::TCP:
@@ -76,7 +76,7 @@ Factory::fsListener Factory::listen(ConnectionProtocol protocol, unsigned short 
 {
 	return std::async(std::launch::async, [this](ConnectionProtocol protocol, unsigned short port) -> std::shared_ptr<Listener>
 	{
-		auto service = std::make_shared<boost::asio::io_service>();
+		auto service = std::make_shared<boost::asio::io_context>();
 		
 		switch (protocol)
 		{

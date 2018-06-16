@@ -4,7 +4,7 @@
 #include <logging/ILogger.hpp>
 using namespace CubA4::network::io;
 
-ConnectionTCP::ConnectionTCP(std::shared_ptr<boost::asio::io_service> service,
+ConnectionTCP::ConnectionTCP(std::shared_ptr<boost::asio::io_context> service,
 	std::shared_ptr<boost::asio::ip::tcp::socket> socket,
 	std::shared_ptr<CubA4::core::logging::ILogger> logger) :
 	service_(service), socket_(socket), logger_(logger)

@@ -22,7 +22,7 @@ namespace CubA4
 				public Connection
 			{
 			public:
-				explicit ConnectionUDP(std::shared_ptr<boost::asio::io_service> service,
+				explicit ConnectionUDP(std::shared_ptr<boost::asio::io_context> service,
 					std::shared_ptr<boost::asio::ip::udp::socket> socket,
 					boost::asio::ip::udp::endpoint endpoint,
 					std::shared_ptr<CubA4::core::logging::ILogger> logger);
@@ -32,7 +32,7 @@ namespace CubA4
 				std::shared_future<void> send(const std::string &data) override;
 			protected:
 			private:
-				std::shared_ptr<boost::asio::io_service> service_;
+				std::shared_ptr<boost::asio::io_context> service_;
 				std::shared_ptr<boost::asio::ip::udp::socket> socket_;
 				boost::asio::ip::udp::endpoint endpoint_;
 				std::shared_ptr<CubA4::core::logging::ILogger> logger_;

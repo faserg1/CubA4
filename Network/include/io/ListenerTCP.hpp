@@ -27,14 +27,14 @@ namespace CubA4
 				public Listener
 			{
 			public:
-				explicit ListenerTCP(std::shared_ptr<boost::asio::io_service> service,
+				explicit ListenerTCP(std::shared_ptr<boost::asio::io_context> service,
 					std::shared_ptr<boost::asio::ip::tcp::acceptor> accepter,
 					std::shared_ptr<CubA4::core::logging::ILogger> logger);
 				~ListenerTCP();
 				void subscribe(std::function<void(std::shared_ptr<Connection>)> subscriber) override;
 			protected:
 			private:
-				std::shared_ptr<boost::asio::io_service> service_;
+				std::shared_ptr<boost::asio::io_context> service_;
 				std::shared_ptr<boost::asio::ip::tcp::acceptor> accepter_;
 				std::shared_ptr<CubA4::core::logging::ILogger> logger_;
 				std::thread runThread_;

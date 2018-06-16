@@ -25,7 +25,7 @@ namespace CubA4
 				public Connection
 			{
 			public:
-				explicit ConnectionTCP(std::shared_ptr<boost::asio::io_service> service,
+				explicit ConnectionTCP(std::shared_ptr<boost::asio::io_context> service,
 					std::shared_ptr<boost::asio::ip::tcp::socket> socket,
 					std::shared_ptr<CubA4::core::logging::ILogger> logger);
 				~ConnectionTCP();
@@ -34,7 +34,7 @@ namespace CubA4
 				std::shared_future<void> send(const std::string &data) override;
 			protected:
 			private:
-				std::shared_ptr<boost::asio::io_service> service_;
+				std::shared_ptr<boost::asio::io_context> service_;
 				std::shared_ptr<boost::asio::ip::tcp::socket> socket_;
 				std::shared_ptr<CubA4::core::logging::ILogger> logger_;
 				std::thread runThread_;

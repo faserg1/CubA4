@@ -3,7 +3,7 @@
 #include <logging/ILogger.hpp>
 using namespace CubA4::network::io;
 
-ListenerTCP::ListenerTCP(std::shared_ptr<boost::asio::io_service> service,
+ListenerTCP::ListenerTCP(std::shared_ptr<boost::asio::io_context> service,
 	std::shared_ptr<boost::asio::ip::tcp::acceptor> accepter,
 	std::shared_ptr<CubA4::core::logging::ILogger> logger) :
 	service_(service), accepter_(accepter), logger_(logger)
@@ -28,7 +28,7 @@ void ListenerTCP::acceptLoop()
 {
 	while (run_)
 	{
-		auto clientService = std::make_shared<boost::asio::io_service>();
+		auto clientService = std::make_shared<boost::asio::io_context>();
 		auto socket = std::make_shared<boost::asio::ip::tcp::socket>(*clientService);
 		try
 		{
