@@ -9,6 +9,6 @@ set(Boost_USE_MULTITHREADED ON)
 
 #set (BOOST_INCLUDE_DIR ${BOOST_PATH}/include )
 
-find_package(Boost 1.65.0 REQUIRED
+find_package(Boost 1.67 EXACT REQUIRED
  COMPONENTS filesystem
  )
