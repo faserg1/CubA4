@@ -5,8 +5,17 @@ link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
+set(RenderVulkanSourceVulkanPipelineDir ${RenderVulkanSourceVulkanDir}/pipeline)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceVulkanPipeline
+	${RenderVulkanSourceVulkanPipelineDir}/BasePipeline.cpp
+	${RenderVulkanSourceVulkanPipelineDir}/StandardPipeline.cpp
+)
+set(RenderVulkanHeaderVulkanPipeline
+	${RenderVulkanSourceVulkanPipelineDir}/BasePipeline.hpp
+	${RenderVulkanSourceVulkanPipelineDir}/StandardPipeline.hpp
+)
 set(RenderVulkanSourceConfig
 	${RenderVulkanSourceConfigDir}/RenderConfig.cpp
 )
@@ -80,6 +89,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderVulkan}
 	${RenderVulkanHeaderVulkanAddon}
 	${RenderVulkanHeaderConfig}
+	${RenderVulkanHeaderVulkanPipeline}
 )
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 
@@ -90,6 +100,7 @@ set(RenderVulkanSources
 	${RenderVulkanSourceVulkan}
 	${RenderVulkanSourceVulkanAddon}
 	${RenderVulkanSourceConfig}
+	${RenderVulkanSourceVulkanPipeline}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
@@ -101,6 +112,8 @@ source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConf
 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
+source_group("${SOURCE_GROUP_HEADER_START}vulkan${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanHeaderVulkanPipeline})
+source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanSourceVulkanPipeline})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 
