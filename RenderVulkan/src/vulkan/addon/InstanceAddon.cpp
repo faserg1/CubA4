@@ -1,17 +1,17 @@
 #include "./InstanceAddon.hpp"
 using namespace CubA4::render::vulkan::addon;
 
-VulkanInstanceAddon::VulkanInstanceAddon()
+InstanceAddon::InstanceAddon()
 {
 
 }
 
-VulkanInstanceAddon::~VulkanInstanceAddon()
+InstanceAddon::~InstanceAddon()
 {
 
 }
 
-VulkanAddonType VulkanInstanceAddon::type() const
+AddonType InstanceAddon::type() const
 {
-	return VulkanAddonType::Instance;
+	return AddonType::Instance;
 }

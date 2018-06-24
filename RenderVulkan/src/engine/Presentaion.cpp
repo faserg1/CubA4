@@ -8,10 +8,10 @@
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
-Presentaion::Presentaion(std::shared_ptr<const VulkanDevice> device, std::shared_ptr<const VulkanSwapchain> swapchain) :
+Presentaion::Presentaion(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain) :
 	device_(device), swapchain_(swapchain), timeout_(50)
 {
-	acquireSignalSemaphore_ = VulkanSemaphore::create(device);
+	acquireSignalSemaphore_ = Semaphore::create(device);
 }
 
 Presentaion::~Presentaion()
@@ -19,12 +19,12 @@ Presentaion::~Presentaion()
 	
 }
 
-std::shared_ptr<const VulkanSemaphore> Presentaion::getAcquireSignalSemaphore() const
+std::shared_ptr<const Semaphore> Presentaion::getAcquireSignalSemaphore() const
 {
 	return acquireSignalSemaphore_;
 }
 
-void Presentaion::addAwaitSemaphore(std::shared_ptr<const VulkanSemaphore> semaphore)
+void Presentaion::addAwaitSemaphore(std::shared_ptr<const Semaphore> semaphore)
 {
 	awaitSemaphores_.push_back(semaphore);
 }
@@ -50,7 +50,7 @@ void Presentaion::send(uint32_t imageIndex)
 	VkPresentInfoKHR info = {};
 	std::vector<VkSemaphore> awaitSemaphores;
 	std::transform(awaitSemaphores_.begin(), awaitSemaphores_.end(), awaitSemaphores.begin(),
-		[](std::shared_ptr<const VulkanSemaphore> &semaphore) -> VkSemaphore
+		[](std::shared_ptr<const Semaphore> &semaphore) -> VkSemaphore
 	{
 		return semaphore->getSemaphore();
 	});

@@ -1,5 +1,5 @@
-#ifndef VULKANDEVICEADDON_HPP
-#define VULKANDEVICEADDON_HPP
+#ifndef DEVICEADDON_HPP
+#define DEVICEADDON_HPP
 
 #include <memory>
 #include "Addon.hpp"
@@ -10,25 +10,25 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanDevice;
-			class VulkanDeviceBuilder;
-			class VulkanPhysicalDevice;
+			class Device;
+			class DeviceBuilder;
+			class PhysicalDevice;
 
 			namespace addon
 			{
-				class VulkanDeviceAddon :
-					public VulkanAddon
+				class DeviceAddon :
+					public Addon
 				{
 				public:
-					explicit VulkanDeviceAddon(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
-					~VulkanDeviceAddon();
+					explicit DeviceAddon(std::weak_ptr<PhysicalDevice> physicalDevice);
+					~DeviceAddon();
 
-					VulkanAddonType type() const override;
-					virtual void init(std::shared_ptr<const VulkanDevice> instance) = 0;
-					virtual void destroy(std::shared_ptr<const VulkanDevice> instance) = 0;
-					virtual void added(VulkanDeviceBuilder &builder) = 0;
+					AddonType type() const override;
+					virtual void init(std::shared_ptr<const Device> instance) = 0;
+					virtual void destroy(std::shared_ptr<const Device> instance) = 0;
+					virtual void added(DeviceBuilder &builder) = 0;
 				protected:
-					std::weak_ptr<VulkanPhysicalDevice> physicalDevice_;
+					std::weak_ptr<PhysicalDevice> physicalDevice_;
 				private:
 				};
 			}
@@ -36,4 +36,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANDEVICEADDON_HPP
+#endif // DEVICEADDON_HPP

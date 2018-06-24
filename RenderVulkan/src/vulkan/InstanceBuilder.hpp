@@ -1,5 +1,5 @@
-#ifndef VULKANINSTANCEBUILDER_HPP
-#define VULKANINSTANCEBUILDER_HPP
+#ifndef INSTANCEBUILDER_HPP
+#define INSTANCEBUILDER_HPP
 
 #include <memory>
 #include <string>
@@ -21,28 +21,28 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanInstanceLayer;
-				class VulkanInstanceExtension;
+				class InstanceLayer;
+				class InstanceExtension;
 			}
 
-			class VulkanInstance;
-			struct VulkanInstanceBuilderData;
+			class Instance;
+			struct InstanceBuilderData;
 
-			class VulkanInstanceBuilder
+			class InstanceBuilder
 			{
 			public:
-				explicit VulkanInstanceBuilder(std::shared_ptr<const core::info::IApplicationInfo> info);
-				~VulkanInstanceBuilder();
+				explicit InstanceBuilder(std::shared_ptr<const core::info::IApplicationInfo> info);
+				~InstanceBuilder();
 
-				void addLayer(addon::VulkanInstanceLayer &layer);
-				void addExtension(addon::VulkanInstanceExtension &extension);
-				std::shared_ptr<const VulkanInstance> build();
-				void destroy(std::shared_ptr<const VulkanInstance> instance);
+				void addLayer(addon::InstanceLayer &layer);
+				void addExtension(addon::InstanceExtension &extension);
+				std::shared_ptr<const Instance> build();
+				void destroy(std::shared_ptr<const Instance> instance);
 			protected:
 			private:
 				void fillAppInfo();
 
-				std::shared_ptr<VulkanInstanceBuilderData> data_;
+				std::shared_ptr<InstanceBuilderData> data_;
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::vector<std::string> extensions_;
 				std::vector<std::string> layers_;
@@ -51,4 +51,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANINSTANCEBUILDER_HPP
+#endif // INSTANCEBUILDER_HPP

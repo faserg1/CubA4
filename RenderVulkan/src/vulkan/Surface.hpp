@@ -1,5 +1,5 @@
-#ifndef VULKANSURFACE_HPP
-#define VULKANSURFACE_HPP
+#ifndef SURFACE_HPP 
+#define SURFACE_HPP 
 
 #include <vulkan/vulkan.h>
 
@@ -9,11 +9,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanSurface
+			class Surface
 			{
 			public:
-				explicit VulkanSurface(VkSurfaceKHR surafece);
-				~VulkanSurface();
+				explicit Surface(VkSurfaceKHR surafece);
+				~Surface();
 
 				VkSurfaceKHR getSurface() const;
 			protected:
@@ -24,4 +24,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANSURFACE_HPP
+#endif // SURFACE_HPP 

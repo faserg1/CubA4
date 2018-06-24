@@ -1,5 +1,5 @@
-#ifndef SWAPCHAIN_HPP
-#define SWAPCHAIN_HPP
+#ifndef SWAPCHAIN_HPP 
+#define SWAPCHAIN_HPP 
 
 #include <vulkan/vulkan.h>
 
@@ -9,11 +9,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanSwapchain
+			class Swapchain
 			{
 			public:
-				explicit VulkanSwapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format);
-				~VulkanSwapchain();
+				explicit Swapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format);
+				~Swapchain();
 
 				VkSwapchainKHR getSwapchain() const;
 				VkExtent2D getResolution() const;
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // SWAPCHAIN_HPP
+#endif // SWAPCHAIN_HPP 

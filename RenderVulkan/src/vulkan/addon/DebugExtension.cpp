@@ -17,7 +17,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanDebugExtensionData
+				struct DebugExtensionData
 				{
 					VkDebugUtilsMessengerEXT messeger;
 
@@ -29,23 +29,23 @@ namespace CubA4
 	}
 }
 
-VulkanDebugExtension::VulkanDebugExtension(std::shared_ptr<ILogger> logger) :
-	data_(std::make_shared<VulkanDebugExtensionData>())
+DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger) :
+	data_(std::make_shared<DebugExtensionData>())
 {
 	loggerTagged_ = std::shared_ptr<ILoggerTagged>(logger->createTaggedLog(LogSourceSystem::Render, "VULKAN"));
 }
 
-VulkanDebugExtension::~VulkanDebugExtension()
+DebugExtension::~DebugExtension()
 {
 	
 }
 
-std::vector<std::string> VulkanDebugExtension::names() const
+std::vector<std::string> DebugExtension::names() const
 {
 	return { VK_EXT_DEBUG_UTILS_EXTENSION_NAME };
 }
 
-void VulkanDebugExtension::init(std::shared_ptr<const VulkanInstance> instance)
+void DebugExtension::init(std::shared_ptr<const Instance> instance)
 {
 	fillFunctionPointers(instance);
 	VkDebugUtilsMessengerCreateInfoEXT callback;
@@ -92,18 +92,18 @@ void VulkanDebugExtension::init(std::shared_ptr<const VulkanInstance> instance)
 	data_->createDebugUtils(instance->getInstance(), &callback, nullptr, &data_->messeger);
 }
 
-void VulkanDebugExtension::destroy(std::shared_ptr<const VulkanInstance> instance)
+void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
 {
 	data_->destroyDebugUtils(instance->getInstance(), data_->messeger, nullptr);
 	data_->messeger = {};
 }
 
-void VulkanDebugExtension::added(VulkanInstanceBuilder &builder)
+void DebugExtension::added(InstanceBuilder &builder)
 {
 
 }
 
-void VulkanDebugExtension::fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance)
+void DebugExtension::fillFunctionPointers(std::shared_ptr<const Instance> instance)
 {
 	auto vkInstance = instance->getInstance();
 	data_->createDebugUtils = getVkFuncInstancePtr(vkInstance, vkCreateDebugUtilsMessengerEXT);

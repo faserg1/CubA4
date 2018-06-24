@@ -1,5 +1,5 @@
-#ifndef VULKANSWAPCHAINEXTENSION_HPP
-#define VULKANSWAPCHAINEXTENSION_HPP
+#ifndef SWAPCHAINEXTENSION_HPP
+#define SWAPCHAINEXTENSION_HPP
 
 #include "DeviceExtension.hpp"
 
@@ -11,17 +11,17 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanSwapchainExtension :
-					public VulkanDeviceExtension
+				class SwapchainExtension :
+					public DeviceExtension
 				{
 				public:
-					explicit VulkanSwapchainExtension(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
-					~VulkanSwapchainExtension();
+					explicit SwapchainExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
+					~SwapchainExtension();
 
 					std::vector<std::string> names() const override;
-					void init(std::shared_ptr<const VulkanDevice> instance) override;
-					void destroy(std::shared_ptr<const VulkanDevice> instance) override;
-					void added(VulkanDeviceBuilder &builder) override;
+					void init(std::shared_ptr<const Device> instance) override;
+					void destroy(std::shared_ptr<const Device> instance) override;
+					void added(DeviceBuilder &builder) override;
 				protected:
 				private:
 				};
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANSWAPCHAINEXTENSION_HPP
+#endif // SWAPCHAINEXTENSION_HPP

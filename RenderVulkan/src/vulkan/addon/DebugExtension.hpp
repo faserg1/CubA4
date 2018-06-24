@@ -1,5 +1,5 @@
-#ifndef VULKANDEBUGEXTENSION_HPP
-#define VULKANDEBUGEXTENSION_HPP
+#ifndef DEBUGEXTENSION_HPP
+#define DEBUGEXTENSION_HPP
 
 #include "InstanceExtension.hpp"
 #include <memory>
@@ -20,24 +20,24 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanDebugExtensionData;
+				struct DebugExtensionData;
 
-				class VulkanDebugExtension :
-					public VulkanInstanceExtension
+				class DebugExtension :
+					public InstanceExtension
 				{
 				public:
-					explicit VulkanDebugExtension(std::shared_ptr<core::logging::ILogger> logger);
-					~VulkanDebugExtension();
+					explicit DebugExtension(std::shared_ptr<core::logging::ILogger> logger);
+					~DebugExtension();
 
 					std::vector<std::string> names() const override;
-					void init(std::shared_ptr<const VulkanInstance> instance) override;
-					void destroy(std::shared_ptr<const VulkanInstance> instance) override;
-					void added(VulkanInstanceBuilder &builder) override;
+					void init(std::shared_ptr<const Instance> instance) override;
+					void destroy(std::shared_ptr<const Instance> instance) override;
+					void added(InstanceBuilder &builder) override;
 				protected:
 				private:
-					void fillFunctionPointers(std::shared_ptr<const VulkanInstance> instance);
+					void fillFunctionPointers(std::shared_ptr<const Instance> instance);
 
-					std::shared_ptr<VulkanDebugExtensionData> data_;
+					std::shared_ptr<DebugExtensionData> data_;
 					std::shared_ptr<core::logging::ILoggerTagged> loggerTagged_;
 				};
 			}
@@ -45,4 +45,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANDEBUGEXTENSION_HPP
+#endif // DEBUGEXTENSION_HPP

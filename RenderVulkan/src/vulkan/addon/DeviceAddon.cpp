@@ -2,18 +2,18 @@
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;
 
-VulkanDeviceAddon::VulkanDeviceAddon(std::weak_ptr<VulkanPhysicalDevice> physicalDevice) :
+DeviceAddon::DeviceAddon(std::weak_ptr<PhysicalDevice> physicalDevice) :
 	physicalDevice_(physicalDevice)
 {
 	
 }
 
-VulkanDeviceAddon::~VulkanDeviceAddon()
+DeviceAddon::~DeviceAddon()
 {
 	
 }
 
-VulkanAddonType VulkanDeviceAddon::type() const
+AddonType DeviceAddon::type() const
 {
-	return VulkanAddonType::Device;
+	return AddonType::Device;
 }

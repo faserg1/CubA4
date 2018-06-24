@@ -1,5 +1,5 @@
-#ifndef VULKANPHYSICALDEVICE_HPP
-#define VULKANPHYSICALDEVICE_HPP
+#ifndef PHYSICALDEVICE_HPP
+#define PHYSICALDEVICE_HPP
 
 #include <vulkan/vulkan.h>
 
@@ -9,11 +9,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanPhysicalDevice
+			class PhysicalDevice
 			{
 			public:
-				explicit VulkanPhysicalDevice(VkPhysicalDevice physicalDevice);
-				~VulkanPhysicalDevice();
+				explicit PhysicalDevice(VkPhysicalDevice physicalDevice);
+				~PhysicalDevice();
 
 				VkPhysicalDevice getPhysicalDevice() const;
 			protected:
@@ -24,4 +24,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANPHYSICALDEVICE_HPP
+#endif // PHYSICALDEVICE_HPP

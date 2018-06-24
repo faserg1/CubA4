@@ -1,5 +1,5 @@
-#ifndef VULKANSEMAPHORE_HPP
-#define VULKANSEMAPHORE_HPP
+#ifndef SEMAPHORE_HPP
+#define SEMAPHORE_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -10,23 +10,23 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanDevice;
+			class Device;
 
-			class VulkanSemaphore final
+			class Semaphore final
 			{
 			public:
-				explicit VulkanSemaphore(VkSemaphore semaphore, std::weak_ptr<const VulkanDevice> device);
-				static std::shared_ptr<VulkanSemaphore> create(std::shared_ptr<const VulkanDevice> device);
-				~VulkanSemaphore();
+				explicit Semaphore(VkSemaphore semaphore, std::weak_ptr<const Device> device);
+				static std::shared_ptr<Semaphore> create(std::shared_ptr<const Device> device);
+				~Semaphore();
 
 				VkSemaphore getSemaphore() const;
 			protected:
 			private:
-				std::weak_ptr<const VulkanDevice> device_;
+				std::weak_ptr<const Device> device_;
 				VkSemaphore semaphore_;
 			};
 		}
 	}
 }
 
-#endif // VULKANSEMAPHORE_HPP
+#endif // SEMAPHORE_HPP

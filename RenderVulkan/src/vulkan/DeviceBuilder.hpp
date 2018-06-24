@@ -1,5 +1,5 @@
-#ifndef VULKANDEVICEBUILDER_HPP
-#define VULKANDEVICEBUILDER_HPP
+#ifndef DEVICEBUILDER_HPP
+#define DEVICEBUILDER_HPP
 
 #include <memory>
 #include <vector>
@@ -13,37 +13,37 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanDeviceLayer;
-				class VulkanDeviceExtension;
+				class DeviceLayer;
+				class DeviceExtension;
 			}
 
-			class VulkanInstance;
-			class VulkanDevice;
-			class VulkanSurface;
-			class VulkanPhysicalDevice;
-			struct VulkanDeviceBuilderData;
+			class Instance;
+			class Device;
+			class Surface;
+			class PhysicalDevice;
+			struct DeviceBuilderData;
 
-			class VulkanDeviceBuilder
+			class DeviceBuilder
 			{
 			public:
-				explicit VulkanDeviceBuilder(std::shared_ptr<const VulkanInstance> instance,
-					std::weak_ptr<const VulkanSurface> surface);
-				~VulkanDeviceBuilder();
+				explicit DeviceBuilder(std::shared_ptr<const Instance> instance,
+					std::weak_ptr<const Surface> surface);
+				~DeviceBuilder();
 
-				void addLayer(addon::VulkanDeviceLayer &layer);
-				void addExtension(addon::VulkanDeviceExtension &extension);
+				void addLayer(addon::DeviceLayer &layer);
+				void addExtension(addon::DeviceExtension &extension);
 
-				std::weak_ptr<VulkanPhysicalDevice> getPhysicalDevice();
+				std::weak_ptr<PhysicalDevice> getPhysicalDevice();
 
-				std::shared_ptr<const VulkanDevice> build();
-				void destroy(std::shared_ptr<const VulkanDevice> device);
+				std::shared_ptr<const Device> build();
+				void destroy(std::shared_ptr<const Device> device);
 			protected:
 				void enumPhysicalDevices();
 				void choosePhysicalDevice();
 			private:
-				std::shared_ptr<VulkanDeviceBuilderData> data_;
-				std::shared_ptr<const VulkanInstance> instance_;
-				std::weak_ptr<const VulkanSurface> surface_;
+				std::shared_ptr<DeviceBuilderData> data_;
+				std::shared_ptr<const Instance> instance_;
+				std::weak_ptr<const Surface> surface_;
 
 				std::vector<std::string> extensions_;
 				std::vector<std::string> layers_;
@@ -52,4 +52,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANDEVICEBUILDER_HPP
+#endif // DEVICEBUILDER_HPP

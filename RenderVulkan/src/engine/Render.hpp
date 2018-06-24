@@ -1,5 +1,5 @@
-#ifndef VULKANRENDER_HPP
-#define VULKANRENDER_HPP
+#ifndef RENDER_HPP
+#define RENDER_HPP
 
 namespace CubA4
 {
@@ -7,11 +7,11 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			class VulkanRender
+			class Render
 			{
 			public:
-				explicit VulkanRender();
-				~VulkanRender();
+				explicit Render();
+				~Render();
 			protected:
 			private:
 			};
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANRENDER_HPP
+#endif // RENDER_HPP

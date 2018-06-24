@@ -1,5 +1,5 @@
-#ifndef VULKANRENDERENGINE_HPP
-#define VULKANRENDERENGINE_HPP
+#ifndef RENDERENGINE_HPP
+#define RENDERENGINE_HPP
 
 #include <engine/IRenderEngine.hpp>
 #include <vector>
@@ -28,25 +28,25 @@ namespace CubA4
 
 		namespace vulkan
 		{
-			class VulkanInstance;
-			class VulkanInstanceBuilder;
-			class VulkanDevice;
-			class VulkanDeviceBuilder;
-			class VulkanSurface;
-			class VulkanSwapchain;
-			class VulkanSwapchainBuilder;
+			class Instance;
+			class InstanceBuilder;
+			class Device;
+			class DeviceBuilder;
+			class Surface;
+			class Swapchain;
+			class SwapchainBuilder;
 
 			namespace addon
 			{
-				class VulkanInstanceAddon;
-				class VulkanDeviceAddon;
+				class InstanceAddon;
+				class DeviceAddon;
 			}
 		}
 
 		namespace engine
 		{
 			class Presentaion;
-			class VulkanRender;
+			class Render;
 
 			class VulkanRenderEngine :
 				public virtual IRenderEngine
@@ -84,24 +84,24 @@ namespace CubA4
 				std::shared_ptr<config::IRenderConfig> config_;
 
 				std::weak_ptr<window::IWindow> window_;
-				std::weak_ptr<const vulkan::VulkanSurface> surface_;
+				std::weak_ptr<const vulkan::Surface> surface_;
 
-				std::shared_ptr<vulkan::VulkanInstanceBuilder> instanceBuilder_;
-				std::shared_ptr<const vulkan::VulkanInstance> instance_;
-				std::vector<std::shared_ptr<vulkan::addon::VulkanInstanceAddon>> instanceAddons_;
+				std::shared_ptr<vulkan::InstanceBuilder> instanceBuilder_;
+				std::shared_ptr<const vulkan::Instance> instance_;
+				std::vector<std::shared_ptr<vulkan::addon::InstanceAddon>> instanceAddons_;
 
-				std::shared_ptr<vulkan::VulkanDeviceBuilder> deviceBuilder_;
-				std::shared_ptr<const vulkan::VulkanDevice> device_;
-				std::vector<std::shared_ptr<vulkan::addon::VulkanDeviceAddon>> deviceAddons_;
+				std::shared_ptr<vulkan::DeviceBuilder> deviceBuilder_;
+				std::shared_ptr<const vulkan::Device> device_;
+				std::vector<std::shared_ptr<vulkan::addon::DeviceAddon>> deviceAddons_;
 
-				std::shared_ptr<vulkan::VulkanSwapchainBuilder> swapchainBuilder_;
-				std::shared_ptr<const vulkan::VulkanSwapchain> swapchain_;
+				std::shared_ptr<vulkan::SwapchainBuilder> swapchainBuilder_;
+				std::shared_ptr<const vulkan::Swapchain> swapchain_;
 
 				std::shared_ptr<Presentaion> presetation_;
-				std::shared_ptr<VulkanRender> render_;
+				std::shared_ptr<Render> render_;
 			};
 		}
 	}
 }
 
-#endif // VULKANRENDERENGINE_HPP
+#endif // RENDERENGINE_HPP

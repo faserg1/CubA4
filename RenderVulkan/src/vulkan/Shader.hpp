@@ -1,5 +1,5 @@
-#ifndef VULKANSHADER_HPP
-#define VULKANSHADER_HPP
+#ifndef SHADER_HPP
+#define SHADER_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -10,23 +10,23 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanDevice;
+			class Device;
 
-			class VulkanShader
+			class Shader
 			{
 			public:
 				VkShaderModule getModule() const;
 
-				static std::shared_ptr<VulkanShader> fromIrs(std::shared_ptr<VulkanDevice> device, const char *name);
+				static std::shared_ptr<Shader> fromIrs(std::shared_ptr<Device> device, const char *name);
 			protected:
-				explicit VulkanShader(std::shared_ptr<VulkanDevice> device, const void *data, size_t size);
-				~VulkanShader();
+				explicit Shader(std::shared_ptr<Device> device, const void *data, size_t size);
+				~Shader();
 			private:
-				std::shared_ptr<VulkanDevice> device_;
+				std::shared_ptr<Device> device_;
 				VkShaderModule module_;
 			};
 		}
 	}
 }
 
-#endif // VULKANSHADER_HPP
+#endif // SHADER_HPP

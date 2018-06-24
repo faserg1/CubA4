@@ -17,7 +17,7 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			struct VulkanSwapchainBuilderData
+			struct SwapchainBuilderData
 			{
 				VkSurfaceCapabilitiesKHR caps;
 				std::vector<VkSurfaceFormatKHR> surfaceFormats;
@@ -27,9 +27,9 @@ namespace CubA4
 	}
 }
 
-VulkanSwapchainBuilder::VulkanSwapchainBuilder(
-	std::shared_ptr<const VulkanDevice> device, std::weak_ptr<const VulkanSurface> surface, std::shared_ptr<const IRenderConfig> config) :
-	data_(std::make_shared<VulkanSwapchainBuilderData>()), device_(device), surface_(surface), config_(config)
+SwapchainBuilder::SwapchainBuilder(
+	std::shared_ptr<const Device> device, std::weak_ptr<const Surface> surface, std::shared_ptr<const IRenderConfig> config) :
+	data_(std::make_shared<SwapchainBuilderData>()), device_(device), surface_(surface), config_(config)
 {
 	if (auto surface = surface_.lock())
 	{
@@ -54,14 +54,14 @@ VulkanSwapchainBuilder::VulkanSwapchainBuilder(
 		throw std::runtime_error("Can't get surface for swapchain!");
 }
 
-VulkanSwapchainBuilder::~VulkanSwapchainBuilder()
+SwapchainBuilder::~SwapchainBuilder()
 {
 	
 }
 
-std::shared_ptr<VulkanSwapchain> VulkanSwapchainBuilder::build()
+std::shared_ptr<Swapchain> SwapchainBuilder::build()
 {
-	std::shared_ptr<const VulkanSurface> surface = surface_.lock();
+	std::shared_ptr<const Surface> surface = surface_.lock();
 	if (!surface)
 		throw std::runtime_error("Can't get surface for swapchain!");
 	VkSwapchainCreateInfoKHR swapchainInfo = {};
@@ -99,15 +99,15 @@ std::shared_ptr<VulkanSwapchain> VulkanSwapchainBuilder::build()
 	VkSwapchainKHR swapchain;
 	if (vkCreateSwapchainKHR(device_->getDevice(), &swapchainInfo, nullptr, &swapchain) != VK_SUCCESS)
 		throw std::runtime_error("Cannot create swapchain");
-	return std::make_shared<VulkanSwapchain>(swapchain, swapchainInfo.imageExtent, swapchainInfo.minImageCount, swapchainInfo.imageFormat);
+	return std::make_shared<Swapchain>(swapchain, swapchainInfo.imageExtent, swapchainInfo.minImageCount, swapchainInfo.imageFormat);
 }
 
-std::shared_ptr<VulkanSwapchain> VulkanSwapchainBuilder::rebuild(std::shared_ptr<const VulkanSwapchain> oldSwapchain)
+std::shared_ptr<Swapchain> SwapchainBuilder::rebuild(std::shared_ptr<const Swapchain> oldSwapchain)
 {
-	return std::shared_ptr<VulkanSwapchain>();
+	return std::shared_ptr<Swapchain>();
 }
 
-void VulkanSwapchainBuilder::destroy(std::shared_ptr<const VulkanSwapchain> swapchain)
+void SwapchainBuilder::destroy(std::shared_ptr<const Swapchain> swapchain)
 {
 	vkDestroySwapchainKHR(device_->getDevice(), swapchain->getSwapchain(), nullptr);
 }

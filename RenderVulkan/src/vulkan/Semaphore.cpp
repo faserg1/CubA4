@@ -3,29 +3,29 @@
 #include <stdexcept>
 using namespace CubA4::render::vulkan;
 
-VulkanSemaphore::VulkanSemaphore(VkSemaphore semaphore, std::weak_ptr<const VulkanDevice> device) :
+Semaphore::Semaphore(VkSemaphore semaphore, std::weak_ptr<const Device> device) :
 	device_(device), semaphore_(semaphore)
 {
 	
 }
 
-VulkanSemaphore::~VulkanSemaphore()
+Semaphore::~Semaphore()
 {
 	if (auto dev = device_.lock())
 		vkDestroySemaphore(dev->getDevice(), semaphore_, nullptr);
 }
 
-std::shared_ptr<VulkanSemaphore> VulkanSemaphore::create(std::shared_ptr<const VulkanDevice> device)
+std::shared_ptr<Semaphore> Semaphore::create(std::shared_ptr<const Device> device)
 {
 	VkSemaphore semaphore;
 	VkSemaphoreCreateInfo info = {};
 	info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 	if (vkCreateSemaphore(device->getDevice(), &info, nullptr, &semaphore) != VK_SUCCESS)
 		throw std::runtime_error("Cannot create semaphore");
-	return std::make_shared<VulkanSemaphore>(semaphore, device);
+	return std::make_shared<Semaphore>(semaphore, device);
 }
 
-VkSemaphore VulkanSemaphore::getSemaphore() const
+VkSemaphore Semaphore::getSemaphore() const
 {
 	return semaphore_;
 }

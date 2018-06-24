@@ -1,5 +1,5 @@
-#ifndef VULKANADDON_HPP
-#define VULKANADDON_HPP
+#ifndef ADDON_HPP 
+#define ADDON_HPP 
 
 #include <string>
 #include <vector>
@@ -12,21 +12,21 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				enum class VulkanAddonType
+				enum class AddonType 
 				{
 					Instance,
 					Device
 				};
 
-				class VulkanAddon
+				class Addon
 				{
 				public:
 					virtual std::vector<std::string> names() const = 0;
-					virtual VulkanAddonType type() const = 0;
+					virtual AddonType type() const = 0;
 					bool available() const;
 				protected:
-					explicit VulkanAddon();
-					~VulkanAddon();
+					explicit Addon();
+					~Addon();
 
 					virtual std::vector<std::string> allNames() const = 0;
 				private:
@@ -36,4 +36,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANADDON_HPP
+#endif // ADDON_HPP

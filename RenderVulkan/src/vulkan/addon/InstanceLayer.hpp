@@ -1,5 +1,5 @@
-#ifndef VULKANLAYER_HPP
-#define VULKANLAYER_HPP
+#ifndef INSTANCELAYER_HPP
+#define INSTANCELAYER_HPP
 
 #include "InstanceAddon.hpp"
 #include <memory>
@@ -12,22 +12,22 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanInstanceLayerData;
+				struct InstanceLayerData;
 
-				class VulkanInstanceLayer :
-					public VulkanInstanceAddon
+				class InstanceLayer :
+					public InstanceAddon
 				{
 				public:
-					explicit VulkanInstanceLayer();
-					~VulkanInstanceLayer();
+					explicit InstanceLayer();
+					~InstanceLayer();
 				protected:
 					std::vector<std::string> allNames() const override;
 				private:
-					std::shared_ptr<VulkanInstanceLayerData> data_;
+					std::shared_ptr<InstanceLayerData> data_;
 				};
 			}
 		}
 	}
 }
 
-#endif // VULKANLAYER_HPP
+#endif // INSTANCELAYER_HPP

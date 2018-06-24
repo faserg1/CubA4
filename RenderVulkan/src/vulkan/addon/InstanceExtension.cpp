@@ -12,7 +12,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanInstanceExtensionData
+				struct InstanceExtensionData
 				{
 					std::vector<VkExtensionProperties> extensions;
 				};
@@ -21,8 +21,8 @@ namespace CubA4
 	}
 }
 
-VulkanInstanceExtension::VulkanInstanceExtension() :
-	data_(std::make_shared<VulkanInstanceExtensionData>())
+InstanceExtension::InstanceExtension() :
+	data_(std::make_shared<InstanceExtensionData>())
 {
 	uint32_t extCount = 0;
 	if (vkEnumerateInstanceExtensionProperties(nullptr, &extCount, nullptr) != VK_SUCCESS)
@@ -32,7 +32,7 @@ VulkanInstanceExtension::VulkanInstanceExtension() :
 		throw std::runtime_error("Unable to enumerate instance extensions.");
 }
 
-std::vector<std::string> VulkanInstanceExtension::allNames() const
+std::vector<std::string> InstanceExtension::allNames() const
 {
 	std::vector<std::string> all;
 	all.reserve(data_->extensions.size());
@@ -41,7 +41,7 @@ std::vector<std::string> VulkanInstanceExtension::allNames() const
 	return all;
 }
 
-VulkanInstanceExtension::~VulkanInstanceExtension()
+InstanceExtension::~InstanceExtension()
 {
 	
 }

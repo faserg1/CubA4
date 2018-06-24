@@ -1,5 +1,5 @@
-#ifndef VULKANINSTANCE_HPP
-#define VULKANINSTANCE_HPP
+#ifndef INSTANCE_HPP 
+#define INSTANCE_HPP 
 
 #include <vulkan/vulkan.h>
 
@@ -9,11 +9,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanInstance
+			class Instance 
 			{
 			public:
-				explicit VulkanInstance(VkInstance instance);
-				~VulkanInstance();
+				explicit Instance(VkInstance instance);
+				~Instance();
 				VkInstance getInstance() const;
 			protected:
 				
@@ -24,4 +24,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANINSTANCE_HPP
+#endif // INSTANCE_HPP 

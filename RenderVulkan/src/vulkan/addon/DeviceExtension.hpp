@@ -1,5 +1,5 @@
-#ifndef VULKANDEVICEEXTENSION_HPP
-#define VULKANDEVICEEXTENSION_HPP
+#ifndef DEVICEEXTENSION_HPP
+#define DEVICEEXTENSION_HPP
 
 #include <memory>
 #include "DeviceAddon.hpp"
@@ -12,22 +12,22 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanDeviceExtensionData;
+				struct DeviceExtensionData;
 
-				class VulkanDeviceExtension :
-					public VulkanDeviceAddon
+				class DeviceExtension :
+					public DeviceAddon
 				{
 				public:
-					explicit VulkanDeviceExtension(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
-					~VulkanDeviceExtension();
+					explicit DeviceExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
+					~DeviceExtension();
 				protected:
 					std::vector<std::string> allNames() const override;
 				private:
-					std::shared_ptr<VulkanDeviceExtensionData> data_;
+					std::shared_ptr<DeviceExtensionData> data_;
 				};
 			}
 		}
 	}
 }
 
-#endif // VULKANDEVICEEXTENSION_HPP
+#endif // DEVICEEXTENSION_HPP

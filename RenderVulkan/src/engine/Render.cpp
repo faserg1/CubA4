@@ -1,12 +1,12 @@
 #include "./Render.hpp"
 using namespace CubA4::render::engine;
 
-VulkanRender::VulkanRender()
+Render::Render()
 {
 	
 }
 
-VulkanRender::~VulkanRender()
+Render::~Render()
 {
 	
 }

@@ -2,17 +2,17 @@
 #include <algorithm>
 using namespace CubA4::render::vulkan::addon;
 
-VulkanAddon::VulkanAddon()
+Addon::Addon()
 {
 	
 }
 
-VulkanAddon::~VulkanAddon()
+Addon::~Addon()
 {
 	
 }
 
-bool CubA4::render::vulkan::addon::VulkanAddon::available() const
+bool CubA4::render::vulkan::addon::Addon::available() const
 {
 	auto all = allNames();
 	auto required = names();

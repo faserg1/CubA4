@@ -1,5 +1,5 @@
-#ifndef VULKANDEVICELAYER_HPP
-#define VULKANDEVICELAYER_HPP
+#ifndef DEVICELAYER_HPP
+#define DEVICELAYER_HPP
 
 #include "DeviceAddon.hpp"
 
@@ -11,12 +11,12 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				class VulkanDeviceLayer :
-					public VulkanDeviceAddon
+				class DeviceLayer :
+					public DeviceAddon
 				{
 				public:
-					explicit VulkanDeviceLayer(std::weak_ptr<VulkanPhysicalDevice> physicalDevice);
-					~VulkanDeviceLayer();
+					explicit DeviceLayer(std::weak_ptr<PhysicalDevice> physicalDevice);
+					~DeviceLayer();
 				protected:
 				private:
 				};
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANDEVICELAYER_HPP
+#endif // DEVICELAYER_HPP

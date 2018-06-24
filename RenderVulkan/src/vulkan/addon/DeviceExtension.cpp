@@ -12,7 +12,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanDeviceExtensionData
+				struct DeviceExtensionData
 				{
 					std::vector<VkExtensionProperties> extensions;
 				};
@@ -21,8 +21,8 @@ namespace CubA4
 	}
 }
 
-VulkanDeviceExtension::VulkanDeviceExtension(std::weak_ptr<VulkanPhysicalDevice> physicalDevice) :
-	VulkanDeviceAddon(physicalDevice), data_(std::make_shared<VulkanDeviceExtensionData>())
+DeviceExtension::DeviceExtension(std::weak_ptr<PhysicalDevice> physicalDevice) :
+	DeviceAddon(physicalDevice), data_(std::make_shared<DeviceExtensionData>())
 {
 	if (auto pd = physicalDevice_.lock())
 	{
@@ -37,12 +37,12 @@ VulkanDeviceExtension::VulkanDeviceExtension(std::weak_ptr<VulkanPhysicalDevice>
 		throw std::runtime_error("Unable to get physical device");
 }
 
-VulkanDeviceExtension::~VulkanDeviceExtension()
+DeviceExtension::~DeviceExtension()
 {
 	
 }
 
-std::vector<std::string> VulkanDeviceExtension::allNames() const
+std::vector<std::string> DeviceExtension::allNames() const
 {
 	std::vector<std::string> all;
 	all.reserve(data_->extensions.size());

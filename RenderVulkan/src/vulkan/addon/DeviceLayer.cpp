@@ -2,13 +2,13 @@
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;
 
-VulkanDeviceLayer::VulkanDeviceLayer(std::weak_ptr<VulkanPhysicalDevice> physicalDevice) :
-	VulkanDeviceAddon(physicalDevice)
+DeviceLayer::DeviceLayer(std::weak_ptr<PhysicalDevice> physicalDevice) :
+	DeviceAddon(physicalDevice)
 {
 	
 }
 
-VulkanDeviceLayer::~VulkanDeviceLayer()
+DeviceLayer::~DeviceLayer()
 {
 	
 }

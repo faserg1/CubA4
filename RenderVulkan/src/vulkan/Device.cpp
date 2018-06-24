@@ -1,28 +1,28 @@
 #include "./Device.hpp"
 using namespace CubA4::render::vulkan;
 
-VulkanDevice::VulkanDevice(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue) :
+Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue) :
 	device_(device), physicalDevice_(physicalDevice), queue_(queue)
 {
 	
 }
 
-VulkanDevice::~VulkanDevice()
+Device::~Device()
 {
 	
 }
 
-VkDevice VulkanDevice::getDevice() const
+VkDevice Device::getDevice() const
 {
 	return device_;
 }
 
-VkPhysicalDevice VulkanDevice::getPhysicalDevice() const
+VkPhysicalDevice Device::getPhysicalDevice() const
 {
 	return physicalDevice_;
 }
 
-VkQueue VulkanDevice::getQueue() const
+VkQueue Device::getQueue() const
 {
 	return queue_;
 }

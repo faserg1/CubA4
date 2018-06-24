@@ -14,27 +14,27 @@ namespace CubA4
 
 		namespace vulkan
 		{
-			class VulkanDevice;
-			class VulkanSurface;
-			class VulkanSwapchain;
+			class Device;
+			class Surface;
+			class Swapchain;
 
-			struct VulkanSwapchainBuilderData;
+			struct SwapchainBuilderData;
 
-			class VulkanSwapchainBuilder
+			class SwapchainBuilder
 			{
 			public:
-				explicit VulkanSwapchainBuilder(std::shared_ptr<const VulkanDevice> device,
-					std::weak_ptr<const VulkanSurface> surface, std::shared_ptr<const config::IRenderConfig> config);
-				~VulkanSwapchainBuilder();
+				explicit SwapchainBuilder(std::shared_ptr<const Device> device,
+					std::weak_ptr<const Surface> surface, std::shared_ptr<const config::IRenderConfig> config);
+				~SwapchainBuilder();
 
-				std::shared_ptr<VulkanSwapchain> build();
-				std::shared_ptr<VulkanSwapchain> rebuild(std::shared_ptr<const VulkanSwapchain> oldSwapchain);
-				void destroy(std::shared_ptr<const VulkanSwapchain> swapchain);
+				std::shared_ptr<Swapchain> build();
+				std::shared_ptr<Swapchain> rebuild(std::shared_ptr<const Swapchain> oldSwapchain);
+				void destroy(std::shared_ptr<const Swapchain> swapchain);
 			protected:
 			private:
-				std::shared_ptr<VulkanSwapchainBuilderData> data_;
-				std::shared_ptr<const VulkanDevice> device_;
-				std::weak_ptr<const VulkanSurface> surface_;
+				std::shared_ptr<SwapchainBuilderData> data_;
+				std::shared_ptr<const Device> device_;
+				std::weak_ptr<const Surface> surface_;
 				std::shared_ptr<const config::IRenderConfig> config_;
 			};
 		}

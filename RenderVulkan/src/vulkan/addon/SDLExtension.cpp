@@ -9,18 +9,18 @@ using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::window;
 
-VulkanSDLExtension::VulkanSDLExtension(std::shared_ptr<IWindow> window) :
+SDLExtension::SDLExtension(std::shared_ptr<IWindow> window) :
 	window_(window)
 {
 	
 }
 
-VulkanSDLExtension::~VulkanSDLExtension()
+SDLExtension::~SDLExtension()
 {
 	
 }
 
-std::vector<std::string> VulkanSDLExtension::names() const
+std::vector<std::string> SDLExtension::names() const
 {
 	unsigned int extCount;
 	if (!SDL_Vulkan_GetInstanceExtensions(window_->getSDLWindow(), &extCount, nullptr))
@@ -31,26 +31,26 @@ std::vector<std::string> VulkanSDLExtension::names() const
 	return std::vector<std::string>(extensions.begin(), extensions.end());
 }
 
-void VulkanSDLExtension::init(std::shared_ptr<const VulkanInstance> instance)
+void SDLExtension::init(std::shared_ptr<const Instance> instance)
 {
 	VkSurfaceKHR nativeSurface;
 	if (!SDL_Vulkan_CreateSurface(window_->getSDLWindow(), instance->getInstance(), &nativeSurface))
 		throw std::runtime_error("Cant create surface!");
-	surface_ = std::make_shared<VulkanSurface>(nativeSurface);
+	surface_ = std::make_shared<Surface>(nativeSurface);
 }
 
-void VulkanSDLExtension::destroy(std::shared_ptr<const VulkanInstance> instance)
+void SDLExtension::destroy(std::shared_ptr<const Instance> instance)
 {
 	vkDestroySurfaceKHR(instance->getInstance(), surface_->getSurface(), nullptr);
 	surface_.reset();
 }
 
-void VulkanSDLExtension::added(VulkanInstanceBuilder &builder)
+void SDLExtension::added(InstanceBuilder &builder)
 {
 
 }
 
-std::shared_ptr<const VulkanSurface> VulkanSDLExtension::getSurface() const
+std::shared_ptr<const Surface> SDLExtension::getSurface() const
 {
 	return surface_;
 }

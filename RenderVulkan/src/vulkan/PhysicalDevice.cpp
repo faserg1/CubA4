@@ -1,18 +1,18 @@
 #include "./PhysicalDevice.hpp"
 using namespace CubA4::render::vulkan;
 
-VulkanPhysicalDevice::VulkanPhysicalDevice(VkPhysicalDevice physicalDevice) :
+PhysicalDevice::PhysicalDevice(VkPhysicalDevice physicalDevice) :
 	physicalDevice_(physicalDevice)
 {
 	
 }
 
-VulkanPhysicalDevice::~VulkanPhysicalDevice()
+PhysicalDevice::~PhysicalDevice()
 {
 	
 }
 
-VkPhysicalDevice VulkanPhysicalDevice::getPhysicalDevice() const
+VkPhysicalDevice PhysicalDevice::getPhysicalDevice() const
 {
 	return physicalDevice_;
 }

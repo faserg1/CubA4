@@ -1,5 +1,5 @@
-#ifndef IVULKANINSTANCEADDON_HPP
-#define IVULKANINSTANCEADDON_HPP
+#ifndef IINSTANCEADDON_HPP
+#define IINSTANCEADDON_HPP
 
 #include <memory>
 #include "Addon.hpp"
@@ -10,22 +10,22 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanInstance;
-			class VulkanInstanceBuilder;
+			class Instance;
+			class InstanceBuilder;
 			
 			namespace addon
 			{
-				class VulkanInstanceAddon :
-					public VulkanAddon
+				class InstanceAddon :
+					public Addon
 				{
 				public:
-					VulkanAddonType type() const override;
-					virtual void init(std::shared_ptr<const VulkanInstance> instance) = 0;
-					virtual void destroy(std::shared_ptr<const VulkanInstance> instance) = 0;
-					virtual void added(VulkanInstanceBuilder &builder) = 0;
+					AddonType type() const override;
+					virtual void init(std::shared_ptr<const Instance> instance) = 0;
+					virtual void destroy(std::shared_ptr<const Instance> instance) = 0;
+					virtual void added(InstanceBuilder &builder) = 0;
 				protected:
-					explicit VulkanInstanceAddon();
-					virtual ~VulkanInstanceAddon();
+					explicit InstanceAddon();
+					virtual ~InstanceAddon();
 				private:
 				};
 			}
@@ -33,4 +33,4 @@ namespace CubA4
 	}
 }
 
-#endif // IVULKANINSTANCEADDON_HPP
+#endif // IINSTANCEADDON_HPP

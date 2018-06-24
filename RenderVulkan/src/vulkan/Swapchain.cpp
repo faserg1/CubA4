@@ -1,33 +1,33 @@
 #include "./Swapchain.hpp"
 using namespace CubA4::render::vulkan;
 
-VulkanSwapchain::VulkanSwapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format) :
+Swapchain::Swapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format) :
 	swapchain_(swapchain), resolution_(res), imageCount_(imageCount), format_(format)
 {
 	
 }
 
-VulkanSwapchain::~VulkanSwapchain()
+Swapchain::~Swapchain()
 {
 	
 }
 
-VkSwapchainKHR VulkanSwapchain::getSwapchain() const
+VkSwapchainKHR Swapchain::getSwapchain() const
 {
 	return swapchain_;
 }
 
-VkExtent2D VulkanSwapchain::getResolution() const
+VkExtent2D Swapchain::getResolution() const
 {
 	return resolution_;
 }
 
-uint32_t VulkanSwapchain::getImageCount() const
+uint32_t Swapchain::getImageCount() const
 {
 	return imageCount_;
 }
 
-VkFormat VulkanSwapchain::getFormat() const
+VkFormat Swapchain::getFormat() const
 {
 	return format_;
 }

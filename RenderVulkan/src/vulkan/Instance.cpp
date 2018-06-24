@@ -1,18 +1,18 @@
 #include "./Instance.hpp"
 using namespace CubA4::render::vulkan;
 
-VulkanInstance::VulkanInstance(VkInstance instance) :
+Instance::Instance(VkInstance instance) :
 	instance_(instance)
 {
 	
 }
 
-VulkanInstance::~VulkanInstance()
+Instance::~Instance()
 {
 	
 }
 
-VkInstance VulkanInstance::getInstance() const
+VkInstance Instance::getInstance() const
 {
 	return instance_;
 }

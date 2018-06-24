@@ -18,30 +18,30 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			struct VulkanDeviceBuilderData
+			struct DeviceBuilderData
 			{
 				std::vector<VkPhysicalDevice> physicalDevices;
-				std::shared_ptr<VulkanPhysicalDevice> choosedDevice;
+				std::shared_ptr<PhysicalDevice> choosedDevice;
 				uint32_t queueFamilyIndex;
 			};
 		}
 	}
 }
 
-VulkanDeviceBuilder::VulkanDeviceBuilder(std::shared_ptr<const VulkanInstance> instance,
-	std::weak_ptr<const VulkanSurface> surface) :
-	data_(std::make_shared<VulkanDeviceBuilderData>()), instance_(instance), surface_(surface)
+DeviceBuilder::DeviceBuilder(std::shared_ptr<const Instance> instance,
+	std::weak_ptr<const Surface> surface) :
+	data_(std::make_shared<DeviceBuilderData>()), instance_(instance), surface_(surface)
 {
 	enumPhysicalDevices();
 	choosePhysicalDevice();
 }
 
-VulkanDeviceBuilder::~VulkanDeviceBuilder()
+DeviceBuilder::~DeviceBuilder()
 {
 	
 }
 
-void VulkanDeviceBuilder::addLayer(addon::VulkanDeviceLayer &layer)
+void DeviceBuilder::addLayer(addon::DeviceLayer &layer)
 {
 	if (!layer.available())
 		throw std::runtime_error("Extension is not available");
@@ -50,7 +50,7 @@ void VulkanDeviceBuilder::addLayer(addon::VulkanDeviceLayer &layer)
 	layer.added(*this);
 }
 
-void VulkanDeviceBuilder::addExtension(addon::VulkanDeviceExtension &extension)
+void DeviceBuilder::addExtension(addon::DeviceExtension &extension)
 {
 	if (!extension.available())
 		throw std::runtime_error("Extension is not available");
@@ -59,13 +59,13 @@ void VulkanDeviceBuilder::addExtension(addon::VulkanDeviceExtension &extension)
 	extension.added(*this);
 }
 
-std::weak_ptr<VulkanPhysicalDevice> VulkanDeviceBuilder::getPhysicalDevice()
+std::weak_ptr<PhysicalDevice> DeviceBuilder::getPhysicalDevice()
 {
 	return data_->choosedDevice;
 }
 
 
-std::shared_ptr<const VulkanDevice> VulkanDeviceBuilder::build()
+std::shared_ptr<const Device> DeviceBuilder::build()
 {
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -97,16 +97,16 @@ std::shared_ptr<const VulkanDevice> VulkanDeviceBuilder::build()
 	VkQueue queue;
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 0, &queue);
 
-	return std::make_shared<VulkanDevice>(device, data_->choosedDevice->getPhysicalDevice(), queue);
+	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue);
 }
 
-void VulkanDeviceBuilder::destroy(std::shared_ptr<const VulkanDevice> device)
+void DeviceBuilder::destroy(std::shared_ptr<const Device> device)
 {
 	vkDeviceWaitIdle(device->getDevice());
 	vkDestroyDevice(device->getDevice(), nullptr);
 }
 
-void VulkanDeviceBuilder::enumPhysicalDevices()
+void DeviceBuilder::enumPhysicalDevices()
 {
 	uint32_t physicalDevicesCount;
 	if (vkEnumeratePhysicalDevices(instance_->getInstance(), &physicalDevicesCount, nullptr) != VK_SUCCESS)
@@ -116,7 +116,7 @@ void VulkanDeviceBuilder::enumPhysicalDevices()
 		throw std::runtime_error("Cannot list physical devices");
 }
 
-void VulkanDeviceBuilder::choosePhysicalDevice()
+void DeviceBuilder::choosePhysicalDevice()
 {
 	for (auto physicalDevice : data_->physicalDevices)
 	{
@@ -148,7 +148,7 @@ void VulkanDeviceBuilder::choosePhysicalDevice()
 			break;
 		}
 
-		data_->choosedDevice = std::make_shared<VulkanPhysicalDevice>(physicalDevice);
+		data_->choosedDevice = std::make_shared<PhysicalDevice>(physicalDevice);
 		data_->queueFamilyIndex = queueFamilyIndex;
 		break;
 	}

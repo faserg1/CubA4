@@ -2,17 +2,17 @@
 #include <vulkan/vulkan.h>
 using namespace CubA4::render::vulkan;
 
-VulkanSurface::VulkanSurface(VkSurfaceKHR surface) : surface_(surface)
+Surface::Surface(VkSurfaceKHR surface) : surface_(surface)
 {
 	
 }
 
-VulkanSurface::~VulkanSurface()
+Surface::~Surface()
 {
 	
 }
 
-VkSurfaceKHR VulkanSurface::getSurface() const
+VkSurfaceKHR Surface::getSurface() const
 {
 	return surface_;
 }

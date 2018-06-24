@@ -3,33 +3,33 @@
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
 
-VulkanSwapchainExtension::VulkanSwapchainExtension(std::weak_ptr<VulkanPhysicalDevice> physicalDevice) :
-	VulkanDeviceExtension(physicalDevice)
+SwapchainExtension::SwapchainExtension(std::weak_ptr<PhysicalDevice> physicalDevice) :
+	DeviceExtension(physicalDevice)
 {
 	
 }
 
-VulkanSwapchainExtension::~VulkanSwapchainExtension()
+SwapchainExtension::~SwapchainExtension()
 {
 	
 }
 
-std::vector<std::string> VulkanSwapchainExtension::names() const
+std::vector<std::string> SwapchainExtension::names() const
 {
 	return { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 }
 
-void VulkanSwapchainExtension::init(std::shared_ptr<const VulkanDevice> instance)
+void SwapchainExtension::init(std::shared_ptr<const Device> instance)
 {
 
 }
 
-void VulkanSwapchainExtension::destroy(std::shared_ptr<const VulkanDevice> instance)
+void SwapchainExtension::destroy(std::shared_ptr<const Device> instance)
 {
 
 }
 
-void VulkanSwapchainExtension::added(VulkanDeviceBuilder &builder)
+void SwapchainExtension::added(DeviceBuilder &builder)
 {
 
 }

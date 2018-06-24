@@ -11,7 +11,7 @@ namespace CubA4
 		{
 			namespace addon
 			{
-				struct VulkanInstanceLayerData
+				struct InstanceLayerData
 				{
 					std::vector<VkLayerProperties> layers;
 				};
@@ -20,8 +20,8 @@ namespace CubA4
 	}
 }
 
-VulkanInstanceLayer::VulkanInstanceLayer() :
-	data_(std::make_shared<VulkanInstanceLayerData>())
+InstanceLayer::InstanceLayer() :
+	data_(std::make_shared<InstanceLayerData>())
 {
 	uint32_t layersCount = 0;
 	if (vkEnumerateInstanceLayerProperties(&layersCount, nullptr) != VK_SUCCESS)
@@ -31,12 +31,12 @@ VulkanInstanceLayer::VulkanInstanceLayer() :
 		throw std::runtime_error("Unable to enumerate instance layers.");
 }
 
-VulkanInstanceLayer::~VulkanInstanceLayer()
+InstanceLayer::~InstanceLayer()
 {
 	
 }
 
-std::vector<std::string> CubA4::render::vulkan::addon::VulkanInstanceLayer::allNames() const
+std::vector<std::string> CubA4::render::vulkan::addon::InstanceLayer::allNames() const
 {
 	std::vector<std::string> all;
 	all.reserve(data_->layers.size());

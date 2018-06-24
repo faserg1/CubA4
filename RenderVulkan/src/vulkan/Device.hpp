@@ -1,6 +1,5 @@
-#ifndef VULKANDEVICE_HPP
-#define VULKANDEVICE_HPP
-
+#ifndef DEVICE_HPP 
+#define DEVICE_HPP 
 #include <vulkan/vulkan.h>
 
 namespace CubA4
@@ -9,11 +8,11 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class VulkanDevice
+			class Device
 			{
 			public:
-				explicit VulkanDevice(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue);
-				~VulkanDevice();
+				explicit Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue);
+				~Device();
 
 				VkDevice getDevice() const;
 				VkPhysicalDevice getPhysicalDevice() const;
@@ -28,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKANDEVICE_HPP
+#endif // DEVICE_HPP
