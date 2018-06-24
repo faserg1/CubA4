@@ -170,7 +170,7 @@ void VulkanRenderEngine::destroySwapchain()
 void VulkanRenderEngine::initPresentation()
 {
 	if (!presetation_)
-		presetation_ = std::make_shared<VulkanPresentaion>(device_, swapchain_);
+		presetation_ = std::make_shared<Presentaion>(device_, swapchain_);
 
 }
 

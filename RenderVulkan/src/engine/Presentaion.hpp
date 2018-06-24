@@ -17,11 +17,11 @@ namespace CubA4
 
 		namespace engine
 		{
-			class VulkanPresentaion
+			class Presentaion
 			{
 			public:
-				explicit VulkanPresentaion(std::shared_ptr<const vulkan::VulkanDevice> device, std::shared_ptr<const vulkan::VulkanSwapchain> swapchain);
-				~VulkanPresentaion();
+				explicit Presentaion(std::shared_ptr<const vulkan::VulkanDevice> device, std::shared_ptr<const vulkan::VulkanSwapchain> swapchain);
+				~Presentaion();
 
 				std::shared_ptr<const vulkan::VulkanSemaphore> getAcquireSignalSemaphore() const;
 				void addAwaitSemaphore(std::shared_ptr<const vulkan::VulkanSemaphore> semaphore);

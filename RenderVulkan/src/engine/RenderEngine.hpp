@@ -45,7 +45,7 @@ namespace CubA4
 
 		namespace engine
 		{
-			class VulkanPresentaion;
+			class Presentaion;
 			class VulkanRender;
 
 			class VulkanRenderEngine :
@@ -97,7 +97,7 @@ namespace CubA4
 				std::shared_ptr<vulkan::VulkanSwapchainBuilder> swapchainBuilder_;
 				std::shared_ptr<const vulkan::VulkanSwapchain> swapchain_;
 
-				std::shared_ptr<VulkanPresentaion> presetation_;
+				std::shared_ptr<Presentaion> presetation_;
 				std::shared_ptr<VulkanRender> render_;
 			};
 		}

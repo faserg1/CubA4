@@ -8,28 +8,28 @@
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
-VulkanPresentaion::VulkanPresentaion(std::shared_ptr<const VulkanDevice> device, std::shared_ptr<const VulkanSwapchain> swapchain) :
+Presentaion::Presentaion(std::shared_ptr<const VulkanDevice> device, std::shared_ptr<const VulkanSwapchain> swapchain) :
 	device_(device), swapchain_(swapchain), timeout_(50)
 {
 	acquireSignalSemaphore_ = VulkanSemaphore::create(device);
 }
 
-VulkanPresentaion::~VulkanPresentaion()
+Presentaion::~Presentaion()
 {
 	
 }
 
-std::shared_ptr<const VulkanSemaphore> VulkanPresentaion::getAcquireSignalSemaphore() const
+std::shared_ptr<const VulkanSemaphore> Presentaion::getAcquireSignalSemaphore() const
 {
 	return acquireSignalSemaphore_;
 }
 
-void VulkanPresentaion::addAwaitSemaphore(std::shared_ptr<const VulkanSemaphore> semaphore)
+void Presentaion::addAwaitSemaphore(std::shared_ptr<const VulkanSemaphore> semaphore)
 {
 	awaitSemaphores_.push_back(semaphore);
 }
 
-uint32_t VulkanPresentaion::acquire()
+uint32_t Presentaion::acquire()
 {
 	VkAcquireNextImageInfoKHR info = {};
 	info.sType = VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR;
@@ -45,7 +45,7 @@ uint32_t VulkanPresentaion::acquire()
 	return imageIndex;
 }
 
-void VulkanPresentaion::send(uint32_t imageIndex)
+void Presentaion::send(uint32_t imageIndex)
 {
 	VkPresentInfoKHR info = {};
 	std::vector<VkSemaphore> awaitSemaphores;
