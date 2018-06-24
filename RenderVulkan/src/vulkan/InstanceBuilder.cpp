@@ -1,13 +1,13 @@
-#include "./VulkanInstanceBuilder.hpp"
+#include "./InstanceBuilder.hpp"
 #include <vulkan/vulkan.h>
 #include <SDL_vulkan.h>
 #include <stdexcept>
 #include <algorithm>
 #include <info/IApplicationInfo.hpp>
 #include <info/IVersion.hpp>
-#include "addon/VulkanInstanceExtension.hpp"
-#include "addon/VulkanInstanceLayer.hpp"
-#include "VulkanInstance.hpp"
+#include "addon/InstanceExtension.hpp"
+#include "addon/InstanceLayer.hpp"
+#include "Instance.hpp"
 using namespace CubA4::render::vulkan;
 using namespace CubA4::core::info;
 

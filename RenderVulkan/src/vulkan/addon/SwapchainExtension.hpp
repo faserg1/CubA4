@@ -1,7 +1,7 @@
 #ifndef VULKANSWAPCHAINEXTENSION_HPP
 #define VULKANSWAPCHAINEXTENSION_HPP
 
-#include "VulkanDeviceExtension.hpp"
+#include "DeviceExtension.hpp"
 
 namespace CubA4
 {

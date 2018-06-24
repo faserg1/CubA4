@@ -1,4 +1,4 @@
-#include "./VulkanInstanceLayer.hpp"
+#include "./InstanceLayer.hpp"
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 using namespace CubA4::render::vulkan::addon;

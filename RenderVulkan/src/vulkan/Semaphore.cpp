@@ -1,5 +1,5 @@
-#include "./VulkanSemaphore.hpp"
-#include "./VulkanDevice.hpp"
+#include "./Semaphore.hpp"
+#include "./Device.hpp"
 #include <stdexcept>
 using namespace CubA4::render::vulkan;
 

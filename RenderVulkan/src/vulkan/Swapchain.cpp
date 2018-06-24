@@ -1,4 +1,4 @@
-#include "./VulkanSwapchain.hpp"
+#include "./Swapchain.hpp"
 using namespace CubA4::render::vulkan;
 
 VulkanSwapchain::VulkanSwapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format) :

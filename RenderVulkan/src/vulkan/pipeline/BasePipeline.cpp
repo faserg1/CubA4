@@ -1,5 +1,5 @@
 #include "./BasePipeline.hpp"
-#include "../VulkanDevice.hpp"
+#include "../Device.hpp"
 #include <stdexcept>
 using namespace CubA4::render::vulkan::pipeline;
 using namespace CubA4::render::vulkan;

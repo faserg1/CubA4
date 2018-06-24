@@ -1,6 +1,6 @@
-#include "./VulkanDebugExtension.hpp"
+#include "./DebugExtension.hpp"
 #include <vulkan/vulkan.h>
-#include "../VulkanInstance.hpp"
+#include "../Instance.hpp"
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 using namespace CubA4::render::vulkan;

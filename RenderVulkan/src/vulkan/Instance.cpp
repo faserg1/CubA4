@@ -1,4 +1,4 @@
-#include "./VulkanInstance.hpp"
+#include "./Instance.hpp"
 using namespace CubA4::render::vulkan;
 
 VulkanInstance::VulkanInstance(VkInstance instance) :

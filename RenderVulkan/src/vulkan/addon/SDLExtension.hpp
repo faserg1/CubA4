@@ -2,7 +2,7 @@
 #define VULKANSDLEXTENSION_HPP
 
 #include <memory>
-#include "VulkanInstanceExtension.hpp"
+#include "InstanceExtension.hpp"
 
 namespace CubA4
 {

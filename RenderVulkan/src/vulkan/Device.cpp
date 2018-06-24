@@ -1,4 +1,4 @@
-#include "./VulkanDevice.hpp"
+#include "./Device.hpp"
 using namespace CubA4::render::vulkan;
 
 VulkanDevice::VulkanDevice(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue) :

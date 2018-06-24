@@ -1,7 +1,7 @@
-#include "./VulkanSwapchainBuilder.hpp"
-#include "./VulkanDevice.hpp"
-#include "./VulkanSwapchain.hpp"
-#include "./VulkanSurface.hpp"
+#include "./SwapchainBuilder.hpp"
+#include "./Device.hpp"
+#include "./Swapchain.hpp"
+#include "./Surface.hpp"
 
 #include <config/IRenderConfig.hpp>
 #include <vulkan/vulkan.h>

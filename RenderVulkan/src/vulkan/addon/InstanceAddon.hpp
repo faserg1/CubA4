@@ -2,7 +2,7 @@
 #define IVULKANINSTANCEADDON_HPP
 
 #include <memory>
-#include "VulkanAddon.hpp"
+#include "Addon.hpp"
 
 namespace CubA4
 {

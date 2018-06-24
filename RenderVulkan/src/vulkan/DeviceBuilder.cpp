@@ -1,10 +1,10 @@
-#include "./VulkanDeviceBuilder.hpp"
-#include "./VulkanDevice.hpp"
-#include "./VulkanInstance.hpp"
-#include "./VulkanSurface.hpp"
-#include "./VulkanPhysicalDevice.hpp"
-#include "addon/VulkanDeviceExtension.hpp"
-#include "addon/VulkanDeviceLayer.hpp"
+#include "./DeviceBuilder.hpp"
+#include "./Device.hpp"
+#include "./Instance.hpp"
+#include "./Surface.hpp"
+#include "./PhysicalDevice.hpp"
+#include "addon/DeviceExtension.hpp"
+#include "addon/DeviceLayer.hpp"
 #include <vector>
 #include <stdexcept>
 #include <vulkan/vulkan.h>

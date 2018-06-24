@@ -2,7 +2,7 @@
 #define VULKANDEVICEEXTENSION_HPP
 
 #include <memory>
-#include "VulkanDeviceAddon.hpp"
+#include "DeviceAddon.hpp"
 
 namespace CubA4
 {

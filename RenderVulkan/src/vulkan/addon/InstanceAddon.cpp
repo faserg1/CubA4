@@ -1,4 +1,4 @@
-#include "./VulkanInstanceAddon.hpp"
+#include "./InstanceAddon.hpp"
 using namespace CubA4::render::vulkan::addon;
 
 VulkanInstanceAddon::VulkanInstanceAddon()

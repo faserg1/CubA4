@@ -1,4 +1,4 @@
-#include "./VulkanPhysicalDevice.hpp"
+#include "./PhysicalDevice.hpp"
 using namespace CubA4::render::vulkan;
 
 VulkanPhysicalDevice::VulkanPhysicalDevice(VkPhysicalDevice physicalDevice) :

@@ -1,4 +1,4 @@
-#include "./VulkanInstanceExtension.hpp"
+#include "./InstanceExtension.hpp"
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <stdexcept>

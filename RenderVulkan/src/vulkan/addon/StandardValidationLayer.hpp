@@ -1,7 +1,7 @@
 #ifndef VULKANSTANDARTVALIDATIONLAYER_HPP
 #define VULKANSTANDARTVALIDATIONLAYER_HPP
 
-#include "VulkanInstanceLayer.hpp"
+#include "InstanceLayer.hpp"
 
 namespace CubA4
 {

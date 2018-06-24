@@ -1,4 +1,4 @@
-#include "./VulkanStandardValidationLayer.hpp"
+#include "./StandardValidationLayer.hpp"
 #include <vulkan/vulkan.h>
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;

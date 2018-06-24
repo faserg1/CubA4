@@ -1,6 +1,6 @@
-#include "./VulkanSDLExtension.hpp"
-#include "../VulkanSurface.hpp"
-#include "../VulkanInstance.hpp"
+#include "./SDLExtension.hpp"
+#include "../Surface.hpp"
+#include "../Instance.hpp"
 #include <window/IWindow.hpp>
 #include <vulkan/vulkan.h>
 #include <SDL_vulkan.h>

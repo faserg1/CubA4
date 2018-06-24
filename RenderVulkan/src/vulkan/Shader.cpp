@@ -1,5 +1,5 @@
-#include "./VulkanShader.hpp"
-#include "./VulkanDevice.hpp"
+#include "./Shader.hpp"
+#include "./Device.hpp"
 #include "../../gen/irs.hpp"
 #include <stdexcept>
 using namespace CubA4::render::vulkan;

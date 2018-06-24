@@ -1,4 +1,4 @@
-#include "./VulkanRenderEngine.hpp"
+#include "./RenderEngine.hpp"
 
 #include <ICore.hpp>
 #include <config/IFilePaths.hpp>
@@ -6,26 +6,26 @@
 
 #include "../config/RenderConfig.hpp"
 
-#include "../vulkan/VulkanInstance.hpp"
-#include "../vulkan/VulkanInstanceBuilder.hpp"
-#include "../vulkan/addon/VulkanInstanceLayer.hpp"
-#include "../vulkan/addon/VulkanInstanceExtension.hpp"
+#include "../vulkan/Instance.hpp"
+#include "../vulkan/InstanceBuilder.hpp"
+#include "../vulkan/addon/InstanceLayer.hpp"
+#include "../vulkan/addon/InstanceExtension.hpp"
 
-#include "../vulkan/VulkanDevice.hpp"
-#include "../vulkan/VulkanDeviceBuilder.hpp"
-#include "../vulkan/addon/VulkanDeviceLayer.hpp"
-#include "../vulkan/addon/VulkanDeviceExtension.hpp"
+#include "../vulkan/Device.hpp"
+#include "../vulkan/DeviceBuilder.hpp"
+#include "../vulkan/addon/DeviceLayer.hpp"
+#include "../vulkan/addon/DeviceExtension.hpp"
 
-#include "../vulkan/addon/VulkanSDLExtension.hpp"
-#include "../vulkan/addon/VulkanDebugExtension.hpp"
-#include "../vulkan/addon/VulkanSwapchainExtension.hpp"
-#include "../vulkan/addon/VulkanStandardValidationLayer.hpp"
+#include "../vulkan/addon/SDLExtension.hpp"
+#include "../vulkan/addon/DebugExtension.hpp"
+#include "../vulkan/addon/SwapchainExtension.hpp"
+#include "../vulkan/addon/StandardValidationLayer.hpp"
 
-#include "../vulkan/VulkanSwapchain.hpp"
-#include "../vulkan/VulkanSwapchainBuilder.hpp"
+#include "../vulkan/Swapchain.hpp"
+#include "../vulkan/SwapchainBuilder.hpp"
 
-#include "./VulkanPresentaion.hpp"
-#include "./VulkanRender.hpp"
+#include "./Presentaion.hpp"
+#include "./Render.hpp"
 
 #include <algorithm>
 #include <stdexcept>

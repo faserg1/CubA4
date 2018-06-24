@@ -1,7 +1,7 @@
-#include "./VulkanPresentaion.hpp"
-#include "../vulkan/VulkanDevice.hpp"
-#include "../vulkan/VulkanSwapchain.hpp"
-#include "../vulkan/VulkanSemaphore.hpp"
+#include "./Presentaion.hpp"
+#include "../vulkan/Device.hpp"
+#include "../vulkan/Swapchain.hpp"
+#include "../vulkan/Semaphore.hpp"
 
 #include <algorithm>
 

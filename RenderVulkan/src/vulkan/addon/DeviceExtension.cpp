@@ -1,5 +1,5 @@
-#include "./VulkanDeviceExtension.hpp"
-#include "../VulkanPhysicalDevice.hpp"
+#include "./DeviceExtension.hpp"
+#include "../PhysicalDevice.hpp"
 #include <vulkan/vulkan.h>
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;

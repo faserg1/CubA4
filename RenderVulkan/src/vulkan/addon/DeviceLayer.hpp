@@ -1,7 +1,7 @@
 #ifndef VULKANDEVICELAYER_HPP
 #define VULKANDEVICELAYER_HPP
 
-#include "VulkanDeviceAddon.hpp"
+#include "DeviceAddon.hpp"
 
 namespace CubA4
 {

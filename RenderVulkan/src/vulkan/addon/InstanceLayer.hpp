@@ -1,7 +1,7 @@
 #ifndef VULKANLAYER_HPP
 #define VULKANLAYER_HPP
 
-#include "VulkanInstanceAddon.hpp"
+#include "InstanceAddon.hpp"
 #include <memory>
 
 namespace CubA4
