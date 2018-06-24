@@ -10,22 +10,25 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			class IMaterialLayoutBuilder;
-			class IMaterialLayout;
-
-			/** \brief Фабрика набора IMaterialLayout
-			  * \description Создает набор описаний материала
-			*/ 
-			class IMaterialLayoutSetFactory
+			namespace material
 			{
-			public:
-				virtual ~IMaterialLayoutSetFactory() {}
-				virtual std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() = 0;
-				virtual std::vector<std::shared_ptr<IMaterialLayout>> build() = 0;
-			protected:
-				explicit IMaterialLayoutSetFactory() {}
-			private:
-			};
+				class IMaterialLayoutBuilder;
+				class IMaterialLayout;
+
+				/** \brief Фабрика набора IMaterialLayout
+				* \description Создает набор описаний материала
+				*/
+				class IMaterialLayoutSetFactory
+				{
+				public:
+					virtual ~IMaterialLayoutSetFactory() {}
+					virtual std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() = 0;
+					virtual std::vector<std::shared_ptr<IMaterialLayout>> build() = 0;
+				protected:
+					explicit IMaterialLayoutSetFactory() {}
+				private:
+				};
+			}
 		}
 	}
 }

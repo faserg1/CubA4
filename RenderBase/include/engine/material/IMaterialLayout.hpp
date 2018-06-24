@@ -7,19 +7,22 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			/**
-			\brief Описание материала
-			\description Содержит в себе свойства материала (шейдеры, как рендерится и т.д)
-			**/
-			class IMaterialLayout
+			namespace material
 			{
-			public:
-				
-			protected:
-				explicit IMaterialLayout() {}
-				virtual ~IMaterialLayout() {}
-			private:
-			};
+				/**
+				\brief Описание материала
+				\description Содержит в себе свойства материала (шейдеры, как рендерится и т.д)
+				**/
+				class IMaterialLayout
+				{
+				public:
+
+				protected:
+					explicit IMaterialLayout() {}
+					virtual ~IMaterialLayout() {}
+				private:
+				};
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ set(RenderBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(RenderBaseIncludeConfigDir ${RenderBaseIncludeDir}/config)
 set(RenderBaseIncludeWindowDir ${RenderBaseIncludeDir}/window)
 set(RenderBaseIncludeEngineDir ${RenderBaseIncludeDir}/engine)
+set(RenderBaseIncludeEngineMaterialDir ${RenderBaseIncludeEngineDir}/material)
 set(RenderBaseHeaderConfig
 	${RenderBaseIncludeConfigDir}/IRenderConfig.hpp
 )
@@ -12,23 +13,27 @@ set(RenderBaseHeaderWindow
 )
 set(RenderBaseHeaderEngine
 	${RenderBaseIncludeEngineDir}/IRenderEngine.hpp
-	${RenderBaseIncludeEngineDir}/IMaterialLayout.hpp
-	${RenderBaseIncludeEngineDir}/IMaterial.hpp
-	${RenderBaseIncludeEngineDir}/IMaterialFactory.hpp
-	${RenderBaseIncludeEngineDir}/IMaterialLayoutSetFactory.hpp
-	${RenderBaseIncludeEngineDir}/IMaterialLayoutBuilder.hpp
+)
+set(RenderBaseHeaderEngineMaterial
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayout.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterial.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialFactory.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayoutSetFactory.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayoutBuilder.hpp
 )
 
 set(RenderBaseHeaders 
 	${RenderBaseIncludeDir}/RenderExportHelper.hpp
 	${RenderBaseIncludeDir}/IRenderInfo.hpp
 	${RenderBaseHeaderEngine}
+	${RenderBaseHeaderEngineMaterial}
 	${RenderBaseHeaderWindow}
 	${RenderBaseHeaderConfig}
 	)
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderBaseHeaderEngine})
 source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${RenderBaseHeaderWindow})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${RenderBaseHeaderConfig})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderBaseHeaderEngineMaterial})
 
 add_library(RenderBase INTERFACE)
 target_include_directories(RenderBase INTERFACE include)

@@ -7,16 +7,19 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			///Строитель описания материала
-			class IMaterialLayoutBuilder
+			namespace material
 			{
-			public:
-				
-			protected:
-				explicit IMaterialLayoutBuilder() {}
-				virtual ~IMaterialLayoutBuilder() {}
-			private:
-			};
+				///Строитель описания материала
+				class IMaterialLayoutBuilder
+				{
+				public:
+
+				protected:
+					explicit IMaterialLayoutBuilder() {}
+					virtual ~IMaterialLayoutBuilder() {}
+				private:
+				};
+			}
 		}
 	}
 }

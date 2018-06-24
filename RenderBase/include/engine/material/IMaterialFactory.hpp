@@ -7,14 +7,17 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			class IMaterialFactory
+			namespace material
 			{
-			public:
-				virtual ~IMaterialFactory() {}
-			protected:
-				explicit IMaterialFactory() {}
-			private:
-			};
+				class IMaterialFactory
+				{
+				public:
+					virtual ~IMaterialFactory() {}
+				protected:
+					explicit IMaterialFactory() {}
+				private:
+				};
+			}
 		}
 	}
 }

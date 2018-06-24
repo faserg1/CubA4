@@ -7,19 +7,22 @@ namespace CubA4
 	{
 		namespace engine
 		{
-			/** 
-			\brief Материал.
-			\description Можно сказать, применяет текстуры и т.д.
-			**/
-			class IMaterial
+			namespace material
 			{
-			public:
-				
-			protected:
-				explicit IMaterial() {}
-				virtual ~IMaterial() {}
-			private:
-			};
+				/**
+				\brief Материал.
+				\description Можно сказать, применяет текстуры и т.д.
+				**/
+				class IMaterial
+				{
+				public:
+
+				protected:
+					explicit IMaterial() {}
+					virtual ~IMaterial() {}
+				private:
+				};
+			}
 		}
 	}
 }
