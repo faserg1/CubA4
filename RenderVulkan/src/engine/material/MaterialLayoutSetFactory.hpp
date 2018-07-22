@@ -19,9 +19,10 @@ namespace CubA4
 					~MaterialLayoutSetFactory();
 
 					std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() override;
-					std::vector<std::shared_ptr<IMaterialLayout>> build() override;
+					std::vector<std::shared_ptr<const IMaterialLayout>> build() override;
 				protected:
 				private:
+					std::vector<std::shared_ptr<IMaterialLayoutBuilder>> builders_;
 				};
 			}
 		}

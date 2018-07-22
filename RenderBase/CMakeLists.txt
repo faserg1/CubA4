@@ -20,6 +20,11 @@ set(RenderBaseHeaderEngineMaterial
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialFactory.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayoutSetFactory.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayoutBuilder.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IShader.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IVertexShader.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IFragmentShader.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IShaderFactory.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialManager.hpp
 )
 
 set(RenderBaseHeaders 

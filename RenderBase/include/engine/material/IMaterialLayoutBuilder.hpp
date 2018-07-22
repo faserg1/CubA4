@@ -13,7 +13,11 @@ namespace CubA4
 				class IMaterialLayoutBuilder
 				{
 				public:
-
+					/// ”станавливает режим прозрачности материала. ѕо умолчанию материал непрозрачен
+					virtual void setTransparentMode(bool transparent = true) = 0;
+					// useShader()
+					// addSampler()
+					// add..*
 				protected:
 					explicit IMaterialLayoutBuilder() {}
 					virtual ~IMaterialLayoutBuilder() {}

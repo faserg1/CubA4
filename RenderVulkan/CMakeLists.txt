@@ -14,6 +14,11 @@ set(RenderVulkanSourceEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/MaterialLayoutSetFactory.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialLayoutBuilder.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialFactory.cpp
+	${RenderVulkanSourceEngineMaterialDir}/Shader.cpp
+	${RenderVulkanSourceEngineMaterialDir}/VertexShader.cpp
+	${RenderVulkanSourceEngineMaterialDir}/FragmentShader.cpp
+	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.cpp
+	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.cpp
 )
 set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/Material.hpp
@@ -21,6 +26,11 @@ set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/MaterialLayoutSetFactory.hpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialLayoutBuilder.hpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialFactory.hpp
+	${RenderVulkanSourceEngineMaterialDir}/Shader.hpp
+	${RenderVulkanSourceEngineMaterialDir}/VertexShader.hpp
+	${RenderVulkanSourceEngineMaterialDir}/FragmentShader.hpp
+	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.hpp
+	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.hpp
 )
 set(RenderVulkanSourceConfig
 	${RenderVulkanSourceConfigDir}/RenderConfig.cpp
@@ -64,7 +74,6 @@ set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/Swapchain.cpp
 	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.cpp
 	${RenderVulkanSourceVulkanDir}/Semaphore.cpp
-	${RenderVulkanSourceVulkanDir}/Shader.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/Instance.hpp
@@ -76,7 +85,6 @@ set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/Swapchain.hpp
 	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.hpp
 	${RenderVulkanSourceVulkanDir}/Semaphore.hpp
-	${RenderVulkanSourceVulkanDir}/Shader.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.cpp

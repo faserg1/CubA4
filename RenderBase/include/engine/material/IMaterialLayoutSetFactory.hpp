@@ -23,7 +23,7 @@ namespace CubA4
 				public:
 					virtual ~IMaterialLayoutSetFactory() {}
 					virtual std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() = 0;
-					virtual std::vector<std::shared_ptr<IMaterialLayout>> build() = 0;
+					virtual std::vector<std::shared_ptr<const IMaterialLayout>> build() = 0;
 				protected:
 					explicit IMaterialLayoutSetFactory() {}
 				private:

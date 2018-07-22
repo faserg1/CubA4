@@ -3,6 +3,7 @@
 
 #include <engine/material/IMaterialLayoutBuilder.hpp>
 #include <vulkan/vulkan.h>
+#include <vector>
 
 namespace CubA4
 {
@@ -18,9 +19,18 @@ namespace CubA4
 				public:
 					explicit MaterialLayoutBuilder();
 					~MaterialLayoutBuilder();
+
+					void setTransparentMode(bool transparent = true) override;
+
+					void prepare();
+					VkDescriptorSetLayoutCreateInfo &getDescriptorLayoutInfo();
 				protected:
+					bool transparentMode_;
 				private:
-					VkPipelineLayoutCreateInfo layoutInfo;
+					VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo_;
+					std::vector<VkDescriptorSetLayoutBinding> bindings_;
+
+					void fillStartInfo();
 				};
 			}
 		}
