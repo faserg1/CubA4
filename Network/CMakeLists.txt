@@ -69,8 +69,7 @@ source_group("${SOURCE_GROUP_SOURCE_START}transmit" FILES ${NetworkSourceTransmi
 #library
 add_library(Network SHARED ${NetworkHeaders} ${NetworkSources})
 
-get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(Network PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
+use_base_library(Network CoreBase)
 
 #self include directories
 target_include_directories(Network PUBLIC ${NetworkIncludeDir})

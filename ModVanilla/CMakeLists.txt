@@ -11,10 +11,10 @@ set(ModVanillaSources
 	)
 	
 add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources})
-#target_include_directories(ModVanilla PUBLIC include/...)
 
-get_target_property(MOD_BASE_INCLUDE_DIRECTORIES ModBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(ModVanilla PUBLIC ${MOD_BASE_INCLUDE_DIRECTORIES})
+use_base_library(ModVanilla ModBase)
+use_base_library(ModVanilla CoreBase)
+use_base_library(ModVanilla RenderBase)
 
 #set output directory
 set_target_properties( ModVanilla

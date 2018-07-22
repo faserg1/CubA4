@@ -137,11 +137,8 @@ target_link_libraries(RenderVulkan PRIVATE vulkan-1 SDL2 SDL2main)
 target_include_directories(RenderVulkan PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(RenderVulkan PRIVATE Boost::filesystem)
 
-get_target_property(RENDER_BASE_INCLUDE_DIRECTORIES RenderBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(RenderVulkan PUBLIC ${RENDER_BASE_INCLUDE_DIRECTORIES})
-
-get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(RenderVulkan PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
+use_base_library(RenderVulkan CoreBase)
+use_base_library(RenderVulkan RenderBase)
 
 #set output directory
 set_target_properties( RenderVulkan

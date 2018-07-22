@@ -38,10 +38,6 @@ set(MoadLoaderTotal
 #library
 add_library(ModLoader SHARED ${ModLoaderHeaders} ${ModLoaderSources})
 
-#link
-#target_link_libraries (ModLoader LINK_INTERFACE_LIBRARIES ModBase)
-#target_link_libraries (ModLoader LINK_INTERFACE_LIBRARIES RenderBase)
-
 #self include directories
 target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath})
 
@@ -49,8 +45,7 @@ target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath})
 target_include_directories(ModLoader PRIVATE ${Boost_INCLUDE_DIRS})
 
 #libs
-get_target_property(MOD_BASE_INCLUDE_DIRECTORIES ModBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(ModLoader PUBLIC ${MOD_BASE_INCLUDE_DIRECTORIES})
+use_base_library(ModLoader ModBase)
 
 #set defines for library export
 target_compile_definitions(ModLoader PRIVATE MOD_LOADER_LIBRARY)

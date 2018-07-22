@@ -39,10 +39,8 @@ source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${CoreSourceConfig})
 	
 add_library(Core SHARED ${CoreHeaders} ${CoreSources})
 target_include_directories(Core INTERFACE include)
-#target_include_directories(Core PUBLIC include/...)
 
-get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(Core PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
+use_base_library(Core CoreBase)
 
 #third-party library
 target_include_directories(Core PRIVATE ${Boost_INCLUDE_DIRS})

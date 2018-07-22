@@ -9,3 +9,14 @@ function(add_irs module_dir name)
 		PARENT_SCOPE
 	)
 endfunction(add_irs)
+
+function(use_base_library target source)
+	get_target_property(BASE_INCLUDE_DIRECTORIES ${source} INTERFACE_INCLUDE_DIRECTORIES)
+	target_include_directories(${target} PUBLIC ${BASE_INCLUDE_DIRECTORIES})
+endfunction(use_base_library)
+
+function(use_library target source)
+	get_target_property(LIBRARY_INCLUDE_DIRECTORIES ${source} INTERFACE_INCLUDE_DIRECTORIES)
+	target_include_directories(${target} PRIVATE ${LIBRARY_INCLUDE_DIRECTORIES})
+	target_link_libraries(${target} PRIVATE ${source})
+endfunction(use_library)

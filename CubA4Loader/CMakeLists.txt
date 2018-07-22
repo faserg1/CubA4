@@ -58,23 +58,13 @@ link_directories(
 add_executable(CubA4Loader ${CubA4LoaderHeaders} ${CubA4LoaderSources})
 
 #libs
-get_target_property(CORE_BASE_INCLUDE_DIRECTORIES CoreBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(CubA4Loader PUBLIC ${CORE_BASE_INCLUDE_DIRECTORIES})
+use_base_library(CubA4Loader CoreBase)
+use_base_library(CubA4Loader RenderBase)
+use_base_library(CubA4Loader ModBase)
 
-get_target_property(CORE_INCLUDE_DIRECTORIES Core INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(CubA4Loader PRIVATE ${CORE_INCLUDE_DIRECTORIES})
-target_link_libraries(CubA4Loader PRIVATE Core)
-
-get_target_property(MOD_LOADER_INCLUDE_DIRECTORIES ModLoader INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(CubA4Loader PRIVATE ${MOD_LOADER_INCLUDE_DIRECTORIES})
-target_link_libraries(CubA4Loader PRIVATE ModLoader)
-
-get_target_property(RENDER_BASE_INCLUDE_DIRECTORIES RenderBase INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(CubA4Loader PUBLIC ${RENDER_BASE_INCLUDE_DIRECTORIES})
-
-get_target_property(NETWORK_INCLUDE_DIRECTORIES Network INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(CubA4Loader PRIVATE ${NETWORK_INCLUDE_DIRECTORIES})
-target_link_libraries(CubA4Loader PRIVATE Network)
+use_library(CubA4Loader Core)
+use_library(CubA4Loader ModLoader)
+use_library(CubA4Loader Network)
 
 #find thrid-party libraries
 find_library(SDL2 PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
