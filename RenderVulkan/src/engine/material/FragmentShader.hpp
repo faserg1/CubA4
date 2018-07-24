@@ -16,7 +16,7 @@ namespace CubA4
 					public Shader, public virtual IFragmentShader
 				{
 				public:
-					explicit FragmentShader(std::shared_ptr<vulkan::Device> device, VkShaderModule shaderModule);
+					explicit FragmentShader(std::shared_ptr<const vulkan::Device> device, VkShaderModule shaderModule);
 					~FragmentShader();
 
 					ShaderType getType() const override final;

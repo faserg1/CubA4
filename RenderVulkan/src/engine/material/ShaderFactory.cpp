@@ -6,7 +6,7 @@
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-ShaderFactory::ShaderFactory(std::shared_ptr<Device> device) :
+ShaderFactory::ShaderFactory(std::shared_ptr<const Device> device) :
 	device_(device)
 {
 	

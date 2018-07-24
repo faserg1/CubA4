@@ -39,6 +39,10 @@ namespace CubA4
 			bool createWindow();
 			void initRender();
 			void destroyRender();
+
+			void run();
+			void stop();
+
 			void loop();
 
 			bool running_;

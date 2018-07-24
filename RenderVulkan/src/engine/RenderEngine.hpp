@@ -3,6 +3,7 @@
 
 #include <engine/IRenderEngine.hpp>
 #include <vector>
+#include <thread>
 
 namespace CubA4
 {
@@ -47,6 +48,7 @@ namespace CubA4
 		{
 			class Presentaion;
 			class Render;
+			class RenderManager;
 
 			class VulkanRenderEngine :
 				public virtual IRenderEngine
@@ -58,6 +60,11 @@ namespace CubA4
 
 				void init(std::shared_ptr<window::IWindow> window) override;
 				void destroy() override;
+
+				void run() override;
+				void stop() override;
+
+				std::shared_ptr<IRenderManager> getRenderManager() const override;
 			protected:
 				void initInstance();
 				void destroyInstance();
@@ -76,7 +83,8 @@ namespace CubA4
 				void destroyRender();
 
 				void setup();
-				void run();
+
+				void loop();
 			private:
 				std::shared_ptr<const core::info::IApplicationInfo> info_;
 				std::shared_ptr<const core::ICore> core_;
@@ -99,6 +107,11 @@ namespace CubA4
 
 				std::shared_ptr<Presentaion> presetation_;
 				std::shared_ptr<Render> render_;
+
+				std::shared_ptr<RenderManager> renderManager_;
+
+				bool running_;
+				std::thread renderLoopThread_;
 			};
 		}
 	}

@@ -17,12 +17,11 @@ namespace CubA4
 				class IMaterialManager
 				{
 				public:
-					virtual ~IMaterialManager() {}
-
-					std::shared_ptr<IShaderFactory> getShaderFactory();
-					std::shared_ptr<IMaterialLayoutSetFactory> getMaterialLayoutSetFactory();
+					virtual std::shared_ptr<IShaderFactory> getShaderFactory() const = 0;
+					virtual std::shared_ptr<IMaterialLayoutSetFactory> getMaterialLayoutSetFactory() const = 0;
 				protected:
 					explicit IMaterialManager() {}
+					virtual ~IMaterialManager() {}
 				private:
 				};
 			}

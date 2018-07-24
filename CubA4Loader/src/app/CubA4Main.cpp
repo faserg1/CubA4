@@ -29,7 +29,9 @@ int AppMain::exec()
 		// TODO: [OOKAMI] В ядро положить коды ошибок
 		return 1;
 	initRender();
+	run();
 	loop();
+	stop();
 	destroyRender();
 	unloadRender();
 	SDL_Quit();
@@ -99,6 +101,20 @@ void AppMain::destroyRender()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->destroy();
+}
+
+void AppMain::run()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->run();
+	//run all processes
+}
+
+void AppMain::stop()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->stop();
+	//stop all processes
 }
 
 void AppMain::loop()

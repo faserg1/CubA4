@@ -24,10 +24,12 @@ namespace CubA4
 				public:
 					
 				protected:
-					explicit Shader(std::shared_ptr<vulkan::Device> device, VkShaderModule shaderModule);
+					explicit Shader(std::shared_ptr<const vulkan::Device> device, VkShaderModule shaderModule);
 					~Shader();
+
+					VkShaderModule getShaderModule() const;
 				private:
-					const std::shared_ptr<vulkan::Device> device_;
+					const std::shared_ptr<const vulkan::Device> device_;
 					VkShaderModule shaderModule_;
 				};
 			}

@@ -90,11 +90,13 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.cpp
 	${RenderVulkanSourceEngineDir}/Presentaion.cpp
 	${RenderVulkanSourceEngineDir}/Render.cpp
+	${RenderVulkanSourceEngineDir}/RenderManager.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.hpp
 	${RenderVulkanSourceEngineDir}/Presentaion.hpp
 	${RenderVulkanSourceEngineDir}/Render.hpp
+	${RenderVulkanSourceEngineDir}/RenderManager.hpp
 )
 
 set(RenderVulkanHeaders

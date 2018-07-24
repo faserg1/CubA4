@@ -24,20 +24,11 @@ std::shared_ptr<const Semaphore> Presentaion::getAcquireSignalSemaphore() const
 	return acquireSignalSemaphore_;
 }
 
-void Presentaion::addAwaitSemaphore(std::shared_ptr<const Semaphore> semaphore)
-{
-	awaitSemaphores_.push_back(semaphore);
-}
-
 uint32_t Presentaion::acquire()
 {
-	VkAcquireNextImageInfoKHR info = {};
-	info.sType = VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR;
-	info.swapchain = swapchain_->getSwapchain();
-	info.semaphore = acquireSignalSemaphore_->getSemaphore();
-	info.timeout = timeout_;
-	uint32_t imageIndex;
-	if (vkAcquireNextImage2KHR(device_->getDevice(), &info, &imageIndex) != VK_SUCCESS)
+	uint32_t imageIndex = 0;
+	if (vkAcquireNextImageKHR(device_->getDevice(), swapchain_->getSwapchain(), timeout_,
+		acquireSignalSemaphore_->getSemaphore(), VK_NULL_HANDLE, &imageIndex) != VK_SUCCESS)
 	{
 		//TODO: [OOKAMI] Разберись с этим...
 		return UINT32_MAX;
@@ -45,11 +36,11 @@ uint32_t Presentaion::acquire()
 	return imageIndex;
 }
 
-void Presentaion::send(uint32_t imageIndex)
+void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Semaphore>> awaitSemaphores)
 {
 	VkPresentInfoKHR info = {};
-	std::vector<VkSemaphore> awaitSemaphores;
-	std::transform(awaitSemaphores_.begin(), awaitSemaphores_.end(), awaitSemaphores.begin(),
+	std::vector<VkSemaphore> awaitVkSemaphores(awaitSemaphores.size());
+	std::transform(awaitSemaphores.begin(), awaitSemaphores.end(), awaitVkSemaphores.begin(),
 		[](std::shared_ptr<const Semaphore> &semaphore) -> VkSemaphore
 	{
 		return semaphore->getSemaphore();
@@ -58,8 +49,8 @@ void Presentaion::send(uint32_t imageIndex)
 	info.swapchainCount = 1;
 	VkSwapchainKHR swapchain = swapchain_->getSwapchain();
 	info.pSwapchains = &swapchain;
-	info.waitSemaphoreCount = awaitSemaphores.size();
-	info.pWaitSemaphores = awaitSemaphores.data();
+	info.waitSemaphoreCount = awaitVkSemaphores.size();
+	info.pWaitSemaphores = awaitVkSemaphores.data();
 	info.pImageIndices = &imageIndex;
 	if (vkQueuePresentKHR(device_->getQueue(), &info) != VK_SUCCESS)
 	{

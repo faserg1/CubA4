@@ -27,6 +27,8 @@
 #include "./Presentaion.hpp"
 #include "./Render.hpp"
 
+#include "./RenderManager.hpp"
+
 #include <algorithm>
 #include <stdexcept>
 using namespace CubA4::core::logging;
@@ -39,7 +41,8 @@ constexpr char *loggerTag = "ENGINE";
 VulkanRenderEngine::VulkanRenderEngine(
 	std::shared_ptr<const CubA4::core::info::IApplicationInfo> info,
 	std::shared_ptr<const CubA4::core::ICore> core) :
-	info_(info), core_(core), logger_(core->getLogger())
+	info_(info), core_(core), logger_(core->getLogger()),
+	running_(false)
 {
 	config_ = std::make_shared<config::RenderConfig>(core->getPaths()->configPath());
 }
@@ -70,6 +73,13 @@ void VulkanRenderEngine::destroy()
 	destroyInstance();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
 }
+
+std::shared_ptr<IRenderManager> VulkanRenderEngine::getRenderManager() const
+{
+	return renderManager_;
+}
+
+
 
 void VulkanRenderEngine::initInstance()
 {
@@ -181,7 +191,8 @@ void VulkanRenderEngine::destroyPresentation()
 
 void VulkanRenderEngine::initRender()
 {
-
+	if (!render_)
+		render_ = std::make_shared<Render>(device_, swapchain_);
 }
 
 void VulkanRenderEngine::destroyRender()
@@ -191,10 +202,37 @@ void VulkanRenderEngine::destroyRender()
 
 void VulkanRenderEngine::setup()
 {
+	renderManager_ = std::make_shared<RenderManager>(device_);
 	//TODO: [OOKAMI] настройка Presentation & Render
 }
 
 void VulkanRenderEngine::run()
 {
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
+	running_ = true;
+	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
 	//TODO: [OOKAMI] запуск основного рендер потока
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
+}
+
+void VulkanRenderEngine::stop()
+{
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
+	running_ = false;
+	renderLoopThread_.join();
+	//TODO: [OOKAMI] остановка основного рендер потока
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
+}
+
+void VulkanRenderEngine::loop()
+{
+	auto acquireSemaphore = presetation_->getAcquireSignalSemaphore();
+	while (running_)
+	{
+		auto imgIndex = presetation_->acquire();
+		render_->record(imgIndex);
+		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
+		//
+		presetation_->send(imgIndex, { renderDoneSemaphore });
+	}
 }

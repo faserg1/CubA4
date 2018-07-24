@@ -2,8 +2,10 @@
 #include "./MaterialLayoutBuilder.hpp"
 #include <algorithm>
 using namespace CubA4::render::engine::material;
+using namespace CubA4::render::vulkan;
 
-MaterialLayoutSetFactory::MaterialLayoutSetFactory()
+MaterialLayoutSetFactory::MaterialLayoutSetFactory(std::shared_ptr<const Device> device) :
+	device_(device)
 {
 	
 }

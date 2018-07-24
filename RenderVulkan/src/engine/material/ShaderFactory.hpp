@@ -21,13 +21,13 @@ namespace CubA4
 					public virtual IShaderFactory
 				{
 				public:
-					explicit ShaderFactory(std::shared_ptr<vulkan::Device> device);
+					explicit ShaderFactory(std::shared_ptr<const vulkan::Device> device);
 					~ShaderFactory();
 
 					std::shared_ptr<IShader> createFromBinary(const void *data, size_t size, ShaderType type) const override;
 				protected:
 				private:
-					const std::shared_ptr<vulkan::Device> device_;
+					const std::shared_ptr<const vulkan::Device> device_;
 				};
 			}
 		}

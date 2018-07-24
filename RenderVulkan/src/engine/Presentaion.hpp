@@ -24,17 +24,15 @@ namespace CubA4
 				~Presentaion();
 
 				std::shared_ptr<const vulkan::Semaphore> getAcquireSignalSemaphore() const;
-				void addAwaitSemaphore(std::shared_ptr<const vulkan::Semaphore> semaphore);
 
 				uint32_t acquire();
-				void send(uint32_t imageIndex);
+				void send(uint32_t imageIndex, std::vector<std::shared_ptr<const vulkan::Semaphore>> awaitSemaphores);
 			protected:
 				
 			private:
-				std::shared_ptr<const vulkan::Device> device_;
-				std::shared_ptr<const vulkan::Swapchain> swapchain_;
+				const std::shared_ptr<const vulkan::Device> device_;
+				const std::shared_ptr<const vulkan::Swapchain> swapchain_;
 				std::shared_ptr<vulkan::Semaphore> acquireSignalSemaphore_;
-				std::vector<std::shared_ptr<const vulkan::Semaphore>> awaitSemaphores_;
 				uint32_t timeout_;
 			};
 		}

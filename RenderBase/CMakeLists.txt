@@ -13,6 +13,7 @@ set(RenderBaseHeaderWindow
 )
 set(RenderBaseHeaderEngine
 	${RenderBaseIncludeEngineDir}/IRenderEngine.hpp
+	${RenderBaseIncludeEngineDir}/IRenderManager.hpp
 )
 set(RenderBaseHeaderEngineMaterial
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialLayout.hpp
