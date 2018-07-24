@@ -8,28 +8,38 @@
 #include <config/ICoreConfig.hpp>
 #include <stdexcept>
 #include <logging/ILogger.hpp>
+#include <logging/ILoggerTagged.hpp>
 #include <config/IFilePaths.hpp>
 
 using namespace CubA4::app;
+using namespace CubA4::core::logging;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
 	core_(std::make_shared<CubA4::core::Core>(argc, argv)),
 	info_(std::make_shared<AppInfo>())
 {
-	using namespace CubA4::core::logging;
-	core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Info, "CubA4 Loader start.");
+	log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN"));
+	log_->log(LogLevel::Info, "CubA4 Loader start.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
 }
 
 int AppMain::exec()
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	loadRender();
-	if (!createWindow())
-		// TODO: [OOKAMI] В ядро положить коды ошибок
+	try
+	{
+		loadRender();
+		if (!createWindow())
+			// TODO: [OOKAMI] В ядро положить коды ошибок
+			return 1;
+		initRender();
+		run();
+	}
+	catch (std::exception &ex)
+	{
+		log_->log(LogLevel::Critical, ex.what());
 		return 1;
-	initRender();
-	run();
+	}
 	loop();
 	stop();
 	destroyRender();
@@ -66,7 +76,9 @@ void AppMain::loadRender()
 	}
 	if (!finalRenderInfo)
 		throw std::runtime_error("Cannot find render library!");
+	log_->log(LogLevel::Info, std::string("Loading render engine: ") + finalRenderInfo->getRenderEngineId());
 	finalRenderInfo->init(info_, core_);
+	log_->log(LogLevel::Info, "Render engine loaded");
 }
 
 void  AppMain::unloadRender()
@@ -131,7 +143,7 @@ void AppMain::loop()
 				break;
 			//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
 			case SDL_KEYUP:
-				if (event.key.keysym.scancode = SDL_SCANCODE_F11)
+				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
 					window_->toggleFullscreen();
 				break;
 			}

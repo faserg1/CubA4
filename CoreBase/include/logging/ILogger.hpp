@@ -15,6 +15,7 @@ namespace CubA4
 			public:
 				virtual void log(LogSourceSystem system, const std::string &tag,
 					LogLevel level, const std::string &message) = 0;
+				virtual void flush() = 0;
 
 				virtual ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) = 0;
 			protected:

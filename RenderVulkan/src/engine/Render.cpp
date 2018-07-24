@@ -25,11 +25,12 @@ void Render::record(uint32_t imgIndex)
 {
 	auto cmdBuffer = framebuffersData_[imgIndex].cmdBuffer;
 	auto framebuffer = framebuffersData_[imgIndex].framebuffer;
+	auto fence = framebuffersData_[imgIndex].fence;
 
 	VkCommandBufferBeginInfo cmdBeginInfo = {};
 	cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
+	
 
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -37,8 +38,8 @@ void Render::record(uint32_t imgIndex)
 	renderPassBeginInfo.renderPass = renderPass_;
 
 	VkClearValue colorAttachmentClearValue = {};
-	int32_t *colorAttachmentClearValueInt32 = colorAttachmentClearValue.color.int32;
-	colorAttachmentClearValueInt32[0] = 255;
+	float clrClearFloat[4] = { 0.2f,0.2f,0.2f,0.f };
+	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
 	std::vector<VkClearValue> clearValues = 
 	{
@@ -49,6 +50,10 @@ void Render::record(uint32_t imgIndex)
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
 
+	vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
+	vkResetFences(device_->getDevice(), 1, &fence);
+
+	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 	//record in parallel second command buffers (subpasses)
 
@@ -75,7 +80,7 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	submitInfo.pWaitSemaphores = waitSemaphores.data();
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, framebuffersData_[imgIndex].fence);
 
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
@@ -105,7 +110,7 @@ void Render::createRenderPass()
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = swapchain_->getFormat();
 	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -178,6 +183,14 @@ void Render::createFramebuffers()
 		framebufferData.image = images[imgIdx];
 		framebufferData.cmdBuffer = cmdBuffers[imgIdx];
 
+		//create fence
+		VkFenceCreateInfo fenceCreateInfo = {};
+		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		if (vkCreateFence(device_->getDevice(), &fenceCreateInfo, nullptr, &framebufferData.fence) != VK_SUCCESS)
+		{
+			//TODO: [OOKAMI] Exception, etc
+		}
+
 		//create image view
 		VkImageViewCreateInfo imageViewCreateInfo = {};
 		imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -222,6 +235,9 @@ void Render::destroyFramebuffers()
 
 		//destroy image view
 		vkDestroyImageView(device_->getDevice(), framebufferData.imageView, nullptr);
+
+		//destroy fence
+		vkDestroyFence(device_->getDevice(), framebufferData.fence, nullptr);
 	}
 	vkResetCommandPool(device_->getDevice(), mainCommandPool_, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
 }

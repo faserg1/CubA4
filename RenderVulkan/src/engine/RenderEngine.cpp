@@ -98,7 +98,6 @@ void VulkanRenderEngine::initInstance()
 		instanceAddons_.push_back(layer);
 	};
 
-
 	std::shared_ptr<SDLExtension> vkSDLExt;
 	if (auto window = window_.lock())
 	{
@@ -109,7 +108,7 @@ void VulkanRenderEngine::initInstance()
 		throw std::runtime_error("Window destroyed! Cannot init surface!");
 	
 	auto vkDebugExt = std::make_shared<DebugExtension>(logger_);
-	addExt(vkDebugExt);
+	//addExt(vkDebugExt);
 
 	auto vkStdLayer = std::make_shared<StandardValidationLayer>();
 	addLayer(vkStdLayer);
@@ -117,7 +116,6 @@ void VulkanRenderEngine::initInstance()
 	instance_ = instanceBuilder_->build();
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<InstanceAddon> addon) {addon->init(instance_); });
-
 	surface_ = vkSDLExt->getSurface();
 }
 
@@ -230,6 +228,8 @@ void VulkanRenderEngine::loop()
 	while (running_)
 	{
 		auto imgIndex = presetation_->acquire();
+		if (imgIndex == UINT32_MAX)
+			continue;
 		render_->record(imgIndex);
 		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
 		//

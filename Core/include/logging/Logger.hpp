@@ -28,6 +28,8 @@ namespace CubA4
 				void log(LogSourceSystem system, const std::string &tag,
 					LogLevel level, const std::string &message) override;
 
+				void flush() override;
+
 				ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) override;
 			protected:
 				explicit Logger(std::string logsPath);

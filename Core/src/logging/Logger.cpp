@@ -88,6 +88,11 @@ void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level,
 	stream_->out_.write(logMsg.c_str(), logMsg.size());
 }
 
+void Logger::flush()
+{
+	stream_->flush();
+}
+
 ILoggerTagged *Logger::createTaggedLog(LogSourceSystem system, const std::string &tag)
 {
 	if (auto ptr = this_.lock())

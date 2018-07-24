@@ -13,6 +13,11 @@ namespace CubA4
 		{
 			class IApplicationInfo;
 		}
+
+		namespace logging
+		{
+			class ILoggerTagged;
+		}
 	}
 
 	namespace render
@@ -50,6 +55,8 @@ namespace CubA4
 			std::shared_ptr<CubA4::core::info::IApplicationInfo> info_;
 			std::shared_ptr<CubA4::render::RenderLoader> renderLoader_;
 			std::shared_ptr<CubA4::window::Window> window_;
+
+			std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
 		};
 	}
 }

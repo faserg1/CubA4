@@ -43,6 +43,7 @@ namespace CubA4
 
 				struct FramebufferData
 				{
+					VkFence fence;
 					VkFramebuffer framebuffer;
 					VkImage image;
 					VkImageView imageView;

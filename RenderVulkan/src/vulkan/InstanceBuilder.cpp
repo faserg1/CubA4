@@ -44,7 +44,7 @@ InstanceBuilder::~InstanceBuilder()
 void InstanceBuilder::addLayer(addon::InstanceLayer &layer)
 {
 	if (!layer.available())
-		throw std::runtime_error("Extension is not available");
+		throw std::runtime_error("Layer {" + layer.joinNames() + "} is not available");
 	auto names = layer.names();
 	layers_.insert(layers_.end(), names.begin(), names.end());
 	layer.added(*this);
@@ -53,7 +53,7 @@ void InstanceBuilder::addLayer(addon::InstanceLayer &layer)
 void InstanceBuilder::addExtension(addon::InstanceExtension &extension)
 {
 	if (!extension.available())
-		throw std::runtime_error("Extension is not available");
+		throw std::runtime_error("Extension {" + extension.joinNames() + "} is not available");
 	auto names = extension.names();
 	extensions_.insert(extensions_.end(), names.begin(), names.end());
 	extension.added(*this);

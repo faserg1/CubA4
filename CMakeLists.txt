@@ -4,17 +4,17 @@ project (CubA4 C CXX)
 set (CMAKE_CXX_STANDARD 11)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(CUBA4_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/built)
+#prepare config
+include (Arch.cmake)
+include (Util.cmake)
+
+set(CUBA4_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/built/${TARGET_ARCH})
 
 set(BIN_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/bin) 
 set(MOD_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/mods)
 set(RENDER_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/render)
 
 set(BUILD_OUTPUT_DIRECTORY ${BIN_BUILD_OUTPUT_DIRECTORY})
-
-#prepare config
-include (Arch.cmake)
-include (Util.cmake)
 
 #first prepare thirdparty libraries
 include (thirdparty/thirdparty.cmake)
@@ -60,3 +60,25 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT C
 #set( CMAKE_RUNTIME_OUTPUT_DIRECTORY bin )
 #set( CMAKE_LIBRARY_OUTPUT_DIRECTORY lib )
 #set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib )
+
+# Windows Generate batch file (parent folder):
+#@echo off
+#set MY_FUCKING_PATH=%CD%
+#set BOOST_ROOT=D:\Libs\boost_1_67_0
+#
+#cd CubA4
+#
+#if not exist build mkdir build
+#cd build
+#
+#if not exist x32 mkdir x32
+#cd x32
+#cmake -G "Visual Studio 15 2017" ../..
+#cd ..
+#
+#if not exist x64 mkdir x64
+#cd x64
+#cmake -G "Visual Studio 15 2017 Win64" ../..
+#cd ..
+#
+#cd %MY_FUCKING_PATH%

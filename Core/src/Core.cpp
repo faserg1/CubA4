@@ -2,6 +2,7 @@
 #include "../include/config/CoreConfig.hpp"
 #include "../include/config/FilePaths.hpp"
 #include "../include/logging/Logger.hpp"
+#include <exception>
 
 using namespace CubA4::core;
 
