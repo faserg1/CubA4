@@ -2,9 +2,19 @@
 #define IMODINFO_HPP
 
 #include <string>
+#include <vector>
 
 namespace CubA4
 {
+	namespace core
+	{
+		namespace info
+		{
+			class IVersion;
+			class IVersionDependency;
+		}
+	}
+
 	namespace mod
 	{
 		class IModInfo
@@ -12,10 +22,14 @@ namespace CubA4
 		public:
 			virtual ~IModInfo() {}
 			
-			virtual std::string getIdName() = 0;
-			virtual std::wstring getName() = 0;
+			virtual std::string getIdName() const = 0;
+			virtual std::wstring getName() const = 0;
 			
-			virtual void getVersion(int16_t &major, int16_t &minor, int16_t &patch) = 0;
+			virtual const core::info::IVersion &getVersion() const = 0;
+			virtual const core::info::IVersionDependency &getAppDependency() const = 0;
+			virtual std::vector<std::string> getRequiredMods() const = 0;
+			virtual std::vector<std::string> getPreferedMods() const = 0;
+			virtual const core::info::IVersionDependency &getModDependency(std::string modIdName) const = 0;
 		protected:
 			explicit IModInfo() {}
 		};

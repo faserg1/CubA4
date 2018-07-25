@@ -5,7 +5,7 @@
 
 namespace CubA4
 {
-	namespace mod
+	namespace exception
 	{
 		class IModRuntimeException :
 			public virtual IModException

@@ -7,6 +7,7 @@ set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
 set(CoreBaseHeaderInfo
 	${CoreBaseIncludeInfoDir}/IApplicationInfo.hpp
 	${CoreBaseIncludeInfoDir}/IVersion.hpp
+	${CoreBaseIncludeInfoDir}/IVersionDependency.hpp
 )
 set(CoreBaseHeaderConfig
 	${CoreBaseIncludeConfigDir}/IFilePaths.hpp

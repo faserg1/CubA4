@@ -45,6 +45,7 @@ target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath})
 target_include_directories(ModLoader PRIVATE ${Boost_INCLUDE_DIRS})
 
 #libs
+use_base_library(ModLoader CoreBase)
 use_base_library(ModLoader ModBase)
 
 #set defines for library export

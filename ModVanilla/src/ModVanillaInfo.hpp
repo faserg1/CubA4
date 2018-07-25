@@ -11,10 +11,14 @@ namespace CubA4
 			public virtual IModInfo
 		{
 		public:
-			std::string getIdName() override;
-			std::wstring getName() override;
+			std::string getIdName() const override;
+			std::wstring getName() const override;
 
-			void getVersion(int16_t &major, int16_t &minor, int16_t &patch) override;
+			const core::info::IVersion &getVersion() const override;
+			const core::info::IVersionDependency &getAppDependency() const override;
+			std::vector<std::string> getRequiredMods() const override;
+			std::vector<std::string> getPreferedMods() const override;
+			const core::info::IVersionDependency &getModDependency(std::string modIdName) const override;
 		};
 	}
 }

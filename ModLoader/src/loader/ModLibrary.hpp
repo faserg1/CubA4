@@ -3,6 +3,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/dll.hpp>
+#include <memory>
 
 namespace CubA4
 {
@@ -15,13 +16,15 @@ namespace CubA4
 	{
 		class ModLibrary
 		{
-			const char *importSymbolName_;
-			boost::dll::shared_library library_;
-			CubA4::mod::ModInfo *modInfo_;
-			bool validLibrary_;
 		public:
 			ModLibrary(boost::filesystem::path path);
-			bool isValidLibrary();
+			bool isValidLibrary() const;
+			std::shared_ptr<const CubA4::mod::ModInfo> getModInfo() const;
+		private:
+			const char *importSymbolName_;
+			boost::dll::shared_library library_;
+			std::shared_ptr<CubA4::mod::ModInfo> modInfo_;
+			bool validLibrary_;
 		};
 	}
 }

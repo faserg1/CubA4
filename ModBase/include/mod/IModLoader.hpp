@@ -9,6 +9,11 @@ namespace CubA4
 		{
 		public:
 			virtual ~IModLoader() {}
+
+			virtual void find() = 0;
+			virtual void load() = 0;
+			virtual void setup() = 0;
+			virtual void unload() = 0;
 		protected:
 			explicit IModLoader() {}
 		};
