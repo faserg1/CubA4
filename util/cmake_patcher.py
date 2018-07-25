@@ -35,9 +35,6 @@ class CMakePatcher:
 			self._insert_files(self._source_path)
 		if not self._dry_run:
 			self._write()
-		else:
-			print("CMake not saved: dry run.")
-			print(self._cmake_text)
 		
 	#Options
 	
@@ -235,12 +232,12 @@ class CMakePatcher:
 	def _read(self):
 		cmake_path = self._cmake_path()
 		with open(cmake_path, "r") as cmake_file:
-			self._cmake_text = cmake_file.read()
+			self._cmake_text = cmake_file.read().decode("UTF-8")
 			
 	def _write(self):
 		cmake_path = self._cmake_path()
 		with open(cmake_path, "w") as cmake_file:
-			cmake_file.write(self._cmake_text)
+			cmake_file.write(self._cmake_text.encode("UTF-8"))
 			
 	def _find(self, pattern):
 		return find_line_by_pattern(self._cmake_text, pattern)

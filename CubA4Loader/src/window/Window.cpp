@@ -1,4 +1,4 @@
-#include "Window.hpp"
+﻿#include "Window.hpp"
 #include <SDL_video.h>
 #include <stdexcept>
 using namespace CubA4::window;

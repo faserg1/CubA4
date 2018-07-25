@@ -30,7 +30,7 @@ int AppMain::exec()
 	{
 		loadRender();
 		if (!createWindow())
-			// TODO: [OOKAMI] В ядро положить коды ошибок
+			// TODO: [OOKAMI] Р’ СЏРґСЂРѕ РїРѕР»РѕР¶РёС‚СЊ РєРѕРґС‹ РѕС€РёР±РѕРє
 			return 1;
 		initRender();
 		run();
@@ -141,7 +141,7 @@ void AppMain::loop()
 			case SDL_QUIT:
 				running_ = false;
 				break;
-			//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
+			//TODO: [OOKAMI] РќРёС‡С‚Рѕ С‚Р°Рє РЅРµ РІРµС‡РЅРѕ, РєР°Рє РІСЂРµРјРµРЅРЅРѕРµ... РќР°РґРµСЋСЃСЊ, РїРѕС‚РѕРј СѓР±РµСЂСѓ
 			case SDL_KEYUP:
 				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
 					window_->toggleFullscreen();

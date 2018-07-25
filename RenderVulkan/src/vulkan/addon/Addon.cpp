@@ -16,7 +16,7 @@ bool Addon::available() const
 {
 	auto all = allNames();
 	auto required = names();
-	//Всё это необходимо отсортировать, прежде чем искать
+	//Р’СЃС‘ СЌС‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ, РїСЂРµР¶РґРµ С‡РµРј РёСЃРєР°С‚СЊ
 	std::sort(all.begin(), all.end());
 	std::sort(required.begin(), required.end());
 	return std::includes(all.begin(), all.end(), required.begin(), required.end());

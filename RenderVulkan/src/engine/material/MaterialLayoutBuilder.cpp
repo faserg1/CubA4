@@ -26,7 +26,7 @@ void MaterialLayoutBuilder::fillStartInfo()
 
 void MaterialLayoutBuilder::prepare()
 {
-	//TODO: [OOKAMI] Переписать на приличный вид, когда состояний станет больше
+	//TODO: [OOKAMI] РџРµСЂРµРїРёСЃР°С‚СЊ РЅР° РїСЂРёР»РёС‡РЅС‹Р№ РІРёРґ, РєРѕРіРґР° СЃРѕСЃС‚РѕСЏРЅРёР№ СЃС‚Р°РЅРµС‚ Р±РѕР»СЊС€Рµ
 	if (!transparentMode_)
 	{
 		bindings_.resize(1);
@@ -37,7 +37,7 @@ void MaterialLayoutBuilder::prepare()
 	}
 	else
 	{
-		std::runtime_error("Реализация прозрачного режима отсутствует");
+		std::runtime_error("Р РµР°Р»РёР·Р°С†РёСЏ РїСЂРѕР·СЂР°С‡РЅРѕРіРѕ СЂРµР¶РёРјР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚");
 	}
 	descriptorLayoutInfo_.bindingCount = bindings_.size();
 	descriptorLayoutInfo_.pBindings = bindings_.data();

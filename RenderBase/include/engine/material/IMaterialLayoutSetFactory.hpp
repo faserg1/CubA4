@@ -15,8 +15,8 @@ namespace CubA4
 				class IMaterialLayoutBuilder;
 				class IMaterialLayout;
 
-				/** \brief Фабрика набора IMaterialLayout
-				* \description Создает набор описаний материала
+				/** \brief Р¤Р°Р±СЂРёРєР° РЅР°Р±РѕСЂР° IMaterialLayout
+				* \description РЎРѕР·РґР°РµС‚ РЅР°Р±РѕСЂ РѕРїРёСЃР°РЅРёР№ РјР°С‚РµСЂРёР°Р»Р°
 				*/
 				class IMaterialLayoutSetFactory
 				{

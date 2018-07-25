@@ -30,7 +30,7 @@ uint32_t Presentaion::acquire()
 	if (vkAcquireNextImageKHR(device_->getDevice(), swapchain_->getSwapchain(), timeout_,
 		acquireSignalSemaphore_->getSemaphore(), VK_NULL_HANDLE, &imageIndex) != VK_SUCCESS)
 	{
-		//TODO: [OOKAMI] Разберись с этим...
+		//TODO: [OOKAMI] Р Р°Р·Р±РµСЂРёСЃСЊ СЃ СЌС‚РёРј...
 		return UINT32_MAX;
 	}
 	return imageIndex;
@@ -54,6 +54,6 @@ void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Se
 	info.pImageIndices = &imageIndex;
 	if (vkQueuePresentKHR(device_->getQueue(), &info) != VK_SUCCESS)
 	{
-		//TODO: [OOKAMI] Разберись с этим...
+		//TODO: [OOKAMI] Р Р°Р·Р±РµСЂРёСЃСЊ СЃ СЌС‚РёРј...
 	}
 }

@@ -16,7 +16,7 @@ namespace CubA4
 			explicit IModLoadException() {}
 			virtual ~IModLoadException() {}
 
-			/// Возвращает этап, а котором произошла ошибка
+			/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЌС‚Р°Рї, Р° РєРѕС‚РѕСЂРѕРј РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°
 			virtual ModState getErrorState() const noexcept = 0;
 		};
 	}

@@ -10,8 +10,8 @@ namespace CubA4
 			namespace material
 			{
 				/**
-				\brief Материал.
-				\description Можно сказать, применяет текстуры и т.д.
+				\brief РњР°С‚РµСЂРёР°Р».
+				\description РњРѕР¶РЅРѕ СЃРєР°Р·Р°С‚СЊ, РїСЂРёРјРµРЅСЏРµС‚ С‚РµРєСЃС‚СѓСЂС‹ Рё С‚.Рґ.
 				**/
 				class IMaterial
 				{

@@ -40,6 +40,6 @@ std::vector<std::string> ModVanillaInfo::getPreferedMods() const
 
 const IVersionDependency &ModVanillaInfo::getModDependency(std::string modIdName) const
 {
-	//TODO: [OOKAMI] Заменить выбрасываемое исключение
-	throw std::runtime_error("Мод " + modIdName + " не нужен для загрузки.");
+	//TODO: [OOKAMI] Р—Р°РјРµРЅРёС‚СЊ РІС‹Р±СЂР°СЃС‹РІР°РµРјРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ
+	throw std::runtime_error("РњРѕРґ " + modIdName + " РЅРµ РЅСѓР¶РµРЅ РґР»СЏ Р·Р°РіСЂСѓР·РєРё.");
 }

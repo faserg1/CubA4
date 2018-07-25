@@ -37,12 +37,12 @@ RenderLoader::RenderLoader(std::string renderPath) :
 		boost::dll::shared_library library(candidate);
 		if (!library.is_loaded())
 		{
-			//todo: вывести ошибку
+			//todo: РІС‹РІРµСЃС‚Рё РѕС€РёР±РєСѓ
 			continue;
 		}
 		if (!library.has(importSymbolName_))
 		{
-			//todo: вывести ошибку
+			//todo: РІС‹РІРµСЃС‚Рё РѕС€РёР±РєСѓ
 			library.unload();
 			continue;
 		}
@@ -77,12 +77,12 @@ void RenderLoader::setCurrentRenderInfo(IRenderInfo *renderInfo)
 		throw std::runtime_error("Shut the fuck up!");
 	currentRenderInfo_ = renderInfo;
 	//TODO:
-	//Проверить, не выбрана ли уже библиотека рендеринга
-	//Если выбрана, выбросить ошибку
+	//РџСЂРѕРІРµСЂРёС‚СЊ, РЅРµ РІС‹Р±СЂР°РЅР° Р»Рё СѓР¶Рµ Р±РёР±Р»РёРѕС‚РµРєР° СЂРµРЅРґРµСЂРёРЅРіР°
+	//Р•СЃР»Рё РІС‹Р±СЂР°РЅР°, РІС‹Р±СЂРѕСЃРёС‚СЊ РѕС€РёР±РєСѓ
 	//
-	//Выгрузить все остальные ненужные библиотеки.
-	//Сохранить нужную библиотеку.
-	//Словарь можно очистить
+	//Р’С‹РіСЂСѓР·РёС‚СЊ РІСЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РЅРµРЅСѓР¶РЅС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРё.
+	//РЎРѕС…СЂР°РЅРёС‚СЊ РЅСѓР¶РЅСѓСЋ Р±РёР±Р»РёРѕС‚РµРєСѓ.
+	//РЎР»РѕРІР°СЂСЊ РјРѕР¶РЅРѕ РѕС‡РёСЃС‚РёС‚СЊ
 }
 
 IRenderInfo *RenderLoader::getCurrentRenderInfo()

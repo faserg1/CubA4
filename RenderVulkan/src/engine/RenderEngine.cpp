@@ -201,7 +201,7 @@ void VulkanRenderEngine::destroyRender()
 void VulkanRenderEngine::setup()
 {
 	renderManager_ = std::make_shared<RenderManager>(device_);
-	//TODO: [OOKAMI] настройка Presentation & Render
+	//TODO: [OOKAMI] РЅР°СЃС‚СЂРѕР№РєР° Presentation & Render
 }
 
 void VulkanRenderEngine::run()
@@ -209,7 +209,7 @@ void VulkanRenderEngine::run()
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
 	running_ = true;
 	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
-	//TODO: [OOKAMI] запуск основного рендер потока
+	//TODO: [OOKAMI] Р·Р°РїСѓСЃРє РѕСЃРЅРѕРІРЅРѕРіРѕ СЂРµРЅРґРµСЂ РїРѕС‚РѕРєР°
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
 }
 
@@ -218,7 +218,7 @@ void VulkanRenderEngine::stop()
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
 	running_ = false;
 	renderLoopThread_.join();
-	//TODO: [OOKAMI] остановка основного рендер потока
+	//TODO: [OOKAMI] РѕСЃС‚Р°РЅРѕРІРєР° РѕСЃРЅРѕРІРЅРѕРіРѕ СЂРµРЅРґРµСЂ РїРѕС‚РѕРєР°
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }
 

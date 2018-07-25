@@ -29,7 +29,7 @@ std::shared_future<void> ConnectionTCP::send(const std::string &data)
 {
 	auto dataCopy = std::make_shared<std::string>(data);
 	auto promise = std::make_shared<std::promise<void>>();
-	//TODO: [OOKAMI] ðåàëèçîâàòü
+	//TODO: [OOKAMI] Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ñ‚ÑŒ
 	socket_->async_write_some(boost::asio::buffer(dataCopy->data(), dataCopy->size()), [dataCopy, promise](const boost::system::error_code& error, size_t bytesTransferred)
 	{
 		if (!error)

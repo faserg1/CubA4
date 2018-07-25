@@ -24,6 +24,7 @@ namespace CubA4
 			~Window();
 
 			bool fullscreenMode_;
+			///Оригинальное SDL окно
 			SDL_Window *window_;
 		};
 	}

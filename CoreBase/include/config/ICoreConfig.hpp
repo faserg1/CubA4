@@ -9,7 +9,7 @@ namespace CubA4
 	{
 		namespace config
 		{
-			//Пока делаем простую реализацию
+			//РџРѕРєР° РґРµР»Р°РµРј РїСЂРѕСЃС‚СѓСЋ СЂРµР°Р»РёР·Р°С†РёСЋ
 			class ICoreConfig
 			{
 			public:

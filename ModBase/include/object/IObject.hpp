@@ -13,7 +13,7 @@ namespace CubA4
 		public:
 			virtual ~IObject() {}
 
-			//Получает уникальный идентификатор объекта
+			//РџРѕР»СѓС‡Р°РµС‚ СѓРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
 			virtual std::string getId() = 0;
 			virtual int64_t getMappedId() = 0;
 			virtual std::wstring getName() = 0;

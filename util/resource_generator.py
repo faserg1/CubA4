@@ -36,7 +36,7 @@ class ResourceGenerator:
 		total += "#endif // IRS_HPP\n"
 		filename = os.path.join(self._gen_path, "irs.hpp")
 		with open(filename, "w") as irs_hpp:
-			irs_hpp.write(total)
+			irs_hpp.write(total.encode("UTF-8"))
 	
 	def _generate_irs_cpp(self):
 		total = "#include \"irs.hpp\"\n"
@@ -54,7 +54,7 @@ class ResourceGenerator:
 		total += "}\n"
 		filename = os.path.join(self._gen_path, "irs.cpp")
 		with open(filename, "w") as irs_cpp:
-			irs_cpp.write(total)
+			irs_cpp.write(total.encode("UTF-8"))
 		
 	def _generate_irs_headers_hpp(self, files):
 		total = "#include <map>\n"
@@ -77,7 +77,7 @@ class ResourceGenerator:
 		total += "\t};\n}\n"
 		filename = os.path.join(self._gen_path, "irs-headers.hpp")
 		with open(filename, "w") as irs_headers:
-			irs_headers.write(total)
+			irs_headers.write(total.encode("UTF-8"))
 		
 	def _generate_irs_data_hpp(self, files):
 		total = "constexpr unsigned char data[] = {\n\t"
@@ -91,7 +91,7 @@ class ResourceGenerator:
 		total = total[:-1] + "};"
 		filename = os.path.join(self._gen_path, "irs-data.hpp")
 		with open(filename, "w") as irs_data:
-			irs_data.write(total)
+			irs_data.write(total.encode("UTF-8"))
 	
 	_cwd = ""
 	_module_name = ""

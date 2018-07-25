@@ -14,7 +14,7 @@ namespace CubA4
 				class IMaterialManager;
 			}
 
-			/// Класс взаимодействия с рендер миром
+			/// РљР»Р°СЃСЃ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ СЃ СЂРµРЅРґРµСЂ РјРёСЂРѕРј
 			class IRenderManager
 			{
 			public:

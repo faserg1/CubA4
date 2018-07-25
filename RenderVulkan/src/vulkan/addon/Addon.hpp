@@ -21,7 +21,7 @@ namespace CubA4
 				class Addon
 				{
 				public:
-					///Имена, необходимые в аддоне
+					///РРјРµРЅР°, РЅРµРѕР±С…РѕРґРёРјС‹Рµ РІ Р°РґРґРѕРЅРµ
 					virtual std::vector<std::string> names() const = 0;
 					virtual AddonType type() const = 0;
 					bool available() const;
@@ -31,7 +31,7 @@ namespace CubA4
 					explicit Addon();
 					~Addon();
 
-					///Все имена определенного типа аддона
+					///Р’СЃРµ РёРјРµРЅР° РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ С‚РёРїР° Р°РґРґРѕРЅР°
 					virtual std::vector<std::string> allNames() const = 0;
 				private:
 				};

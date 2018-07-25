@@ -17,11 +17,11 @@ namespace CubA4
 				public:
 					virtual ~IShaderFactory() {}
 
-					/// \brief Создает Шейдер из бинарных данных (SPIR-V)
-					/// \param data Бинарные данные шейдера на языке SPIR-V
-					/// \param size Размер данных в байтах
-					/// \param type Тип шейдера
-					/// \return Модуль шейдера
+					/// \brief РЎРѕР·РґР°РµС‚ РЁРµР№РґРµСЂ РёР· Р±РёРЅР°СЂРЅС‹С… РґР°РЅРЅС‹С… (SPIR-V)
+					/// \param data Р‘РёРЅР°СЂРЅС‹Рµ РґР°РЅРЅС‹Рµ С€РµР№РґРµСЂР° РЅР° СЏР·С‹РєРµ SPIR-V
+					/// \param size Р Р°Р·РјРµСЂ РґР°РЅРЅС‹С… РІ Р±Р°Р№С‚Р°С…
+					/// \param type РўРёРї С€РµР№РґРµСЂР°
+					/// \return РњРѕРґСѓР»СЊ С€РµР№РґРµСЂР°
 					virtual std::shared_ptr<IShader> createFromBinary(const void *data, size_t size, ShaderType type) const = 0;
 				protected:
 					explicit IShaderFactory() {}
