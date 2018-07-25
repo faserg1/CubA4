@@ -1,5 +1,5 @@
 #include "ModLibrary.hpp"
-using namespace CubA4::loader;
+#include <IModInfo.hpp>
 using namespace CubA4::mod;
 
 ModLibrary::ModLibrary(boost::filesystem::path path) :
@@ -10,8 +10,8 @@ ModLibrary::ModLibrary(boost::filesystem::path path) :
 	{
 		return;
 	}
-	auto getModInfo = library_.get<ModInfo *()>(importSymbolName_);
-	modInfo_ = std::shared_ptr<ModInfo>(getModInfo());
+	auto getModInfo = library_.get<IModInfo *()>(importSymbolName_);
+	modInfo_ = std::shared_ptr<IModInfo>(getModInfo());
 	validLibrary_ = true;
 }
 
@@ -20,7 +20,7 @@ bool ModLibrary::isValidLibrary() const
 	return validLibrary_;
 }
 
-std::shared_ptr<const ModInfo> ModLibrary::getModInfo() const
+std::shared_ptr<const IModInfo> ModLibrary::getModInfo() const
 {
 	return modInfo_;
 }

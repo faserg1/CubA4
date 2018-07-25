@@ -1,11 +1,19 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreIncludeSystemDir ${CoreIncludeDir}/system)
 set(CoreIncludeLoggingDir ${CoreIncludeDir}/logging)
 set(CoreIncludeConfigDir ${CoreIncludeDir}/config)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(CoreSourceSystemDir ${CoreSourceDir}/system)
 set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
+set(CoreSourceSystem
+	${CoreSourceSystemDir}/Startup.cpp
+)
+set(CoreHeaderSystem
+	${CoreIncludeSystemDir}/Startup.hpp
+)
 set(CoreSourceLogging
 	${CoreSourceLoggingDir}/Logger.cpp
 )
@@ -25,6 +33,7 @@ set(CoreHeaders
 	${CoreIncludeDir}/Core.hpp
 	${CoreHeaderLogging}
 	${CoreHeaderConfig}
+	${CoreHeaderSystem}
 )
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreHeaderConfig})
@@ -33,9 +42,12 @@ set(CoreSources
 	${CoreSourceDir}/Core.cpp
 	${CoreSourceLogging}
 	${CoreSourceConfig}
+	${CoreSourceSystem}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}logging" FILES ${CoreSourceLogging})
 source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${CoreSourceConfig})
+source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreHeaderSystem})
+source_group("${SOURCE_GROUP_SOURCE_START}system" FILES ${CoreSourceSystem})
 	
 add_library(Core SHARED ${CoreHeaders} ${CoreSources})
 target_include_directories(Core INTERFACE include)

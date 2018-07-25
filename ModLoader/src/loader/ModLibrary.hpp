@@ -9,21 +9,18 @@ namespace CubA4
 {
 	namespace mod
 	{
-		class ModInfo;
-	}
+		class IModInfo;
 
-	namespace loader
-	{
 		class ModLibrary
 		{
 		public:
 			ModLibrary(boost::filesystem::path path);
 			bool isValidLibrary() const;
-			std::shared_ptr<const CubA4::mod::ModInfo> getModInfo() const;
+			std::shared_ptr<const CubA4::mod::IModInfo> getModInfo() const;
 		private:
 			const char *importSymbolName_;
 			boost::dll::shared_library library_;
-			std::shared_ptr<CubA4::mod::ModInfo> modInfo_;
+			std::shared_ptr<CubA4::mod::IModInfo> modInfo_;
 			bool validLibrary_;
 		};
 	}

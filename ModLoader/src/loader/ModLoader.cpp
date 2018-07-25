@@ -1,7 +1,15 @@
-#include "loader/ModLoader.hpp"
+#include <loader/ModLoader.hpp>
+#include "ModLibrary.hpp"
 #include <ICore.hpp>
+#include <config/IFilePaths.hpp>
+#include <logging/ILogger.hpp>
+
 #include <vector>
-using namespace CubA4::mod_loader;
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/dll.hpp>
+
+using namespace CubA4::mod;
 using namespace CubA4::core;
 using namespace CubA4::core::config;
 
@@ -14,4 +22,46 @@ ModLoader::ModLoader(std::shared_ptr<const ICore> core) :
 ModLoader::~ModLoader()
 {
 	
+}
+
+void ModLoader::find()
+{
+	auto modsPath = core_->getPaths()->modsPath();
+	using namespace boost::filesystem;
+	auto modsFolder = path(modsPath);
+	recursive_directory_iterator modsFolderIterator(modsFolder), end;
+
+	for (modsFolderIterator; modsFolderIterator != end; modsFolderIterator++)
+	{
+		auto path = modsFolderIterator->path();
+		if (is_directory(path))
+			continue;
+		if (path.extension() != boost::dll::shared_library::suffix())
+			continue;
+		candidates_.push_back(path.generic_string());
+	}
+}
+
+void ModLoader::load()
+{
+	using namespace boost::filesystem;
+	using namespace CubA4::core::logging;
+	for (auto candidate : candidates_)
+	{
+		auto library = std::make_shared<ModLibrary>(path(candidate));
+		if (library->isValidLibrary())
+			mods_.push_back(library);
+		else
+			core_->getLogger()->log(LogSourceSystem::Mod, "LOADER", LogLevel::Warning, "Invalid mod library: " + candidate);
+	}
+}
+
+void ModLoader::setup()
+{
+
+}
+
+void ModLoader::unload()
+{
+
 }

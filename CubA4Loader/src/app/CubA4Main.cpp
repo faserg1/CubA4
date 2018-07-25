@@ -15,7 +15,7 @@ using namespace CubA4::app;
 using namespace CubA4::core::logging;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
-	core_(std::make_shared<CubA4::core::Core>(argc, argv)),
+	core_(CubA4::core::Core::create(argc, argv)),
 	info_(std::make_shared<AppInfo>())
 {
 	log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN"));
