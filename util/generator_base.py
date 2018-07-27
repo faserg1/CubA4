@@ -165,7 +165,7 @@ class GeneratorBase:
 	
 	def _write_file(self, file, file_path):
 		str = file.to_string()
-		with open(file_path, "w") as file_handle:
+		with open(file_path, "wb") as file_handle:
 			file_handle.write(str.encode('UTF-8'))
 	
 	def _save_to(self, file, ext, folder):

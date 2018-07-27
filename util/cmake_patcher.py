@@ -231,12 +231,12 @@ class CMakePatcher:
 	
 	def _read(self):
 		cmake_path = self._cmake_path()
-		with open(cmake_path, "r") as cmake_file:
+		with open(cmake_path, "rb") as cmake_file:
 			self._cmake_text = cmake_file.read().decode("UTF-8")
 			
 	def _write(self):
 		cmake_path = self._cmake_path()
-		with open(cmake_path, "w") as cmake_file:
+		with open(cmake_path, "wb") as cmake_file:
 			cmake_file.write(self._cmake_text.encode("UTF-8"))
 			
 	def _find(self, pattern):
