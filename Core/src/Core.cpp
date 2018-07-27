@@ -6,6 +6,7 @@
 #include <exception>
 
 using namespace CubA4::core;
+using namespace CubA4::core::system;
 
 Core::Core(int argc, const char *const argv[]) :
 	paths_(std::make_shared<config::FilePaths>(argc, argv))

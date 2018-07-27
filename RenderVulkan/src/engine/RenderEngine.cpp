@@ -108,7 +108,7 @@ void VulkanRenderEngine::initInstance()
 		throw std::runtime_error("Window destroyed! Cannot init surface!");
 	
 	auto vkDebugExt = std::make_shared<DebugExtension>(logger_);
-	//addExt(vkDebugExt);
+	addExt(vkDebugExt);
 
 	auto vkStdLayer = std::make_shared<StandardValidationLayer>();
 	addLayer(vkStdLayer);

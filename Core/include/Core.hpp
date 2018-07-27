@@ -13,6 +13,11 @@ namespace CubA4
 			class CoreConfig;
 		}
 
+		namespace system
+		{
+			class IAppCallback;
+		}
+
 		class CORE_LIBRARY_EXPORT Core :
 			public virtual ICore
 		{
@@ -34,7 +39,7 @@ namespace CubA4
 
 			std::shared_ptr<system::IStartup> startup_;
 
-			///Слабый указатель на себя. Присваивается через create()
+			///РЎР»Р°Р±С‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃРµР±СЏ. РџСЂРёСЃРІР°РёРІР°РµС‚СЃСЏ С‡РµСЂРµР· create()
 			std::weak_ptr<ICore> core_;
 		};
 	}

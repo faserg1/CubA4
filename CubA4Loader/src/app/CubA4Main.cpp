@@ -1,15 +1,23 @@
 #include "CubA4Main.hpp"
-#include <SDL.h>
 #include "AppInfo.hpp"
+
+#include <SDL.h>
+#include <stdexcept>
+
 #include "../render/RenderLoader.hpp"
 #include "../window/Window.hpp"
 #include <engine/IRenderEngine.hpp>
+
 #include <Core.hpp>
 #include <config/ICoreConfig.hpp>
-#include <stdexcept>
+#include <config/IFilePaths.hpp>
+
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
-#include <config/IFilePaths.hpp>
+
+#include <loader/ModLoader.hpp>
+
+#include <system/IStartup.hpp>
 
 using namespace CubA4::app;
 using namespace CubA4::core::logging;
@@ -21,6 +29,7 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 	log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN"));
 	log_->log(LogLevel::Info, "CubA4 Loader start.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
+	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_);
 }
 
 int AppMain::exec()
@@ -33,6 +42,7 @@ int AppMain::exec()
 			// TODO: [OOKAMI] В ядро положить коды ошибок
 			return 1;
 		initRender();
+		core_->getStartup()->setup(*this);
 		run();
 	}
 	catch (std::exception &ex)
@@ -46,6 +56,11 @@ int AppMain::exec()
 	unloadRender();
 	SDL_Quit();
 	return 0;
+}
+
+std::shared_ptr<CubA4::mod::IModLoader> AppMain::getModLoader() const
+{
+	return modLoader_;
 }
 
 void AppMain::loadRender()
@@ -119,14 +134,14 @@ void AppMain::run()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->run();
-	//run all processes
+	core_->getStartup()->run();
 }
 
 void AppMain::stop()
 {
+	core_->getStartup()->stop();
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->stop();
-	//stop all processes
 }
 
 void AppMain::loop()

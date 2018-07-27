@@ -2,6 +2,7 @@
 #define CUBA4MAIN_HPP
 
 #include <memory>
+#include <system/IAppCallback.hpp>
 
 namespace CubA4
 {
@@ -20,6 +21,11 @@ namespace CubA4
 		}
 	}
 
+	namespace mod
+	{
+		class ModLoader;
+	}
+
 	namespace render
 	{
 		class RenderLoader;
@@ -32,10 +38,13 @@ namespace CubA4
 
 	namespace app
 	{
-		class AppMain
+		class AppMain :
+			public virtual CubA4::core::system::IAppCallback
 		{
 		public:
 			explicit AppMain(int argc, const char *const argv[]);
+
+			std::shared_ptr<mod::IModLoader> getModLoader() const override;
 
 			int exec();
 		private:
@@ -57,6 +66,8 @@ namespace CubA4
 			std::shared_ptr<CubA4::window::Window> window_;
 
 			std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
+
+			std::shared_ptr<CubA4::mod::ModLoader> modLoader_;
 		};
 	}
 }

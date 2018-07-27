@@ -11,6 +11,11 @@ namespace CubA4
 	namespace core
 	{
 		class ICore;
+
+		namespace logging
+		{
+			class ILoggerTagged;
+		}
 	}
 
 	namespace mod
@@ -32,6 +37,7 @@ namespace CubA4
 			const std::shared_ptr<const core::ICore> core_;
 			std::vector<std::string> candidates_;
 			std::vector<std::shared_ptr<ModLibrary>> mods_;
+			std::shared_ptr<core::logging::ILoggerTagged> log_;
 		};
 	}
 }

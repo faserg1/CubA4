@@ -7,6 +7,7 @@ set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
 set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IStartup.hpp
+	${CoreBaseIncludeSystemDir}/IAppCallback.hpp
 )
 set(CoreBaseHeaderInfo
 	${CoreBaseIncludeInfoDir}/IApplicationInfo.hpp

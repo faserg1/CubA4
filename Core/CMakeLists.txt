@@ -53,6 +53,7 @@ add_library(Core SHARED ${CoreHeaders} ${CoreSources})
 target_include_directories(Core INTERFACE include)
 
 use_base_library(Core CoreBase)
+use_base_library(Core ModBase)
 
 #third-party library
 target_include_directories(Core PRIVATE ${Boost_INCLUDE_DIRS})
