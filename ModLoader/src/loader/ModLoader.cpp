@@ -1,14 +1,19 @@
 #include <loader/ModLoader.hpp>
 #include "ModLibrary.hpp"
+
 #include <ICore.hpp>
 #include <config/IFilePaths.hpp>
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 
+#include <IModInfo.hpp>
+
 #include <vector>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/dll.hpp>
+
+#include <util/stringutil.hpp>
 
 using namespace CubA4::mod;
 using namespace CubA4::core;
@@ -41,7 +46,7 @@ void ModLoader::find()
 		if (path.extension() != boost::dll::shared_library::suffix())
 			continue;
 		candidates_.push_back(path.generic_string());
-		log_->log(LogLevel::Info, "Find mod candidate: " + path.generic_string());
+		log_->log(LogLevel::Info, CubA4::util::format("Find mod candidate: %.", path.generic_string()));
 	}
 }
 
@@ -52,15 +57,22 @@ void ModLoader::load()
 	{
 		auto library = std::make_shared<ModLibrary>(path(candidate));
 		if (library->isValidLibrary())
+		{
 			mods_.push_back(library);
+			auto modInfo = library->getModInfo();
+			log_->log(LogLevel::Info, CubA4::util::format("Loaded mod: %.", modInfo->getIdName()));
+		}
 		else
-			log_->log(LogLevel::Warning, "Invalid mod library: " + candidate);
+			log_->log(LogLevel::Warning, CubA4::util::format("Invalid mod library: %.", candidate));
 	}
 }
 
 void ModLoader::setup()
 {
+	for (auto library : mods_)
+	{
 
+	}
 }
 
 void ModLoader::unload()

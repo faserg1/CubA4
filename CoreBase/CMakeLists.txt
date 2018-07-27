@@ -5,6 +5,7 @@ set(CoreBaseIncludeSystemDir ${CoreBaseIncludeDir}/system)
 set(CoreBaseIncludeInfoDir ${CoreBaseIncludeDir}/info)
 set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
+set(CoreBaseIncludeUtilDir ${CoreBaseIncludeDir}/util)
 set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IStartup.hpp
 	${CoreBaseIncludeSystemDir}/IAppCallback.hpp
@@ -25,6 +26,10 @@ set(CoreBaseHeaderLogging
 	${CoreBaseIncludeLoggingDir}/ILogger.hpp
 )
 
+set(CoreBaseHeaderUtil
+	${CoreBaseIncludeUtilDir}/stringutil.hpp
+)
+
 set(CoreBaseHeaders
 	${CoreBaseHeaderLogging}
 	${CoreBaseIncludeDir}/CoreExportHelper.hpp
@@ -32,12 +37,14 @@ set(CoreBaseHeaders
 	${CoreBaseHeaderConfig}
 	${CoreBaseHeaderInfo}
 	${CoreBaseHeaderSystem}
+	${CoreBaseHeaderUtil}
 )
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreBaseHeaderConfig})
 
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreBaseHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}info" FILES ${CoreBaseHeaderInfo})
 source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreBaseHeaderSystem})
+source_group("${SOURCE_GROUP_HEADER_START}util" FILES ${CoreBaseHeaderUtil})
 
 add_library(CoreBase INTERFACE)
 target_include_directories(CoreBase INTERFACE include)

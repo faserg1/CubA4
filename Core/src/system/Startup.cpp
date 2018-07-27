@@ -36,4 +36,7 @@ void Startup::stop()
 void Startup::initMods()
 {
 	modLoader_->find();
+	modLoader_->load();
+
+	modLoader_->setup();
 }
