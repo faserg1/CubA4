@@ -39,7 +39,7 @@ void MaterialLayoutBuilder::prepare()
 	{
 		std::runtime_error("Реализация прозрачного режима отсутствует");
 	}
-	descriptorLayoutInfo_.bindingCount = bindings_.size();
+	descriptorLayoutInfo_.bindingCount = static_cast<uint32_t>(bindings_.size());
 	descriptorLayoutInfo_.pBindings = bindings_.data();
 }
 

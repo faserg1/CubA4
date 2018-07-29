@@ -17,7 +17,7 @@ namespace CubA4
 			void destroy() override;
 			std::string getRenderEngineId() const override;
 			std::shared_ptr<engine::IRenderEngine> getRenderEngine() override;
-			int64_t getSDLWindowFlags() const override;
+			uint32_t getSDLWindowFlags() const override;
 		private:
 			std::shared_ptr<const core::info::IApplicationInfo> info_;
 			std::shared_ptr<const core::ICore> core_;

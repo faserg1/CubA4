@@ -65,9 +65,9 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 	std::vector<const char *> cStrLayers(layers_.size());
 	std::transform(extensions_.begin(), extensions_.end(), cStrExtensions.begin(), [](std::string &str) {return str.c_str(); });
 	std::transform(layers_.begin(), layers_.end(), cStrLayers.begin(), [](std::string &str) {return str.c_str(); });
-	data_->instanceInfo.enabledExtensionCount = cStrExtensions.size();
+	data_->instanceInfo.enabledExtensionCount = static_cast<uint32_t>(cStrExtensions.size());
 	data_->instanceInfo.ppEnabledExtensionNames = cStrExtensions.data();
-	data_->instanceInfo.enabledLayerCount = cStrLayers.size();
+	data_->instanceInfo.enabledLayerCount = static_cast<uint32_t>(cStrLayers.size());
 	data_->instanceInfo.ppEnabledLayerNames = cStrLayers.data();
 
 	VkInstance instance;

@@ -142,7 +142,7 @@ std::string CubA4::core::logging::Logger::getTimeString(const char *format)
 	auto *localTime = std::localtime(&time);
 	constexpr unsigned bufferSize = 50;
 	char buffer[bufferSize];
-	const int len = std::strftime(buffer, bufferSize, format, localTime);
+	const size_t len = std::strftime(buffer, bufferSize, format, localTime);
 	if (!len)
 		throw std::runtime_error("Cannot format time!");
 	std::string result(buffer, len);

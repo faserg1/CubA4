@@ -75,9 +75,9 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	std::transform(extensions_.begin(), extensions_.end(), cStrExtensions.begin(), [](std::string &str) {return str.c_str(); });
 	std::transform(layers_.begin(), layers_.end(), cStrLayers.begin(), [](std::string &str) {return str.c_str(); });
 
-	createInfo.enabledLayerCount = cStrExtensions.size();
+	createInfo.enabledLayerCount = static_cast<uint32_t>(cStrExtensions.size());
 	createInfo.ppEnabledLayerNames = cStrExtensions.data();
-	createInfo.enabledExtensionCount = cStrExtensions.size();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(cStrExtensions.size());
 	createInfo.ppEnabledExtensionNames = cStrExtensions.data();
 
 	float queuePriorities[1] = { 1.f };

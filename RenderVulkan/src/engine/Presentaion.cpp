@@ -49,7 +49,7 @@ void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Se
 	info.swapchainCount = 1;
 	VkSwapchainKHR swapchain = swapchain_->getSwapchain();
 	info.pSwapchains = &swapchain;
-	info.waitSemaphoreCount = awaitVkSemaphores.size();
+	info.waitSemaphoreCount = static_cast<uint32_t>(awaitVkSemaphores.size());
 	info.pWaitSemaphores = awaitVkSemaphores.data();
 	info.pImageIndices = &imageIndex;
 	if (vkQueuePresentKHR(device_->getQueue(), &info) != VK_SUCCESS)

@@ -1,4 +1,4 @@
-#include "ModVanillaInfo.hpp"]
+#include "ModVanillaInfo.hpp"
 #include "../include/core/info/Version.hpp"
 #include "../include/core/info/VersionDependency.hpp"
 #include <stdexcept>

@@ -31,7 +31,7 @@ namespace CubA4
 			virtual void destroy() = 0;
 			virtual std::string getRenderEngineId() const = 0;
 			virtual std::shared_ptr<engine::IRenderEngine> getRenderEngine() = 0;
-			virtual int64_t getSDLWindowFlags() const = 0;
+			virtual uint32_t getSDLWindowFlags() const = 0;
 		protected:
 			explicit IRenderInfo() {}
 		};

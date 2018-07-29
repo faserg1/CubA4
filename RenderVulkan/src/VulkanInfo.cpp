@@ -36,7 +36,7 @@ std::shared_ptr<engine::IRenderEngine> VulkanInfo::getRenderEngine()
 	return engine_;
 }
 
-int64_t VulkanInfo::getSDLWindowFlags() const
+uint32_t VulkanInfo::getSDLWindowFlags() const
 {
 	return SDL_WINDOW_VULKAN;
 }

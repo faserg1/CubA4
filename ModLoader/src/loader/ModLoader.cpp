@@ -19,7 +19,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/dll.hpp>
 
-#include <util/stringutil.hpp>
+#include <boost/format.hpp>
 
 using namespace CubA4::mod;
 using namespace CubA4::core;
@@ -55,7 +55,7 @@ void ModLoader::find()
 		if (path.extension() != boost::dll::shared_library::suffix())
 			continue;
 		candidates_.push_back(path.generic_string());
-		log_->log(LogLevel::Info, CubA4::util::format("Find mod candidate: %.", path.generic_string()));
+		log_->log(LogLevel::Info, str(boost::format("Find mod candidate: %1%.") % path.generic_string()));
 	}
 }
 
@@ -69,10 +69,10 @@ void ModLoader::load()
 		{
 			modLibs_.push_back(library);
 			auto modInfo = library->getModInfo();
-			log_->log(LogLevel::Info, CubA4::util::format("Loaded mod: %.", modInfo->getIdName()));
+			log_->log(LogLevel::Info, str(boost::format("Loaded mod: %1%.") % modInfo->getIdName()));
 		}
 		else
-			log_->log(LogLevel::Warning, CubA4::util::format("Invalid mod library: %.", candidate));
+			log_->log(LogLevel::Warning, str(boost::format("Invalid mod library: %1%.") % candidate));
 	}
 }
 
@@ -87,14 +87,14 @@ void ModLoader::setup()
 		auto &appDep = modInfo->getAppDependency();
 		if (appDep.required().major() != appInfo_->version().major())
 		{
-			log_->log(LogLevel::Warning, CubA4::util::format("Skipping mod %: Required app version is: %, current: %. Major version is not equal.",
-				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
+			log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required app version is: %2%, current: %3%. Major version is not equal.")
+				% modInfo->getIdName() % appDep.required().to_string() % appInfo_->version().to_string()));
 			continue;
 		}
 		if (appDep.required().minor() > appInfo_->version().minor())
 		{
-			log_->log(LogLevel::Warning, CubA4::util::format("Skipping mod %: Required app version is: %, current: %. Minor version is lower than required.",
-				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
+			log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required app version is: %2%, current: %3%. Minor version is lower than required.")
+				% modInfo->getIdName() % appDep.required().to_string() % appInfo_->version().to_string()));
 			continue;
 		}
 		modInfos.insert(std::make_pair(modInfo->getIdName(), modInfo));
@@ -109,7 +109,7 @@ void ModLoader::setup()
 			mods.push_back(mod);
 		else
 		{
-			log_->log(LogLevel::Info, CubA4::util::format("The % is meta mod. Skipping next steps for this mod", modInfoPair.first));
+			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfoPair.first));
 		}
 	}
 	log_->log(LogLevel::Info, "Loading mods.");

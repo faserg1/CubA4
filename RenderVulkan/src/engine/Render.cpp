@@ -45,7 +45,7 @@ void Render::record(uint32_t imgIndex)
 	{
 		colorAttachmentClearValue
 	};
-	renderPassBeginInfo.clearValueCount = clearValues.size();
+	renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 	renderPassBeginInfo.pClearValues = clearValues.data();
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
@@ -73,10 +73,10 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	std::vector<VkSemaphore> waitSemaphores = { awaitSemaphore->getSemaphore() };
 	std::vector<VkPipelineStageFlags> waitFlags = { VK_PIPELINE_STAGE_ALL_COMMANDS_BIT };
 
-	submitInfo.signalSemaphoreCount = signalSemaphores.size();
+	submitInfo.signalSemaphoreCount = static_cast<uint32_t>(signalSemaphores.size());
 	submitInfo.pSignalSemaphores = signalSemaphores.data();
 
-	submitInfo.waitSemaphoreCount = waitSemaphores.size();
+	submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
 	submitInfo.pWaitSemaphores = waitSemaphores.data();
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
@@ -122,7 +122,7 @@ void Render::createRenderPass()
 		colorAttachment
 	};
 
-	renderPassCreateInfo.attachmentCount = attachments.size();
+	renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
 	renderPassCreateInfo.pAttachments = attachments.data();
 
 	VkAttachmentReference colorAttachmentReference = {};
@@ -143,7 +143,7 @@ void Render::createRenderPass()
 		mainSubpass
 	};
 
-	renderPassCreateInfo.subpassCount = subpasses.size();
+	renderPassCreateInfo.subpassCount = static_cast<uint32_t>(subpasses.size());
 	renderPassCreateInfo.pSubpasses = subpasses.data();
 
 	if (vkCreateRenderPass(device_->getDevice(), &renderPassCreateInfo, nullptr, &renderPass_) != VK_SUCCESS)
