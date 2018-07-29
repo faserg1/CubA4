@@ -17,6 +17,8 @@ namespace CubA4
 
 	namespace mod
 	{
+		class IMod;
+
 		class IModInfo
 		{
 		public:
@@ -30,6 +32,8 @@ namespace CubA4
 			virtual std::vector<std::string> getRequiredMods() const = 0;
 			virtual std::vector<std::string> getPreferedMods() const = 0;
 			virtual const core::info::IVersionDependency &getModDependency(std::string modIdName) const = 0;
+
+			virtual std::shared_ptr<IMod> getMod() const = 0;
 		protected:
 			explicit IModInfo() {}
 		};

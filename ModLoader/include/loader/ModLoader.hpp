@@ -16,17 +16,23 @@ namespace CubA4
 		{
 			class ILoggerTagged;
 		}
+
+		namespace info
+		{
+			class IApplicationInfo;
+		}
 	}
 
 	namespace mod
 	{
 		class ModLibrary;
+		class IMod;
 
 		class MOD_LOADER_SHARED ModLoader : 
 			public virtual IModLoader
 		{
 		public:
-			ModLoader(std::shared_ptr<const core::ICore> core);
+			ModLoader(std::weak_ptr<const core::ICore> core, std::shared_ptr<const core::info::IApplicationInfo> appInfo);
 			virtual ~ModLoader();
 
 			void find() override;
@@ -34,10 +40,12 @@ namespace CubA4
 			void setup() override;
 			void unload() override;
 		private:
-			const std::shared_ptr<const core::ICore> core_;
+			const std::weak_ptr<const core::ICore> core_;
+			const std::shared_ptr<const core::info::IApplicationInfo> appInfo_;
 			std::vector<std::string> candidates_;
-			std::vector<std::shared_ptr<ModLibrary>> mods_;
+			std::vector<std::shared_ptr<ModLibrary>> modLibs_;
 			std::shared_ptr<core::logging::ILoggerTagged> log_;
+			std::vector<std::shared_ptr<IMod>> loadedMods_;
 		};
 	}
 }

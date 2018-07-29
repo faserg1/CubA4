@@ -34,6 +34,7 @@ namespace CubA4
 		public:
 			virtual ~IMod() {}
 
+			//TODO: [OOKAMI] Replace with core
 			virtual void load(std::shared_ptr<core::logging::ILogger> logger) = 0;
 			virtual void preinit() = 0;
 			virtual void link(std::shared_ptr<const IModLinker> linker) = 0;

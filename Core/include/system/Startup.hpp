@@ -32,6 +32,7 @@ namespace CubA4
 				void stop() override;
 			protected:
 				void initMods();
+				void unloadMods();
 
 			private:
 				const std::weak_ptr<const ICore> core_;

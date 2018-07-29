@@ -31,6 +31,7 @@ void Startup::run()
 
 void Startup::stop()
 {
+	unloadMods();
 }
 
 void Startup::initMods()
@@ -39,4 +40,9 @@ void Startup::initMods()
 	modLoader_->load();
 
 	modLoader_->setup();
+}
+
+void Startup::unloadMods()
+{
+	modLoader_->unload();
 }

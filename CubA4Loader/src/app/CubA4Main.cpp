@@ -29,7 +29,7 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 	log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN"));
 	log_->log(LogLevel::Info, "CubA4 Loader start.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
-	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_);
+	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_, info_);
 }
 
 int AppMain::exec()

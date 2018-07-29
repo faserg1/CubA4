@@ -7,8 +7,14 @@
 #include <logging/ILoggerTagged.hpp>
 
 #include <IModInfo.hpp>
+#include <mod/IMod.hpp>
+
+#include <info/IApplicationInfo.hpp>
+#include <info/IVersionDependency.hpp>
+#include <info/IVersion.hpp>
 
 #include <vector>
+#include <map>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/dll.hpp>
@@ -20,10 +26,13 @@ using namespace CubA4::core;
 using namespace CubA4::core::config;
 using namespace CubA4::core::logging;
 
-ModLoader::ModLoader(std::shared_ptr<const ICore> core) :
-	core_(core)
+ModLoader::ModLoader(std::weak_ptr<const ICore> core, std::shared_ptr<const CubA4::core::info::IApplicationInfo> appInfo) :
+	core_(core), appInfo_(appInfo)
 {
-	log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::Mod, "LOADER"));
+	if (auto lockedCore = core_.lock())
+	{
+		log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(lockedCore->getLogger()->createTaggedLog(LogSourceSystem::Mod, "LOADER"));
+	}
 }
 
 ModLoader::~ModLoader()
@@ -33,7 +42,7 @@ ModLoader::~ModLoader()
 
 void ModLoader::find()
 {
-	auto modsPath = core_->getPaths()->modsPath();
+	auto modsPath = core_.lock()->getPaths()->modsPath();
 	using namespace boost::filesystem;
 	auto modsFolder = path(modsPath);
 	recursive_directory_iterator modsFolderIterator(modsFolder), end;
@@ -58,7 +67,7 @@ void ModLoader::load()
 		auto library = std::make_shared<ModLibrary>(path(candidate));
 		if (library->isValidLibrary())
 		{
-			mods_.push_back(library);
+			modLibs_.push_back(library);
 			auto modInfo = library->getModInfo();
 			log_->log(LogLevel::Info, CubA4::util::format("Loaded mod: %.", modInfo->getIdName()));
 		}
@@ -69,13 +78,79 @@ void ModLoader::load()
 
 void ModLoader::setup()
 {
-	for (auto library : mods_)
+	std::map<std::string, std::shared_ptr<const IModInfo>> modInfos;
+	std::vector<std::shared_ptr<IMod>> mods;
+	log_->log(LogLevel::Info, "Checking for app dependency.");
+	for (auto library : modLibs_)
 	{
-
+		auto modInfo = library->getModInfo();
+		auto &appDep = modInfo->getAppDependency();
+		if (appDep.required().major() != appInfo_->version().major())
+		{
+			log_->log(LogLevel::Warning, CubA4::util::format("Skipping mod %: Required app version is: %, current: %. Major version is not equal.",
+				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
+			continue;
+		}
+		if (appDep.required().minor() > appInfo_->version().minor())
+		{
+			log_->log(LogLevel::Warning, CubA4::util::format("Skipping mod %: Required app version is: %, current: %. Minor version is lower than required.",
+				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
+			continue;
+		}
+		modInfos.insert(std::make_pair(modInfo->getIdName(), modInfo));
+		//TODO: [OOKAMI] Check prefered deps
+	}
+	log_->log(LogLevel::Info, "Checking for mod dependency.");
+	for (auto modInfoPair : modInfos)
+	{
+		//TODO: [OOKAMI] Check for mod deps
+		auto mod = modInfoPair.second->getMod();
+		if (mod)
+			mods.push_back(mod);
+		else
+		{
+			log_->log(LogLevel::Info, CubA4::util::format("The % is meta mod. Skipping next steps for this mod", modInfoPair.first));
+		}
+	}
+	log_->log(LogLevel::Info, "Loading mods.");
+	for (auto mod : mods)
+	{
+		//TODO: [OOKAMI] Send core
+		//mod->load(core_->getLogger());
+	}
+	log_->log(LogLevel::Info, "Preiniting mods.");
+	for (auto mod : mods)
+	{
+		mod->preinit();
+	}
+	log_->log(LogLevel::Info, "Linking mods.");
+	for (auto mod : mods)
+	{
+		//TODO:: Place linker
+		mod->link(nullptr);
+	}
+	log_->log(LogLevel::Info, "Initing mods.");
+	for (auto mod : mods)
+	{
+		mod->init();
+	}
+	log_->log(LogLevel::Info, "Configuring mods.");
+	for (auto mod : mods)
+	{
+		mod->configure();
+	}
+	log_->log(LogLevel::Info, "Finishing load mods.");
+	for (auto mod : mods)
+	{
+		mod->done();
 	}
 }
 
 void ModLoader::unload()
 {
-
+	for (auto mod : loadedMods_)
+	{
+		mod->preunload();
+	}
+	modLibs_.clear();
 }
