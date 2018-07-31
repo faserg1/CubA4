@@ -115,8 +115,7 @@ void ModLoader::setup()
 	log_->log(LogLevel::Info, "Loading mods.");
 	for (auto mod : mods)
 	{
-		//TODO: [OOKAMI] Send core
-		//mod->load(core_->getLogger());
+		mod->load(core_.lock());
 	}
 	log_->log(LogLevel::Info, "Preiniting mods.");
 	for (auto mod : mods)

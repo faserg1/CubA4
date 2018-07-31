@@ -6,6 +6,12 @@ set(ModVanillaIncludeCoreInfoDir ${ModVanillaIncludeCoreDir}/info)
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(ModVanillaSourceCoreDir ${ModVanillaSourceDir}/core)
 set(ModVanillaSourceCoreInfoDir ${ModVanillaSourceCoreDir}/info)
+set(ModVanillaSource
+	${ModVanillaSourceDir}/ModVanilla.cpp
+)
+set(ModVanillaHeader
+	${ModVanillaIncludeDir}/ModVanilla.hpp
+)
 set(ModVanillaSourceCoreInfo
 	${ModVanillaSourceCoreInfoDir}/Version.cpp
 	${ModVanillaSourceCoreInfoDir}/VersionDependency.cpp
@@ -17,13 +23,15 @@ set(ModVanillaHeaderCoreInfo
 
 set(ModVanillaHeaders 
 	${ModVanillaSourceDir}/ModVanillaInfo.hpp
-	${ModVanillaHeaderCoreInfo})
+	${ModVanillaHeaderCoreInfo}
+	${ModVanillaHeader})
 source_group("${SOURCE_GROUP_HEADER_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaHeaderCoreInfo})
 
 set(ModVanillaSources 
 	${ModVanillaSourceDir}/ModVanillaInfo.cpp
 	${ModVanillaSourceDir}/ExportMod.cpp
 	${ModVanillaSourceCoreInfo}
+	${ModVanillaSource}
 	)
 source_group("${SOURCE_GROUP_SOURCE_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaSourceCoreInfo})
 	
