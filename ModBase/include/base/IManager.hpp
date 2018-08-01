@@ -8,9 +8,9 @@ namespace CubA4
 		class IManager
 		{
 		public:
-			virtual ~IManager() {}
 		protected:
 			explicit IManager() {}
+			virtual ~IManager() {}
 		};
 	}
 }
