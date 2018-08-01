@@ -8,6 +8,11 @@ namespace CubA4
 	namespace core
 	{
 		class ICore;
+
+		namespace system
+		{
+			class IEnvironmentBuilder;
+		}
 	}
 	
 	namespace mod
@@ -34,7 +39,7 @@ namespace CubA4
 			virtual void load(std::shared_ptr<const core::ICore> core) = 0;
 			virtual void preinit() = 0;
 			virtual void link(std::shared_ptr<const IModLinker> linker) = 0;
-			virtual void init() = 0;
+			virtual void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) = 0;
 			virtual void configure() = 0;
 			virtual void done() = 0;
 

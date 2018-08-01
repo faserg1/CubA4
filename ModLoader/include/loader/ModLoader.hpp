@@ -37,7 +37,7 @@ namespace CubA4
 
 			void find() override;
 			void load() override;
-			void setup() override;
+			void setup(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) override;
 			void unload() override;
 		private:
 			const std::weak_ptr<const core::ICore> core_;

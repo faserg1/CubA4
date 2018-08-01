@@ -10,9 +10,13 @@ set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
 set(CoreSourceSystem
 	${CoreSourceSystemDir}/Startup.cpp
+	${CoreSourceSystemDir}/Environment.cpp
+	${CoreSourceSystemDir}/EnvironmentBuilder.cpp
 )
 set(CoreHeaderSystem
 	${CoreIncludeSystemDir}/Startup.hpp
+	${CoreIncludeSystemDir}/Environment.hpp
+	${CoreIncludeSystemDir}/EnvironmentBuilder.hpp
 )
 set(CoreSourceLogging
 	${CoreSourceLoggingDir}/Logger.cpp

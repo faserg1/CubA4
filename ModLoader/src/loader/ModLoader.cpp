@@ -76,7 +76,7 @@ void ModLoader::load()
 	}
 }
 
-void ModLoader::setup()
+void ModLoader::setup(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
 	std::map<std::string, std::shared_ptr<const IModInfo>> modInfos;
 	std::vector<std::shared_ptr<IMod>> mods;
@@ -131,7 +131,7 @@ void ModLoader::setup()
 	log_->log(LogLevel::Info, "Initing mods.");
 	for (auto mod : mods)
 	{
-		mod->init();
+		mod->init(builder);
 	}
 	log_->log(LogLevel::Info, "Configuring mods.");
 	for (auto mod : mods)

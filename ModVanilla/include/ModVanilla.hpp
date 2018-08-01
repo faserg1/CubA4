@@ -17,7 +17,7 @@ namespace CubA4
 			void load(std::shared_ptr<const core::ICore> core) override;
 			void preinit() override;
 			void link(std::shared_ptr<const IModLinker> linker) override;
-			void init() override;
+			void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) override;
 			void configure() override;
 			void done() override;
 

@@ -8,6 +8,8 @@ set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
 set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IStartup.hpp
 	${CoreBaseIncludeSystemDir}/IAppCallback.hpp
+	${CoreBaseIncludeSystemDir}/IEnvironment.hpp
+	${CoreBaseIncludeSystemDir}/IEnvironmentBuilder.hpp
 )
 set(CoreBaseHeaderInfo
 	${CoreBaseIncludeInfoDir}/IApplicationInfo.hpp

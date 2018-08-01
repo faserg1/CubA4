@@ -27,7 +27,7 @@ void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
 
 }
 
-void ModVanilla::init()
+void ModVanilla::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
 
 }

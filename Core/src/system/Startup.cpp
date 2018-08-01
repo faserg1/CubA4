@@ -1,4 +1,5 @@
 #include "../../include/system/Startup.hpp"
+#include "../../include/system/EnvironmentBuilder.hpp"
 #include <system/IAppCallback.hpp>
 #include <mod/IModLoader.hpp>
 #include <stdexcept>
@@ -39,7 +40,8 @@ void Startup::initMods()
 	modLoader_->find();
 	modLoader_->load();
 
-	modLoader_->setup();
+	auto envBuilder = std::make_shared<EnvironmentBuilder>();
+	modLoader_->setup(envBuilder);
 }
 
 void Startup::unloadMods()
