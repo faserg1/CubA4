@@ -102,6 +102,8 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 
 void DeviceBuilder::destroy(std::shared_ptr<const Device> device)
 {
+	if (!device)
+		return;
 	vkDeviceWaitIdle(device->getDevice());
 	vkDestroyDevice(device->getDevice(), nullptr);
 }

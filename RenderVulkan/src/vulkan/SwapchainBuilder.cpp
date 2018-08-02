@@ -109,5 +109,6 @@ std::shared_ptr<Swapchain> SwapchainBuilder::rebuild(std::shared_ptr<const Swapc
 
 void SwapchainBuilder::destroy(std::shared_ptr<const Swapchain> swapchain)
 {
-	vkDestroySwapchainKHR(device_->getDevice(), swapchain->getSwapchain(), nullptr);
+	if (swapchain)
+		vkDestroySwapchainKHR(device_->getDevice(), swapchain->getSwapchain(), nullptr);
 }
