@@ -1,10 +1,17 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreBaseIncludeModelDir ${CoreBaseIncludeDir}/model)
 set(CoreBaseIncludeSystemDir ${CoreBaseIncludeDir}/system)
 set(CoreBaseIncludeInfoDir ${CoreBaseIncludeDir}/info)
 set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
+set(CoreBaseHeaderModel
+	${CoreBaseIncludeModelDir}/IModel.hpp
+	${CoreBaseIncludeModelDir}/IShapeModel.hpp
+	${CoreBaseIncludeModelDir}/IRenderModel.hpp
+	${CoreBaseIncludeModelDir}/ICollisionModel.hpp
+)
 set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IStartup.hpp
 	${CoreBaseIncludeSystemDir}/IAppCallback.hpp
@@ -34,12 +41,14 @@ set(CoreBaseHeaders
 	${CoreBaseHeaderConfig}
 	${CoreBaseHeaderInfo}
 	${CoreBaseHeaderSystem}
+	${CoreBaseHeaderModel}
 )
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreBaseHeaderConfig})
 
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreBaseHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}info" FILES ${CoreBaseHeaderInfo})
 source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreBaseHeaderSystem})
+source_group("${SOURCE_GROUP_HEADER_START}model" FILES ${CoreBaseHeaderModel})
 
 add_library(CoreBase INTERFACE)
 target_include_directories(CoreBase INTERFACE include)

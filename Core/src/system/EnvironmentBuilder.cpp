@@ -11,3 +11,7 @@ EnvironmentBuilder::~EnvironmentBuilder()
 	
 }
 
+void EnvironmentBuilder::registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world)
+{
+
+}

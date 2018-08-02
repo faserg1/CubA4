@@ -15,6 +15,8 @@ namespace CubA4
 			public:
 				explicit EnvironmentBuilder();
 				~EnvironmentBuilder();
+
+				void registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world) override;
 			protected:
 			private:
 			};
