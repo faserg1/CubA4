@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.12)
 set(CubA4LoaderSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(CubA4LoaderSourceAppDir ${CubA4LoaderSourceDir}/app)
 set(CubA4LoaderSourceRenderDir ${CubA4LoaderSourceDir}/render)
