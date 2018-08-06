@@ -2,6 +2,7 @@
 #define IRENDERMODEL_HPP
 
 #include "IModel.hpp"
+#include <vector>
 
 namespace CubA4
 {
@@ -13,7 +14,11 @@ namespace CubA4
 				public virtual IModel
 			{
 			public:
-				
+				/**
+				@brief Получение списка индексов вершин для составлеия граней
+				@return Кол-во индексов, [индексы грани], ...
+				**/
+				virtual std::vector<unsigned short> getFaceIndices() = 0;
 			protected:
 				explicit IRenderModel() {}
 				virtual ~IRenderModel() {}
