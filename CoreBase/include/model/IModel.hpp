@@ -20,7 +20,7 @@ namespace CubA4
 			class IModel
 			{
 			public:
-				virtual std::vector<Vertex> getVertices() = 0;
+				virtual std::vector<Vertex> getVertices() const = 0;
 			protected:
 				explicit IModel() {}
 				virtual ~IModel() {}
