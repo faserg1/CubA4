@@ -75,6 +75,8 @@ set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.cpp
 	${RenderVulkanSourceVulkanDir}/Semaphore.cpp
 	${RenderVulkanSourceVulkanDir}/Memory.cpp
+	${RenderVulkanSourceVulkanDir}/Pipeline.cpp
+	${RenderVulkanSourceVulkanDir}/PipelineBuilder.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/Instance.hpp
@@ -87,6 +89,8 @@ set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/SwapchainBuilder.hpp
 	${RenderVulkanSourceVulkanDir}/Semaphore.hpp
 	${RenderVulkanSourceVulkanDir}/Memory.hpp
+	${RenderVulkanSourceVulkanDir}/Pipeline.hpp
+	${RenderVulkanSourceVulkanDir}/PipelineBuilder.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.cpp
