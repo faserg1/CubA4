@@ -11,8 +11,8 @@ namespace CubA4
 			public virtual IModException
 		{
 		public:
-			explicit IModRuntimeException() {}
-			virtual ~IModRuntimeException() {}
+			explicit IModRuntimeException() = default;
+			virtual ~IModRuntimeException() = default;
 		};
 	}
 }

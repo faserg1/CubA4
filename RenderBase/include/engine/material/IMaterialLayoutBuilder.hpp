@@ -19,8 +19,8 @@ namespace CubA4
 					// addSampler()
 					// add..*
 				protected:
-					explicit IMaterialLayoutBuilder() {}
-					virtual ~IMaterialLayoutBuilder() {}
+					explicit IMaterialLayoutBuilder() = default;
+					virtual ~IMaterialLayoutBuilder() = default;
 				private:
 				};
 			}

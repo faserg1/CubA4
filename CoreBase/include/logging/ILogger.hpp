@@ -19,8 +19,8 @@ namespace CubA4
 
 				virtual ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) = 0;
 			protected:
-				virtual ~ILogger() {}
-				explicit ILogger() {}
+				virtual ~ILogger() = default;
+				explicit ILogger() = default;
 			};
 		}
 	}

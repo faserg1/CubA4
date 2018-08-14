@@ -43,8 +43,8 @@ namespace CubA4
 			virtual std::shared_ptr<system::IStartup> getStartup() = 0;
 			virtual void criticalException() const = 0;
 		protected:
-			virtual ~ICore() {}
-			explicit ICore() {}
+			virtual ~ICore() = default;
+			explicit ICore() = default;
 		};
 	}
 }

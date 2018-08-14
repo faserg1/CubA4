@@ -20,8 +20,8 @@ namespace CubA4
 				**/
 				virtual std::vector<unsigned short> getFaceIndices() const = 0;
 			protected:
-				explicit IRenderModel() {}
-				virtual ~IRenderModel() {}
+				explicit IRenderModel() = default;
+				virtual ~IRenderModel() = default;
 			private:
 			};
 		}

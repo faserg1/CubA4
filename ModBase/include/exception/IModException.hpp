@@ -10,8 +10,8 @@ namespace CubA4
 		class IModException
 		{
 		public:
-			explicit IModException() {}
-			virtual ~IModException() {}
+			explicit IModException() = default;
+			virtual ~IModException() = default;
 
 			virtual std::string message() const noexcept = 0;
 		};

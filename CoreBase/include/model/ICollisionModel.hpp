@@ -15,8 +15,8 @@ namespace CubA4
 			public:
 				
 			protected:
-				explicit ICollisionModel() {}
-				virtual ~ICollisionModel() {}
+				explicit ICollisionModel() = default;
+				virtual ~ICollisionModel() = default;
 			private:
 			};
 		}

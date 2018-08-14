@@ -10,11 +10,11 @@ namespace CubA4
 		class IWindow
 		{
 		public:
-			virtual ~IWindow() {}
+			virtual ~IWindow() = default;
 
 			virtual SDL_Window *getSDLWindow() = 0;
 		protected:
-			explicit IWindow() {}
+			explicit IWindow() = default;
 		private:
 		};
 	}

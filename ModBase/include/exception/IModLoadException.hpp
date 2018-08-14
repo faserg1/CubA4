@@ -13,8 +13,8 @@ namespace CubA4
 			public virtual IModException 
 		{
 		public:
-			explicit IModLoadException() {}
-			virtual ~IModLoadException() {}
+			explicit IModLoadException() = default;
+			virtual ~IModLoadException() = default;
 
 			/// Возвращает этап, а котором произошла ошибка
 			virtual ModState getErrorState() const noexcept = 0;

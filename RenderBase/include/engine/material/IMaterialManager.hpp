@@ -20,8 +20,8 @@ namespace CubA4
 					virtual std::shared_ptr<IShaderFactory> getShaderFactory() const = 0;
 					virtual std::shared_ptr<IMaterialLayoutSetFactory> getMaterialLayoutSetFactory() const = 0;
 				protected:
-					explicit IMaterialManager() {}
-					virtual ~IMaterialManager() {}
+					explicit IMaterialManager() = default;
+					virtual ~IMaterialManager() = default;
 				private:
 				};
 			}

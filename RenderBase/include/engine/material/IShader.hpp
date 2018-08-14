@@ -18,11 +18,11 @@ namespace CubA4
 				class IShader
 				{
 				public:
-					virtual ~IShader() {}
+					virtual ~IShader() = default;
 
 					virtual ShaderType getType() const = 0;
 				protected:
-					explicit IShader() {}
+					explicit IShader() = default;
 				private:
 				};
 			}

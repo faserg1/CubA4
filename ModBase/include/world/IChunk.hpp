@@ -8,9 +8,9 @@ namespace CubA4
 		class IChunk
 		{
 		public:
-			virtual ~IChunk() {}
+			virtual ~IChunk() = default;
 		protected:
-			explicit IChunk() {}
+			explicit IChunk() = default;
 		};
 	}
 }

@@ -22,9 +22,9 @@ namespace CubA4
 
 				virtual void reload() = 0;
 
-				virtual ~ICoreConfig() {}
+				virtual ~ICoreConfig() = default;
 			protected:
-				explicit ICoreConfig() {}
+				explicit ICoreConfig() = default;
 			};
 		}
 		

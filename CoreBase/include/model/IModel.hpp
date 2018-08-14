@@ -22,8 +22,8 @@ namespace CubA4
 			public:
 				virtual std::vector<Vertex> getVertices() const = 0;
 			protected:
-				explicit IModel() {}
-				virtual ~IModel() {}
+				explicit IModel() = default;
+				virtual ~IModel() = default;
 			private:
 			};
 		}

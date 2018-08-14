@@ -14,12 +14,12 @@ namespace CubA4
 			public virtual CubA4::object::IObject
 		{
 		public:
-			virtual ~IWorld() {}
+			virtual ~IWorld() = default;
 
 			virtual void subscribe(IWorldSubscriber *subscriber) = 0;
 			virtual void unsubscribe(IWorldSubscriber *subscriber) = 0;
 		protected:
-			explicit IWorld() {}
+			explicit IWorld() = default;
 		};
 	}
 }

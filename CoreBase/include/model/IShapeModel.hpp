@@ -15,8 +15,8 @@ namespace CubA4
 			public:
 				
 			protected:
-				explicit IShapeModel() {}
-				virtual ~IShapeModel() {}
+				explicit IShapeModel() = default;
+				virtual ~IShapeModel() = default;
 			private:
 			};
 		}

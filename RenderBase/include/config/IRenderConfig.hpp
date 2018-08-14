@@ -17,8 +17,8 @@ namespace CubA4
 
 				virtual void reload() = 0;
 			protected:
-				explicit IRenderConfig() {}
-				virtual ~IRenderConfig() {}
+				explicit IRenderConfig() = default;
+				virtual ~IRenderConfig() = default;
 			private:
 			};
 		}

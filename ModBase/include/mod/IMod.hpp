@@ -34,7 +34,7 @@ namespace CubA4
 		class IMod
 		{
 		public:
-			virtual ~IMod() {}
+			virtual ~IMod() = default;
 
 			virtual void load(std::shared_ptr<const core::ICore> core) = 0;
 			virtual void preinit() = 0;
@@ -45,7 +45,7 @@ namespace CubA4
 
 			virtual void preunload() = 0;
 		protected:
-			explicit IMod() {}
+			explicit IMod() = default;
 		};
 	}
 }

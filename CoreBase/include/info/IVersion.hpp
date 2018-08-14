@@ -21,8 +21,8 @@ namespace CubA4
 				
 				virtual std::string to_string() const = 0;
 			protected:
-				explicit IVersion() {}
-				virtual ~IVersion() {}
+				explicit IVersion() = default;
+				virtual ~IVersion() = default;
 			private:
 			};
 		}

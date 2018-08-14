@@ -15,7 +15,7 @@ namespace CubA4
 				class IShaderFactory
 				{
 				public:
-					virtual ~IShaderFactory() {}
+					virtual ~IShaderFactory() = default;
 
 					/// \brief Создает Шейдер из бинарных данных (SPIR-V)
 					/// \param data Бинарные данные шейдера на языке SPIR-V
@@ -24,7 +24,7 @@ namespace CubA4
 					/// \return Модуль шейдера
 					virtual std::shared_ptr<IShader> createFromBinary(const void *data, size_t size, ShaderType type) const = 0;
 				protected:
-					explicit IShaderFactory() {}
+					explicit IShaderFactory() = default;
 				private:
 				};
 			}
