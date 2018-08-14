@@ -18,7 +18,7 @@ namespace CubA4
 				@brief Получение списка индексов вершин для составлеия граней
 				@return Кол-во индексов, [индексы грани], ...
 				**/
-				virtual std::vector<unsigned short> getFaceIndices() = 0;
+				virtual std::vector<unsigned short> getFaceIndices() const = 0;
 			protected:
 				explicit IRenderModel() {}
 				virtual ~IRenderModel() {}
