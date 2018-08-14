@@ -45,10 +45,10 @@ def generate_class(full_name, module, params):
 	generate_common(generator, params)
 	if "--dtr:virtual" in params:
 		generator.set_virtual_destructor(True)
-	if "--ctr:empty" in params:
-		generator.set_empty_constructor(True)
-	if "--dtr:empty" in params:
-		generator.set_empty_destructor(True)
+	if "--ctr:default" in params:
+		generator.set_default_constructor(True)
+	if "--dtr:default" in params:
+		generator.set_default_destructor(True)
 	generator.generate()
 	generator.save()
 	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())

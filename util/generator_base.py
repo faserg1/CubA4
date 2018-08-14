@@ -11,8 +11,8 @@ class GeneratorBase:
 		self._module_name = module_name
 		self._dry_run = False
 		self._virtual_dtr = False
-		self._ctr_empty_realization = False
-		self._dtr_empty_realization = False
+		self._ctr_default_realization = False
+		self._dtr_default_realization = False
 		self._ctr_access = "public"
 		self._dtr_access = "public"
 		self._header_folder = "include"
@@ -32,11 +32,11 @@ class GeneratorBase:
 	def set_virtual_destructor(self, is_virtual):
 		self._virtual_dtr = is_virtual
 		
-	def set_empty_constructor(self, is_empty):
-		self._ctr_empty_realization = is_empty
+	def set_default_constructor(self, is_empty):
+		self._ctr_default_realization = is_empty
 	
-	def set_empty_destructor(self, is_empty):
-		self._dtr_empty_realization = is_empty
+	def set_default_destructor(self, is_empty):
+		self._dtr_default_realization = is_empty
 		
 	def set_access_constructor(self, access):
 		self._ctr_access = access
@@ -87,8 +87,10 @@ class GeneratorBase:
 		class_private = "private:\n"
 		class_ends = "};"
 		
-		class_ctr = "\t" + "explicit " + name + "()" + (" {}" if self._ctr_empty_realization else ";") + "\n"
-		class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + (" {}" if self._dtr_empty_realization else ";") + "\n"
+		cdtr_gen = lambda is_default: return (" = default;" if is_default else ";")
+		
+		class_ctr = "\t" + "explicit " + name + "()" + cdtr_gen(self._ctr_default_realization) + "\n"
+		class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + cdtr_gen(self._dtr_default_realization) + "\n"
 		
 		class_open = class_define + class_public
 		if self._ctr_access == "public":
@@ -129,10 +131,10 @@ class GeneratorBase:
 		head_open = include_line + using_namespace_line
 		file.add_lines(head_open, "", False, True)
 		source_open = ""
-		if not self._ctr_empty_realization:
+		if not self._ctr_default_realization:
 			ctr_open = name + "::" + name + "()\n{\n\t\n}"
 			file.add_lines(ctr_open, "", False, True)
-		if not self._dtr_empty_realization:
+		if not self._dtr_default_realization:
 			dtr_open = name + "::~" + name + "()\n{\n\t\n}"
 			file.add_lines(dtr_open, "", False, True)
 	
@@ -199,8 +201,8 @@ class GeneratorBase:
 	_cwd = ""
 	_dry_run = False
 	_virtual_dtr = False
-	_ctr_empty_realization = False
-	_dtr_empty_realization = False
+	_ctr_default_realization = False
+	_dtr_default_realization = False
 	_ctr_access = "public"
 	_dtr_access = "public"
 	_header_folder = "include"
