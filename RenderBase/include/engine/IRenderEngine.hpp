@@ -19,7 +19,7 @@ namespace CubA4
 			class IRenderEngine
 			{
 			public:
-				virtual ~IRenderEngine() {}
+				virtual ~IRenderEngine() = default;
 
 				virtual void init(std::shared_ptr<window::IWindow> window) = 0;
 				virtual void destroy() = 0;
@@ -28,7 +28,7 @@ namespace CubA4
 
 				virtual std::shared_ptr<IRenderManager> getRenderManager() const = 0;
 			protected:
-				explicit IRenderEngine() {}
+				explicit IRenderEngine() = default;
 			private:
 			};
 		}

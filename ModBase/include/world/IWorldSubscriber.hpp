@@ -8,9 +8,9 @@ namespace CubA4
 		class IWorldSubscriber
 		{
 		public:
-			virtual ~IWorldSubscriber() {}
+			virtual ~IWorldSubscriber() = default;
 		protected:
-			explicit IWorldSubscriber() {}
+			explicit IWorldSubscriber() = default;
 		};
 	}
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.12)
 set(NetworkSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(NetworkSourceIoDir ${NetworkSourceDir}/io)
 set(NetworkSourceDataDir ${NetworkSourceDir}/data)

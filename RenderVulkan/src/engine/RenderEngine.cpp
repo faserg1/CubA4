@@ -121,8 +121,6 @@ void VulkanRenderEngine::initInstance()
 
 void VulkanRenderEngine::destroyInstance()
 {
-	if (!instance_)
-		throw std::runtime_error("Not initialized");
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<InstanceAddon> addon) {addon->destroy(instance_); });
 	instanceAddons_.clear();
@@ -217,7 +215,8 @@ void VulkanRenderEngine::stop()
 {
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
 	running_ = false;
-	renderLoopThread_.join();
+	if (renderLoopThread_.joinable())
+		renderLoopThread_.join();
 	//TODO: [OOKAMI] остановка основного рендер потока
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }

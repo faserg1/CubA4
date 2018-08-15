@@ -17,8 +17,8 @@ namespace CubA4
 				virtual std::string renderPath() const = 0;
 				virtual std::string logsPath() const = 0;
 			protected:
-				explicit IFilePaths() {}
-				virtual ~IFilePaths() {}
+				explicit IFilePaths() = default;
+				virtual ~IFilePaths() = default;
 			private:
 			};
 		}

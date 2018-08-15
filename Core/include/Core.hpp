@@ -29,6 +29,8 @@ namespace CubA4
 			std::shared_ptr<system::IStartup> getStartup() override;
 
 			static std::shared_ptr<ICore> create(int argc, const char *const argv[]);
+
+			void criticalException() const override;
 		protected:
 			explicit Core(int argc, const char *const argv[]);
 			~Core();

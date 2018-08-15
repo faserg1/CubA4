@@ -11,9 +11,9 @@ namespace CubA4
 			public virtual IObject
 		{
 		public:
-			virtual ~IEntity() {}
+			virtual ~IEntity() = default;
 		protected:
-			explicit IEntity() {}
+			explicit IEntity() = default;
 		};
 	}
 }

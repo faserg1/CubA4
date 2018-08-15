@@ -15,8 +15,8 @@ namespace CubA4
 				virtual const IVersion &required() const = 0;
 				virtual const IVersion &prefered() const = 0;
 			protected:
-				explicit IVersionDependency() {}
-				virtual ~IVersionDependency() {}
+				explicit IVersionDependency() = default;
+				virtual ~IVersionDependency() = default;
 			private:
 			};
 		}

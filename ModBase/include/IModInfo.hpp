@@ -22,7 +22,7 @@ namespace CubA4
 		class IModInfo
 		{
 		public:
-			virtual ~IModInfo() {}
+			virtual ~IModInfo() = default;
 			
 			virtual std::string getIdName() const = 0;
 			virtual std::wstring getName() const = 0;
@@ -35,7 +35,7 @@ namespace CubA4
 
 			virtual std::shared_ptr<IMod> getMod() const = 0;
 		protected:
-			explicit IModInfo() {}
+			explicit IModInfo() = default;
 		};
 	}
 }

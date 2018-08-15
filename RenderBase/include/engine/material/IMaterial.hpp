@@ -18,8 +18,8 @@ namespace CubA4
 				public:
 
 				protected:
-					explicit IMaterial() {}
-					virtual ~IMaterial() {}
+					explicit IMaterial() = default;
+					virtual ~IMaterial() = default;
 				private:
 				};
 			}

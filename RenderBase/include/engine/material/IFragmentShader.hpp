@@ -15,9 +15,9 @@ namespace CubA4
 					public virtual IShader
 				{
 				public:
-					virtual ~IFragmentShader() {}
+					virtual ~IFragmentShader() = default;
 				protected:
-					explicit IFragmentShader() {}
+					explicit IFragmentShader() = default;
 				private:
 				};
 			}

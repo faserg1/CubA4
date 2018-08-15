@@ -19,10 +19,10 @@ class CmdLineParser:
 		print("--ctr:<access_mod> — Set access modifier to constructor.")
 		print("--dtr:<access_mod> — Set access modifier to desctructor.")
 		print("--dtr:virtual — Desctructor will be virtual.")
-		print("--ctr:empty — Set empty realization in header to constructor.")
-		print("--dtr:empty — Set empty realization in header to desctructor.")
-		print("--header-folder:<folder> — Set empty realization in header to desctructor.")
-		print("--source-folder:<folder> — Set empty realization in header to desctructor.")
+		print("--ctr:default — Set default realization in header to constructor.")
+		print("--dtr:default — Set default realization in header to desctructor.")
+		print("--header-folder:<folder> — Set folder for .hpp files.")
+		print("--source-folder:<folder> — Set folder for .cpp files.")
 		print("--module-namespace — Will not ignore module namespace")
 	
 	def parse(self):

@@ -27,7 +27,7 @@ std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::bu
 	std::vector<std::shared_ptr<const IMaterialLayout>> layouts;
 	std::for_each(builders_.begin(), builders_.end(), [](std::shared_ptr<IMaterialLayoutBuilder> iBuilder)
 	{
-		auto builder = dynamic_cast<MaterialLayoutBuilder*>(&*iBuilder);
+		auto builder = std::dynamic_pointer_cast<MaterialLayoutBuilder>(iBuilder);
 		builder->prepare();
 		auto descriptorLayoutInfo = builder->getDescriptorLayoutInfo();
 	});

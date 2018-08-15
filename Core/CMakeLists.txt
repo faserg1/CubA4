@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.12)
 
 set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(CoreIncludeSystemDir ${CoreIncludeDir}/system)
@@ -61,7 +61,7 @@ use_base_library(Core ModBase)
 
 #third-party library
 target_include_directories(Core PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(Core PRIVATE Boost::filesystem)
+target_link_libraries(Core PRIVATE Boost::filesystem ${boost_stacktrace_lib})
 
 #set output directory
 set_target_properties(Core

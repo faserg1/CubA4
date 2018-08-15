@@ -12,9 +12,9 @@ namespace CubA4
 			public virtual IObject
 		{
 		public:
-			virtual ~IBlock() {}
+			virtual ~IBlock() = default;
 		protected:
-			explicit IBlock() {}
+			explicit IBlock() = default;
 		};
 	}
 }

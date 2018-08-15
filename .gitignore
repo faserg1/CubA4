@@ -1,4 +1,5 @@
 build/*
+env/*
 Win32/*
 bin/*
 built/*

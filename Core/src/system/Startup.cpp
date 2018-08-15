@@ -46,5 +46,7 @@ void Startup::initMods()
 
 void Startup::unloadMods()
 {
+	if (!modLoader_)
+		return;
 	modLoader_->unload();
 }

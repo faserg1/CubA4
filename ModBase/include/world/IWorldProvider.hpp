@@ -10,12 +10,12 @@ namespace CubA4
 		class IWorldProvider
 		{
 		public:
-			virtual ~IWorldProvider() {}
+			virtual ~IWorldProvider() = default;
 
 			virtual void registerWorld(IWorld *world) = 0;
 			virtual void unregisterWorld(IWorld *world) = 0;
 		protected:
-			explicit IWorldProvider() {}
+			explicit IWorldProvider() = default;
 		};
 	}
 }

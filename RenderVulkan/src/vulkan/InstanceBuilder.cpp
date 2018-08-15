@@ -79,6 +79,8 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 
 void InstanceBuilder::destroy(std::shared_ptr<const Instance> instance)
 {
+	if (!instance)
+		return;
 	auto vkInst = instance->getInstance();
 	vkDestroyInstance(vkInst, nullptr);
 }

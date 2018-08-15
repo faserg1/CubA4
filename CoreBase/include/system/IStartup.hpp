@@ -22,8 +22,8 @@ namespace CubA4
 				virtual void run() = 0;
 				virtual void stop() = 0;
 			protected:
-				explicit IStartup() {}
-				virtual ~IStartup() {}
+				explicit IStartup() = default;
+				virtual ~IStartup() = default;
 			private:
 			};
 		}

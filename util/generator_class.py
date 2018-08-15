@@ -9,8 +9,8 @@ class GeneratorClass(GeneratorBase):
 		self._file_hpp = CppFile()
 		self._file_cpp = CppFile()
 		self.set_virtual_destructor(False)
-		self.set_empty_constructor(False)
-		self.set_empty_destructor(False)
+		self.set_default_constructor(False)
+		self.set_default_destructor(False)
 	
 	def generate(self):
 		#Header

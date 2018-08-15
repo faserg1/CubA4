@@ -8,8 +8,8 @@ class GeneratorInterface(GeneratorBase):
 		super().__init__(full_name, module_name)
 		self._file_hpp = CppFile()
 		self.set_virtual_destructor(True)
-		self.set_empty_constructor(True)
-		self.set_empty_destructor(True)
+		self.set_default_constructor(True)
+		self.set_default_destructor(True)
 		if self._ctr_access == "public":
 			self.set_access_constructor("protected")
 		

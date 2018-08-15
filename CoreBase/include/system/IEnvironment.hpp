@@ -12,8 +12,8 @@ namespace CubA4
 			public:
 				
 			protected:
-				explicit IEnvironment() {}
-				virtual ~IEnvironment() {}
+				explicit IEnvironment() = default;
+				virtual ~IEnvironment() = default;
 			private:
 			};
 		}

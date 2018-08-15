@@ -20,8 +20,8 @@ namespace CubA4
 			public:
 				virtual std::shared_ptr<material::IMaterialManager> getMaterialManager() const = 0;
 			protected:
-				explicit IRenderManager() {}
-				virtual ~IRenderManager() {}
+				explicit IRenderManager() = default;
+				virtual ~IRenderManager() = default;
 			private:
 			};
 		}

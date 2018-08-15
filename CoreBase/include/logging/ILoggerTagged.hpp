@@ -13,11 +13,11 @@ namespace CubA4
 			class ILoggerTagged
 			{
 			public:
-				virtual ~ILoggerTagged() {}
+				virtual ~ILoggerTagged() = default;
 
 				virtual void log(LogLevel level, const std::string &message) = 0;
 			protected:
-				explicit ILoggerTagged() {}
+				explicit ILoggerTagged() = default;
 			};
 		}
 	}

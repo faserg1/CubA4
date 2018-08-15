@@ -3,7 +3,9 @@
 #include "../include/config/FilePaths.hpp"
 #include "../include/logging/Logger.hpp"
 #include "../include/system/Startup.hpp"
-#include <exception>
+#include <stdexcept>
+#include <boost/stacktrace.hpp>
+#include <sstream>
 
 using namespace CubA4::core;
 using namespace CubA4::core::system;
@@ -47,4 +49,21 @@ std::shared_ptr<system::IStartup> Core::getStartup()
 	if (!startup_)
 		startup_ = std::make_shared<system::Startup>(core_);
 	return startup_;
+}
+
+void Core::criticalException() const
+{
+	logger_->flush();
+	auto print = [this](const std::string &msg)
+	{
+		logger_->log(CubA4::core::logging::LogSourceSystem::Core, "TERMINATE", CubA4::core::logging::LogLevel::Critical, msg);
+	};
+	auto st = boost::stacktrace::stacktrace();
+	auto frames = st.as_vector();
+	print("CubA4 has terminated! Stacktrace:");
+	for (auto frame : frames)
+	{
+		print(frame.name() + " at " + frame.source_file() + ":" + std::to_string(frame.source_line()));
+	}
+	logger_->flush();
 }

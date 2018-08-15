@@ -15,9 +15,9 @@ namespace CubA4
 					public virtual IShader
 				{
 				public:
-					virtual ~IVertexShader() {}
+					virtual ~IVertexShader() = default;
 				protected:
-					explicit IVertexShader() {}
+					explicit IVertexShader() = default;
 				private:
 				};
 			}

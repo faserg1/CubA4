@@ -12,9 +12,9 @@ namespace CubA4
 				class IMaterialFactory
 				{
 				public:
-					virtual ~IMaterialFactory() {}
+					virtual ~IMaterialFactory() = default;
 				protected:
-					explicit IMaterialFactory() {}
+					explicit IMaterialFactory() = default;
 				private:
 				};
 			}

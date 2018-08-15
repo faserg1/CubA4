@@ -18,8 +18,8 @@ namespace CubA4
 				public:
 					virtual bool transparentMode() = 0;
 				protected:
-					explicit IMaterialLayout() {}
-					virtual ~IMaterialLayout() {}
+					explicit IMaterialLayout() = default;
+					virtual ~IMaterialLayout() = default;
 				private:
 				};
 			}

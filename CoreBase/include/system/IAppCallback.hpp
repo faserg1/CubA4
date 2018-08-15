@@ -19,8 +19,8 @@ namespace CubA4
 			public:
 				virtual std::shared_ptr<mod::IModLoader> getModLoader() const = 0;
 			protected:
-				virtual ~IAppCallback() {}
-				explicit IAppCallback() {}
+				virtual ~IAppCallback() = default;
+				explicit IAppCallback() = default;
 			private:
 			};
 		}

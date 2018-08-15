@@ -8,9 +8,9 @@ namespace CubA4
 		class IContainer
 		{
 		public:
-			virtual ~IContainer() {}
+			virtual ~IContainer() = default;
 		protected:
-			explicit IContainer() {}
+			explicit IContainer() = default;
 		};
 	}
 }
