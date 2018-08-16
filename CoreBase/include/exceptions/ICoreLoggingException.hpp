@@ -11,12 +11,13 @@ namespace core
 	{
 		enum class LoggingExceptionsSourceType : char
 		{
-			WrittingStreamError, // Ошибка при записи потока
-			OpeningStreamError // Ошибка при открытии потока
+			WrittingStreamError, ///< Ошибка при записи потока
+			OpeningStreamError ///< Ошибка при открытии потока
 		};
 
 
-		class ICoreLoggingException : public virtual ICoreException
+		class ICoreLoggingException :
+			public virtual ICoreException
 		{
 		public:
 			virtual LoggingExceptionsSourceType source() = 0;

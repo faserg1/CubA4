@@ -11,15 +11,16 @@ namespace core
 	{
 		enum class ConfigExceptionsSourceType : char
 		{
-			ReadConfigurationFile, // Неудавшиеся чтение файла конфигурации
-			CreatureConfigurationFile, // Неудавшиеся создание файла конфигурации
-			PreserveConfigurationFile, // Неудавшиеся сохрание файла конфигурации
-			FailedReadConfig, // Неудавшиеся прочтение самого конфига
-			FailedSaveConfig // Неудавшиеся сохранение самого конфига
+			ReadConfigurationFile, ///< Неудавшиеся чтение файла конфигурации
+			CreatureConfigurationFile, ///< Неудавшиеся создание файла конфигурации
+			PreserveConfigurationFile, ///< Неудавшиеся сохрание файла конфигурации
+			FailedReadConfig, ///< Неудавшиеся прочтение самого конфига
+			FailedSaveConfig ///< Неудавшиеся сохранение самого конфига
 		};
 
 
-		class ICoreConfigException : public virtual ICoreException
+		class ICoreConfigException :
+			public virtual ICoreException
 		{
 		public:
 			virtual ConfigExceptionsSourceType source() = 0;
