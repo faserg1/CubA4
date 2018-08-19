@@ -11,5 +11,5 @@ else()
 endif ()
 
 find_package(Boost 1.67 EXACT REQUIRED
- COMPONENTS filesystem ${boost_stacktrace_name}
+ COMPONENTS system filesystem ${boost_stacktrace_name}
  )

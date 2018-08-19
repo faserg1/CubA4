@@ -21,6 +21,11 @@ def do_cmake(cmake_args, path):
 
 def create_args(generator, path):
 	return ["cmake", "-G", generator, path]
+
+def check_tool(cmd_tool):
+	cmd = "--tool"
+	if cmd in sys.argv:
+		return cmd_tool == sys.argv[sys.argv.index(cmd)+1].replace("\"", "")
 	
 def check_env(cmd, filepath, env):
 	total_file_path = os.path.join(env_dir, filepath)
@@ -38,13 +43,25 @@ def check_env(cmd, filepath, env):
 def check_boost():
 	check_env("--boost", "boost.txt", "BOOST_ROOT")
 	
+def check_vulkan():
+	check_env("--vulkan", "vulkan.txt", "VULKAN_SDK")
+	
 if not os.path.isdir(env_dir):
 	os.makedirs(env_dir)
 
 check_boost()
+check_vulkan()
 
 if platform.system() == "Windows":
-	args32 = create_args("Visual Studio 15 2017", "../..")
-	args64 = create_args("Visual Studio 15 2017 Win64", "../..")
-	do_cmake(args32, path_build32)
-	do_cmake(args64, path_build64)
+	path_to_project = "../.."
+	if check_tool("MinGW"):
+		args32 = create_args("MinGW Makefiles", path_to_project)
+		do_cmake(args32, path_build32)
+	elif check_tool("CodeBlocks"):
+		args32 = create_args("CodeBlocks", path_to_project)
+		do_cmake(args32, path_build32)
+	else:
+		args32 = create_args("Visual Studio 15 2017", path_to_project)
+		args64 = create_args("Visual Studio 15 2017 Win64", path_to_project)
+		do_cmake(args32, path_build32)
+		do_cmake(args64, path_build64)
