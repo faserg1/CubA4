@@ -1,16 +1,24 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreBaseIncludeExceptionsDir ${CoreBaseIncludeDir}/exceptions)
 set(CoreBaseIncludeModelDir ${CoreBaseIncludeDir}/model)
 set(CoreBaseIncludeSystemDir ${CoreBaseIncludeDir}/system)
 set(CoreBaseIncludeInfoDir ${CoreBaseIncludeDir}/info)
 set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
+
+set(CoreBaseHeaderExceptions
+	${CoreBaseIncludeExceptionsDir}/ICoreConfigException.hpp
+	${CoreBaseIncludeExceptionsDir}/ICoreException.hpp
+	${CoreBaseIncludeExceptionsDir}/ICoreLoggingException.hpp
+)
 set(CoreBaseHeaderModel
 	${CoreBaseIncludeModelDir}/IModel.hpp
 	${CoreBaseIncludeModelDir}/IShapeModel.hpp
 	${CoreBaseIncludeModelDir}/IRenderModel.hpp
 	${CoreBaseIncludeModelDir}/ICollisionModel.hpp
+
 )
 set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IStartup.hpp
@@ -41,13 +49,16 @@ set(CoreBaseHeaders
 	${CoreBaseHeaderConfig}
 	${CoreBaseHeaderInfo}
 	${CoreBaseHeaderSystem}
+	${CoreBaseHeaderExceptions}
 	${CoreBaseHeaderModel}
+
 )
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreBaseHeaderConfig})
 
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreBaseHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}info" FILES ${CoreBaseHeaderInfo})
 source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreBaseHeaderSystem})
+source_group("${SOURCE_GROUP_HEADER_START}exceptions" FILES ${CoreBaseHeaderExceptions})
 source_group("${SOURCE_GROUP_HEADER_START}model" FILES ${CoreBaseHeaderModel})
 
 add_library(CoreBase INTERFACE)
