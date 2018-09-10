@@ -1,0 +1,22 @@
+OpCapability Shader
+OpMemoryModel Logical Simple
+OpEntryPoint Vertex %main "main"
+
+; !!!!!!!!!!! debug namings
+OpName %main "main"
+
+; !!!!!!!!!!! decorations
+
+; !!!!!!!!!!! types
+%type_void = OpTypeVoid ; void
+%func_void = OpTypeFunction %type_void ; void ()
+
+; !!!!!!!!!!! program
+
+%main = OpFunction %type_void None %func_void ;main
+%main_begin = OpLabel
+; !!!! main function block going here
+
+; !!!! main function block done here
+OpReturn
+OpFunctionEnd ;main
