@@ -87,7 +87,7 @@ class GeneratorBase:
 		class_private = "private:\r\n"
 		class_ends = "};"
 		
-		cdtr_gen = lambda is_default: return (" = default;" if is_default else ";")
+		cdtr_gen = lambda is_default: " = default;" if is_default else ";"
 		
 		class_ctr = "\t" + "explicit " + name + "()" + cdtr_gen(self._ctr_default_realization) + "\r\n"
 		class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + cdtr_gen(self._dtr_default_realization) + "\r\n"
