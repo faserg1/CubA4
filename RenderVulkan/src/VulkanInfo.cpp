@@ -28,7 +28,7 @@ void VulkanInfo::destroy()
 
 std::string VulkanInfo::getRenderEngineId() const
 {
-	return "Vulkan";
+	return "vulkan";
 }
 
 std::shared_ptr<engine::IRenderEngine> VulkanInfo::getRenderEngine()

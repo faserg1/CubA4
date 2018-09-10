@@ -10,6 +10,16 @@ namespace CubA4
 		class IModLoader;
 	}
 
+	namespace render
+	{
+		class IRenderInfo;
+
+		namespace engine
+		{
+			class IRenderManager;
+		}
+	}
+
 	namespace core
 	{
 		namespace system
@@ -18,6 +28,8 @@ namespace CubA4
 			{
 			public:
 				virtual std::shared_ptr<mod::IModLoader> getModLoader() const = 0;
+				virtual std::shared_ptr<render::engine::IRenderManager> getRenderManager() const = 0;
+				virtual const render::IRenderInfo &getRenderInfo() const = 0;
 			protected:
 				virtual ~IAppCallback() = default;
 				explicit IAppCallback() = default;

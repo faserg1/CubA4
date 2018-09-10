@@ -5,10 +5,18 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
+#include "../../vulkan/PipelineBuilder.hpp"
+
 namespace CubA4
 {
 	namespace render
 	{
+		namespace vulkan
+		{
+			class Device;
+			struct PipelineInfo;
+		}
+
 		namespace engine
 		{
 			namespace material
@@ -17,20 +25,20 @@ namespace CubA4
 					public virtual IMaterialLayoutBuilder
 				{
 				public:
-					explicit MaterialLayoutBuilder();
+					explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device);
 					~MaterialLayoutBuilder();
 
-					void setTransparentMode(bool transparent = true) override;
+					void useShader(std::shared_ptr<const IShader> shader) override;
 
-					void prepare();
-					VkDescriptorSetLayoutCreateInfo &getDescriptorLayoutInfo();
+					/** \brief Подготовка MaterialLayout к созданию
+					* \param[out] pipelineCreateInfo 
+					*/
+					void prepare(VkGraphicsPipelineCreateInfo &pipelineCreateInfo);
+					void fillPipelineInfo(vulkan::PipelineInfo &pipelineInfo) const;
 				protected:
-					bool transparentMode_;
 				private:
-					VkDescriptorSetLayoutCreateInfo descriptorLayoutInfo_;
-					std::vector<VkDescriptorSetLayoutBinding> bindings_;
-
-					void fillStartInfo();
+					const std::shared_ptr<const vulkan::Device> device_;
+					CubA4::render::vulkan::PipelineBuilder pipelineBuilder_;
 				};
 			}
 		}

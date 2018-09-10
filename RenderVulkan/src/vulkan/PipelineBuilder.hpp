@@ -9,18 +9,37 @@ namespace CubA4
 {
 	namespace render
 	{
+		namespace engine
+		{
+			namespace material
+			{
+				class IShader;
+			}
+		}
+
 		namespace vulkan
 		{
 			class Device;
+
+			class Pipeline;
+			struct PipelineInfo;
 
 			class PipelineBuilder
 			{
 			public:
 				explicit PipelineBuilder(std::shared_ptr<const Device> device);
 				~PipelineBuilder();
+
+				void useShader(std::shared_ptr<const engine::material::IShader> shader);
+
+				VkGraphicsPipelineCreateInfo build();
+				void fillPipelineInfo(PipelineInfo &pipelineInfo) const;
 			protected:
 			private:
 				const std::shared_ptr<const Device> device_;
+				VkPipelineLayout pipelineLayout_;
+
+				std::vector<std::shared_ptr<const engine::material::IShader>> shaders_;
 
 				VkPipelineVertexInputStateCreateInfo vertexInputInfo_;
 				std::vector<VkVertexInputBindingDescription> vertexBindingDescriptions_;
@@ -30,8 +49,12 @@ namespace CubA4
 				VkPipelineRasterizationStateCreateInfo rasterizationInfo_;
 				VkPipelineMultisampleStateCreateInfo multisampleInfo_;
 				VkPipelineDepthStencilStateCreateInfo depthStencilInfo_;
+
+				std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 				VkPipelineColorBlendStateCreateInfo colorBlendInfo_;
-				VkPipelineDynamicStateCreateInfo dynamicInfo_;
+
+				std::vector<VkDescriptorSetLayout> descriptorSetLayouts_;
+				std::vector<VkPushConstantRange> pushConstantsRanges_;
 			private:
 				void prepareVertexInput();
 				void prepareInputAssembly();
@@ -39,8 +62,9 @@ namespace CubA4
 				void prepareMultisampling();
 				void prepareDepthStencil();
 				void prepareColorBlending();
-				void prepareDynamics();
+
 				void prepareDescriptorSets();
+				void preparePushConstants();
 			};
 		}
 	}

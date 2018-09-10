@@ -67,6 +67,17 @@ std::shared_ptr<CubA4::mod::IModLoader> AppMain::getModLoader() const
 	return modLoader_;
 }
 
+std::shared_ptr<CubA4::render::engine::IRenderManager> AppMain::getRenderManager() const
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	return renderEngine->getRenderManager();
+}
+
+const CubA4::render::IRenderInfo &AppMain::getRenderInfo() const
+{
+	return *renderLoader_->getCurrentRenderInfo();
+}
+
 void AppMain::loadRender()
 {
 	auto config = core_->getConfig();

@@ -1,7 +1,9 @@
 #include "./MaterialLayout.hpp"
 using namespace CubA4::render::engine::material;
+using namespace CubA4::render::vulkan;
 
-MaterialLayout::MaterialLayout()
+MaterialLayout::MaterialLayout(std::shared_ptr<Pipeline> pipeline) :
+	pipeline_(pipeline)
 {
 	
 }

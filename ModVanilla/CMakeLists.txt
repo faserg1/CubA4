@@ -4,8 +4,15 @@ set(ModVanillaIncludeCoreDir ${ModVanillaIncludeDir}/core)
 set(ModVanillaIncludeCoreInfoDir ${ModVanillaIncludeCoreDir}/info)
 
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(ModVanillaSourceStartupDir ${ModVanillaSourceDir}/startup)
 set(ModVanillaSourceCoreDir ${ModVanillaSourceDir}/core)
 set(ModVanillaSourceCoreInfoDir ${ModVanillaSourceCoreDir}/info)
+set(ModVanillaSourceStartup
+	${ModVanillaSourceStartupDir}/RenderStartup.cpp
+)
+set(ModVanillaHeaderStartup
+	${ModVanillaSourceStartupDir}/RenderStartup.hpp
+)
 set(ModVanillaSource
 	${ModVanillaSourceDir}/ModVanilla.cpp
 )
@@ -24,7 +31,8 @@ set(ModVanillaHeaderCoreInfo
 set(ModVanillaHeaders 
 	${ModVanillaSourceDir}/ModVanillaInfo.hpp
 	${ModVanillaHeaderCoreInfo}
-	${ModVanillaHeader})
+	${ModVanillaHeader}
+	${ModVanillaHeaderStartup})
 source_group("${SOURCE_GROUP_HEADER_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaHeaderCoreInfo})
 
 set(ModVanillaSources 
@@ -32,10 +40,16 @@ set(ModVanillaSources
 	${ModVanillaSourceDir}/ExportMod.cpp
 	${ModVanillaSourceCoreInfo}
 	${ModVanillaSource}
+	${ModVanillaSourceStartup}
 	)
 source_group("${SOURCE_GROUP_SOURCE_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaSourceCoreInfo})
-	
-add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources})
+source_group("${SOURCE_GROUP_HEADER_START}startup" FILES ${ModVanillaHeaderStartup})
+source_group("${SOURCE_GROUP_SOURCE_START}startup" FILES ${ModVanillaSourceStartup})
+
+add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
+source_group("resources" FILES ${irs_resources})
+
+add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources} ${irs_resources})
 
 use_base_library(ModVanilla ModBase)
 use_base_library(ModVanilla CoreBase)

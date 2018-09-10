@@ -2,6 +2,7 @@
 #define MODVANILLA_HPP
 
 #include <mod/IMod.hpp>
+#include "startup/RenderStartup.hpp"
 
 namespace CubA4
 {
@@ -25,6 +26,7 @@ namespace CubA4
 		protected:
 		private:
 			std::shared_ptr<const core::ICore> core_;
+			startup::RenderStartup renderStartup_;
 		};
 	}
 }

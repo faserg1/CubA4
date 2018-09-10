@@ -40,7 +40,7 @@ void Startup::initMods()
 	modLoader_->find();
 	modLoader_->load();
 
-	auto envBuilder = std::make_shared<EnvironmentBuilder>();
+	auto envBuilder = std::make_shared<EnvironmentBuilder>(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
 	modLoader_->setup(envBuilder);
 }
 
