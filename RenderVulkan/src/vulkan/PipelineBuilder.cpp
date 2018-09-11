@@ -73,6 +73,7 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 	pipelineInfo.pDepthStencilState = &depthStencilInfo_;
 	pipelineInfo.pColorBlendState = &colorBlendInfo_;
 	pipelineInfo.pViewportState = &viewportStateInfo_;
+	pipelineInfo.pDynamicState = &dynamicStateInfo_;
 
 	pipelineInfo.stageCount = static_cast<uint32_t>(stages_.size());
 	pipelineInfo.pStages = stages_.data();
@@ -190,7 +191,13 @@ void PipelineBuilder::prepareColorBlending()
 
 void PipelineBuilder::prepareDynmaic()
 {
+	dynamicStateInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 
+	dynamicStates_.push_back(VK_DYNAMIC_STATE_VIEWPORT);
+	dynamicStates_.push_back(VK_DYNAMIC_STATE_SCISSOR);
+
+	dynamicStateInfo_.dynamicStateCount = static_cast<uint32_t>(dynamicStates_.size());
+	dynamicStateInfo_.pDynamicStates = dynamicStates_.data();
 }
 
 void PipelineBuilder::prepareViewport()
@@ -208,7 +215,6 @@ void PipelineBuilder::prepareViewport()
 
 void PipelineBuilder::prepareDescriptorSets()
 {
-	
 	VkDescriptorSetLayoutBinding bindingInfos[2] = {};
 	//Instance info
 	bindingInfos[0].binding = 0;

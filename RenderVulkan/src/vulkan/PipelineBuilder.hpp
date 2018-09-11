@@ -54,9 +54,10 @@ namespace CubA4
 
 				std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 				VkPipelineColorBlendStateCreateInfo colorBlendInfo_;
+				
 				std::vector<VkViewport> viewports_;
 				std::vector<VkRect2D> scissors_;
-
+				std::vector<VkDynamicState> dynamicStates_;
 				std::vector<VkDescriptorSetLayout> descriptorSetLayouts_;
 				std::vector<VkPushConstantRange> pushConstantsRanges_;
 				std::vector<VkPipelineShaderStageCreateInfo> stages_;
