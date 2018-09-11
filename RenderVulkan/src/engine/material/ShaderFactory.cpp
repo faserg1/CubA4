@@ -17,8 +17,10 @@ ShaderFactory::~ShaderFactory()
 	
 }
 
-std::shared_ptr<IShader> ShaderFactory::createFromBinary(const void *data, size_t size, ShaderType type) const
+std::shared_ptr<IShader> ShaderFactory::createFromBinary(const void *data, size_t size, ShaderType type, std::string entryPoint) const
 {
+	if (!data || !size)
+		return {};
 	VkShaderModuleCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.pCode = reinterpret_cast<const uint32_t*>(data);
@@ -33,9 +35,9 @@ std::shared_ptr<IShader> ShaderFactory::createFromBinary(const void *data, size_
 	switch (type)
 	{
 	case ShaderType::Fragment:
-		return std::make_shared<FragmentShader>(device_, shaderModule);
+		return std::make_shared<FragmentShader>(device_, shaderModule, entryPoint);
 	case ShaderType::Vertex:
-		return std::make_shared<VertexShader>(device_, shaderModule);
+		return std::make_shared<VertexShader>(device_, shaderModule, entryPoint);
 	default:
 		//TODO: [OOKAMI] Exception
 		return {};

@@ -22,15 +22,15 @@ namespace CubA4
 					public virtual IShader
 				{
 				public:
-					
-				protected:
-					explicit Shader(std::shared_ptr<const vulkan::Device> device, VkShaderModule shaderModule);
-					~Shader();
-
 					VkShaderModule getShaderModule() const;
+					const std::string &getEntryPoint() const override;
+				protected:
+					explicit Shader(std::shared_ptr<const vulkan::Device> device, VkShaderModule shaderModule, std::string entryPoint);
+					~Shader();
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
-					VkShaderModule shaderModule_;
+					const VkShaderModule shaderModule_;
+					const std::string entryPoint_;
 				};
 			}
 		}

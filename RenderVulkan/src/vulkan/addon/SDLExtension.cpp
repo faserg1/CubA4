@@ -41,8 +41,11 @@ void SDLExtension::init(std::shared_ptr<const Instance> instance)
 
 void SDLExtension::destroy(std::shared_ptr<const Instance> instance)
 {
-	vkDestroySurfaceKHR(instance->getInstance(), surface_->getSurface(), nullptr);
-	surface_.reset();
+	if (surface_)
+	{
+		vkDestroySurfaceKHR(instance->getInstance(), surface_->getSurface(), nullptr);
+		surface_.reset();
+	}
 }
 
 void SDLExtension::added(InstanceBuilder &builder)

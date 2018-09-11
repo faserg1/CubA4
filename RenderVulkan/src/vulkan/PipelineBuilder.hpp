@@ -49,19 +49,27 @@ namespace CubA4
 				VkPipelineRasterizationStateCreateInfo rasterizationInfo_;
 				VkPipelineMultisampleStateCreateInfo multisampleInfo_;
 				VkPipelineDepthStencilStateCreateInfo depthStencilInfo_;
+				VkPipelineDynamicStateCreateInfo dynamicStateInfo_;
+				VkPipelineViewportStateCreateInfo viewportStateInfo_;
 
 				std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 				VkPipelineColorBlendStateCreateInfo colorBlendInfo_;
+				std::vector<VkViewport> viewports_;
+				std::vector<VkRect2D> scissors_;
 
 				std::vector<VkDescriptorSetLayout> descriptorSetLayouts_;
 				std::vector<VkPushConstantRange> pushConstantsRanges_;
+				std::vector<VkPipelineShaderStageCreateInfo> stages_;
 			private:
+				void prepareStages();
 				void prepareVertexInput();
 				void prepareInputAssembly();
 				void prepareRasterization();
 				void prepareMultisampling();
 				void prepareDepthStencil();
 				void prepareColorBlending();
+				void prepareDynmaic();
+				void prepareViewport();
 
 				void prepareDescriptorSets();
 				void preparePushConstants();

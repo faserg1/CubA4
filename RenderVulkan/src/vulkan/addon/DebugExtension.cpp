@@ -20,9 +20,13 @@ namespace CubA4
 				struct DebugExtensionData
 				{
 					VkDebugUtilsMessengerEXT messeger;
+					VkDebugReportCallbackEXT callback;
 
 					PFN_vkCreateDebugUtilsMessengerEXT createDebugUtils;
 					PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugUtils;
+
+					PFN_vkCreateDebugReportCallbackEXT createDebugReportCallback;
+					PFN_vkDestroyDebugReportCallbackEXT destroyDebugReportCallback;
 				};
 			}
 		}
@@ -42,12 +46,28 @@ DebugExtension::~DebugExtension()
 
 std::vector<std::string> DebugExtension::names() const
 {
-	return { VK_EXT_DEBUG_UTILS_EXTENSION_NAME };
+	return { VK_EXT_DEBUG_UTILS_EXTENSION_NAME, VK_EXT_DEBUG_REPORT_EXTENSION_NAME };
 }
 
 void DebugExtension::init(std::shared_ptr<const Instance> instance)
 {
+	if (!instance)
+		return;
 	fillFunctionPointers(instance);
+	createDebugUtils(instance);
+	//createDebugReport(instance);
+}
+
+void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
+{
+	if (!instance)
+		return;
+	destroyDebugUtils(instance);
+	//destroyDebugReport(instance);
+}
+
+void DebugExtension::createDebugUtils(std::shared_ptr<const Instance> instance)
+{
 	VkDebugUtilsMessengerCreateInfoEXT callback;
 	callback.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	callback.pNext = nullptr;
@@ -57,17 +77,17 @@ void DebugExtension::init(std::shared_ptr<const Instance> instance)
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
-	callback.messageType = 
+	callback.messageType =
 		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	auto logCallback = [](
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
 		const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
 		void *pUserData) -> VkBool32
 	{
-		auto *loggerTagged = (ILoggerTagged*) pUserData;
+		auto *loggerTagged = (ILoggerTagged*)pUserData;
 		LogLevel level;
 		switch (messageSeverity)
 		{
@@ -92,10 +112,64 @@ void DebugExtension::init(std::shared_ptr<const Instance> instance)
 	data_->createDebugUtils(instance->getInstance(), &callback, nullptr, &data_->messeger);
 }
 
-void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
+void DebugExtension::destroyDebugUtils(std::shared_ptr<const Instance> instance)
 {
 	data_->destroyDebugUtils(instance->getInstance(), data_->messeger, nullptr);
 	data_->messeger = {};
+}
+
+void DebugExtension::createDebugReport(std::shared_ptr<const Instance> instance)
+{
+	VkDebugReportCallbackCreateInfoEXT reportInfo = {};
+	reportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+	reportInfo.flags = 
+		VK_DEBUG_REPORT_INFORMATION_BIT_EXT |
+		VK_DEBUG_REPORT_WARNING_BIT_EXT |
+		VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
+		VK_DEBUG_REPORT_ERROR_BIT_EXT |
+		VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+	auto logCallback = [](
+		VkDebugReportFlagsEXT                       flags,
+		VkDebugReportObjectTypeEXT                  objectType,
+		uint64_t                                    object,
+		size_t                                      location,
+		int32_t                                     messageCode,
+		const char*                                 pLayerPrefix,
+		const char*                                 pMessage,
+		void*                                       pUserData) -> VkBool32
+	{
+		auto *loggerTagged = (ILoggerTagged*)pUserData;
+		LogLevel level;
+		switch (flags)
+		{
+		case VK_DEBUG_REPORT_ERROR_BIT_EXT:
+			level = LogLevel::Error;
+			break;
+		case VK_DEBUG_REPORT_WARNING_BIT_EXT:
+			level = LogLevel::Warning;
+			break;
+		case VK_DEBUG_REPORT_INFORMATION_BIT_EXT:
+			level = LogLevel::Info;
+			break;
+		case VK_DEBUG_REPORT_DEBUG_BIT_EXT:
+			level = LogLevel::Debug;
+			break;
+		case VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT:
+			level = LogLevel::Warning;
+			break;
+		}
+		loggerTagged->log(level, "{" + std::string(pLayerPrefix) + "} "+ pMessage);
+		return VK_FALSE;
+	};
+	reportInfo.pfnCallback = logCallback;
+	reportInfo.pUserData = (void *) &(*loggerTagged_);
+	data_->createDebugReportCallback(instance->getInstance(), &reportInfo, nullptr, &data_->callback);
+}
+
+void DebugExtension::destroyDebugReport(std::shared_ptr<const Instance> instance)
+{
+	data_->destroyDebugReportCallback(instance->getInstance(), data_->callback, nullptr);
+	data_->callback = {};
 }
 
 void DebugExtension::added(InstanceBuilder &builder)
@@ -108,4 +182,6 @@ void DebugExtension::fillFunctionPointers(std::shared_ptr<const Instance> instan
 	auto vkInstance = instance->getInstance();
 	data_->createDebugUtils = getVkFuncInstancePtr(vkInstance, vkCreateDebugUtilsMessengerEXT);
 	data_->destroyDebugUtils = getVkFuncInstancePtr(vkInstance, vkDestroyDebugUtilsMessengerEXT);
+	data_->createDebugReportCallback = getVkFuncInstancePtr(vkInstance, vkCreateDebugReportCallbackEXT);
+	data_->destroyDebugReportCallback = getVkFuncInstancePtr(vkInstance, vkDestroyDebugReportCallbackEXT);
 }

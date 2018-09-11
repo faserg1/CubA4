@@ -1,6 +1,8 @@
 #ifndef ISHADER_HPP
 #define ISHADER_HPP
 
+#include <string>
+
 namespace CubA4
 {
 	namespace render
@@ -21,6 +23,7 @@ namespace CubA4
 					virtual ~IShader() = default;
 
 					virtual ShaderType getType() const = 0;
+					virtual const std::string &getEntryPoint() const = 0;
 				protected:
 					explicit IShader() = default;
 				private:

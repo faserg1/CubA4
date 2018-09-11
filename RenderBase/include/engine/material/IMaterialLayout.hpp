@@ -16,7 +16,6 @@ namespace CubA4
 				class IMaterialLayout
 				{
 				public:
-					virtual bool transparentMode() = 0;
 				protected:
 					explicit IMaterialLayout() = default;
 					virtual ~IMaterialLayout() = default;

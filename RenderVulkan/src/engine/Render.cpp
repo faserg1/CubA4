@@ -85,6 +85,11 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
 
+VkRenderPass Render::getRenderPass() const
+{
+	return renderPass_;
+}
+
 void Render::createMainCommandPool()
 {
 	VkCommandPoolCreateInfo info = {};

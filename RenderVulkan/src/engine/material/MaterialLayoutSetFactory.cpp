@@ -4,11 +4,12 @@
 #include "../../vulkan/Pipeline.hpp"
 #include "../../vulkan/Device.hpp"
 #include <algorithm>
+using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-MaterialLayoutSetFactory::MaterialLayoutSetFactory(std::shared_ptr<const Device> device) :
-	device_(device)
+MaterialLayoutSetFactory::MaterialLayoutSetFactory(std::shared_ptr<const Device> device, std::shared_ptr<const Render> render) :
+	device_(device), render_(render)
 {
 	
 }
@@ -20,7 +21,7 @@ MaterialLayoutSetFactory::~MaterialLayoutSetFactory()
 
 std::shared_ptr<IMaterialLayoutBuilder> MaterialLayoutSetFactory::createMaterialLayout()
 {
-	auto builder = std::make_shared<MaterialLayoutBuilder>(device_);
+	auto builder = std::make_shared<MaterialLayoutBuilder>(device_, render_);
 	builders_.push_back(builder);
 	return builder;
 }
@@ -59,6 +60,7 @@ std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::bu
 		auto pipeline = std::make_shared<Pipeline>(device, info);
 
 		auto materialLayout = std::make_shared<MaterialLayout>(pipeline);
+		layouts.push_back(materialLayout);
 
 		pipelinePtr++;
 		pipelineCreateInfoPtr++;

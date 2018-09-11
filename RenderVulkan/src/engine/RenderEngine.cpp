@@ -66,6 +66,7 @@ void VulkanRenderEngine::init(std::shared_ptr<CubA4::window::IWindow> window)
 
 void VulkanRenderEngine::destroy()
 {
+	unload();
 	destroyRender();
 	destroyPresentation();
 	destroySwapchain();
@@ -198,8 +199,13 @@ void VulkanRenderEngine::destroyRender()
 
 void VulkanRenderEngine::setup()
 {
-	renderManager_ = std::make_shared<RenderManager>(device_);
+	renderManager_ = std::make_shared<RenderManager>(device_, render_);
 	//TODO: [OOKAMI] настройка Presentation & Render
+}
+
+void VulkanRenderEngine::unload()
+{
+	renderManager_.reset();
 }
 
 void VulkanRenderEngine::run()

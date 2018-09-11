@@ -2,6 +2,7 @@
 #define MATERIALLAYOUT_HPP
 
 #include <memory>
+#include <engine/material/IMaterialLayout.hpp>
 
 namespace CubA4
 {
@@ -16,7 +17,8 @@ namespace CubA4
 		{
 			namespace material
 			{
-				class MaterialLayout
+				class MaterialLayout :
+					virtual public IMaterialLayout
 				{
 				public:
 					explicit MaterialLayout(std::shared_ptr<vulkan::Pipeline> pipeline);

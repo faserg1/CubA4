@@ -7,6 +7,9 @@
 #include <engine/IRenderManager.hpp>
 #include <engine/material/IMaterialManager.hpp>
 #include <engine/material/IShaderFactory.hpp>
+#include <engine/material/IMaterialLayoutBuilder.hpp>
+#include <engine/material/IMaterialLayoutSetFactory.hpp>
+#include "../../gen/irs.hpp"
 #include <stdexcept>
 using namespace CubA4::mod::startup;
 using namespace CubA4::core::logging;
@@ -39,9 +42,26 @@ void RenderStartup::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilde
 	auto renderManager = builder->getRenderManager();
 	auto materialManager = renderManager->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
+	core_->getLogger()->flush();
+	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
+	core_->getLogger()->flush();
 }
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
 {
-	//shaderFactory->createFromBinary()
+	size_t shaderSize;
+	const void *data = irs::findFile("compiled/default.frag.spv", shaderSize);
+	auto fragShader = shaderFactory->createFromBinary(data, shaderSize, CubA4::render::engine::material::ShaderType::Fragment, "main");
+	shaders_.insert(std::make_pair("default.frag", fragShader));
+	data = irs::findFile("compiled/default.vert.spv", shaderSize);
+	auto vertexShader = shaderFactory->createFromBinary(data, shaderSize, CubA4::render::engine::material::ShaderType::Vertex, "main");
+	shaders_.insert(std::make_pair("default.vert", vertexShader));
+}
+
+void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory)
+{
+	auto defaultLayoutBuilder = layoutFactory->createMaterialLayout();
+	defaultLayoutBuilder->useShader(shaders_.find("default.frag")->second);
+	defaultLayoutBuilder->useShader(shaders_.find("default.vert")->second);
+	auto layouts = layoutFactory->build();
 }

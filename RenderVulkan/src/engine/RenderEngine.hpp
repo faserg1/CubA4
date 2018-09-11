@@ -83,6 +83,7 @@ namespace CubA4
 				void destroyRender();
 
 				void setup();
+				void unload();
 
 				void loop();
 			private:

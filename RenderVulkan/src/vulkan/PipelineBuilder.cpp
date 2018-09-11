@@ -17,6 +17,8 @@ PipelineBuilder::PipelineBuilder(std::shared_ptr<const Device> device) :
 	multisampleInfo_ = {};
 	depthStencilInfo_ = {};
 	colorBlendInfo_ = {};
+	dynamicStateInfo_ = {};
+	viewportStateInfo_ = {};
 }
 
 PipelineBuilder::~PipelineBuilder()
@@ -52,17 +54,29 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 	}
 
 	//Create pipeline
+	prepareStages();
 	prepareVertexInput();
 	prepareInputAssembly();
 	prepareRasterization();
 	prepareMultisampling();
 	prepareDepthStencil();
 	prepareColorBlending();
+	prepareDynmaic();
+	prepareViewport();
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipelineInfo.pVertexInputState = &vertexInputInfo_;
 	pipelineInfo.pInputAssemblyState = &inputAssemblyInfo_;
+	pipelineInfo.pRasterizationState = &rasterizationInfo_;
+	pipelineInfo.pMultisampleState = &multisampleInfo_;
+	pipelineInfo.pDepthStencilState = &depthStencilInfo_;
+	pipelineInfo.pColorBlendState = &colorBlendInfo_;
+	pipelineInfo.pViewportState = &viewportStateInfo_;
+
+	pipelineInfo.stageCount = static_cast<uint32_t>(stages_.size());
+	pipelineInfo.pStages = stages_.data();
+
 	pipelineInfo.layout = pipelineLayout_;
 
 	return pipelineInfo;
@@ -74,6 +88,31 @@ void PipelineBuilder::fillPipelineInfo(PipelineInfo &pipelineInfo) const
 	pipelineInfo.layout = pipelineLayout_;
 	pipelineInfo.shaders = shaders_;
 	pipelineInfo.descriptorSetLayouts = descriptorSetLayouts_;
+}
+
+void PipelineBuilder::prepareStages()
+{
+	stages_.clear();
+	std::for_each(shaders_.begin(), shaders_.end(), [this](std::shared_ptr<const IShader> shader)
+	{
+		VkPipelineShaderStageCreateInfo stageInfo = {};
+		stageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		switch (shader->getType())
+		{
+		case ShaderType::Vertex:
+			stageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+			break;
+		case ShaderType::Fragment:
+			stageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+			break;
+		default:
+			return;
+		}
+		auto vkShader = std::dynamic_pointer_cast<const Shader>(shader);
+		stageInfo.module = vkShader->getShaderModule();
+		stageInfo.pName = shader->getEntryPoint().data();
+		stages_.push_back(stageInfo);
+	});
 }
 
 void PipelineBuilder::prepareVertexInput()
@@ -149,18 +188,42 @@ void PipelineBuilder::prepareColorBlending()
 	colorBlendInfo_.pAttachments = colorAttachments_.data();
 }
 
+void PipelineBuilder::prepareDynmaic()
+{
+
+}
+
+void PipelineBuilder::prepareViewport()
+{
+	viewportStateInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+
+	viewports_.push_back({});
+	scissors_.push_back({});
+
+	viewportStateInfo_.viewportCount = static_cast<uint32_t>(viewports_.size());
+	viewportStateInfo_.scissorCount = static_cast<uint32_t>(scissors_.size());
+	viewportStateInfo_.pViewports = viewports_.data();
+	viewportStateInfo_.pScissors = scissors_.data();
+}
+
 void PipelineBuilder::prepareDescriptorSets()
 {
+	
+	VkDescriptorSetLayoutBinding bindingInfos[2] = {};
 	//Instance info
-	VkDescriptorSetLayoutBinding bindingInfo = {};
-	bindingInfo.binding = 0;
-	bindingInfo.descriptorCount = 1;
-	bindingInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	bindingInfo.stageFlags = VK_SHADER_STAGE_ALL;
+	bindingInfos[0].binding = 0;
+	bindingInfos[0].descriptorCount = 1;
+	bindingInfos[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	bindingInfos[0].stageFlags = VK_SHADER_STAGE_ALL;
+	//Matrix info
+	bindingInfos[1].binding = 1;
+	bindingInfos[1].descriptorCount = 1;
+	bindingInfos[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	bindingInfos[1].stageFlags = VK_SHADER_STAGE_ALL;
 	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
 	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	descriptorSetLayoutInfo.bindingCount = 1;
-	descriptorSetLayoutInfo.pBindings = &bindingInfo;
+	descriptorSetLayoutInfo.bindingCount = 2;
+	descriptorSetLayoutInfo.pBindings = bindingInfos;
 	VkDescriptorSetLayout descriptorSetLayout;
 	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
 	{
@@ -171,21 +234,5 @@ void PipelineBuilder::prepareDescriptorSets()
 
 void PipelineBuilder::preparePushConstants()
 {
-	uint16_t floatMatrixSize = sizeof(float) * 16;
-	VkPushConstantRange worldMatrixRange, viewMatrixRange, projectionMatrixRange;
-	worldMatrixRange.offset = 0;
-	worldMatrixRange.size = floatMatrixSize;
-	worldMatrixRange.stageFlags = VK_SHADER_STAGE_ALL;
-
-	worldMatrixRange.offset = floatMatrixSize;
-	worldMatrixRange.size = floatMatrixSize;
-	worldMatrixRange.stageFlags = VK_SHADER_STAGE_ALL;
-
-	worldMatrixRange.offset = floatMatrixSize * 2;
-	worldMatrixRange.size = floatMatrixSize;
-	worldMatrixRange.stageFlags = VK_SHADER_STAGE_ALL;
-
-	pushConstantsRanges_.push_back(worldMatrixRange);
-	pushConstantsRanges_.push_back(viewMatrixRange);
-	pushConstantsRanges_.push_back(projectionMatrixRange);
+	
 }

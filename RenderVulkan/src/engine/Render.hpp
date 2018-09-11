@@ -27,6 +27,8 @@ namespace CubA4
 
 				void record(uint32_t imgIndex);
 				std::shared_ptr<const vulkan::Semaphore> send(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
+
+				VkRenderPass getRenderPass() const;
 			protected:
 				void createMainCommandPool();
 				void destroyMainCommandPool();

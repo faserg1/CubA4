@@ -1,4 +1,6 @@
 #include "../include/ModVanilla.hpp"
+#include <ICore.hpp>
+#include <logging/ILogger.hpp>
 using namespace CubA4::mod;
 using namespace CubA4::core;
 
@@ -40,7 +42,7 @@ void ModVanilla::configure()
 
 void ModVanilla::done()
 {
-
+	core_->getLogger()->flush();
 }
 
 void ModVanilla::preunload()

@@ -34,6 +34,11 @@ namespace CubA4
 					void destroy(std::shared_ptr<const Instance> instance) override;
 					void added(InstanceBuilder &builder) override;
 				protected:
+					void createDebugUtils(std::shared_ptr<const Instance> instance);
+					void destroyDebugUtils(std::shared_ptr<const Instance> instance);
+
+					void createDebugReport(std::shared_ptr<const Instance> instance);
+					void destroyDebugReport(std::shared_ptr<const Instance> instance);
 				private:
 					void fillFunctionPointers(std::shared_ptr<const Instance> instance);
 

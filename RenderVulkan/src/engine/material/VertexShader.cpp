@@ -2,8 +2,8 @@
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-VertexShader::VertexShader(std::shared_ptr<const Device> device, VkShaderModule shaderModule) :
-	Shader(device, shaderModule)
+VertexShader::VertexShader(std::shared_ptr<const Device> device, VkShaderModule shaderModule, std::string entryPoint) :
+	Shader(device, shaderModule, entryPoint)
 {
 	
 }
