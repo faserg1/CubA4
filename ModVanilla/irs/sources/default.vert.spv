@@ -17,6 +17,11 @@ OpDecorate %outPos BuiltIn Position
 
 OpDecorate %type_matrix_struct Block
 OpMemberDecorate %type_matrix_struct 0 Offset 0
+OpMemberDecorate %type_matrix_struct 1 Offset 64
+OpMemberDecorate %type_matrix_struct 2 Offset 128
+OpMemberDecorate %type_matrix_struct 0 MatrixStride 16
+OpMemberDecorate %type_matrix_struct 1 MatrixStride	16
+OpMemberDecorate %type_matrix_struct 2 MatrixStride 16
 
 OpDecorate %matricies DescriptorSet 0
 OpDecorate %matricies Binding 0
@@ -70,9 +75,9 @@ OpDecorate %matricies Binding 0
 %view_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %view_matrix_pos
 %projection_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %projection_matrix_pos
 
-%loaded_matrix_world = OpLoad %type_mat4x4_float_64 %world_matrix
-%loaded_matrix_view = OpLoad %type_mat4x4_float_64 %view_matrix
-%loaded_matrix_projection = OpLoad %type_mat4x4_float_64 %projection_matrix
+%loaded_matrix_world = OpLoad %type_mat4x4_float_32 %world_matrix
+%loaded_matrix_view = OpLoad %type_mat4x4_float_32 %view_matrix
+%loaded_matrix_projection = OpLoad %type_mat4x4_float_32 %projection_matrix
 
 ; load vertex
 
