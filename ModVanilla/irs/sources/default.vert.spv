@@ -1,21 +1,86 @@
 OpCapability Shader
 OpMemoryModel Logical Simple
-OpEntryPoint Vertex %main "main"
+OpEntryPoint Vertex %main "main" %inPos %outPos
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
+OpName %matricies "matricies"
+OpName %type_matrix_struct "MatrixStruct"
+OpMemberName %type_matrix_struct 0 "world"
+OpMemberName %type_matrix_struct 1 "view"
+OpMemberName %type_matrix_struct 2 "projection"
 
 ; !!!!!!!!!!! decorations
+OpDecorate %inPos Binding 0
+OpDecorate %inPos Location 0
+OpDecorate %outPos BuiltIn Position
+
+OpDecorate %type_matrix_struct Block
+OpMemberDecorate %type_matrix_struct 0 Offset 0
+
+OpDecorate %matricies DescriptorSet 0
+OpDecorate %matricies Binding 0
 
 ; !!!!!!!!!!! types
 %type_void = OpTypeVoid ; void
+%type_uint_32 = OpTypeInt 32 0 ; int 32 unsigned
+%type_float_32 = OpTypeFloat 32 ; float
+
 %func_void = OpTypeFunction %type_void ; void ()
+
+%type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
+%type_mat4x4_float_32 = OpTypeMatrix %type_vec4_float_32 4 ; float 4x4
+%type_matrix_struct = OpTypeStruct %type_mat4x4_float_32 %type_mat4x4_float_32 %type_mat4x4_float_32 ;struct: world view projection
+
+; !!!!!!!!!!! pointers
+
+; vectors 
+%p_vec4_float_32_in = OpTypePointer Input %type_vec4_float_32 ; pointer to input float
+%p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output float
+
+; uniform
+%p_uniform_struct = OpTypePointer Uniform %type_matrix_struct
+%p_mat4x4_float_32_uniform = OpTypePointer Uniform %type_mat4x4_float_32
+
+; !!!!!!!!!!! constants
+
+; Matrix positions
+%world_matrix_pos = OpConstant %type_uint_32 0
+%view_matrix_pos = OpConstant %type_uint_32 1
+%projection_matrix_pos = OpConstant %type_uint_32 2
+
+; !!!!!!!!!!! vars
+
+; vectors
+%inPos = OpVariable %p_vec4_float_32_in Input ; input float
+%outPos = OpVariable %p_vec4_float_32_out Output ; output float
+
+; matricies
+%matricies = OpVariable %p_uniform_struct Uniform
 
 ; !!!!!!!!!!! program
 
 %main = OpFunction %type_void None %func_void ;main
 %main_begin = OpLabel
 ; !!!! main function block going here
+
+; load matricies
+
+%world_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %world_matrix_pos
+%view_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %view_matrix_pos
+%projection_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %projection_matrix_pos
+
+%loaded_matrix_world = OpLoad %type_mat4x4_float_64 %world_matrix
+%loaded_matrix_view = OpLoad %type_mat4x4_float_64 %view_matrix
+%loaded_matrix_projection = OpLoad %type_mat4x4_float_64 %projection_matrix
+
+; load vertex
+
+%loaded_vertex = OpLoad %type_vec4_float_32 %inPos ; load vertex position
+
+; math
+
+; OpStore %outPos %done_vertex
 
 ; !!!! main function block done here
 OpReturn

@@ -216,12 +216,12 @@ void PipelineBuilder::prepareViewport()
 void PipelineBuilder::prepareDescriptorSets()
 {
 	VkDescriptorSetLayoutBinding bindingInfos[2] = {};
-	//Instance info
+	//Matrix info
 	bindingInfos[0].binding = 0;
 	bindingInfos[0].descriptorCount = 1;
 	bindingInfos[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	bindingInfos[0].stageFlags = VK_SHADER_STAGE_ALL;
-	//Matrix info
+	//Instance info
 	bindingInfos[1].binding = 1;
 	bindingInfos[1].descriptorCount = 1;
 	bindingInfos[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
