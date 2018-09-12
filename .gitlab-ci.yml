@@ -1,0 +1,16 @@
+stages:
+  - deps
+  - build
+  - deploy
+
+job deps:
+  stage: deps
+  script: echo deps
+
+job build:
+  stage: build
+  script: echo build
+
+job deploy:
+  stage: deploy
+  script: echo deploy
