@@ -2,6 +2,8 @@
 #include "../vulkan/Device.hpp"
 #include "../vulkan/Swapchain.hpp"
 #include "../vulkan/Semaphore.hpp"
+#include "../vulkan/RenderPass.hpp"
+#include "../vulkan/RenderPassBuilder.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
@@ -35,7 +37,7 @@ void Render::record(uint32_t imgIndex)
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassBeginInfo.framebuffer = framebuffer;
-	renderPassBeginInfo.renderPass = renderPass_;
+	renderPassBeginInfo.renderPass = renderPass_->getRenderPass();
 
 	VkClearValue colorAttachmentClearValue = {};
 	float clrClearFloat[4] = { 0.2f,0.2f,0.2f,0.f };
@@ -85,7 +87,7 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
 
-VkRenderPass Render::getRenderPass() const
+std::shared_ptr<const RenderPass> Render::getRenderPass() const
 {
 	return renderPass_;
 }
@@ -105,61 +107,13 @@ void Render::destroyMainCommandPool()
 
 void Render::createRenderPass()
 {
-	VkRenderPassCreateInfo renderPassCreateInfo = {};
-	renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-
-	//Рассчитывать будем на то, что у нас сейчас только один выход - цвет, и ничего нет на вход.
-	//После здесь добавятся буфер глубины и т.д. и т.п
-	//Не забыть про всю эту фигню при создании фреймбуфера и очистке (в начале прохода рендеринга)
-	
-	VkAttachmentDescription colorAttachment = {};
-	colorAttachment.format = swapchain_->getFormat();
-	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	std::vector<VkAttachmentDescription> attachments =
-	{
-		colorAttachment
-	};
-
-	renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-	renderPassCreateInfo.pAttachments = attachments.data();
-
-	VkAttachmentReference colorAttachmentReference = {};
-	colorAttachmentReference.attachment = 0;
-	colorAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	//И так, по началу будем расчитывать на то, что существует один проход рендеринга с одним подпроходом.
-	//В дальнейшем подпроходов может быть больше, к примеру:
-	//Отрисовка атмосферы (кубмап), отрисовка основных объектов, отрисовка скелетонов, где то тут прозрачные объекты, пост обработка
-	
-	VkSubpassDescription mainSubpass = {};
-	mainSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	mainSubpass.colorAttachmentCount = 1;
-	mainSubpass.pColorAttachments = &colorAttachmentReference;
-
-	std::vector<VkSubpassDescription> subpasses =
-	{
-		mainSubpass
-	};
-
-	renderPassCreateInfo.subpassCount = static_cast<uint32_t>(subpasses.size());
-	renderPassCreateInfo.pSubpasses = subpasses.data();
-
-	if (vkCreateRenderPass(device_->getDevice(), &renderPassCreateInfo, nullptr, &renderPass_) != VK_SUCCESS)
-	{
-		// TODO: [OOKAMI] Exception, etc
-	}
+	RenderPassBuilder builder(device_, swapchain_);
+	renderPass_ = builder.build();
 }
 
 void Render::destroyRenderPass()
 {
-	vkDestroyRenderPass(device_->getDevice(), renderPass_, nullptr);
+	renderPass_.reset();
 }
 
 void Render::createFramebuffers()
@@ -214,7 +168,7 @@ void Render::createFramebuffers()
 		//create framebuffer
 		VkFramebufferCreateInfo framebufferCreateInfo = {};
 		framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferCreateInfo.renderPass = renderPass_;
+		framebufferCreateInfo.renderPass = renderPass_->getRenderPass();
 		framebufferCreateInfo.attachmentCount = 1;
 		framebufferCreateInfo.pAttachments = &framebufferData.imageView;
 		framebufferCreateInfo.layers = 1;

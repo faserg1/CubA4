@@ -2,6 +2,7 @@
 #include "../Render.hpp"
 #include <stdexcept>
 #include <algorithm>
+#include "../../vulkan/RenderPass.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
@@ -25,7 +26,7 @@ void MaterialLayoutBuilder::useShader(std::shared_ptr<const IShader> shader)
 void MaterialLayoutBuilder::prepare(VkGraphicsPipelineCreateInfo &pipelineCreateInfo)
 {
 	pipelineCreateInfo = pipelineBuilder_.build();
-	pipelineCreateInfo.renderPass = render_->getRenderPass();
+	pipelineCreateInfo.renderPass = render_->getRenderPass()->getRenderPass();
 }
 
 void MaterialLayoutBuilder::fillPipelineInfo(PipelineInfo &pipelineInfo) const
