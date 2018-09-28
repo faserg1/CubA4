@@ -102,6 +102,7 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/Render.cpp
 	${RenderVulkanSourceEngineDir}/RenderManager.cpp
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.cpp
+	${RenderVulkanSourceEngineDir}/ResourceManager.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.hpp
@@ -109,6 +110,7 @@ set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/Render.hpp
 	${RenderVulkanSourceEngineDir}/RenderManager.hpp
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.hpp
+	${RenderVulkanSourceEngineDir}/ResourceManager.hpp
 )
 
 set(RenderVulkanHeaders
