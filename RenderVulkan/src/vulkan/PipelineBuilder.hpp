@@ -31,6 +31,7 @@ namespace CubA4
 				~PipelineBuilder();
 
 				void useShader(std::shared_ptr<const engine::material::IShader> shader);
+				void addBuiltInDescriptorSetLayout(VkDescriptorSetLayout builtInLayout);
 
 				VkGraphicsPipelineCreateInfo build();
 				void fillPipelineInfo(PipelineInfo &pipelineInfo) const;

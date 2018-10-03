@@ -20,6 +20,7 @@ namespace CubA4
 		namespace engine
 		{
 			class Render;
+			class ResourceManager;
 
 			namespace material
 			{
@@ -27,7 +28,9 @@ namespace CubA4
 					public virtual IMaterialLayoutBuilder
 				{
 				public:
-					explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const Render> render);
+					explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device,
+						std::shared_ptr<const Render> render,
+						std::shared_ptr<const ResourceManager> resourceManager);
 					~MaterialLayoutBuilder();
 
 					void useShader(std::shared_ptr<const IShader> shader) override;
@@ -41,6 +44,7 @@ namespace CubA4
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<const Render> render_;
+					const std::shared_ptr<const ResourceManager> resourceManager_;
 					CubA4::render::vulkan::PipelineBuilder pipelineBuilder_;
 				};
 			}

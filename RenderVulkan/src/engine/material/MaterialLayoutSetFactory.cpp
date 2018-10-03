@@ -8,8 +8,9 @@ using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-MaterialLayoutSetFactory::MaterialLayoutSetFactory(std::shared_ptr<const Device> device, std::shared_ptr<const Render> render) :
-	device_(device), render_(render)
+MaterialLayoutSetFactory::MaterialLayoutSetFactory(std::shared_ptr<const Device> device,
+	std::shared_ptr<const Render> render, std::shared_ptr<const ResourceManager> resourceManager) :
+	device_(device), render_(render), resourceManager_(resourceManager)
 {
 	
 }
@@ -21,7 +22,7 @@ MaterialLayoutSetFactory::~MaterialLayoutSetFactory()
 
 std::shared_ptr<IMaterialLayoutBuilder> MaterialLayoutSetFactory::createMaterialLayout()
 {
-	auto builder = std::make_shared<MaterialLayoutBuilder>(device_, render_);
+	auto builder = std::make_shared<MaterialLayoutBuilder>(device_, render_, resourceManager_);
 	builders_.push_back(builder);
 	return builder;
 }

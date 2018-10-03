@@ -68,6 +68,8 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 	if (vkCreateRenderPass(device_->getDevice(), &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
+		return {};
 	}
+	device_->getMarker().setName(renderPass, "Default Render Pass");
 	return std::make_shared<RenderPass>(device_, renderPass);
 }

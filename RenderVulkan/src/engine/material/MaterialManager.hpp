@@ -16,6 +16,7 @@ namespace CubA4
 		namespace engine
 		{
 			class Render;
+			class ResourceManager;
 
 			namespace material
 			{
@@ -26,7 +27,9 @@ namespace CubA4
 					public virtual IMaterialManager
 				{
 				public:
-					explicit MaterialManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const Render> render);
+					explicit MaterialManager(std::shared_ptr<const vulkan::Device> device,
+						std::shared_ptr<const Render> render,
+						std::shared_ptr<ResourceManager> resourceManager);
 					~MaterialManager();
 
 					std::shared_ptr<IShaderFactory> getShaderFactory() const;
@@ -35,6 +38,7 @@ namespace CubA4
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<const Render> render_;
+					const std::shared_ptr<ResourceManager> resourceManager_;
 					std::shared_ptr<ShaderFactory> shaderFactory_;
 				};
 			}

@@ -26,9 +26,13 @@ namespace CubA4
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
 				VkDescriptorSetLayout builtInLayout_;
+				VkDescriptorPool builtInPool_;
 			private:
 				void createBuildInDescriptorSetLayout();
 				void destroyBuildInDescriptorSetLayout();
+
+				void createBuiltInDescriptorPool();
+				void destroyBuiltInDescriptorPool();
 			};
 		}
 	}

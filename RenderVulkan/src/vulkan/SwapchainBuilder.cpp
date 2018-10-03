@@ -99,6 +99,7 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build()
 	VkSwapchainKHR swapchain;
 	if (vkCreateSwapchainKHR(device_->getDevice(), &swapchainInfo, nullptr, &swapchain) != VK_SUCCESS)
 		throw std::runtime_error("Cannot create swapchain");
+	device_->getMarker().setName(swapchain, "Default swapchain");
 	return std::make_shared<Swapchain>(swapchain, swapchainInfo.imageExtent, swapchainInfo.minImageCount, swapchainInfo.imageFormat);
 }
 

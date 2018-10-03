@@ -2,9 +2,9 @@
 using namespace CubA4::render::vulkan;
 
 Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue) :
-	device_(device), physicalDevice_(physicalDevice), queue_(queue)
+	device_(device), physicalDevice_(physicalDevice), queue_(queue), marker_(*this)
 {
-	
+	marker_.setName(device_, "Default logical device");
 }
 
 Device::~Device()
@@ -25,4 +25,9 @@ VkPhysicalDevice Device::getPhysicalDevice() const
 VkQueue Device::getQueue() const
 {
 	return queue_;
+}
+
+DebugMarker &Device::getMarker() const
+{
+	return marker_;
 }

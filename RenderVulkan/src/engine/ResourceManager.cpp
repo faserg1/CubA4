@@ -1,5 +1,6 @@
 #include "./ResourceManager.hpp"
 #include "../vulkan/Device.hpp"
+#include <vector>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
@@ -7,10 +8,12 @@ ResourceManager::ResourceManager(std::shared_ptr<const Device> device) :
 	device_(device)
 {
 	createBuildInDescriptorSetLayout();
+	createBuiltInDescriptorPool();
 }
 
 ResourceManager::~ResourceManager()
 {
+	destroyBuiltInDescriptorPool();
 	destroyBuildInDescriptorSetLayout();
 }
 
@@ -40,9 +43,40 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	{
 		// TODO: [OOKAMI] Exceptions, etc
 	}
+	device_->getMarker().setName(builtInLayout_, "BuiltIn Layout");
 }
 
 void ResourceManager::destroyBuildInDescriptorSetLayout()
 {
 	vkDestroyDescriptorSetLayout(device_->getDevice(), builtInLayout_, nullptr);
+}
+
+void ResourceManager::createBuiltInDescriptorPool()
+{
+	std::vector<VkDescriptorPoolSize> sizes;
+
+	VkDescriptorPoolCreateInfo poolCreateInfo = {};
+	poolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolCreateInfo.maxSets = 1;
+	
+	VkDescriptorPoolSize uniforms;
+	uniforms.descriptorCount = 2;
+	uniforms.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+
+	sizes.push_back(uniforms);
+
+	poolCreateInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
+	poolCreateInfo.pPoolSizes = sizes.data();
+
+	if (vkCreateDescriptorPool(device_->getDevice(), &poolCreateInfo, nullptr, &builtInPool_) != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exceptions, etc
+	}
+
+	device_->getMarker().setName(builtInPool_, "Builtin pool");
+}
+
+void ResourceManager::destroyBuiltInDescriptorPool()
+{
+	vkDestroyDescriptorPool(device_->getDevice(), builtInPool_, nullptr);
 }

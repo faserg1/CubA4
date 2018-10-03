@@ -1,6 +1,7 @@
 #ifndef MATERIALLAYOUTSETFACTORY_HPP
 #define MATERIALLAYOUTSETFACTORY_HPP
 
+#include <memory>
 #include <engine/material/IMaterialLayoutSetFactory.hpp>
 
 namespace CubA4
@@ -15,6 +16,7 @@ namespace CubA4
 		namespace engine
 		{
 			class Render;
+			class ResourceManager;
 
 			namespace material
 			{
@@ -22,7 +24,9 @@ namespace CubA4
 					public virtual IMaterialLayoutSetFactory
 				{
 				public:
-					explicit MaterialLayoutSetFactory(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const Render> render);
+					explicit MaterialLayoutSetFactory(std::shared_ptr<const vulkan::Device> device,
+						std::shared_ptr<const Render> render,
+						std::shared_ptr<const ResourceManager> resourceManager);
 					~MaterialLayoutSetFactory();
 
 					std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() override;
@@ -31,6 +35,7 @@ namespace CubA4
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<const Render> render_;
+					const std::shared_ptr<const ResourceManager> resourceManager_;
 					std::vector<std::shared_ptr<IMaterialLayoutBuilder>> builders_;
 				};
 			}

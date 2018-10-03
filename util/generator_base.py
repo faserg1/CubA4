@@ -132,7 +132,7 @@ class GeneratorBase:
 		file.add_lines(head_open, "", False, True)
 		source_open = ""
 		if not self._ctr_default_realization:
-			ctr_open = name + "::" + name + "()\r\n{\r\n\r\t\r\n}"
+			ctr_open = name + "::" + name + "()\r\n{\r\n\t\r\n}"
 			file.add_lines(ctr_open, "", False, True)
 		if not self._dtr_default_realization:
 			dtr_open = name + "::~" + name + "()\r\n{\r\n\t\r\n}"

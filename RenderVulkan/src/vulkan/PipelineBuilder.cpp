@@ -36,6 +36,11 @@ void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
 	shaders_.push_back(shader);
 }
 
+void PipelineBuilder::addBuiltInDescriptorSetLayout(VkDescriptorSetLayout builtInLayout)
+{
+	descriptorSetLayouts_.push_back(builtInLayout);
+}
+
 VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 {
 	prepareDescriptorSets();
@@ -215,27 +220,7 @@ void PipelineBuilder::prepareViewport()
 
 void PipelineBuilder::prepareDescriptorSets()
 {
-	VkDescriptorSetLayoutBinding bindingInfos[2] = {};
-	//Matrix info
-	bindingInfos[0].binding = 0;
-	bindingInfos[0].descriptorCount = 1;
-	bindingInfos[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	bindingInfos[0].stageFlags = VK_SHADER_STAGE_ALL;
-	//Instance info
-	bindingInfos[1].binding = 1;
-	bindingInfos[1].descriptorCount = 1;
-	bindingInfos[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	bindingInfos[1].stageFlags = VK_SHADER_STAGE_ALL;
-	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
-	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	descriptorSetLayoutInfo.bindingCount = 2;
-	descriptorSetLayoutInfo.pBindings = bindingInfos;
-	VkDescriptorSetLayout descriptorSetLayout;
-	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
-	{
-		// TODO: [OOKAMI] Exceptions, etc
-	}
-	descriptorSetLayouts_.push_back(descriptorSetLayout);
+	
 }
 
 void PipelineBuilder::preparePushConstants()

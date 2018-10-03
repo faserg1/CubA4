@@ -35,8 +35,10 @@ std::shared_ptr<IShader> ShaderFactory::createFromBinary(const void *data, size_
 	switch (type)
 	{
 	case ShaderType::Fragment:
+		device_->getMarker().setName(shaderModule, "Fragment shader");
 		return std::make_shared<FragmentShader>(device_, shaderModule, entryPoint);
 	case ShaderType::Vertex:
+		device_->getMarker().setName(shaderModule, "Vertex shader");
 		return std::make_shared<VertexShader>(device_, shaderModule, entryPoint);
 	default:
 		//TODO: [OOKAMI] Exception

@@ -16,6 +16,7 @@ namespace CubA4
 		namespace engine
 		{
 			class Render;
+			class ResourceManager;
 
 			namespace material
 			{
@@ -26,7 +27,8 @@ namespace CubA4
 				public virtual IRenderManager
 			{
 			public:
-				explicit RenderManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const Render> render);
+				explicit RenderManager(std::shared_ptr<const vulkan::Device> device,
+					std::shared_ptr<const Render> render);
 				~RenderManager();
 
 				std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
@@ -34,6 +36,7 @@ namespace CubA4
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
 				const std::shared_ptr<const Render> render_;
+				std::shared_ptr<ResourceManager> resourceManager_;
 				std::shared_ptr<material::MaterialManager> materialManager_;
 			};
 		}
