@@ -55,6 +55,7 @@ namespace CubA4
 			private:
 				void loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory);
 				void createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory);
+				void createModels();
 			};
 		}
 	}

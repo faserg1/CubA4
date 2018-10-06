@@ -17,13 +17,13 @@ namespace CubA4
 				float z;
 			};
 
-			class IModel
+			class IModelDefinition
 			{
 			public:
 				virtual std::vector<Vertex> getVertices() const = 0;
 			protected:
-				explicit IModel() = default;
-				virtual ~IModel() = default;
+				explicit IModelDefinition() = default;
+				virtual ~IModelDefinition() = default;
 			private:
 			};
 		}

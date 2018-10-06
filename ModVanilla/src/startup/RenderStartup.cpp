@@ -42,9 +42,7 @@ void RenderStartup::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilde
 	auto renderManager = builder->getRenderManager();
 	auto materialManager = renderManager->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
-	core_->getLogger()->flush();
 	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
-	core_->getLogger()->flush();
 }
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
@@ -64,4 +62,9 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 	defaultLayoutBuilder->useShader(shaders_.find("default.frag")->second);
 	defaultLayoutBuilder->useShader(shaders_.find("default.vert")->second);
 	auto layouts = layoutFactory->build();
+}
+
+void RenderStartup::createModels()
+{
+
 }

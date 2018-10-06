@@ -1,7 +1,7 @@
 #ifndef ICOLLISIONMODEL_HPP
 #define ICOLLISIONMODEL_HPP
 
-#include "IModel.hpp"
+#include "IModelDefinition.hpp"
 
 namespace CubA4
 {
@@ -9,14 +9,14 @@ namespace CubA4
 	{
 		namespace model
 		{
-			class ICollisionModel :
-				public virtual IModel
+			class ICollisionModelDefinition :
+				public virtual IModelDefinition
 			{
 			public:
 				
 			protected:
-				explicit ICollisionModel() = default;
-				virtual ~ICollisionModel() = default;
+				explicit ICollisionModelDefinition() = default;
+				virtual ~ICollisionModelDefinition() = default;
 			private:
 			};
 		}

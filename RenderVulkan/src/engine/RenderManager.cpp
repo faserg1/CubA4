@@ -21,3 +21,8 @@ std::shared_ptr<material::IMaterialManager> RenderManager::getMaterialManager() 
 {
 	return materialManager_;
 }
+
+std::shared_ptr<model::IModelManager> RenderManager::getModelManager() const
+{
+	return {};
+}

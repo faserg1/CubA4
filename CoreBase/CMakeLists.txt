@@ -14,10 +14,10 @@ set(CoreBaseHeaderExceptions
 	${CoreBaseIncludeExceptionsDir}/ICoreLoggingException.hpp
 )
 set(CoreBaseHeaderModel
-	${CoreBaseIncludeModelDir}/IModel.hpp
-	${CoreBaseIncludeModelDir}/IShapeModel.hpp
-	${CoreBaseIncludeModelDir}/IRenderModel.hpp
-	${CoreBaseIncludeModelDir}/ICollisionModel.hpp
+	${CoreBaseIncludeModelDir}/IModelDefinition.hpp
+	${CoreBaseIncludeModelDir}/IShapeModelDefinition.hpp
+	${CoreBaseIncludeModelDir}/IRenderModelDefinition.hpp
+	${CoreBaseIncludeModelDir}/ICollisionModelDefinition.hpp
 
 )
 set(CoreBaseHeaderSystem

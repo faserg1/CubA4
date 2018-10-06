@@ -1,7 +1,7 @@
 #ifndef IRENDERMODEL_HPP
 #define IRENDERMODEL_HPP
 
-#include "IModel.hpp"
+#include "IModelDefinition.hpp"
 #include <vector>
 
 namespace CubA4
@@ -10,8 +10,8 @@ namespace CubA4
 	{
 		namespace model
 		{
-			class IRenderModel :
-				public virtual IModel
+			class IRenderModelDefinition :
+				public virtual IModelDefinition
 			{
 			public:
 				/**
@@ -20,8 +20,8 @@ namespace CubA4
 				**/
 				virtual std::vector<unsigned short> getFaceIndices() const = 0;
 			protected:
-				explicit IRenderModel() = default;
-				virtual ~IRenderModel() = default;
+				explicit IRenderModelDefinition() = default;
+				virtual ~IRenderModelDefinition() = default;
 			private:
 			};
 		}

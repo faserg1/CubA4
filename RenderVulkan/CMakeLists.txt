@@ -1,5 +1,4 @@
 cmake_minimum_required (VERSION 3.12)
-
 link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
@@ -7,7 +6,16 @@ set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanSourceEngineModel
+	${RenderVulkanSourceEngineModelDir}/ModelManager.cpp
+	${RenderVulkanSourceEngineModelDir}/RenderModel.cpp
+)
+set(RenderVulkanHeaderEngineModel
+	${RenderVulkanSourceEngineModelDir}/ModelManager.hpp
+	${RenderVulkanSourceEngineModelDir}/RenderModel.hpp
+)
 set(RenderVulkanSourceEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/Material.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialLayout.cpp
@@ -105,6 +113,7 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderManager.cpp
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.cpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.cpp
+	${RenderVulkanSourceEngineDir}/MemoryManager.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.hpp
@@ -113,6 +122,7 @@ set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderManager.hpp
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.hpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.hpp
+	${RenderVulkanSourceEngineDir}/MemoryManager.hpp
 )
 
 set(RenderVulkanHeaders
@@ -122,6 +132,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderVulkanAddon}
 	${RenderVulkanHeaderConfig}
 	${RenderVulkanHeaderEngineMaterial}
+	${RenderVulkanHeaderEngineModel}
 )
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 
@@ -133,6 +144,7 @@ set(RenderVulkanSources
 	${RenderVulkanSourceVulkanAddon}
 	${RenderVulkanSourceConfig}
 	${RenderVulkanSourceEngineMaterial}
+	${RenderVulkanSourceEngineModel}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
@@ -143,6 +155,7 @@ source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${RenderVulkanHeaderConf
 source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConfig})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderVulkanHeaderEngineMaterial})
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderVulkanSourceEngineMaterial})
+source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanSourceEngineModel})
 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})

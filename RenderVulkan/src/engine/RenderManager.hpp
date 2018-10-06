@@ -32,6 +32,7 @@ namespace CubA4
 				~RenderManager();
 
 				std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
+				std::shared_ptr<model::IModelManager> getModelManager() const override;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;

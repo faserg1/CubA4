@@ -1,7 +1,7 @@
 #ifndef ISHAPEMODEL_HPP
 #define ISHAPEMODEL_HPP
 
-#include "IModel.hpp"
+#include "IModelDefinition.hpp"
 
 namespace CubA4
 {
@@ -9,14 +9,14 @@ namespace CubA4
 	{
 		namespace model
 		{
-			class IShapeModel :
-				public virtual IModel
+			class IShapeModelDefinition :
+				public virtual IModelDefinition
 			{
 			public:
 				
 			protected:
-				explicit IShapeModel() = default;
-				virtual ~IShapeModel() = default;
+				explicit IShapeModelDefinition() = default;
+				virtual ~IShapeModelDefinition() = default;
 			private:
 			};
 		}
