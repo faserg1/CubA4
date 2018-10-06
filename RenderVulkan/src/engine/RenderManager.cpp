@@ -1,6 +1,7 @@
 #include "./RenderManager.hpp"
 #include "./ResourceManager.hpp"
 #include "material/MaterialManager.hpp"
+#include "model/ModelManager.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
@@ -10,6 +11,7 @@ RenderManager::RenderManager(std::shared_ptr<const Device> device,
 {
 	resourceManager_ = std::make_shared<ResourceManager>(device);
 	materialManager_ = std::make_shared<material::MaterialManager>(device, render, resourceManager_);
+	modelManager_ = std::make_shared<model::ModelManager>(device);
 }
 
 RenderManager::~RenderManager()
@@ -24,5 +26,5 @@ std::shared_ptr<material::IMaterialManager> RenderManager::getMaterialManager() 
 
 std::shared_ptr<model::IModelManager> RenderManager::getModelManager() const
 {
-	return {};
+	return modelManager_;
 }

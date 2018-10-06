@@ -19,10 +19,12 @@ namespace CubA4
 		{
 			namespace model
 			{
+				class IRenderModel;
+
 				class IModelManager
 				{
 				public:
-					virtual void registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) = 0;
+					virtual std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) = 0;
 				protected:
 					explicit IModelManager() = default;
 					virtual ~IModelManager() = default;

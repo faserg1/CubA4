@@ -23,6 +23,11 @@ namespace CubA4
 				class MaterialManager;
 			}
 
+			namespace model
+			{
+				class ModelManager;
+			}
+
 			class RenderManager :
 				public virtual IRenderManager
 			{
@@ -39,6 +44,7 @@ namespace CubA4
 				const std::shared_ptr<const Render> render_;
 				std::shared_ptr<ResourceManager> resourceManager_;
 				std::shared_ptr<material::MaterialManager> materialManager_;
+				std::shared_ptr<model::ModelManager> modelManager_;
 			};
 		}
 	}

@@ -9,8 +9,11 @@
 #include <engine/material/IShaderFactory.hpp>
 #include <engine/material/IMaterialLayoutBuilder.hpp>
 #include <engine/material/IMaterialLayoutSetFactory.hpp>
+#include <engine/model/IModelManager.hpp>
 #include "../../gen/irs.hpp"
 #include <stdexcept>
+
+#include "../render/BlockModel.hpp"
 using namespace CubA4::mod::startup;
 using namespace CubA4::core::logging;
 
@@ -43,6 +46,7 @@ void RenderStartup::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilde
 	auto materialManager = renderManager->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
 	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
+	createModels(renderManager->getModelManager());
 }
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
@@ -64,7 +68,8 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 	auto layouts = layoutFactory->build();
 }
 
-void RenderStartup::createModels()
+void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager)
 {
-
+	auto blockModelDef = render::BlockModel();
+	auto blockModel = modelManager->registerModel(blockModelDef);
 }

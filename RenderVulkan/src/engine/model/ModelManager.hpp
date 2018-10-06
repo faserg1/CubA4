@@ -10,23 +10,27 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class Memory;
+			class Device;
 		}
 
 		namespace engine
 		{
+			class MemoryAllocator;
+
 			namespace model
 			{
 				class ModelManager :
 					public virtual IModelManager
 				{
 				public:
-					explicit ModelManager();
+					explicit ModelManager(std::shared_ptr<const vulkan::Device> device);
 					~ModelManager();
 
-					void registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) override;
+					std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) override;
 				protected:
 				private:
+					const std::shared_ptr<const vulkan::Device> device_;
+					const std::shared_ptr<MemoryAllocator> allocator_;
 				};
 			}
 		}
