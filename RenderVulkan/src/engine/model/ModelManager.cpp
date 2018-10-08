@@ -1,5 +1,6 @@
 #include "./ModelManager.hpp"
 #include "../MemoryAllocator.hpp"
+#include "../MemoryManager.hpp"
 #include "../../vulkan/Memory.hpp"
 #include "../../vulkan/Device.hpp"
 #include <model/IRenderModelDefinition.hpp>
@@ -10,7 +11,7 @@ using namespace CubA4::render::vulkan;
 ModelManager::ModelManager(std::shared_ptr<const Device> device) :
 	device_(device), allocator_(std::make_shared<MemoryAllocator>(device))
 {
-	
+	memoryManager_ = std::make_shared<MemoryManager>(device);
 }
 
 ModelManager::~ModelManager()
@@ -61,17 +62,19 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	vkGetBufferMemoryRequirements2(device_->getDevice(), &reqVertexTransitBufferInfo, &reqVertexTransitBuffer);
 	vkGetBufferMemoryRequirements2(device_->getDevice(), &reqVertexBufferInfo, &reqVertexBuffer);
 
-	auto memoryVertexBuffer = allocator_->allocate(verticesSize,
-		MemoryAllocationPrefered::Device, reqVertexBuffer.memoryRequirements.memoryTypeBits);
-	auto memoryVertexTransitBuffer = allocator_->allocate(verticesSize,
+	auto memoryVertexTransitBuffer = allocator_->allocate(reqVertexTransitBuffer.memoryRequirements.size,
 		MemoryAllocationPrefered::Host, reqVertexTransitBuffer.memoryRequirements.memoryTypeBits);
+	auto memoryVertexBuffer = allocator_->allocate(reqVertexBuffer.memoryRequirements.size,
+		MemoryAllocationPrefered::Device, reqVertexBuffer.memoryRequirements.memoryTypeBits);
 
 	auto mappedMemory = memoryVertexTransitBuffer->map(0, VK_WHOLE_SIZE);
 	memcpy(mappedMemory.get(), vertices.data(), verticesSize);
 	mappedMemory.reset();
 
-	vkBindBufferMemory(device_->getDevice(), vertexBuffer, memoryVertexBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), vertexTransitBuffer, memoryVertexTransitBuffer->getMemory(), 0);
+	vkBindBufferMemory(device_->getDevice(), vertexBuffer, memoryVertexBuffer->getMemory(), 0);
+
+	memoryManager_->copyBufferToBuffer(vertexTransitBuffer, vertexBuffer, verticesSize);
 
 	return {};
 }

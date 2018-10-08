@@ -47,6 +47,6 @@ std::shared_ptr<void> Memory::map(VkDeviceSize offset, VkDeviceSize size)
 	auto mem = self_.lock();
 	return std::shared_ptr<void>(ptr, [mem](void *ptr)
 	{
-		vkFreeMemory(mem->device_->getDevice(), mem->getMemory(), nullptr);
+		vkUnmapMemory(mem->device_->getDevice(), mem->getMemory());
 	});
 }

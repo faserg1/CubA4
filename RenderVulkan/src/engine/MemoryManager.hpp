@@ -3,6 +3,8 @@
 
 #include <map>
 #include <memory>
+#include <future>
+#include <vulkan/vulkan.h>
 
 namespace CubA4
 {
@@ -10,7 +12,7 @@ namespace CubA4
 	{
 		namespace vulkan
 		{
-			class Memory;
+			class Device;
 		}
 
 		namespace engine
@@ -20,13 +22,17 @@ namespace CubA4
 			class MemoryManager
 			{
 			public:
-				explicit MemoryManager();
+				explicit MemoryManager(std::shared_ptr<const vulkan::Device> device);
 				~MemoryManager();
 
-
+				std::shared_future<bool> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
 			protected:
 			private:
-
+				const std::shared_ptr<const vulkan::Device> device_;
+				VkCommandPool transitPool_;
+			private:
+				bool allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence);
+				std::shared_future<bool> submitCmdBuffer(VkCommandBuffer cmdBuffer, VkFence fence);
 			};
 		}
 	}

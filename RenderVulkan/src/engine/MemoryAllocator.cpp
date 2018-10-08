@@ -37,7 +37,7 @@ std::shared_ptr<Memory> MemoryAllocator::allocate(size_t size, MemoryAllocationP
 		break;
 	default:
 		//TODO: [OOKAMI] Throw exception
-		break;
+		return {};
 	}
 	int32_t index = findProperties(&props, supportedTypes, requiredFlags);
 	if (index < 0)
