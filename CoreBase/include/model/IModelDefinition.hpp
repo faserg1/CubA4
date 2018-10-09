@@ -1,5 +1,5 @@
-#ifndef IMODEL_HPP
-#define IMODEL_HPP
+#ifndef IMODELDEFINITION_HPP
+#define IMODELDEFINITION_HPP
 
 #include <vector>
 
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODEL_HPP
+#endif // IMODELDEFINITION_HPP

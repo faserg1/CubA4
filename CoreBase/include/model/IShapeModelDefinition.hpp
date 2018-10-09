@@ -1,5 +1,5 @@
-#ifndef ISHAPEMODEL_HPP
-#define ISHAPEMODEL_HPP
+#ifndef ISHAPEMODELDEFINITION_HPP
+#define ISHAPEMODELDEFINITION_HPP
 
 #include "IModelDefinition.hpp"
 
@@ -23,4 +23,4 @@ namespace CubA4
 	}
 }
 
-#endif // ISHAPEMODEL_HPP
+#endif // ISHAPEMODELDEFINITION_HPP

@@ -1,4 +1,5 @@
 #include "./ModelManager.hpp"
+#include "./RenderModel.hpp"
 #include "../MemoryAllocator.hpp"
 #include "../MemoryManager.hpp"
 #include "../../vulkan/Memory.hpp"
@@ -174,5 +175,5 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 
-	return {};
+	return std::make_shared<RenderModel>(device_, memoryVertexBuffer, memoryIndexBuffer, vertexBuffer, indexBuffer);
 }

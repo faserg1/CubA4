@@ -1,5 +1,5 @@
-#ifndef IRENDERMODEL_HPP
-#define IRENDERMODEL_HPP
+#ifndef IRENDERMODELDEFINITION_HPP
+#define IRENDERMODELDEFINITION_HPP
 
 #include "IModelDefinition.hpp"
 #include <vector>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // IRENDERMODEL_HPP
+#endif // IRENDERMODELDEFINITION_HPP

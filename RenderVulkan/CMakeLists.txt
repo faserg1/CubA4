@@ -11,9 +11,11 @@ set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
 set(RenderVulkanSourceEngineModel
 	${RenderVulkanSourceEngineModelDir}/ModelManager.cpp
 	${RenderVulkanSourceEngineModelDir}/RenderModel.cpp
+	${RenderVulkanSourceEngineModelDir}/RenderModel.cpp
 )
 set(RenderVulkanHeaderEngineModel
 	${RenderVulkanSourceEngineModelDir}/ModelManager.hpp
+	${RenderVulkanSourceEngineModelDir}/RenderModel.hpp
 	${RenderVulkanSourceEngineModelDir}/RenderModel.hpp
 )
 set(RenderVulkanSourceEngineMaterial
@@ -159,6 +161,7 @@ source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}model" FILES 
 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanHeaderEngineModel})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 
