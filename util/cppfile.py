@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 class CppFile:
 	def __init__(self):
 		self._lines = []
@@ -29,6 +31,8 @@ class CppFile:
 		total = ""
 		for line in self._lines:
 			total += line
+		if sys.platform.startswith("win32"):
+			total = total.replace("\n", "\r\n")
 		return total
 	
 	_lines = []
