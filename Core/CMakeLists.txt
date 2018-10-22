@@ -12,11 +12,17 @@ set(CoreSourceSystem
 	${CoreSourceSystemDir}/Startup.cpp
 	${CoreSourceSystemDir}/Environment.cpp
 	${CoreSourceSystemDir}/EnvironmentBuilder.cpp
+	${CoreSourceSystemDir}/EnvironmentContext.cpp
+	${CoreSourceSystemDir}/EnvironmentBuilderData.cpp
+	${CoreSourceSystemDir}/EnvironmentBuilderContext.cpp
 )
 set(CoreHeaderSystem
 	${CoreIncludeSystemDir}/Startup.hpp
 	${CoreIncludeSystemDir}/Environment.hpp
 	${CoreIncludeSystemDir}/EnvironmentBuilder.hpp
+	${CoreIncludeSystemDir}/EnvironmentContext.hpp
+	${CoreIncludeSystemDir}/EnvironmentBuilderData.hpp
+	${CoreIncludeSystemDir}/EnvironmentBuilderContext.hpp
 )
 set(CoreSourceLogging
 	${CoreSourceLoggingDir}/Logger.cpp

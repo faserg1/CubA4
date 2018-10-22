@@ -31,7 +31,7 @@ ModLoader::ModLoader(std::weak_ptr<const ICore> core, std::shared_ptr<const CubA
 {
 	if (auto lockedCore = core_.lock())
 	{
-		log_ = std::shared_ptr<CubA4::core::logging::ILoggerTagged>(lockedCore->getLogger()->createTaggedLog(LogSourceSystem::Mod, "LOADER"));
+		log_ = lockedCore->getLogger()->createTaggedLog(LogSourceSystem::Mod, "LOADER");
 	}
 }
 
@@ -76,10 +76,11 @@ void ModLoader::load()
 	}
 }
 
-void ModLoader::setup(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
+void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 {
 	std::map<std::string, std::shared_ptr<const IModInfo>> modInfos;
 	std::vector<std::shared_ptr<IMod>> mods;
+	std::map<std::shared_ptr<IMod>, std::shared_ptr<const IModInfo>> modToInfoMap;
 	log_->log(LogLevel::Info, "Checking for app dependency.");
 	for (auto library : modLibs_)
 	{
@@ -106,7 +107,10 @@ void ModLoader::setup(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> 
 		//TODO: [OOKAMI] Check for mod deps
 		auto mod = modInfoPair.second->getMod();
 		if (mod)
+		{
 			mods.push_back(mod);
+			modToInfoMap.insert(std::make_pair(mod, modInfoPair.second));
+		}
 		else
 		{
 			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfoPair.first));
@@ -131,6 +135,8 @@ void ModLoader::setup(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> 
 	log_->log(LogLevel::Info, "Initing mods.");
 	for (auto mod : mods)
 	{
+		auto modInfo = modToInfoMap.find(mod)->second;
+		auto builder = builderFactory(modInfo);
 		mod->init(builder);
 	}
 	log_->log(LogLevel::Info, "Configuring mods.");

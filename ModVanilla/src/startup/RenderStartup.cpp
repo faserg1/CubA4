@@ -31,7 +31,7 @@ RenderStartup::~RenderStartup()
 void RenderStartup::load(std::shared_ptr<const CubA4::core::ICore> core)
 {
 	core_ = core;
-	log_ = std::shared_ptr<ILoggerTagged>(core_->getLogger()->createTaggedLog(LogSourceSystem::Mod, "ModVanilla/RenderStartup"));
+	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::Mod, "ModVanilla/RenderStartup");
 }
 
 void RenderStartup::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)

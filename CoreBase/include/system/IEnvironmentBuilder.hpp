@@ -7,6 +7,13 @@ namespace CubA4
 {
 	namespace mod
 	{
+		namespace object
+		{
+			class IBlock;
+			class IEntity;
+			class IItem;
+		}
+
 		namespace world
 		{
 			class IWorld;
@@ -24,11 +31,6 @@ namespace CubA4
 
 	namespace core
 	{
-		namespace model
-		{
-			class IModel;
-		}
-
 		namespace system
 		{
 			class IEnvironmentBuilder
@@ -37,7 +39,8 @@ namespace CubA4
 				virtual const CubA4::render::IRenderInfo &getRenderInfo() const = 0;
 				virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
 
-				virtual void registerModel(std::shared_ptr<const CubA4::core::model::IModel> model) = 0;
+				virtual void registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) = 0;
+
 				virtual void registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world) = 0;
 			protected:
 				explicit IEnvironmentBuilder() = default;

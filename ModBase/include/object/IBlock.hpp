@@ -3,19 +3,35 @@
 
 #include "IObject.hpp"
 #include <cstdint>
+#include <memory>
 
 namespace CubA4
 {
-	namespace object
+	namespace render
 	{
-		class IBlock :
-			public virtual IObject
+		namespace engine
 		{
-		public:
-			virtual ~IBlock() = default;
-		protected:
-			explicit IBlock() = default;
-		};
+			namespace model
+			{
+				class IRenderModel;
+			}
+		}
+	}
+
+	namespace mod
+	{
+		namespace object
+		{
+			class IBlock :
+				public virtual IObject
+			{
+			public:
+				virtual ~IBlock() = default;
+				virtual std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getRenderModel() const = 0;
+			protected:
+				explicit IBlock() = default;
+			};
+		}
 	}
 }
 

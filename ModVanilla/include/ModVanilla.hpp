@@ -3,6 +3,7 @@
 
 #include <mod/IMod.hpp>
 #include "startup/RenderStartup.hpp"
+#include "startup/WorldSetup.hpp"
 
 namespace CubA4
 {
@@ -27,6 +28,7 @@ namespace CubA4
 		private:
 			std::shared_ptr<const core::ICore> core_;
 			startup::RenderStartup renderStartup_;
+			startup::WorldSetup worldSetup_;
 		};
 	}
 }

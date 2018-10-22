@@ -1,4 +1,5 @@
 #include "../../include/system/Startup.hpp"
+#include "../../include/system/EnvironmentBuilderData.hpp"
 #include "../../include/system/EnvironmentBuilder.hpp"
 #include <system/IAppCallback.hpp>
 #include <mod/IModLoader.hpp>
@@ -40,8 +41,12 @@ void Startup::initMods()
 	modLoader_->find();
 	modLoader_->load();
 
-	auto envBuilder = std::make_shared<EnvironmentBuilder>(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
-	modLoader_->setup(envBuilder);
+	auto envBuilderData = EnvironmentBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
+	modLoader_->setup([&envBuilderData](std::shared_ptr<const CubA4::mod::IModInfo> modInfo) -> std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>
+	{
+		auto envBuilderContext = EnvironmentBuilderContext(modInfo);
+		return std::make_shared<EnvironmentBuilder>(envBuilderData, envBuilderContext);
+	});
 }
 
 void Startup::unloadMods()

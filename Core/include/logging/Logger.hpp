@@ -30,7 +30,7 @@ namespace CubA4
 
 				void flush() override;
 
-				ILoggerTagged *createTaggedLog(LogSourceSystem system, const std::string &tag) override;
+				std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) override;
 			protected:
 				explicit Logger(std::string logsPath);
 				Logger(const Logger &) = delete;

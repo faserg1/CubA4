@@ -5,16 +5,19 @@
 
 namespace CubA4
 {
-	namespace object
+	namespace mod
 	{
-		class IItem :
-			public virtual IEntity
+		namespace object
 		{
-		public:
-			virtual ~IItem() = default;
-		protected:
-			explicit IItem() = default;
-		};
+			class IItem :
+				public virtual IEntity
+			{
+			public:
+				virtual ~IItem() = default;
+			protected:
+				explicit IItem() = default;
+			};
+		}
 	}
 }
 

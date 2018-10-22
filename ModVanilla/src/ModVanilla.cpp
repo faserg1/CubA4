@@ -18,6 +18,7 @@ void ModVanilla::load(std::shared_ptr<const ICore> core)
 {
 	core_ = core;
 	renderStartup_.load(core);
+	worldSetup_.load(core);
 }
 
 void ModVanilla::preinit()
@@ -32,6 +33,7 @@ void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
 
 void ModVanilla::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
+	renderStartup_.init(builder);
 	renderStartup_.init(builder);
 }
 

@@ -36,7 +36,7 @@ namespace CubA4
 DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger) :
 	data_(std::make_shared<DebugExtensionData>())
 {
-	loggerTagged_ = std::shared_ptr<ILoggerTagged>(logger->createTaggedLog(LogSourceSystem::Render, "VULKAN"));
+	loggerTagged_ = logger->createTaggedLog(LogSourceSystem::Render, "VULKAN");
 }
 
 DebugExtension::~DebugExtension()

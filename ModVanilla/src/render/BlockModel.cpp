@@ -16,15 +16,15 @@ std::vector<CubA4::core::model::Vertex> BlockModel::getVertices() const
 	return
 	{
 		//up
-		{0.5,0.5,0.5},		// front right
-		{0.5,-0.5,0.5},		// back right
-		{-0.5,-0.5,0.5},	// back left
-		{-0.5,0.5,0.5},		// front left
+		{1,1,1},		// front right
+		{1,0,1},		// back right
+		{0,0,1},	// back left
+		{0,1,1},		// front left
 		//down
-		{0.5,0.5,-0.5},		// front righ
-		{0.5,-0.5,-0.5},	// back right
-		{-0.5,-0.5,-0.5},	// back left
-		{-0.5,0.5,-0.5},	// front left
+		{1,1,0},		// front righ
+		{1,0,0},	// back right
+		{0,0,0},	// back left
+		{0,1,0},	// front left
 	};
 }
 

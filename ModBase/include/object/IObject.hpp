@@ -6,20 +6,22 @@
 
 namespace CubA4
 {
-	namespace object
+	namespace mod
 	{
-		class IObject
+		namespace object
 		{
-		public:
-			virtual ~IObject() = default;
+			class IObject
+			{
+			public:
+				virtual ~IObject() = default;
 
-			//Получает уникальный идентификатор объекта
-			virtual std::string getId() = 0;
-			virtual int64_t getMappedId() = 0;
-			virtual std::wstring getName() = 0;
-		protected:
-			explicit IObject() = default;
-		};
+				//Получает уникальный идентификатор объекта
+				virtual std::string getId() const = 0;
+				virtual std::wstring getName() const = 0;
+			protected:
+				explicit IObject() = default;
+			};
+		}
 	}
 }
 

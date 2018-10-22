@@ -31,7 +31,6 @@ set(ModBaseHeaderObject
 	${ModBaseIncludeObjectDir}/IItem.hpp
 )
 set(ModBaseHeaderWorld
-	${ModBaseIncludeWorldDir}/IWorldProvider.hpp
 	${ModBaseIncludeWorldDir}/IWorld.hpp
 	${ModBaseIncludeWorldDir}/IWorldSubscriber.hpp
 	${ModBaseIncludeWorldDir}/IChunk.hpp

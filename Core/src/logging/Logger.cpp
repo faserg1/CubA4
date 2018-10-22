@@ -93,11 +93,11 @@ void Logger::flush()
 	stream_->flush();
 }
 
-ILoggerTagged *Logger::createTaggedLog(LogSourceSystem system, const std::string &tag)
+std::shared_ptr<ILoggerTagged> Logger::createTaggedLog(LogSourceSystem system, const std::string &tag)
 {
 	if (auto ptr = this_.lock())
-		return new LoggerTagged(ptr, system, tag);
-	return nullptr;
+		return  std::make_shared<LoggerTagged>(ptr, system, tag);
+	return {};
 }
 
 std::string Logger::getTagString(LogSourceSystem system)
