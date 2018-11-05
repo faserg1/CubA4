@@ -27,7 +27,7 @@ namespace CubA4
 					explicit ModelManager(std::shared_ptr<const vulkan::Device> device);
 					~ModelManager();
 
-					std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) override;
+					std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef) override;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;

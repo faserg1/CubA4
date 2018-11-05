@@ -46,6 +46,8 @@ namespace CubA4
 			std::vector<std::shared_ptr<ModLibrary>> modLibs_;
 			std::shared_ptr<core::logging::ILoggerTagged> log_;
 			std::vector<std::shared_ptr<IMod>> loadedMods_;
+		private:
+			void setupModByChain(IEnvironmentBuilderFactory builderFactory, std::vector<std::shared_ptr<IMod>> mods);
 		};
 	}
 }

@@ -23,7 +23,7 @@ namespace CubA4
 		{
 		public:
 			virtual ~IModLoader() = default;
-			using IEnvironmentBuilderFactory = std::function<std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>(std::shared_ptr<const IModInfo>)>;
+			using IEnvironmentBuilderFactory = std::function<std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>(const CubA4::mod::IModInfo &modInfo)>;
 
 			virtual void find() = 0;
 			virtual void load() = 0;

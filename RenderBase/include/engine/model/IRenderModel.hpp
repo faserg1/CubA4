@@ -1,6 +1,8 @@
 #ifndef IRENDERMODEL_HPP
 #define IRENDERMODEL_HPP
 
+#include <string>
+
 namespace CubA4
 {
 	namespace render
@@ -12,7 +14,7 @@ namespace CubA4
 				class IRenderModel
 				{
 				public:
-					
+					virtual std::string getId() const = 0;
 				protected:
 					explicit IRenderModel() = default;
 					virtual ~IRenderModel() = default;

@@ -42,7 +42,7 @@ void Startup::initMods()
 	modLoader_->load();
 
 	auto envBuilderData = EnvironmentBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
-	modLoader_->setup([&envBuilderData](std::shared_ptr<const CubA4::mod::IModInfo> modInfo) -> std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>
+	modLoader_->setup([&envBuilderData](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>
 	{
 		auto envBuilderContext = EnvironmentBuilderContext(modInfo);
 		return std::make_shared<EnvironmentBuilder>(envBuilderData, envBuilderContext);

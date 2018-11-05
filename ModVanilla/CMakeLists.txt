@@ -1,15 +1,26 @@
 cmake_minimum_required (VERSION 3.12)
 set(ModVanillaIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ModVanillaIncludeBlockDir ${ModVanillaIncludeDir}/block)
-set(ModVanillaIncludeCoreDir ${ModVanillaIncludeDir}/core)
-set(ModVanillaIncludeCoreInfoDir ${ModVanillaIncludeCoreDir}/info)
 
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(ModVanillaSourceManagerDir ${ModVanillaSourceDir}/manager)
 set(ModVanillaSourceBlockDir ${ModVanillaSourceDir}/block)
 set(ModVanillaSourceRenderDir ${ModVanillaSourceDir}/render)
 set(ModVanillaSourceStartupDir ${ModVanillaSourceDir}/startup)
 set(ModVanillaSourceCoreDir ${ModVanillaSourceDir}/core)
 set(ModVanillaSourceCoreInfoDir ${ModVanillaSourceCoreDir}/info)
+set(ModVanillaSourceManager
+	${ModVanillaSourceManagerDir}/ModManager.cpp
+	${ModVanillaSourceManagerDir}/ModRenderManager.cpp
+	${ModVanillaSourceManagerDir}/ModBlockManager.cpp
+	${ModVanillaSourceManagerDir}/ModItemManager.cpp
+)
+set(ModVanillaHeaderManager
+	${ModVanillaSourceManagerDir}/ModManager.hpp
+	${ModVanillaSourceManagerDir}/ModRenderManager.hpp
+	${ModVanillaSourceManagerDir}/ModBlockManager.hpp
+	${ModVanillaSourceManagerDir}/ModItemManager.hpp
+)
 set(ModVanillaSourceBlock
 	${ModVanillaSourceBlockDir}/TestBlock.cpp
 )
@@ -41,8 +52,8 @@ set(ModVanillaSourceCoreInfo
 	${ModVanillaSourceCoreInfoDir}/VersionDependency.cpp
 )
 set(ModVanillaHeaderCoreInfo
-	${ModVanillaIncludeCoreInfoDir}/Version.hpp
-	${ModVanillaIncludeCoreInfoDir}/VersionDependency.hpp
+	${ModVanillaSourceCoreInfoDir}/Version.hpp
+	${ModVanillaSourceCoreInfoDir}/VersionDependency.hpp
 )
 
 set(ModVanillaHeaders 
@@ -51,7 +62,8 @@ set(ModVanillaHeaders
 	${ModVanillaHeader}
 	${ModVanillaHeaderStartup}
 	${ModVanillaHeaderRender}
-	${ModVanillaHeaderBlock})
+	${ModVanillaHeaderBlock}
+	${ModVanillaHeaderManager})
 source_group("${SOURCE_GROUP_HEADER_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaHeaderCoreInfo})
 
 set(ModVanillaSources 
@@ -62,6 +74,7 @@ set(ModVanillaSources
 	${ModVanillaSourceStartup}
 	${ModVanillaSourceRender}
 	${ModVanillaSourceBlock}
+	${ModVanillaSourceManager}
 	)
 source_group("${SOURCE_GROUP_SOURCE_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaSourceCoreInfo})
 source_group("${SOURCE_GROUP_HEADER_START}startup" FILES ${ModVanillaHeaderStartup})
@@ -73,6 +86,8 @@ source_group("${SOURCE_GROUP_HEADER_START}render" FILES ${ModVanillaHeaderRender
 source_group("${SOURCE_GROUP_SOURCE_START}render" FILES ${ModVanillaSourceRender})
 source_group("${SOURCE_GROUP_HEADER_START}block" FILES ${ModVanillaHeaderBlock})
 source_group("${SOURCE_GROUP_SOURCE_START}block" FILES ${ModVanillaSourceBlock})
+source_group("${SOURCE_GROUP_HEADER_START}manager" FILES ${ModVanillaHeaderManager})
+source_group("${SOURCE_GROUP_SOURCE_START}manager" FILES ${ModVanillaSourceManager})
 
 add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources} ${irs_resources})
 

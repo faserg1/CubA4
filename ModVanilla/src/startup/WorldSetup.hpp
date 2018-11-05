@@ -22,6 +22,11 @@ namespace CubA4
 
 	namespace mod
 	{
+		namespace manager
+		{
+			class ModManager;
+		}
+
 		namespace startup
 		{
 			class WorldSetup
@@ -30,10 +35,11 @@ namespace CubA4
 				explicit WorldSetup();
 				~WorldSetup();
 
-				void load(std::shared_ptr<const core::ICore> core);
+				void load(std::shared_ptr<const core::ICore> core, std::shared_ptr<manager::ModManager> manager);
 				void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
 			protected:
 			private:
+				std::shared_ptr<manager::ModManager> manager_;
 				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
 			};
 		}

@@ -1,7 +1,9 @@
 #include "../../include/system/EnvironmentBuilder.hpp"
+#include <IModInfo.hpp>
+#include <object/IBlock.hpp>
 using namespace CubA4::core::system;
 
-EnvironmentBuilder::EnvironmentBuilder(const EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
+EnvironmentBuilder::EnvironmentBuilder(EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
 	data_(data), context_(context)
 {
 	
@@ -24,7 +26,8 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilder::getRe
 
 void EnvironmentBuilder::registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block)
 {
-	
+	auto genId = data_.identityMap_.add(context_.modInfo_.getIdName(), block->getId());
+	data_.blocks_.insert(std::make_pair(genId, block));
 }
 
 void EnvironmentBuilder::registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world)

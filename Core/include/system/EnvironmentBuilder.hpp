@@ -16,7 +16,7 @@ namespace CubA4
 				public virtual IEnvironmentBuilder
 			{
 			public:
-				explicit EnvironmentBuilder(const EnvironmentBuilderData &data, const EnvironmentBuilderContext &context);
+				explicit EnvironmentBuilder(EnvironmentBuilderData &data, const EnvironmentBuilderContext &context);
 				~EnvironmentBuilder();
 
 				const CubA4::render::IRenderInfo &getRenderInfo() const override;
@@ -26,7 +26,7 @@ namespace CubA4
 				void registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world) override;
 			protected:
 			private:
-				const EnvironmentBuilderData data_;
+				EnvironmentBuilderData data_;
 				const EnvironmentBuilderContext context_;
 			};
 		}

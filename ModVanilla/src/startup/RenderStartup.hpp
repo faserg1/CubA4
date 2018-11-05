@@ -42,6 +42,11 @@ namespace CubA4
 
 	namespace mod
 	{
+		namespace manager
+		{
+			class ModManager;
+		}
+
 		namespace startup
 		{
 			class RenderStartup
@@ -50,11 +55,12 @@ namespace CubA4
 				explicit RenderStartup();
 				~RenderStartup();
 
-				void load(std::shared_ptr<const core::ICore> core);
-				void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
+				void load(std::shared_ptr<const core::ICore> core, std::shared_ptr<manager::ModManager> manager);
+				void preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
 			protected:
 			private:
 				std::shared_ptr<const CubA4::core::ICore> core_;
+				std::shared_ptr<manager::ModManager> manager_;
 				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
 				std::map<std::string, std::shared_ptr<CubA4::render::engine::material::IShader>> shaders_;
 			private:

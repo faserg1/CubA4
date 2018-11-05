@@ -1,4 +1,4 @@
-#include "../../../include/core/info/VersionDependency.hpp"
+#include "VersionDependency.hpp"
 using namespace CubA4::core::info;
 
 VersionDependency::VersionDependency(const IVersion &required, const IVersion &prefered) :

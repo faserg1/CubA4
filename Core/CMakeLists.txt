@@ -15,6 +15,7 @@ set(CoreSourceSystem
 	${CoreSourceSystemDir}/EnvironmentContext.cpp
 	${CoreSourceSystemDir}/EnvironmentBuilderData.cpp
 	${CoreSourceSystemDir}/EnvironmentBuilderContext.cpp
+	${CoreSourceSystemDir}/IdentityMap.cpp
 )
 set(CoreHeaderSystem
 	${CoreIncludeSystemDir}/Startup.hpp
@@ -23,6 +24,7 @@ set(CoreHeaderSystem
 	${CoreIncludeSystemDir}/EnvironmentContext.hpp
 	${CoreIncludeSystemDir}/EnvironmentBuilderData.hpp
 	${CoreIncludeSystemDir}/EnvironmentBuilderContext.hpp
+	${CoreIncludeSystemDir}/IdentityMap.hpp
 )
 set(CoreSourceLogging
 	${CoreSourceLoggingDir}/Logger.cpp

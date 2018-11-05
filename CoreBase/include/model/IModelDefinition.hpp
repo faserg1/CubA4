@@ -2,6 +2,7 @@
 #define IMODELDEFINITION_HPP
 
 #include <vector>
+#include <string>
 
 namespace CubA4
 {
@@ -20,6 +21,7 @@ namespace CubA4
 			class IModelDefinition
 			{
 			public:
+				virtual std::string getId() const = 0;
 				virtual std::vector<Vertex> getVertices() const = 0;
 			protected:
 				explicit IModelDefinition() = default;

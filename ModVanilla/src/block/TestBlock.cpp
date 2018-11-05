@@ -1,7 +1,8 @@
 #include "../../include/block/TestBlock.hpp"
 using namespace CubA4::mod::block;
 
-TestBlock::TestBlock()
+TestBlock::TestBlock(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel) :
+	renderModel_(renderModel)
 {
 	
 }
@@ -23,5 +24,5 @@ std::wstring TestBlock::getName() const
 
 std::shared_ptr<const CubA4::render::engine::model::IRenderModel> TestBlock::getRenderModel() const
 {
-	return {};
+	return renderModel_;
 }

@@ -4,6 +4,7 @@
 #include <engine/model/IRenderModel.hpp>
 #include <vulkan/vulkan.h>
 #include <memory>
+#include <string>
 
 namespace CubA4
 {
@@ -27,9 +28,11 @@ namespace CubA4
 						std::shared_ptr<const vulkan::Memory> vertexBufferMemory,
 						std::shared_ptr<const vulkan::Memory> indexBufferMemory,
 						VkBuffer vertexBuffer,
-						VkBuffer indexBuffer);
+						VkBuffer indexBuffer,
+						const std::string &id);
 					~RenderModel();
 
+					std::string getId() const override;
 					void bind(VkCommandBuffer cmdBuffer, uint32_t index = 0);
 				protected:
 				private:
@@ -38,6 +41,7 @@ namespace CubA4
 					const std::shared_ptr<const vulkan::Memory> indexBufferMemory_;
 					const VkBuffer vertexBuffer_;
 					const VkBuffer indexBuffer_;
+					const std::string id_;
 				};
 			}
 		}

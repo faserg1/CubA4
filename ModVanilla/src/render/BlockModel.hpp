@@ -16,6 +16,7 @@ namespace CubA4
 				explicit BlockModel();
 				~BlockModel();
 
+				std::string getId() const override;
 				std::vector<CubA4::core::model::Vertex> getVertices() const override;
 				std::vector<unsigned short> getFaceIndices() const override;
 			protected:

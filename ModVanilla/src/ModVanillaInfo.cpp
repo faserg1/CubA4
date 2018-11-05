@@ -1,7 +1,7 @@
 #include "ModVanillaInfo.hpp"
 #include "../include/ModVanilla.hpp"
-#include "../include/core/info/Version.hpp"
-#include "../include/core/info/VersionDependency.hpp"
+#include "core/info/Version.hpp"
+#include "core/info/VersionDependency.hpp"
 #include <stdexcept>
 using namespace CubA4::core::info;
 using namespace CubA4::mod;
@@ -11,7 +11,7 @@ static const auto appDep = VersionDependency(Version(0, 0), Version(0, 0, 1));
 
 ModVanillaInfo::ModVanillaInfo()
 {
-	mod_ = std::make_shared<ModVanilla>();
+	mod_ = std::make_shared<ModVanilla>(*this);
 }
 
 ModVanillaInfo::~ModVanillaInfo()

@@ -18,11 +18,11 @@ namespace CubA4
 			{
 				friend class EnvironmentBuilder;
 			public:
-				explicit EnvironmentBuilderContext(std::shared_ptr<const CubA4::mod::IModInfo> modInfo);
+				explicit EnvironmentBuilderContext(const CubA4::mod::IModInfo &modInfo);
 				~EnvironmentBuilderContext();
 			protected:
 			private:
-				const std::shared_ptr<const CubA4::mod::IModInfo> modInfo_;
+				const CubA4::mod::IModInfo &modInfo_;
 			};
 		}
 	}

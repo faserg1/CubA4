@@ -1,4 +1,4 @@
-#include "../../../include/core/info/Version.hpp"
+#include "Version.hpp"
 #include <sstream>
 using namespace CubA4::core::info;
 

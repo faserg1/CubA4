@@ -39,3 +39,8 @@ std::vector<unsigned short> BlockModel::getFaceIndices() const
 		4, 2, 3, 6, 7 //left
 	};
 }
+
+std::string BlockModel::getId() const
+{
+	return "block";
+}

@@ -7,10 +7,12 @@ RenderModel::RenderModel(std::shared_ptr<const Device> device,
 	std::shared_ptr<const Memory> vertexBufferMemory,
 	std::shared_ptr<const Memory> indexBufferMemory,
 	VkBuffer vertexBuffer,
-	VkBuffer indexBuffer) :
+	VkBuffer indexBuffer,
+	const std::string &id) :
 	device_(device),
 	vertexBufferMemory_(vertexBufferMemory), indexBufferMemory_(indexBufferMemory),
-	vertexBuffer_(vertexBuffer), indexBuffer_(indexBuffer)
+	vertexBuffer_(vertexBuffer), indexBuffer_(indexBuffer),
+	id_(id)
 {
 	
 }
@@ -26,4 +28,9 @@ void RenderModel::bind(VkCommandBuffer cmdBuffer, uint32_t index)
 	const VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers(cmdBuffer, index, 1, &vertexBuffer_, &offset);
 	vkCmdBindIndexBuffer(cmdBuffer, indexBuffer_, offset, VK_INDEX_TYPE_UINT16);
+}
+
+std::string RenderModel::getId() const
+{
+	return id_;
 }

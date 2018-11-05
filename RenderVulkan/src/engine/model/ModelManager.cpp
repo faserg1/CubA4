@@ -20,10 +20,10 @@ ModelManager::~ModelManager()
 	
 }
 
-std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel)
+std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef)
 {
-	auto &vertices = renderModel.getVertices();
-	auto &faces = renderModel.getFaceIndices();
+	auto &vertices = renderModelDef.getVertices();
+	auto &faces = renderModelDef.getFaceIndices();
 
 	VkBuffer vertexBuffer, vertexTransitBuffer;
 	VkBuffer indexBuffer, indexTransitBuffer;
@@ -175,5 +175,5 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 
-	return std::make_shared<RenderModel>(device_, memoryVertexBuffer, memoryIndexBuffer, vertexBuffer, indexBuffer);
+	return std::make_shared<RenderModel>(device_, memoryVertexBuffer, memoryIndexBuffer, vertexBuffer, indexBuffer, renderModelDef.getId());
 }

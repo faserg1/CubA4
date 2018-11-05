@@ -78,9 +78,8 @@ void ModLoader::load()
 
 void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 {
-	std::map<std::string, std::shared_ptr<const IModInfo>> modInfos;
+	std::vector<std::shared_ptr<const IModInfo>> modInfos;
 	std::vector<std::shared_ptr<IMod>> mods;
-	std::map<std::shared_ptr<IMod>, std::shared_ptr<const IModInfo>> modToInfoMap;
 	log_->log(LogLevel::Info, "Checking for app dependency.");
 	for (auto library : modLibs_)
 	{
@@ -98,33 +97,41 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 				% modInfo->getIdName() % appDep.required().to_string() % appInfo_->version().to_string()));
 			continue;
 		}
-		modInfos.insert(std::make_pair(modInfo->getIdName(), modInfo));
+		modInfos.push_back(modInfo);
 		//TODO: [OOKAMI] Check prefered deps
 	}
 	log_->log(LogLevel::Info, "Checking for mod dependency.");
-	for (auto modInfoPair : modInfos)
+	for (auto modInfo : modInfos)
 	{
 		//TODO: [OOKAMI] Check for mod deps
-		auto mod = modInfoPair.second->getMod();
+		auto mod = modInfo->getMod();
 		if (mod)
 		{
 			mods.push_back(mod);
-			modToInfoMap.insert(std::make_pair(mod, modInfoPair.second));
 		}
 		else
 		{
-			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfoPair.first));
+			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfo->getIdName()));
 		}
 	}
+	setupModByChain(builderFactory, mods);
+}
+
+void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::vector<std::shared_ptr<IMod>> mods)
+{
+	std::map<std::string, std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>> builders;
+	auto core = core_.lock();
 	log_->log(LogLevel::Info, "Loading mods.");
 	for (auto mod : mods)
 	{
-		mod->load(core_.lock());
+		mod->load(core);
 	}
 	log_->log(LogLevel::Info, "Preiniting mods.");
 	for (auto mod : mods)
 	{
-		mod->preinit();
+		auto builder = builderFactory(mod->getInfo());
+		builders.insert(std::make_pair(mod->getInfo().getIdName(), builder));
+		mod->preinit(builder);
 	}
 	log_->log(LogLevel::Info, "Linking mods.");
 	for (auto mod : mods)
@@ -135,19 +142,20 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 	log_->log(LogLevel::Info, "Initing mods.");
 	for (auto mod : mods)
 	{
-		auto modInfo = modToInfoMap.find(mod)->second;
-		auto builder = builderFactory(modInfo);
+		auto builder = builders.find(mod->getInfo().getIdName())->second;
 		mod->init(builder);
 	}
 	log_->log(LogLevel::Info, "Configuring mods.");
 	for (auto mod : mods)
 	{
-		mod->configure();
+		auto builder = builders.find(mod->getInfo().getIdName())->second;
+		mod->configure(builder);
 	}
 	log_->log(LogLevel::Info, "Finishing load mods.");
 	for (auto mod : mods)
 	{
-		mod->done();
+		auto builder = builders.find(mod->getInfo().getIdName())->second;
+		mod->done(builder);
 	}
 }
 

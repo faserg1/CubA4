@@ -13,7 +13,7 @@ namespace CubA4
 				public virtual CubA4::mod::object::IBlock
 			{
 			public:
-				explicit TestBlock();
+				explicit TestBlock(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel);
 				~TestBlock();
 
 				std::string getId() const override;
@@ -22,6 +22,7 @@ namespace CubA4
 				std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getRenderModel() const override;
 			protected:
 			private:
+				const std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel_;
 			};
 		}
 	}

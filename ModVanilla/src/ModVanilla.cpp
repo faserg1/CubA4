@@ -4,9 +4,10 @@
 using namespace CubA4::mod;
 using namespace CubA4::core;
 
-ModVanilla::ModVanilla()
+ModVanilla::ModVanilla(const IModInfo &modInfo) :
+	modInfo_(modInfo)
 {
-	
+	manager_ = std::make_shared<manager::ModManager>();
 }
 
 ModVanilla::~ModVanilla()
@@ -17,13 +18,13 @@ ModVanilla::~ModVanilla()
 void ModVanilla::load(std::shared_ptr<const ICore> core)
 {
 	core_ = core;
-	renderStartup_.load(core);
-	worldSetup_.load(core);
+	renderStartup_.load(core, manager_);
+	worldSetup_.load(core, manager_);
 }
 
-void ModVanilla::preinit()
+void ModVanilla::preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
-
+	renderStartup_.preinit(builder);
 }
 
 void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
@@ -32,17 +33,16 @@ void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
 }
 
 void ModVanilla::init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
-{
-	renderStartup_.init(builder);
-	renderStartup_.init(builder);
+{	
+	worldSetup_.init(builder);
 }
 
-void ModVanilla::configure()
+void ModVanilla::configure(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
 
 }
 
-void ModVanilla::done()
+void ModVanilla::done(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
 	core_->getLogger()->flush();
 }
@@ -50,4 +50,14 @@ void ModVanilla::done()
 void ModVanilla::preunload()
 {
 
+}
+
+const IModInfo &ModVanilla::getInfo() const
+{
+	return modInfo_;
+}
+
+std::weak_ptr<const manager::IModManager> ModVanilla::getManager() const
+{
+	return manager_;
 }

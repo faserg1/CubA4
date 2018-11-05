@@ -1,15 +1,17 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(ModBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
-set(ModBaseIncludeBaseDir ${ModBaseIncludeDir}/base)
+set(ModBaseIncludeManagerDir ${ModBaseIncludeDir}/manager)
 set(ModBaseIncludeContainerDir ${ModBaseIncludeDir}/container)
 set(ModBaseIncludeExceptionDir ${ModBaseIncludeDir}/exception)
 set(ModBaseIncludeModDir ${ModBaseIncludeDir}/mod)
 set(ModBaseIncludeObjectDir ${ModBaseIncludeDir}/object)
 set(ModBaseIncludeWorldDir ${ModBaseIncludeDir}/world)
-
-set(ModBaseHeaderBase 
-	${ModBaseIncludeBaseDir}/IManager.hpp
+set(ModBaseHeaderManager
+	${ModBaseIncludeManagerDir}/IModManager.hpp
+	${ModBaseIncludeManagerDir}/IModRenderManager.hpp
+	${ModBaseIncludeManagerDir}/IModBlockManager.hpp
+	${ModBaseIncludeManagerDir}/IModItemManager.hpp
 )
 set(ModBaseHeaderContainer
 	${ModBaseIncludeContainerDir}/IContainer.hpp
@@ -36,7 +38,6 @@ set(ModBaseHeaderWorld
 	${ModBaseIncludeWorldDir}/IChunk.hpp
 )
 
-source_group("${SOURCE_GROUP_HEADER_START}base" FILES ${ModBaseHeaderBase})
 source_group("${SOURCE_GROUP_HEADER_START}container" FILES ${ModBaseHeaderContainer})
 source_group("${SOURCE_GROUP_HEADER_START}exception" FILES ${ModBaseHeaderException})
 source_group("${SOURCE_GROUP_HEADER_START}mod" FILES ${ModBaseHeaderMod})
@@ -52,7 +53,9 @@ set(ModBaseHeaders
 	${ModBaseHeaderMod}
 	${ModBaseHeaderObject}
 	${ModBaseHeaderWorld}
+	${ModBaseHeaderManager}
 )
+source_group("${SOURCE_GROUP_HEADER_START}manager" FILES ${ModBaseHeaderManager})
 
 add_library(ModBase INTERFACE)
 target_include_directories(ModBase INTERFACE include)

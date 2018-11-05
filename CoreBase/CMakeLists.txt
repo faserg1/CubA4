@@ -25,6 +25,7 @@ set(CoreBaseHeaderSystem
 	${CoreBaseIncludeSystemDir}/IAppCallback.hpp
 	${CoreBaseIncludeSystemDir}/IEnvironment.hpp
 	${CoreBaseIncludeSystemDir}/IEnvironmentBuilder.hpp
+	${CoreBaseIncludeSystemDir}/IIdentityiMap.hpp
 )
 set(CoreBaseHeaderInfo
 	${CoreBaseIncludeInfoDir}/IApplicationInfo.hpp
