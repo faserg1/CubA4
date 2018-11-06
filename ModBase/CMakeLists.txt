@@ -36,14 +36,8 @@ set(ModBaseHeaderWorld
 	${ModBaseIncludeWorldDir}/IWorld.hpp
 	${ModBaseIncludeWorldDir}/IWorldSubscriber.hpp
 	${ModBaseIncludeWorldDir}/IChunk.hpp
+	${ModBaseIncludeWorldDir}/IWorldDefinition.hpp
 )
-
-source_group("${SOURCE_GROUP_HEADER_START}container" FILES ${ModBaseHeaderContainer})
-source_group("${SOURCE_GROUP_HEADER_START}exception" FILES ${ModBaseHeaderException})
-source_group("${SOURCE_GROUP_HEADER_START}mod" FILES ${ModBaseHeaderMod})
-source_group("${SOURCE_GROUP_HEADER_START}object" FILES ${ModBaseHeaderObject})
-source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${ModBaseHeaderWorld})
-
 set(ModBaseHeaders 
 	${ModBaseIncludeDir}/ModExportHelper.hpp
 	${ModBaseIncludeDir}/IModInfo.hpp
@@ -55,6 +49,12 @@ set(ModBaseHeaders
 	${ModBaseHeaderWorld}
 	${ModBaseHeaderManager}
 )
+
+source_group("${SOURCE_GROUP_HEADER_START}container" FILES ${ModBaseHeaderContainer})
+source_group("${SOURCE_GROUP_HEADER_START}exception" FILES ${ModBaseHeaderException})
+source_group("${SOURCE_GROUP_HEADER_START}mod" FILES ${ModBaseHeaderMod})
+source_group("${SOURCE_GROUP_HEADER_START}object" FILES ${ModBaseHeaderObject})
+source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${ModBaseHeaderWorld})
 source_group("${SOURCE_GROUP_HEADER_START}manager" FILES ${ModBaseHeaderManager})
 
 add_library(ModBase INTERFACE)

@@ -22,8 +22,8 @@ namespace CubA4
 				const CubA4::render::IRenderInfo &getRenderInfo() const override;
 				std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
 
-				void registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) override;
-				void registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world) override;
+				bool registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) override;
+				std::shared_ptr<const CubA4::mod::world::IWorld> createWorld(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> worldDef) override;
 			protected:
 			private:
 				EnvironmentBuilderData data_;

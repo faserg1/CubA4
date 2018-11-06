@@ -3,15 +3,18 @@
 
 namespace CubA4
 {
-	namespace world
+	namespace mod
 	{
-		class IWorldSubscriber
+		namespace world
 		{
-		public:
-			virtual ~IWorldSubscriber() = default;
-		protected:
-			explicit IWorldSubscriber() = default;
-		};
+			class IWorldSubscriber
+			{
+			public:
+				virtual ~IWorldSubscriber() = default;
+			protected:
+				explicit IWorldSubscriber() = default;
+			};
+		}
 	}
 }
 

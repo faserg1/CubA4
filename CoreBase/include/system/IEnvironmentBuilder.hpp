@@ -2,6 +2,7 @@
 #define IENVIRONMENTBUILDER_HPP
 
 #include <memory>
+#include <string>
 
 namespace CubA4
 {
@@ -17,6 +18,7 @@ namespace CubA4
 		namespace world
 		{
 			class IWorld;
+			class IWorldDefinition;
 		}
 	}
 
@@ -39,9 +41,9 @@ namespace CubA4
 				virtual const CubA4::render::IRenderInfo &getRenderInfo() const = 0;
 				virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
 
-				virtual void registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) = 0;
+				virtual bool registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) = 0;
 
-				virtual void registerWorld(std::shared_ptr<const CubA4::mod::world::IWorld> world) = 0;
+				virtual std::shared_ptr<const CubA4::mod::world::IWorld> createWorld(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> worldDef) = 0;
 			protected:
 				explicit IEnvironmentBuilder() = default;
 				virtual ~IEnvironmentBuilder() = default;

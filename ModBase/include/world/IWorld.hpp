@@ -6,21 +6,27 @@
 
 namespace CubA4
 {
-	namespace world
+	namespace mod
 	{
-		class IWorldSubscriber;
-
-		class IWorld :
-			public virtual CubA4::object::IObject
+		namespace world
 		{
-		public:
-			virtual ~IWorld() = default;
+			class IWorldSubscriber;
+			class IWorldDefinition;
 
-			virtual void subscribe(IWorldSubscriber *subscriber) = 0;
-			virtual void unsubscribe(IWorldSubscriber *subscriber) = 0;
-		protected:
-			explicit IWorld() = default;
-		};
+			class IWorld :
+				public virtual CubA4::mod::object::IObject
+			{
+			public:
+				virtual ~IWorld() = default;
+
+				virtual void subscribe(IWorldSubscriber *subscriber) = 0;
+				virtual void unsubscribe(IWorldSubscriber *subscriber) = 0;
+
+				virtual std::shared_ptr<const IWorldDefinition> getWorldDefinition() const = 0;
+			protected:
+				explicit IWorld() = default;
+			};
+		}
 	}
 }
 

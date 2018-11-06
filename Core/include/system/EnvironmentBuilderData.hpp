@@ -50,6 +50,7 @@ namespace CubA4
 				const std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
 				IdentityMap identityMap_;
 				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IBlock>> blocks_;
+				std::map<int64_t, const std::shared_ptr<const CubA4::mod::world::IWorld>> worlds_;
 			};
 		}
 	}

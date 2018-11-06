@@ -18,6 +18,9 @@ void IdentityMap::clear()
 
 int64_t IdentityMap::add(const std::string &tag, const std::string &id)
 {
+	auto lastId = get(tag, id);
+	if (lastId >= 0)
+		return -1;
 	const auto genId = counter_++;
 	map_.insert(bm_value(genId, makeId(tag, id)));
 	return genId;
@@ -25,7 +28,10 @@ int64_t IdentityMap::add(const std::string &tag, const std::string &id)
 
 int64_t IdentityMap::get(const std::string &tag, const std::string &id) const
 {
-	return map_.right.find(makeId(tag, id))->second;
+	auto pair = map_.right.find(makeId(tag, id));
+	if (pair == map_.right.end())
+		return -1;
+	return pair->second;
 }
 
 bool IdentityMap::parseId(const std::string &input, std::string &tag, std::string &id)
