@@ -1,7 +1,14 @@
 #include "../../include/system/IdentityMap.hpp"
 using namespace CubA4::core::system;
 
-IdentityMap::IdentityMap()
+IdentityMap::IdentityMap() :
+	counter_(0)
+{
+	
+}
+
+IdentityMap::IdentityMap(const IdentityMap &&other) :
+	counter_(other.counter_), map_(std::move(other.map_))
 {
 	
 }
@@ -13,6 +20,7 @@ IdentityMap::~IdentityMap()
 
 void IdentityMap::clear()
 {
+	counter_ = 0;
 	map_.clear();
 }
 

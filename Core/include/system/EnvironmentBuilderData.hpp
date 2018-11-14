@@ -11,14 +11,7 @@ namespace CubA4
 	{
 		namespace object
 		{
-			class IBlock;
-			class IEntity;
-			class IItem;
-		}
-
-		namespace world
-		{
-			class IWorld;
+			class IObject;
 		}
 	}
 
@@ -38,19 +31,22 @@ namespace CubA4
 		{
 			class EnvironmentBuilderData
 			{
-				friend class EnvironmentBuilder;
 			public:
 				explicit EnvironmentBuilderData(
 					std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager,
 					const CubA4::render::IRenderInfo &renderInfo);
 				~EnvironmentBuilderData();
+
+				const CubA4::render::IRenderInfo &getRenderInfo() const;
+				std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
+				IdentityMap &getIdentityMap();
+				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IObject>> &getObjects();
 			protected:
 			private:
 				const CubA4::render::IRenderInfo &renderInfo_;
 				const std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
 				IdentityMap identityMap_;
-				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IBlock>> blocks_;
-				std::map<int64_t, const std::shared_ptr<const CubA4::mod::world::IWorld>> worlds_;
+				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IObject>> objects_;
 			};
 		}
 	}

@@ -39,5 +39,5 @@ void WorldSetup::init(std::shared_ptr<IEnvironmentBuilder> builder)
 {
 	log_->log(LogLevel::Info, "Initialisating world");
 	auto renderManager = manager_->getModRenderManager();
-	builder->registerBlock(std::make_shared<TestBlock>(renderManager->getModel("block")));
+	builder->registerObject(std::make_shared<TestBlock>(renderManager->getModel("block")));
 }

@@ -15,6 +15,7 @@ namespace CubA4
 			{
 			public:
 				explicit IdentityMap();
+				explicit IdentityMap(const IdentityMap &&other);
 				~IdentityMap();
 
 				void clear() override;

@@ -10,9 +10,7 @@ namespace CubA4
 	{
 		namespace object
 		{
-			class IBlock;
-			class IEntity;
-			class IItem;
+			class IObject;
 		}
 
 		namespace world
@@ -41,7 +39,7 @@ namespace CubA4
 				virtual const CubA4::render::IRenderInfo &getRenderInfo() const = 0;
 				virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
 
-				virtual bool registerBlock(std::shared_ptr<const CubA4::mod::object::IBlock> block) = 0;
+				virtual bool registerObject(std::shared_ptr<const CubA4::mod::object::IObject> object) = 0;
 
 				virtual std::shared_ptr<const CubA4::mod::world::IWorld> createWorld(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> worldDef) = 0;
 			protected:
