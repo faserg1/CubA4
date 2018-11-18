@@ -1,4 +1,4 @@
-#include "../../include/system/Environment.hpp"
+#include "Environment.hpp"
 using namespace CubA4::core::system;
 
 Environment::Environment(EnvironmentContext &&context) :

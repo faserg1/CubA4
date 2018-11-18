@@ -1,8 +1,8 @@
 #include "../include/Core.hpp"
-#include "../include/config/CoreConfig.hpp"
-#include "../include/config/FilePaths.hpp"
-#include "../include/logging/Logger.hpp"
-#include "../include/system/Startup.hpp"
+#include "config/CoreConfig.hpp"
+#include "config/FilePaths.hpp"
+#include "logging/Logger.hpp"
+#include "system/Startup.hpp"
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
 #include <sstream>

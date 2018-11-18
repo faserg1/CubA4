@@ -1,4 +1,4 @@
-#include "../../include/config/FilePaths.hpp"
+#include "FilePaths.hpp"
 
 using namespace CubA4::core::config;
 

@@ -1,4 +1,4 @@
-#include "../../include/system/IdentityMap.hpp"
+#include "IdentityMap.hpp"
 using namespace CubA4::core::system;
 
 IdentityMap::IdentityMap() :

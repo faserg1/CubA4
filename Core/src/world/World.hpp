@@ -22,10 +22,14 @@ namespace CubA4
 			void unsubscribe(CubA4::mod::world::IWorldSubscriber *subscriber) override;
 
 			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
+
+			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<CubA4::mod::world::BlockGlobalPos> positions) override;
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition_;
 			std::vector<CubA4::mod::world::IWorldSubscriber*> subscribers_;
+		private:
+			void resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos);
 		};
 	}
 }

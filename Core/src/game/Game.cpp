@@ -1,4 +1,4 @@
-#include "../../include/game/Game.hpp"
+#include "Game.hpp"
 using namespace CubA4::core::game;
 
 Game::Game() :

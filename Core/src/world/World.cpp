@@ -1,4 +1,4 @@
-#include "../../include/world/World.hpp"
+#include "World.hpp"
 #include <world/IWorldDefinition.hpp>
 #include <world/IWorldSubscriber.hpp>
 #include <algorithm>
@@ -39,4 +39,20 @@ void World::unsubscribe(IWorldSubscriber *subscriber)
 std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const
 {
 	return definition_;
+}
+
+void World::placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<BlockGlobalPos> positions)
+{
+
+}
+
+void World::resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos)
+{
+	blockPos.x = globalPos.x % ChunkSize;
+	blockPos.y = globalPos.y % ChunkSize;
+	blockPos.z = globalPos.z % ChunkSize;
+	
+	chunkPos.x = (globalPos.x - blockPos.x) / ChunkSize;
+	chunkPos.y = (globalPos.y - blockPos.y) / ChunkSize;
+	chunkPos.z = (globalPos.z - blockPos.z) / ChunkSize;
 }

@@ -1,5 +1,5 @@
-#include "../../include/system/EnvironmentBuilder.hpp"
-#include "../../include/world/World.hpp"
+#include "EnvironmentBuilder.hpp"
+#include "../world/World.hpp"
 #include <IModInfo.hpp>
 #include <object/IObject.hpp>
 #include <world/IWorldDefinition.hpp>

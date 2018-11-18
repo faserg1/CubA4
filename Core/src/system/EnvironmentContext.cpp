@@ -1,4 +1,4 @@
-#include "../../include/system/EnvironmentContext.hpp"
+#include "EnvironmentContext.hpp"
 using namespace CubA4::core::system;
 
 EnvironmentContext::EnvironmentContext(IdentityMap &&map, objectsMap_t &&objectsMap) :

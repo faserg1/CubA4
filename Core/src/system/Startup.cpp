@@ -1,9 +1,9 @@
-#include "../../include/system/Startup.hpp"
-#include "../../include/system/EnvironmentBuilderData.hpp"
-#include "../../include/system/EnvironmentBuilder.hpp"
-#include "../../include/system/EnvironmentContext.hpp"
-#include "../../include/system/Environment.hpp"
-#include "../../include/game/Game.hpp"
+#include "Startup.hpp"
+#include "EnvironmentBuilderData.hpp"
+#include "EnvironmentBuilder.hpp"
+#include "EnvironmentContext.hpp"
+#include "Environment.hpp"
+#include "../game/Game.hpp"
 #include <system/IAppCallback.hpp>
 #include <mod/IModLoader.hpp>
 #include <stdexcept>
@@ -45,6 +45,11 @@ void Startup::stop()
 {
 	game_->stop();
 	destroyGame();
+}
+
+std::shared_ptr<CubA4::core::game::IGame> Startup::getGame() const
+{
+	return game_;
 }
 
 void Startup::initMods()

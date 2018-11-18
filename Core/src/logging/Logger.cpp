@@ -1,4 +1,4 @@
-#include "../../include/logging/Logger.hpp"
+#include "Logger.hpp"
 #include <logging/ILoggerTagged.hpp>
 #include <boost/filesystem.hpp>
 #include <ostream>

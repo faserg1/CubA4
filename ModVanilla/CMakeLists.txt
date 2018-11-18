@@ -3,12 +3,19 @@ set(ModVanillaIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ModVanillaIncludeBlockDir ${ModVanillaIncludeDir}/block)
 
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(ModVanillaSourceWorldDir ${ModVanillaSourceDir}/world)
 set(ModVanillaSourceManagerDir ${ModVanillaSourceDir}/manager)
 set(ModVanillaSourceBlockDir ${ModVanillaSourceDir}/block)
 set(ModVanillaSourceRenderDir ${ModVanillaSourceDir}/render)
 set(ModVanillaSourceStartupDir ${ModVanillaSourceDir}/startup)
 set(ModVanillaSourceCoreDir ${ModVanillaSourceDir}/core)
 set(ModVanillaSourceCoreInfoDir ${ModVanillaSourceCoreDir}/info)
+set(ModVanillaSourceWorld
+	${ModVanillaSourceWorldDir}/TestWorldGenerator.cpp
+)
+set(ModVanillaHeaderWorld
+	${ModVanillaSourceWorldDir}/TestWorldGenerator.hpp
+)
 set(ModVanillaSourceManager
 	${ModVanillaSourceManagerDir}/ModManager.cpp
 	${ModVanillaSourceManagerDir}/ModRenderManager.cpp
@@ -63,7 +70,8 @@ set(ModVanillaHeaders
 	${ModVanillaHeaderStartup}
 	${ModVanillaHeaderRender}
 	${ModVanillaHeaderBlock}
-	${ModVanillaHeaderManager})
+	${ModVanillaHeaderManager}
+	${ModVanillaHeaderWorld})
 source_group("${SOURCE_GROUP_HEADER_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaHeaderCoreInfo})
 
 set(ModVanillaSources 
@@ -75,6 +83,7 @@ set(ModVanillaSources
 	${ModVanillaSourceRender}
 	${ModVanillaSourceBlock}
 	${ModVanillaSourceManager}
+	${ModVanillaSourceWorld}
 	)
 source_group("${SOURCE_GROUP_SOURCE_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaSourceCoreInfo})
 source_group("${SOURCE_GROUP_HEADER_START}startup" FILES ${ModVanillaHeaderStartup})
@@ -88,6 +97,8 @@ source_group("${SOURCE_GROUP_HEADER_START}block" FILES ${ModVanillaHeaderBlock})
 source_group("${SOURCE_GROUP_SOURCE_START}block" FILES ${ModVanillaSourceBlock})
 source_group("${SOURCE_GROUP_HEADER_START}manager" FILES ${ModVanillaHeaderManager})
 source_group("${SOURCE_GROUP_SOURCE_START}manager" FILES ${ModVanillaSourceManager})
+source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${ModVanillaHeaderWorld})
+source_group("${SOURCE_GROUP_SOURCE_START}world" FILES ${ModVanillaSourceWorld})
 
 add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources} ${irs_resources})
 

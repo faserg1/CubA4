@@ -115,7 +115,7 @@ void AppMain::loadRender()
 	log_->log(LogLevel::Info, "Render engine loaded");
 }
 
-void  AppMain::unloadRender()
+void AppMain::unloadRender()
 {
 	// TODO: [OOKAMI] unload render library
 }

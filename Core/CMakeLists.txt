@@ -1,11 +1,6 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
-set(CoreIncludeGameDir ${CoreIncludeDir}/game)
-set(CoreIncludeWorldDir ${CoreIncludeDir}/world)
-set(CoreIncludeSystemDir ${CoreIncludeDir}/system)
-set(CoreIncludeLoggingDir ${CoreIncludeDir}/logging)
-set(CoreIncludeConfigDir ${CoreIncludeDir}/config)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(CoreSourceGameDir ${CoreSourceDir}/game)
 set(CoreSourceWorldDir ${CoreSourceDir}/world)
@@ -16,15 +11,15 @@ set(CoreSourceGame
 	${CoreSourceGameDir}/Game.cpp
 )
 set(CoreHeaderGame
-	${CoreIncludeGameDir}/Game.hpp
+	${CoreSourceGameDir}/Game.hpp
 )
 set(CoreSourceWorld
 	${CoreSourceWorldDir}/World.cpp
 	${CoreSourceWorldDir}/Chunk.cpp
 )
 set(CoreHeaderWorld
-	${CoreIncludeWorldDir}/World.hpp
-	${CoreIncludeWorldDir}/Chunk.hpp
+	${CoreSourceWorldDir}/World.hpp
+	${CoreSourceWorldDir}/Chunk.hpp
 )
 set(CoreSourceSystem
 	${CoreSourceSystemDir}/Startup.cpp
@@ -36,27 +31,27 @@ set(CoreSourceSystem
 	${CoreSourceSystemDir}/IdentityMap.cpp
 )
 set(CoreHeaderSystem
-	${CoreIncludeSystemDir}/Startup.hpp
-	${CoreIncludeSystemDir}/Environment.hpp
-	${CoreIncludeSystemDir}/EnvironmentBuilder.hpp
-	${CoreIncludeSystemDir}/EnvironmentContext.hpp
-	${CoreIncludeSystemDir}/EnvironmentBuilderData.hpp
-	${CoreIncludeSystemDir}/EnvironmentBuilderContext.hpp
-	${CoreIncludeSystemDir}/IdentityMap.hpp
+	${CoreSourceSystemDir}/Startup.hpp
+	${CoreSourceSystemDir}/Environment.hpp
+	${CoreSourceSystemDir}/EnvironmentBuilder.hpp
+	${CoreSourceSystemDir}/EnvironmentContext.hpp
+	${CoreSourceSystemDir}/EnvironmentBuilderData.hpp
+	${CoreSourceSystemDir}/EnvironmentBuilderContext.hpp
+	${CoreSourceSystemDir}/IdentityMap.hpp
 )
 set(CoreSourceLogging
 	${CoreSourceLoggingDir}/Logger.cpp
 )
 set(CoreHeaderLogging
-	${CoreIncludeLoggingDir}/Logger.hpp
+	${CoreSourceLoggingDir}/Logger.hpp
 )
 set(CoreSourceConfig
 	${CoreSourceConfigDir}/CoreConfig.cpp
 	${CoreSourceConfigDir}/FilePaths.cpp
 )
 set(CoreHeaderConfig
-	${CoreIncludeConfigDir}/CoreConfig.hpp
-	${CoreIncludeConfigDir}/FilePaths.hpp
+	${CoreSourceConfigDir}/CoreConfig.hpp
+	${CoreSourceConfigDir}/FilePaths.hpp
 )
 
 set(CoreHeaders
