@@ -7,6 +7,12 @@ IdentityMap::IdentityMap() :
 	
 }
 
+IdentityMap::IdentityMap(IdentityMap &&other) :
+	counter_(other.counter_), map_(std::move(other.map_))
+{
+	
+}
+
 IdentityMap::IdentityMap(const IdentityMap &&other) :
 	counter_(other.counter_), map_(std::move(other.map_))
 {
@@ -15,7 +21,7 @@ IdentityMap::IdentityMap(const IdentityMap &&other) :
 
 IdentityMap::~IdentityMap()
 {
-	
+	clear();
 }
 
 void IdentityMap::clear()

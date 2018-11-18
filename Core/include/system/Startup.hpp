@@ -15,6 +15,11 @@ namespace CubA4
 	{
 		class ICore;
 
+		namespace game
+		{
+			class Game;
+		}
+
 		namespace system
 		{
 			class IAppCallback;
@@ -27,6 +32,7 @@ namespace CubA4
 				~Startup();
 
 				void setup(system::IAppCallback &appCallback) override;
+				void unload() override;
 
 				void run() override;
 				void stop() override;
@@ -34,10 +40,13 @@ namespace CubA4
 				void initMods();
 				void unloadMods();
 
+				void initGame();
+				void destroyGame();
 			private:
 				const std::weak_ptr<const ICore> core_;
 				system::IAppCallback *appCallback_;
 				std::shared_ptr<mod::IModLoader> modLoader_;
+				std::shared_ptr<CubA4::core::game::Game> game_;
 			};
 		}
 	}

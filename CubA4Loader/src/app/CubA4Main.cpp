@@ -48,14 +48,18 @@ int AppMain::exec()
 	catch (const std::exception ex)
 	{
 		stop();
+		core_->getStartup()->unload();
 		destroyRender();
 		unloadRender();
 		SDL_Quit();
 		log_->log(LogLevel::Critical, ex.what());
 		return 1;
 	}
+	///////////////////////////
 	loop();
+	///////////////////////////
 	stop();
+	core_->getStartup()->unload();
 	destroyRender();
 	unloadRender();
 	SDL_Quit();

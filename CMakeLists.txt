@@ -51,8 +51,8 @@ add_subdirectory (CubA4Loader)
 add_subdirectory (CubA4Server)
 
 #deps
-add_dependencies(CubA4Loader Network ModLoader RenderVulkan ModVanilla)
-add_dependencies(CubA4Server Network ModLoader ModVanilla)
+add_dependencies(CubA4Loader Core Network ModLoader RenderVulkan ModVanilla)
+add_dependencies(CubA4Server Core Network ModLoader ModVanilla)
 
 #special
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CubA4Loader)

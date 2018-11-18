@@ -15,6 +15,7 @@ namespace CubA4
 			{
 			public:
 				explicit IdentityMap();
+				explicit IdentityMap(IdentityMap &&other);
 				explicit IdentityMap(const IdentityMap &&other);
 				~IdentityMap();
 

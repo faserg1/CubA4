@@ -18,6 +18,7 @@ namespace CubA4
 			{
 			public:
 				virtual void setup(IAppCallback &appCallback) = 0;
+				virtual void unload() = 0;
 
 				virtual void run() = 0;
 				virtual void stop() = 0;

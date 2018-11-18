@@ -1,15 +1,23 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreIncludeGameDir ${CoreIncludeDir}/game)
 set(CoreIncludeWorldDir ${CoreIncludeDir}/world)
 set(CoreIncludeSystemDir ${CoreIncludeDir}/system)
 set(CoreIncludeLoggingDir ${CoreIncludeDir}/logging)
 set(CoreIncludeConfigDir ${CoreIncludeDir}/config)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(CoreSourceGameDir ${CoreSourceDir}/game)
 set(CoreSourceWorldDir ${CoreSourceDir}/world)
 set(CoreSourceSystemDir ${CoreSourceDir}/system)
 set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
+set(CoreSourceGame
+	${CoreSourceGameDir}/Game.cpp
+)
+set(CoreHeaderGame
+	${CoreIncludeGameDir}/Game.hpp
+)
 set(CoreSourceWorld
 	${CoreSourceWorldDir}/World.cpp
 	${CoreSourceWorldDir}/Chunk.cpp
@@ -57,6 +65,7 @@ set(CoreHeaders
 	${CoreHeaderConfig}
 	${CoreHeaderSystem}
 	${CoreHeaderWorld}
+	${CoreHeaderGame}
 )
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreHeaderConfig})
@@ -67,6 +76,7 @@ set(CoreSources
 	${CoreSourceConfig}
 	${CoreSourceSystem}
 	${CoreSourceWorld}
+	${CoreSourceGame}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}logging" FILES ${CoreSourceLogging})
 source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${CoreSourceConfig})
@@ -74,6 +84,8 @@ source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreHeaderSystem})
 source_group("${SOURCE_GROUP_SOURCE_START}system" FILES ${CoreSourceSystem})
 source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${CoreHeaderWorld})
 source_group("${SOURCE_GROUP_SOURCE_START}world" FILES ${CoreSourceWorld})
+source_group("${SOURCE_GROUP_HEADER_START}game" FILES ${CoreHeaderGame})
+source_group("${SOURCE_GROUP_SOURCE_START}game" FILES ${CoreSourceGame})
 	
 add_library(Core SHARED ${CoreHeaders} ${CoreSources})
 target_include_directories(Core INTERFACE include)

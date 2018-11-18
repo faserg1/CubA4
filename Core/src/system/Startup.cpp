@@ -3,6 +3,7 @@
 #include "../../include/system/EnvironmentBuilder.hpp"
 #include "../../include/system/EnvironmentContext.hpp"
 #include "../../include/system/Environment.hpp"
+#include "../../include/game/Game.hpp"
 #include <system/IAppCallback.hpp>
 #include <mod/IModLoader.hpp>
 #include <stdexcept>
@@ -24,18 +25,26 @@ void Startup::setup(system::IAppCallback &appCallback)
 {
 	appCallback_ = &appCallback;
 	modLoader_ = appCallback_->getModLoader();
+	initGame();
 	initMods();
+}
+
+void Startup::unload()
+{
+	unloadMods();
 }
 
 void Startup::run()
 {
 	if (!appCallback_)
 		throw std::runtime_error("Startup not initialized!");
+	game_->run();
 }
 
 void Startup::stop()
 {
-	unloadMods();
+	game_->stop();
+	destroyGame();
 }
 
 void Startup::initMods()
@@ -52,6 +61,7 @@ void Startup::initMods()
 
 	EnvironmentContext envContext(std::move(envBuilderData.getIdentityMap()), std::move(envBuilderData.getObjects()));
 	auto env = std::make_shared<Environment>(std::move(envContext));
+	game_->setupEnvironment(env);
 }
 
 void Startup::unloadMods()
@@ -59,4 +69,14 @@ void Startup::unloadMods()
 	if (!modLoader_)
 		return;
 	modLoader_->unload();
+}
+
+void Startup::initGame()
+{
+	game_ = std::make_shared<CubA4::core::game::Game>();
+}
+
+void Startup::destroyGame()
+{
+	game_.reset();
 }

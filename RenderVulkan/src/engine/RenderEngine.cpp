@@ -80,8 +80,6 @@ std::shared_ptr<IRenderManager> VulkanRenderEngine::getRenderManager() const
 	return renderManager_;
 }
 
-
-
 void VulkanRenderEngine::initInstance()
 {
 	if (!instanceBuilder_)
@@ -107,12 +105,14 @@ void VulkanRenderEngine::initInstance()
 	}
 	else
 		throw std::runtime_error("Window destroyed! Cannot init surface!");
-	
+
+#ifdef _DEBUG
 	auto vkDebugExt = std::make_shared<DebugExtension>(logger_);
 	addExt(vkDebugExt);
 
 	auto vkStdLayer = std::make_shared<StandardValidationLayer>();
 	addLayer(vkStdLayer);
+#endif
 
 	instance_ = instanceBuilder_->build();
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),

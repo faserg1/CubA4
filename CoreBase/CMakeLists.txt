@@ -1,12 +1,16 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
+set(CoreBaseIncludeGameDir ${CoreBaseIncludeDir}/game)
 set(CoreBaseIncludeExceptionsDir ${CoreBaseIncludeDir}/exceptions)
 set(CoreBaseIncludeModelDir ${CoreBaseIncludeDir}/model)
 set(CoreBaseIncludeSystemDir ${CoreBaseIncludeDir}/system)
 set(CoreBaseIncludeInfoDir ${CoreBaseIncludeDir}/info)
 set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
+set(CoreBaseHeaderGame
+	${CoreBaseIncludeGameDir}/IGame.hpp
+)
 
 set(CoreBaseHeaderExceptions
 	${CoreBaseIncludeExceptionsDir}/ICoreConfigException.hpp
@@ -52,6 +56,7 @@ set(CoreBaseHeaders
 	${CoreBaseHeaderSystem}
 	${CoreBaseHeaderExceptions}
 	${CoreBaseHeaderModel}
+	${CoreBaseHeaderGame}
 
 )
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreBaseHeaderConfig})
@@ -61,6 +66,7 @@ source_group("${SOURCE_GROUP_HEADER_START}info" FILES ${CoreBaseHeaderInfo})
 source_group("${SOURCE_GROUP_HEADER_START}system" FILES ${CoreBaseHeaderSystem})
 source_group("${SOURCE_GROUP_HEADER_START}exceptions" FILES ${CoreBaseHeaderExceptions})
 source_group("${SOURCE_GROUP_HEADER_START}model" FILES ${CoreBaseHeaderModel})
+source_group("${SOURCE_GROUP_HEADER_START}game" FILES ${CoreBaseHeaderGame})
 
 add_library(CoreBase INTERFACE)
 target_include_directories(CoreBase INTERFACE include)
