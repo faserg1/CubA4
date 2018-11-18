@@ -24,6 +24,12 @@ namespace CubA4
 				TPosType y;
 				TPosType z;
 				TPosType unused;
+				friend bool operator==(const BasePos &one, const BasePos &other)
+				{
+					return one.x == other.x
+						&& one.y == other.y
+						&& one.z == other.z;
+				}
 			};
 
 			/*Позиция блока в чанке */
@@ -50,6 +56,7 @@ namespace CubA4
 				 * \return Количество позиций в чанке
 				*/
 				virtual std::vector<BlockInChunkPos> &&getChunkPositions(const std::shared_ptr<const object::IBlock> usedBlock) const = 0;
+				virtual const ChunkPos &getChunkPos() const = 0;
 			protected:
 				explicit IChunk() = default;
 			};

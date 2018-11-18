@@ -4,7 +4,8 @@ using namespace CubA4::world;
 using namespace CubA4::mod::world;
 using namespace CubA4::mod::object;
 
-Chunk::Chunk()
+Chunk::Chunk(const CubA4::mod::world::ChunkPos &chunkPos) :
+	chunkPos_(chunkPos)
 {
 	
 }
@@ -26,6 +27,11 @@ std::vector<BlockInChunkPos> &&Chunk::getChunkPositions(const std::shared_ptr<co
 	Locker locker(globalLock_);
 	auto copy = usedBlockInfos_.find(usedBlock->getId())->second.chunkPositions;
 	return std::move(copy);
+}
+
+const CubA4::mod::world::ChunkPos &Chunk::getChunkPos() const
+{
+	return chunkPos_;
 }
 
 void Chunk::placeBlocks(std::shared_ptr<const IBlock> block, std::vector<BlockInChunkPos> positions)

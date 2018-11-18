@@ -7,6 +7,8 @@ namespace CubA4
 	{
 		namespace game
 		{
+			class IGameSubscriber;
+
 			class IGame
 			{
 			public:

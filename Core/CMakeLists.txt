@@ -2,11 +2,16 @@ cmake_minimum_required (VERSION 3.12)
 
 set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(CoreSourceUtilDir ${CoreSourceDir}/util)
 set(CoreSourceGameDir ${CoreSourceDir}/game)
 set(CoreSourceWorldDir ${CoreSourceDir}/world)
 set(CoreSourceSystemDir ${CoreSourceDir}/system)
 set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
+set(CoreHeaderUtil
+	${CoreSourceUtilDir}/ChunkPosHash.hpp
+	${CoreSourceUtilDir}/SubscriptionHelper.hpp
+)
 set(CoreSourceGame
 	${CoreSourceGameDir}/Game.cpp
 )
@@ -61,6 +66,7 @@ set(CoreHeaders
 	${CoreHeaderSystem}
 	${CoreHeaderWorld}
 	${CoreHeaderGame}
+	${CoreHeaderUtil}
 )
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreHeaderConfig})
@@ -81,6 +87,7 @@ source_group("${SOURCE_GROUP_HEADER_START}world" FILES ${CoreHeaderWorld})
 source_group("${SOURCE_GROUP_SOURCE_START}world" FILES ${CoreSourceWorld})
 source_group("${SOURCE_GROUP_HEADER_START}game" FILES ${CoreHeaderGame})
 source_group("${SOURCE_GROUP_SOURCE_START}game" FILES ${CoreSourceGame})
+source_group("${SOURCE_GROUP_HEADER_START}util" FILES ${CoreHeaderUtil})
 	
 add_library(Core SHARED ${CoreHeaders} ${CoreSources})
 target_include_directories(Core INTERFACE include)

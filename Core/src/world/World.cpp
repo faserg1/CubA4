@@ -1,4 +1,5 @@
 #include "World.hpp"
+#include "Chunk.hpp"
 #include <world/IWorldDefinition.hpp>
 #include <world/IWorldSubscriber.hpp>
 #include <algorithm>
@@ -26,14 +27,9 @@ std::wstring World::getName() const
 	return definition_->getName();
 }
 
-void World::subscribe(IWorldSubscriber *subscriber)
+std::shared_ptr<CubA4::core::util::ISubscription> World::subscribe(IWorldSubscriber *subscriber)
 {
-	subscribers_.push_back(subscriber);
-}
-
-void World::unsubscribe(IWorldSubscriber *subscriber)
-{
-	std::remove(subscribers_.begin(), subscribers_.end(), subscriber);
+	return subscriptionHelper_.add(subscriber);
 }
 
 std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const
@@ -41,9 +37,30 @@ std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const
 	return definition_;
 }
 
-void World::placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<BlockGlobalPos> positions)
+void World::placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, const std::vector<BlockGlobalPos> positions)
 {
-
+	CubA4::mod::world::ChunkPos chunkPos;
+	CubA4::mod::world::BlockInChunkPos blockPos;
+	std::unordered_map<const CubA4::mod::world::ChunkPos, std::vector<CubA4::mod::world::BlockInChunkPos>, CubA4::core::util::ChunkPosHash> resolvedPositions;
+	for (const auto &pos : positions)
+	{
+		resolve(pos, chunkPos, blockPos);
+		auto it = resolvedPositions.find(chunkPos);
+		if (it == resolvedPositions.end())
+			resolvedPositions.insert(std::make_pair(chunkPos, std::vector<CubA4::mod::world::BlockInChunkPos>{blockPos}));
+		else
+			it->second.push_back(blockPos);
+	}
+	for (auto &resolvedPosition : resolvedPositions)
+	{
+		auto chunk = findChunk(resolvedPosition.first);
+		if (!chunk)
+		{
+			// TODO: [OOKAMI] Chunk has not loaded? Not found? Why?
+			continue;
+		}
+		chunk->placeBlocks(block, resolvedPosition.second);
+	}
 }
 
 void World::resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos)
@@ -55,4 +72,17 @@ void World::resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::m
 	chunkPos.x = (globalPos.x - blockPos.x) / ChunkSize;
 	chunkPos.y = (globalPos.y - blockPos.y) / ChunkSize;
 	chunkPos.z = (globalPos.z - blockPos.z) / ChunkSize;
+}
+
+std::shared_ptr<CubA4::world::Chunk> World::findChunk(const CubA4::mod::world::ChunkPos &chunkPos)
+{
+	auto it = loadedChunks_.find(chunkPos);
+	if (it == loadedChunks_.end())
+	{
+		// TODO: [OOKAMI] Exception? We do not have to create new chunk. So it placeholder
+		auto chunk = std::make_shared<Chunk>(chunkPos);
+		loadedChunks_.insert(std::make_pair(chunkPos, chunk));
+		return chunk;
+	}
+	return it->second;
 }

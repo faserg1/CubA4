@@ -20,11 +20,12 @@ namespace CubA4
 			public virtual CubA4::mod::world::IChunk
 		{
 		public:
-			explicit Chunk();
+			explicit Chunk(const CubA4::mod::world::ChunkPos &chunkPos);
 			~Chunk();
 
 			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> &&getUsedBlocks() const override;
 			std::vector<CubA4::mod::world::BlockInChunkPos> &&getChunkPositions(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
+			const CubA4::mod::world::ChunkPos &getChunkPos() const override;
 
 			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<CubA4::mod::world::BlockInChunkPos> positions);
 		protected:
@@ -32,6 +33,7 @@ namespace CubA4
 			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> usedBlocks_;
 			std::map<std::string, UsedBlockInfo> usedBlockInfos_;
 			mutable std::atomic_bool globalLock_;
+			const CubA4::mod::world::ChunkPos chunkPos_;
 		private:
 			class Locker
 			{
