@@ -44,17 +44,20 @@ namespace CubA4
 		public:
 			explicit AppMain(int argc, const char *const argv[]);
 
+			int exec();
+
 			std::shared_ptr<mod::IModLoader> getModLoader() const override;
 			std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
 			const CubA4::render::IRenderInfo &getRenderInfo() const override;
-
-			int exec();
 		private:
 			void loadRender();
 			void unloadRender();
 			bool createWindow();
 			void initRender();
 			void destroyRender();
+
+			bool setup();
+			void unload();
 
 			void run();
 			void stop();

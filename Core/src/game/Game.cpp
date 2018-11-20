@@ -12,6 +12,11 @@ Game::~Game()
 	
 }
 
+std::unique_ptr<CubA4::core::util::ISubscription> Game::subscribe(IGameSubscriber *subscriber) const
+{
+	return std::move(subscriptionHelper_.add(subscriber));
+}
+
 void Game::run()
 {
 	runGameLoop_ = true;

@@ -14,6 +14,7 @@ set(CoreBaseHeaderUtil
 )
 set(CoreBaseHeaderGame
 	${CoreBaseIncludeGameDir}/IGame.hpp
+	${CoreBaseIncludeGameDir}/IGameSubscriber.hpp
 )
 
 set(CoreBaseHeaderExceptions

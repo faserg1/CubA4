@@ -37,32 +37,20 @@ int AppMain::exec()
 	SDL_Init(SDL_INIT_VIDEO);
 	try
 	{
-		loadRender();
-		if (!createWindow())
+		if (!setup())
 			// TODO: [OOKAMI] В ядро положить коды ошибок
 			return 1;
-		initRender();
-		core_->getStartup()->setup(*this);
-		run();
 	}
 	catch (const std::exception ex)
 	{
-		stop();
-		core_->getStartup()->unload();
-		destroyRender();
-		unloadRender();
-		SDL_Quit();
+		unload();
 		log_->log(LogLevel::Critical, ex.what());
 		return 1;
 	}
 	///////////////////////////
 	loop();
 	///////////////////////////
-	stop();
-	core_->getStartup()->unload();
-	destroyRender();
-	unloadRender();
-	SDL_Quit();
+	unload();
 	return 0;
 }
 
@@ -81,6 +69,65 @@ const CubA4::render::IRenderInfo &AppMain::getRenderInfo() const
 {
 	return *renderLoader_->getCurrentRenderInfo();
 }
+
+void AppMain::run()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->run();
+	core_->getStartup()->run();
+}
+
+void AppMain::stop()
+{
+	core_->getStartup()->stop();
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->stop();
+}
+
+bool AppMain::setup()
+{
+	loadRender();
+	if (!createWindow())
+		return false;
+	initRender();
+	core_->getStartup()->setup(*this);
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->setGame(core_->getStartup()->getGame());
+	run();
+}
+
+void AppMain::unload()
+{
+	stop();
+	core_->getStartup()->unload();
+	destroyRender();
+	unloadRender();
+	SDL_Quit();
+}
+
+void AppMain::loop()
+{
+	SDL_Event event;
+	while (running_)
+	{
+		if (SDL_WaitEvent(&event))
+		{
+			switch (event.type)
+			{
+			case SDL_QUIT:
+				running_ = false;
+				break;
+				//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
+			case SDL_KEYUP:
+				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
+					window_->toggleFullscreen();
+				break;
+			}
+		}
+	}
+}
+
+
 
 void AppMain::loadRender()
 {
@@ -147,41 +194,5 @@ void AppMain::destroyRender()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->destroy();
-}
-
-void AppMain::run()
-{
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->run();
-	core_->getStartup()->run();
-}
-
-void AppMain::stop()
-{
-	core_->getStartup()->stop();
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->stop();
-}
-
-void AppMain::loop()
-{
-	SDL_Event event;
-	while (running_)
-	{
-		if (SDL_WaitEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				running_ = false;
-				break;
-			//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
-			case SDL_KEYUP:
-				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
-					window_->toggleFullscreen();
-				break;
-			}
-		}
-	}
 }
 

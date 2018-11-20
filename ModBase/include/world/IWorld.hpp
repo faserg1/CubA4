@@ -2,12 +2,19 @@
 #define IWOLRD_HPP
 
 #include <string>
-#include <util/ISubscription.hpp>
 #include "IChunk.hpp"
 #include "../object/IObject.hpp"
 
 namespace CubA4
 {
+	namespace core
+	{
+		namespace util
+		{
+			class ISubscription;
+		}
+	}
+
 	namespace mod
 	{
 		namespace world
@@ -21,7 +28,7 @@ namespace CubA4
 			public:
 				virtual ~IWorld() = default;
 
-				virtual std::shared_ptr<CubA4::core::util::ISubscription> subscribe(IWorldSubscriber *subscriber) = 0;
+				virtual std::unique_ptr<CubA4::core::util::ISubscription> subscribe(IWorldSubscriber *subscriber) const = 0;
 
 				virtual std::shared_ptr<const IWorldDefinition> getWorldDefinition() const = 0;
 				

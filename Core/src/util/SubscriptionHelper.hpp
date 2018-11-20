@@ -22,7 +22,7 @@ namespace CubA4
 					subscribers_ = std::make_shared<std::vector<TSubscriber*>>();
 				}
 				virtual ~SubscriptionHelper() = default;
-				std::shared_ptr<ISubscription> add(TSubscriber *subscriber)
+				std::unique_ptr<ISubscription> add(TSubscriber *subscriber)
 				{
 					auto placed_subscriber = subscribers_->insert(subscribers_->end(), subscriber);
 					std::weak_ptr<std::vector<TSubscriber*>> weakSubscribers = subscribers_;
@@ -33,7 +33,7 @@ namespace CubA4
 							subscribers->erase(placed_subscriber);
 						}
 					};
-					return std::make_shared<SubscriptionHelper<TSubscriber>::Subscription>(unsubscribeFunc);
+					return std::move(std::make_unique<SubscriptionHelper<TSubscriber>::Subscription>(unsubscribeFunc));
 				}
 				void apply(std::function<void(TSubscriber *)> func)
 				{

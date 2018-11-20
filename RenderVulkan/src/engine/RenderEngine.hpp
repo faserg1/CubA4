@@ -61,6 +61,8 @@ namespace CubA4
 				void init(std::shared_ptr<window::IWindow> window) override;
 				void destroy() override;
 
+				void setGame(std::shared_ptr<const CubA4::core::game::IGame> game) override;
+
 				void run() override;
 				void stop() override;
 

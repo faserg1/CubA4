@@ -27,9 +27,9 @@ std::wstring World::getName() const
 	return definition_->getName();
 }
 
-std::shared_ptr<CubA4::core::util::ISubscription> World::subscribe(IWorldSubscriber *subscriber)
+std::unique_ptr<CubA4::core::util::ISubscription> World::subscribe(IWorldSubscriber *subscriber) const
 {
-	return subscriptionHelper_.add(subscriber);
+	return std::move(subscriptionHelper_.add(subscriber));
 }
 
 std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const

@@ -10,6 +10,14 @@ namespace CubA4
 		class IWindow;
 	}
 
+	namespace core
+	{
+		namespace game
+		{
+			class IGame;
+		}
+	}
+
 	namespace render
 	{
 		namespace engine
@@ -23,6 +31,9 @@ namespace CubA4
 
 				virtual void init(std::shared_ptr<window::IWindow> window) = 0;
 				virtual void destroy() = 0;
+
+				virtual void setGame(std::shared_ptr<const CubA4::core::game::IGame> game) = 0;
+
 				virtual void run() = 0;
 				virtual void stop() = 0;
 

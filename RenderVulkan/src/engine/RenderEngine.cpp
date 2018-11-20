@@ -75,10 +75,37 @@ void VulkanRenderEngine::destroy()
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
 }
 
+
 std::shared_ptr<IRenderManager> VulkanRenderEngine::getRenderManager() const
 {
 	return renderManager_;
 }
+
+
+void VulkanRenderEngine::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
+{
+
+}
+
+void VulkanRenderEngine::run()
+{
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
+	running_ = true;
+	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
+	//TODO: [OOKAMI] запуск основного рендер потока
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
+}
+
+void VulkanRenderEngine::stop()
+{
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
+	running_ = false;
+	if (renderLoopThread_.joinable())
+		renderLoopThread_.join();
+	//TODO: [OOKAMI] остановка основного рендер потока
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
+}
+
 
 void VulkanRenderEngine::initInstance()
 {
@@ -128,6 +155,7 @@ void VulkanRenderEngine::destroyInstance()
 	instanceBuilder_->destroy(instance_);
 	instance_.reset();
 }
+
 
 void VulkanRenderEngine::initDevice()
 {
@@ -186,6 +214,7 @@ void VulkanRenderEngine::destroyPresentation()
 	presetation_.reset();
 }
 
+
 void VulkanRenderEngine::initRender()
 {
 	if (!render_)
@@ -197,6 +226,7 @@ void VulkanRenderEngine::destroyRender()
 	render_.reset();
 }
 
+
 void VulkanRenderEngine::setup()
 {
 	renderManager_ = std::make_shared<RenderManager>(device_, render_);
@@ -206,25 +236,6 @@ void VulkanRenderEngine::setup()
 void VulkanRenderEngine::unload()
 {
 	renderManager_.reset();
-}
-
-void VulkanRenderEngine::run()
-{
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
-	running_ = true;
-	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
-	//TODO: [OOKAMI] запуск основного рендер потока
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
-}
-
-void VulkanRenderEngine::stop()
-{
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
-	running_ = false;
-	if (renderLoopThread_.joinable())
-		renderLoopThread_.join();
-	//TODO: [OOKAMI] остановка основного рендер потока
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }
 
 void VulkanRenderEngine::loop()

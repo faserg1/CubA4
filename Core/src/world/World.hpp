@@ -24,7 +24,7 @@ namespace CubA4
 			std::string getId() const override;
 			std::wstring getName() const override;
 
-			std::shared_ptr<CubA4::core::util::ISubscription> subscribe(CubA4::mod::world::IWorldSubscriber *subscriber) override;
+			std::unique_ptr<CubA4::core::util::ISubscription> subscribe(CubA4::mod::world::IWorldSubscriber *subscriber) const override;
 
 			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
 
@@ -32,7 +32,7 @@ namespace CubA4
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition_;
-			CubA4::core::util::SubscriptionHelper< CubA4::mod::world::IWorldSubscriber> subscriptionHelper_;
+			mutable CubA4::core::util::SubscriptionHelper<CubA4::mod::world::IWorldSubscriber> subscriptionHelper_;
 			std::unordered_map<const CubA4::mod::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::core::util::ChunkPosHash> loadedChunks_;
 		private:
 			void resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos);
