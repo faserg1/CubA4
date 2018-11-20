@@ -25,6 +25,8 @@ Render::~Render()
 
 void Render::record(uint32_t imgIndex)
 {
+	// TODO: [OOKAMI] Если ничего на обновление не пришло - выйти из функции
+
 	auto cmdBuffer = framebuffersData_[imgIndex].cmdBuffer;
 	auto framebuffer = framebuffersData_[imgIndex].framebuffer;
 	auto fence = framebuffersData_[imgIndex].fence;
@@ -33,7 +35,6 @@ void Render::record(uint32_t imgIndex)
 	cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 	
-
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassBeginInfo.framebuffer = framebuffer;

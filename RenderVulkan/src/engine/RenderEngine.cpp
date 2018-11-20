@@ -28,6 +28,7 @@
 #include "./Render.hpp"
 
 #include "./RenderManager.hpp"
+#include "./RenderGameHandler.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -81,10 +82,9 @@ std::shared_ptr<IRenderManager> VulkanRenderEngine::getRenderManager() const
 	return renderManager_;
 }
 
-
 void VulkanRenderEngine::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
 {
-
+	renderGameHandler_->setGame(game);
 }
 
 void VulkanRenderEngine::run()
@@ -230,6 +230,7 @@ void VulkanRenderEngine::destroyRender()
 void VulkanRenderEngine::setup()
 {
 	renderManager_ = std::make_shared<RenderManager>(device_, render_);
+	renderGameHandler_ = std::make_shared<RenderGameHandler>();
 	//TODO: [OOKAMI] настройка Presentation & Render
 }
 
