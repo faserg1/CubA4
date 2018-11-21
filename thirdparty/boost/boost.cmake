@@ -10,6 +10,6 @@ else()
 	
 endif ()
 
-find_package(Boost 1.67 EXACT REQUIRED
+find_package(Boost 1.67 REQUIRED
  COMPONENTS system filesystem ${boost_stacktrace_name}
  )
