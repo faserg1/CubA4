@@ -13,7 +13,7 @@ namespace CubA4
 			template <class TKey>
 			class ChunkPosHashT
 			{
-				static_assert(std::is_same_v<TKey, CubA4::mod::world::ChunkPos>, "TKey must be ChunkPos");
+				static_assert(std::is_same<TKey, CubA4::mod::world::ChunkPos>::value, "TKey must be ChunkPos");
 			public:
 				size_t operator()(const CubA4::mod::world::ChunkPos &chunkPos) const
 				{
