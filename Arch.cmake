@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set (TARGET_ARCH x64 )
 else ()
