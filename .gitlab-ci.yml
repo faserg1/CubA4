@@ -18,8 +18,7 @@ job build:
     - cd /builds/$CI_PROJECT_PATH
     - mkdir -p built/x64
     - cd built/x64
-    - ls ../../build/x64
-    - make ../../build/x64
+    - make -C ../../build/x64
 
 job deploy:
   stage: deploy
