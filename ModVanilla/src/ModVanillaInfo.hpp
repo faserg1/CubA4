@@ -2,6 +2,7 @@
 #define MODVANILLAINFO_HPP
 
 #include <IModInfo.hpp>
+#include <memory>
 
 namespace CubA4
 {

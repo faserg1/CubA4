@@ -1,6 +1,7 @@
 #ifndef MODVANILLA_HPP
 #define MODVANILLA_HPP
 
+#include <memory>
 #include "../include/IModVanilla.hpp"
 #include "startup/RenderStartup.hpp"
 #include "startup/WorldSetup.hpp"
