@@ -4,6 +4,7 @@
 #include <game/IGame.hpp>
 #include <thread>
 #include <atomic>
+#include <memory>
 #include "../util/SubscriptionHelper.hpp"
 
 namespace CubA4

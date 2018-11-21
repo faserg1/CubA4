@@ -1,8 +1,8 @@
 #ifndef STARTUP_HPP
 #define STARTUP_HPP
 
-#include <system/IStartup.hpp>
 #include <memory>
+#include <system/IStartup.hpp>
 
 namespace CubA4
 {
