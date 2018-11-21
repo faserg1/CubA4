@@ -33,7 +33,8 @@ namespace CubA4
 							subscribers->erase(placed_subscriber);
 						}
 					};
-					return std::move(std::make_unique<SubscriptionHelper<TSubscriber>::Subscription>(unsubscribeFunc));
+					auto subscription = std::make_unique<typename SubscriptionHelper<TSubscriber>::Subscription>(unsubscribeFunc);
+					return std::move(subscription);
 				}
 				void apply(std::function<void(TSubscriber *)> func)
 				{
