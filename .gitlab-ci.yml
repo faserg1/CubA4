@@ -1,15 +1,16 @@
 stages:
-  - deps
   - build
   - deploy
-
-job deps:
-  stage: deps
-  script: echo deps
-
+  
 job build:
   stage: build
-  script: echo build
+  artifacts:
+    paths:
+      - built/**
+  script:
+    - apt-get install python3 g++ cmake make
+    - build.py
+    - make
 
 job deploy:
   stage: deploy

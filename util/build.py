@@ -52,8 +52,9 @@ if not os.path.isdir(env_dir):
 check_boost()
 check_vulkan()
 
+path_to_project = "../.."
+
 if platform.system() == "Windows":
-	path_to_project = "../.."
 	if check_tool("MinGW"):
 		args32 = create_args("MinGW Makefiles", path_to_project)
 		do_cmake(args32, path_build32)
@@ -65,3 +66,6 @@ if platform.system() == "Windows":
 		args64 = create_args("Visual Studio 15 2017 Win64", path_to_project)
 		do_cmake(args32, path_build32)
 		do_cmake(args64, path_build64)
+elif platform.system() == "Linux":
+	args64 = create_args("Unix Makefiles", path_to_project)
+	do_cmake(args64, path_build64)
