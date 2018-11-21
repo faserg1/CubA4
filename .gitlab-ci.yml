@@ -11,7 +11,9 @@ job build:
   script:
     - apt-get update
     - apt-get install -y python3 g++ cmake make libboost-all-dev libsdl2-dev
-    - build.py
+    - python3 cir.py
+    - python3 build.py
+    - ls /build/x64
     - make
 
 job deploy:
