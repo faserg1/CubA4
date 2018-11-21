@@ -23,8 +23,8 @@ ModelManager::~ModelManager()
 
 std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef)
 {
-	auto &vertices = renderModelDef.getVertices();
-	auto &faces = renderModelDef.getFaceIndices();
+	auto vertices = renderModelDef.getVertices();
+	auto faces = renderModelDef.getFaceIndices();
 
 	VkBuffer vertexBuffer, vertexTransitBuffer;
 	VkBuffer indexBuffer, indexTransitBuffer;
