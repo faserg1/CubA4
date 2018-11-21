@@ -7,7 +7,7 @@ job build:
   stage: build
   artifacts:
     paths:
-      - built/**
+      - /builds/$CI_PROJECT_PATH/built/**
   script:
     - echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
     - apt-get update
@@ -15,7 +15,7 @@ job build:
     - apt-get install -qq -t sid -y cmake
     - python3 cir.py
     - python3 build.py
-    - cd /$CI_PROJECT_PATH
+    - cd /builds/$CI_PROJECT_PATH
     - mkdir -p built/x64
     - cd built/x64
     - make ../../build/x64
