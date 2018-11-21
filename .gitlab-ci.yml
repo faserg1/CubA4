@@ -1,25 +1,18 @@
 stages:
   - build
-  - deploy
   
 job build:
-  image: debian:latest
+  image: registry.gitlab.com/darteam/cuba4dev/cuba4/build/debian-builder
   stage: build
   artifacts:
     paths:
       - /builds/$CI_PROJECT_PATH/built/**
   script:
-    - echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
     - apt-get update
-    - apt-get install -qq -y python3 g++ make libboost-all-dev libsdl2-dev libvulkan-dev
-    - apt-get install -qq -t sid -y cmake
+    - apt-get install -qq -y python3 g++ make libsdl2-dev libvulkan-dev
     - python3 cir.py
     - python3 build.py
     - cd /builds/$CI_PROJECT_PATH
     - mkdir -p built/x64
     - cd built/x64
     - make -C ../../build/x64
-
-job deploy:
-  stage: deploy
-  script: echo deploy
