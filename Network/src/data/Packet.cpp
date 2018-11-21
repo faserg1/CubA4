@@ -1,5 +1,5 @@
 #include "../include/data/Packet.hpp"
-#include <string.h>
+#include <cstring>
 using namespace CubA4::network::data;
 
 template <typename Type>

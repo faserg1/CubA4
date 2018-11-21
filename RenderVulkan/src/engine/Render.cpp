@@ -4,6 +4,9 @@
 #include "../vulkan/Semaphore.hpp"
 #include "../vulkan/RenderPass.hpp"
 #include "../vulkan/RenderPassBuilder.hpp"
+
+#include <cstring>
+
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
