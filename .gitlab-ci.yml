@@ -3,12 +3,14 @@ stages:
   - deploy
   
 job build:
+  image: debian:latest
   stage: build
   artifacts:
     paths:
       - built/**
   script:
-    - apt-get install python3 g++ cmake make
+    - apt-get update
+    - apt-get install python3 g++ cmake make boost
     - build.py
     - make
 
