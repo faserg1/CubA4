@@ -42,7 +42,7 @@ namespace CubA4
 				byteArray pack() const;
 				static Packet unpack(const byteArray &data);
 			protected:
-				static constexpr size_t headerSize();
+				static constexpr std::size_t headerSize();
 			private:
 				PacketType type_;
 				uint64_t sender_;

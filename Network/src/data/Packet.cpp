@@ -5,7 +5,7 @@ using namespace CubA4::network::data;
 template <typename Type>
 void copyAndMovePointer(void *&dst, Type value)
 {
-	constexpr size_t size = sizeof(Type);
+	constexpr std::size_t size = sizeof(Type);
 	memcpy(dst, &value, size);
 	dst = static_cast<unsigned char*>(dst) + size;
 }
@@ -13,7 +13,7 @@ void copyAndMovePointer(void *&dst, Type value)
 template <typename Type>
 void readAndMovePointer(const void *&src, Type &value)
 {
-	constexpr size_t size = sizeof(Type);
+	constexpr std::size_t size = sizeof(Type);
 	memcpy(&value, src, size);
 	src = static_cast<const unsigned char*>(src) + size;
 }
@@ -116,7 +116,7 @@ Packet Packet::unpack(const Packet::byteArray &data)
 	return std::move(packet);
 }
 
-constexpr size_t Packet::headerSize()
+constexpr std::size_t Packet::headerSize()
 {
 	return sizeof(type_) + sizeof(sender_) + sizeof(receiver_) + sizeof(sendTime_) + sizeof(timeToLive_);
 }
