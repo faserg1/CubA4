@@ -1,4 +1,4 @@
-#include "../include/ModVanilla.hpp"
+#include "ModVanilla.hpp"
 #include <ICore.hpp>
 #include <logging/ILogger.hpp>
 using namespace CubA4::mod;

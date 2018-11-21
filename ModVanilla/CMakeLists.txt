@@ -52,7 +52,8 @@ set(ModVanillaSource
 	${ModVanillaSourceDir}/ModVanilla.cpp
 )
 set(ModVanillaHeader
-	${ModVanillaIncludeDir}/ModVanilla.hpp
+	${ModVanillaSourceDir}/ModVanilla.hpp
+	${ModVanillaIncludeDir}/IModVanilla.hpp
 )
 set(ModVanillaSourceCoreInfo
 	${ModVanillaSourceCoreInfoDir}/Version.cpp
@@ -74,7 +75,7 @@ set(ModVanillaHeaders
 	${ModVanillaHeaderWorld})
 source_group("${SOURCE_GROUP_HEADER_START}core${SOURCE_GROUP_SEP}info" FILES ${ModVanillaHeaderCoreInfo})
 
-set(ModVanillaSources 
+set(ModVanillaSources
 	${ModVanillaSourceDir}/ModVanillaInfo.cpp
 	${ModVanillaSourceDir}/ExportMod.cpp
 	${ModVanillaSourceCoreInfo}

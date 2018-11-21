@@ -1,5 +1,5 @@
 #include "ModVanillaInfo.hpp"
-#include "../include/ModVanilla.hpp"
+#include "ModVanilla.hpp"
 #include "core/info/Version.hpp"
 #include "core/info/VersionDependency.hpp"
 #include <stdexcept>

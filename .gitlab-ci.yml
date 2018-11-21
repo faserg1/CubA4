@@ -8,11 +8,9 @@ job build:
     paths:
       - /builds/$CI_PROJECT_PATH/built/**
   script:
-    - apt-get update
-    - apt-get install -qq -y python3 g++ make libsdl2-dev libvulkan-dev
     - python3 cir.py
     - python3 build.py
     - cd /builds/$CI_PROJECT_PATH
     - mkdir -p built/x64
     - cd built/x64
-    - make -C ../../build/x64
+    - make -j 4 -C ../../build/x64
