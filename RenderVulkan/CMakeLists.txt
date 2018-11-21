@@ -178,7 +178,7 @@ find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 target_include_directories(RenderVulkan PRIVATE ${VULKAN_SDK_INCLUDE})
 target_include_directories(RenderVulkan PRIVATE ${SDL_INCLUDE_DIR})
 
-target_link_libraries(RenderVulkan PRIVATE vulkan-1 SDL2 SDL2main)
+target_link_libraries(RenderVulkan PRIVATE ${VULKAN_LIBRARY_NAME} SDL2 SDL2main)
 
 target_include_directories(RenderVulkan PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(RenderVulkan PRIVATE Boost::filesystem)
