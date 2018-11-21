@@ -11,12 +11,14 @@ job build:
   script:
     - echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list
     - apt-get update
-    - apt-get install -y python3 g++ make libboost-all-dev libsdl2-dev
-    - apt-get install -t sid -y cmake
+    - apt-get install -qq -y python3 g++ make libboost-all-dev libsdl2-dev
+    - apt-get install -qq -t sid -y cmake
     - python3 cir.py
     - python3 build.py
-    - ls /build/x64
-    - make
+    - cd /$CI_PROJECT_PATH
+    - mkdir -p built/x64
+    - cd built/x64
+    - make ../../build/x64
 
 job deploy:
   stage: deploy
