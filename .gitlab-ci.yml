@@ -10,7 +10,7 @@ job build:
       - built/**
   script:
     - apt-get update
-    - apt-get install python3 g++ cmake make boost
+    - apt-get install python3 g++ cmake make libboost-all-dev libsdl2-dev
     - build.py
     - make
 
