@@ -37,7 +37,7 @@ using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
 
-constexpr char *loggerTag = "ENGINE";
+constexpr const char *loggerTag = "ENGINE";
 
 VulkanRenderEngine::VulkanRenderEngine(
 	std::shared_ptr<const CubA4::core::info::IApplicationInfo> info,
