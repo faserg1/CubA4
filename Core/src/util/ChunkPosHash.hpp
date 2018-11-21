@@ -1,7 +1,7 @@
 #ifndef CHUNKPOSHASH_HPP
 #define CHUNKPOSHASH_HPP
 
-#include <world\IChunk.hpp>
+#include <world/IChunk.hpp>
 #include <type_traits>
 
 namespace CubA4

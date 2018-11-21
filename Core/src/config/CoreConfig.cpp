@@ -6,9 +6,9 @@
 
 using namespace CubA4::core::config;
 
-constexpr char *renderEngineIdKey = "core.render.engine_id";
-constexpr char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
-constexpr char *worldChunkSizeKey = "core.world.chunk_size";
+constexpr const char *renderEngineIdKey = "core.render.engine_id";
+constexpr const char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
+constexpr const char *worldChunkSizeKey = "core.world.chunk_size";
 
 CoreConfig::CoreConfig(std::string configsPath)
 {
