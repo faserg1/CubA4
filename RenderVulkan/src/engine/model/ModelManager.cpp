@@ -6,6 +6,7 @@
 #include "../../vulkan/Device.hpp"
 #include <model/IRenderModelDefinition.hpp>
 #include <vulkan/vulkan.h>
+#include <cstring>
 using namespace CubA4::render::engine::model;
 using namespace CubA4::render::vulkan;
 

@@ -4,8 +4,8 @@
 #include <stdexcept>
 using namespace CubA4::render::config;
 
-constexpr char *renderResolutionWidthKey = "render.resolution.width";
-constexpr char *renderResolutionHeightKey = "render.resolution.height";
+constexpr const char *renderResolutionWidthKey = "render.resolution.width";
+constexpr const char *renderResolutionHeightKey = "render.resolution.height";
 
 RenderConfig::RenderConfig(std::string configsPath)
 {
