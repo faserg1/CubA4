@@ -83,4 +83,7 @@ target_compile_definitions(Network PRIVATE NETWORK_LIBRARY)
 #thridparty link libraries
 target_link_libraries(Network PRIVATE Boost::system)
 
+#system libraries
+use_thread_library(Network)
+
 set_target_properties(Network PROPERTIES FOLDER "Libs")

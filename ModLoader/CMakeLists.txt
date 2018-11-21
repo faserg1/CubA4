@@ -54,4 +54,7 @@ target_compile_definitions(ModLoader PRIVATE MOD_LOADER_LIBRARY)
 #thridparty link libraries
 target_link_libraries(ModLoader PRIVATE Boost::filesystem)
 
+#system libraries
+use_system_loader_library(ModLoader)
+
 set_target_properties(ModLoader PROPERTIES FOLDER "Libs")

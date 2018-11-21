@@ -81,6 +81,9 @@ target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 #thridparty link libraries
 target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main phonon Boost::filesystem)
 
+#system libraries
+use_system_loader_library(CubA4Loader)
+
 if (WIN32)
 	set (SDL2_DLL "${SDL_LIBRARY_DIR}/SDL2.dll")
 	set (STEAM_AUDIO_DLL "${STEAM_AUDIO_BINARY_DIR}/phonon.dll")
