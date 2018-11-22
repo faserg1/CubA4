@@ -1,13 +1,18 @@
 #include "Window.hpp"
 #include <SDL_video.h>
 #include <stdexcept>
+#include <string>
 using namespace CubA4::window;
 
 Window::Window(int sizeX, int sizeY, uint32_t additionalSDLWindowFlags)
 {
 	window_ = SDL_CreateWindow("CubA4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, sizeX, sizeY, SDL_WINDOW_SHOWN | additionalSDLWindowFlags);
 	if (!window_)
-		throw std::runtime_error("Window creation failed!");
+	{
+		auto errMsg = std::string("Window creation failed!");
+		auto details = std::string(SDL_GetError());
+		throw std::runtime_error((errMsg + " " + details).c_str());
+	}
 	fullscreenMode_ = false;
 }
 
