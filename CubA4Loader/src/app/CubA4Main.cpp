@@ -39,6 +39,7 @@ int AppMain::exec()
 		auto errMsg = std::string("Unable to initialize SDL.");
 		auto details = std::string(SDL_GetError());
 		log_->log(LogLevel::Critical, errMsg + " " + details);
+		log_->flush();
 		return 1;
 	}
 	try
@@ -49,8 +50,8 @@ int AppMain::exec()
 	}
 	catch (const std::exception ex)
 	{
-		unload();
 		log_->log(LogLevel::Critical, ex.what());
+		unload();
 		return 1;
 	}
 	///////////////////////////
@@ -104,6 +105,7 @@ bool AppMain::setup()
 
 void AppMain::unload()
 {
+	log_->flush();
 	stop();
 	core_->getStartup()->unload();
 	destroyRender();
