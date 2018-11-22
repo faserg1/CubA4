@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.12)
 project (CubA4 CXX)
 
+#temporary for debug on unix
+set(CMAKE_BUILD_TYPE Debug)
+
 set (CMAKE_CXX_STANDARD 14)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
