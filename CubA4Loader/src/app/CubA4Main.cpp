@@ -34,7 +34,13 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 
 int AppMain::exec()
 {
-	SDL_Init(SDL_INIT_VIDEO);
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		auto errMsg = std::string("Unable to initialize SDL.");
+		auto details = std::string(SDL_GetError());
+		log_->log(LogLevel::Critical, errMsg + " " + details);
+		return 1;
+	}
 	try
 	{
 		if (!setup())
