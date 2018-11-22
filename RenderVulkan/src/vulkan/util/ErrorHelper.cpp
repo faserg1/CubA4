@@ -1,7 +1,7 @@
 #include "./ErrorHelper.hpp"
 using namespace CubA4::render::vulkan::util;
 
-std::string ErrorHelper::getResultString(VkResult result) const
+std::string ErrorHelper::getResultString(VkResult result)
 {
 	#define HANDLE_RESULT(r) case r: return #r;
 	switch (result)

@@ -18,7 +18,7 @@ namespace CubA4
 					ErrorHelper() = delete;
 					~ErrorHelper() = delete;
 					
-					static std::string getResultString(VkResult result) const;
+					static std::string getResultString(VkResult result);
 				protected:
 				private:
 					
