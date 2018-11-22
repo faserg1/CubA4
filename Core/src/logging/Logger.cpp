@@ -142,7 +142,8 @@ std::string CubA4::core::logging::Logger::getLevelString(LogLevel level)
 
 std::string CubA4::core::logging::Logger::getTimeString(const char *format)
 {
-	std::time_t time = std::time(nullptr);
+	auto nowSystem = std::chrono::system_clock::now();
+	std::time_t time = std::chrono::system_clock::to_time_t(nowSystem);
 	auto *localTime = std::localtime(&time);
 	constexpr unsigned bufferSize = 50;
 	char buffer[bufferSize];
@@ -154,7 +155,7 @@ std::string CubA4::core::logging::Logger::getTimeString(const char *format)
 	if (posFind != result.npos)
 	{
 		const auto formatMs = "%." + std::to_string((unsigned) ::log10(CLOCKS_PER_SEC) + 1) + "u";
-		snprintf(buffer, bufferSize, formatMs.data(), clock() / CLOCKS_PER_SEC);
+		snprintf(buffer, bufferSize, formatMs.data(), nowSystem.time_since_epoch().count() % CLOCKS_PER_SEC);
 		result = result.replace(posFind, 2, buffer);
 	}
 	return result;
