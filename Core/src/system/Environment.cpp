@@ -19,3 +19,21 @@ int64_t Environment::getId(const std::shared_ptr<const CubA4::mod::object::IObje
 		return -1;
 	return iter->second;
 }
+
+std::string Environment::getIdName(const std::shared_ptr<const CubA4::mod::object::IObject> object) const
+{
+	return context_.getMap().get(getId(object));
+}
+
+std::shared_ptr<const CubA4::mod::object::IObject> Environment::getObject(int64_t id) const
+{
+	auto iter = context_.getObjectsMap().find(id);
+	if (iter == context_.getObjectsMap().end())
+		return {};
+	return iter->second;
+}
+
+std::shared_ptr<const CubA4::mod::object::IObject> Environment::getObject(const std::string &id) const
+{
+	return getObject(context_.getMap().get(id));
+}

@@ -22,7 +22,7 @@ namespace CubA4
 			class IGameSubscriber
 			{
 			public:
-				virtual void worldChanged(std::shared_ptr<CubA4::mod::world::IWorld> newWorld) = 0;
+				virtual void worldChanged(std::shared_ptr<const CubA4::mod::world::IWorld> newWorld) = 0;
 			protected:
 				explicit IGameSubscriber() = default;
 				virtual ~IGameSubscriber() = default;

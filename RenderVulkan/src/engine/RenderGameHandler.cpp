@@ -17,7 +17,7 @@ void RenderGameHandler::setGame(std::shared_ptr<const CubA4::core::game::IGame> 
 	gameSubscription_ = game->subscribe(this);
 }
 
-void RenderGameHandler::worldChanged(std::shared_ptr<CubA4::mod::world::IWorld> newWorld)
+void RenderGameHandler::worldChanged(std::shared_ptr<const CubA4::mod::world::IWorld> newWorld)
 {
 
 }

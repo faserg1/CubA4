@@ -12,9 +12,11 @@ set(ModVanillaSourceCoreDir ${ModVanillaSourceDir}/core)
 set(ModVanillaSourceCoreInfoDir ${ModVanillaSourceCoreDir}/info)
 set(ModVanillaSourceWorld
 	${ModVanillaSourceWorldDir}/TestWorldGenerator.cpp
+	${ModVanillaSourceWorldDir}/TestWorld.cpp
 )
 set(ModVanillaHeaderWorld
 	${ModVanillaSourceWorldDir}/TestWorldGenerator.hpp
+	${ModVanillaSourceWorldDir}/TestWorld.hpp
 )
 set(ModVanillaSourceManager
 	${ModVanillaSourceManagerDir}/ModManager.cpp

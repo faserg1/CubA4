@@ -11,6 +11,8 @@
 
 #include "../../include/block/TestBlock.hpp"
 
+#include "../world/TestWorld.hpp"
+
 using namespace CubA4::mod::startup;
 using namespace CubA4::mod::manager;
 using namespace CubA4::core;
@@ -40,4 +42,5 @@ void WorldSetup::init(std::shared_ptr<IEnvironmentBuilder> builder)
 	log_->log(LogLevel::Info, "Initialisating world");
 	auto renderManager = manager_->getModRenderManager();
 	builder->registerObject(std::make_shared<TestBlock>(renderManager->getModel("block")));
+	builder->createWorld(std::make_shared<CubA4::mod::world::TestWorld>());
 }
