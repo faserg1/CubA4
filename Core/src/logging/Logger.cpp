@@ -49,9 +49,13 @@ namespace CubA4
 					{
 
 					}
-					void log(LogLevel level, const std::string &message)
+					void log(LogLevel level, const std::string &message) override
 					{
 						logger_->log(system_, tag_, level, message);
+					}
+					void flush() override
+					{
+						logger_->flush();
 					}
 				private:
 					const std::shared_ptr<ILogger> logger_;

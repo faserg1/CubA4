@@ -16,6 +16,7 @@ namespace CubA4
 				virtual ~ILoggerTagged() = default;
 
 				virtual void log(LogLevel level, const std::string &message) = 0;
+				virtual void flush() = 0;
 			protected:
 				explicit ILoggerTagged() = default;
 			};
