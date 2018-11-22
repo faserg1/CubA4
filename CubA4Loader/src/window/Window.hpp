@@ -15,7 +15,7 @@ namespace CubA4
 		public:
 			static std::shared_ptr<Window> createWindow(int sizeX, int sizeY, uint32_t additionalSDLWindowFlags);
 
-			SDL_Window *getSDLWindow();
+			SDL_Window *getSDLWindow() const override;
 			bool isFullscreen();
 			void setFullscreen(bool fullscreen);
 			void toggleFullscreen();

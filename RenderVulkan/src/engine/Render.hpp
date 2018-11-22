@@ -26,6 +26,9 @@ namespace CubA4
 				explicit Render(const Render &) = delete;
 				~Render();
 
+				void setup();
+				void unload();
+
 				void record(uint32_t imgIndex);
 				std::shared_ptr<const vulkan::Semaphore> send(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 

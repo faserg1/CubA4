@@ -12,7 +12,7 @@ namespace CubA4
 		public:
 			virtual ~IWindow() = default;
 
-			virtual SDL_Window *getSDLWindow() = 0;
+			virtual SDL_Window *getSDLWindow() const = 0;
 		protected:
 			explicit IWindow() = default;
 		private:
