@@ -26,7 +26,9 @@ set(RUNTIME_OUTPUT_DIRECTORY  ${BUILD_OUTPUT_DIRECTORY})
 
 if (WIN32)
 	set (COPY_DLL_OUTPUT_DIR "${BUILD_OUTPUT_DIRECTORY}/$<CONFIG>/")
-endif (WIN32)
+elseif(UNIX)
+	set (COPY_SO_OUTPUT_DIR "${BUILD_OUTPUT_DIRECTORY}/")
+endif ()
 
 #prepare interfaces
 add_subdirectory (CoreBase)

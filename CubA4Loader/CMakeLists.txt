@@ -96,6 +96,14 @@ if (WIN32)
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_DLL} ${COPY_DLL_OUTPUT_DIR}
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${STEAM_AUDIO_DLL} ${COPY_DLL_OUTPUT_DIR}
 	)
+elseif(UNIX)
+	set (SDL2_SO "${SDL_LIBRARY_DIR}/libSDL2.so")
+	set (STEAM_AUDIO_SO "${STEAM_AUDIO_LIBRARY_DIR}/libphonon.so")
+	
+	add_custom_command(TARGET CubA4Loader POST_BUILD
+	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_SO} ${COPY_SO_OUTPUT_DIR}
+	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${STEAM_AUDIO_SO} ${COPY_SO_OUTPUT_DIR}
+	)
 endif (WIN32)
 
 set_target_properties(CubA4Loader PROPERTIES FOLDER "Executables")
