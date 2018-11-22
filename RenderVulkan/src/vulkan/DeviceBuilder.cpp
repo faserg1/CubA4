@@ -5,6 +5,7 @@
 #include "./PhysicalDevice.hpp"
 #include "addon/DeviceExtension.hpp"
 #include "addon/DeviceLayer.hpp"
+#include "util/ErrorHelper.hpp"
 #include <vector>
 #include <stdexcept>
 #include <vulkan/vulkan.h>
@@ -111,11 +112,14 @@ void DeviceBuilder::destroy(std::shared_ptr<const Device> device)
 void DeviceBuilder::enumPhysicalDevices()
 {
 	uint32_t physicalDevicesCount;
-	if (vkEnumeratePhysicalDevices(instance_->getInstance(), &physicalDevicesCount, nullptr) != VK_SUCCESS)
-		throw std::runtime_error("Cannot list physical devices");
+	VkResult result = vkEnumeratePhysicalDevices(instance_->getInstance(), &physicalDevicesCount, nullptr);
+	const std::string errMsg = "Cannot list physical devices";
+	if (result != VK_SUCCESS)
+		throw std::runtime_error(errMsg + " " + util::ErrorHelper::getResultString(result));
 	data_->physicalDevices.resize(physicalDevicesCount);
-	if (vkEnumeratePhysicalDevices(instance_->getInstance(), &physicalDevicesCount, data_->physicalDevices.data()) != VK_SUCCESS)
-		throw std::runtime_error("Cannot list physical devices");
+	result = vkEnumeratePhysicalDevices(instance_->getInstance(), &physicalDevicesCount, data_->physicalDevices.data());
+	if (result != VK_SUCCESS)
+		throw std::runtime_error(errMsg + " " + util::ErrorHelper::getResultString(result));
 }
 
 void DeviceBuilder::choosePhysicalDevice()
