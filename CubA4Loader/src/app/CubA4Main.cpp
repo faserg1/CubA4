@@ -48,7 +48,7 @@ int AppMain::exec()
 			// TODO: [OOKAMI] В ядро положить коды ошибок
 			return 1;
 	}
-	catch (const std::exception ex)
+	catch (const std::exception &ex)
 	{
 		log_->log(LogLevel::Critical, ex.what());
 		unload();

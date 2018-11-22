@@ -77,7 +77,7 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 	{
 		std::string errMsg = "Unable to create Vulkan Instance";
 		std::string details = util::ErrorHelper::getResultString(resultCreate);
-		throw std::runtime_error((errMsg + " " + details).c_str());
+		throw std::runtime_error(errMsg + " " + details);
 	}
 	return std::make_shared<Instance>(instance);
 }
