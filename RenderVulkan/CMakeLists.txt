@@ -4,10 +4,17 @@ link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
+set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanSourceVulkanUtil
+	${RenderVulkanSourceVulkanUtilDir}/ErrorHelper.cpp
+)
+set(RenderVulkanHeaderVulkanUtil
+	${RenderVulkanSourceVulkanUtilDir}/ErrorHelper.hpp
+)
 set(RenderVulkanSourceEngineModel
 	${RenderVulkanSourceEngineModelDir}/ModelManager.cpp
 	${RenderVulkanSourceEngineModelDir}/RenderModel.cpp
@@ -139,6 +146,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderConfig}
 	${RenderVulkanHeaderEngineMaterial}
 	${RenderVulkanHeaderEngineModel}
+	${RenderVulkanHeaderVulkanUtil}
 )
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 
@@ -151,6 +159,7 @@ set(RenderVulkanSources
 	${RenderVulkanSourceConfig}
 	${RenderVulkanSourceEngineMaterial}
 	${RenderVulkanSourceEngineModel}
+	${RenderVulkanSourceVulkanUtil}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
@@ -166,6 +175,8 @@ source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}model" FILES 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanHeaderEngineModel})
+source_group("${SOURCE_GROUP_HEADER_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanHeaderVulkanUtil})
+source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanSourceVulkanUtil})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 

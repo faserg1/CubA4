@@ -7,6 +7,7 @@
 #include <info/IVersion.hpp>
 #include "addon/InstanceExtension.hpp"
 #include "addon/InstanceLayer.hpp"
+#include "util/ErrorHelper.hpp"
 #include "Instance.hpp"
 using namespace CubA4::render::vulkan;
 using namespace CubA4::core::info;
@@ -71,9 +72,13 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 	data_->instanceInfo.ppEnabledLayerNames = cStrLayers.data();
 
 	VkInstance instance;
-	if (vkCreateInstance(&data_->instanceInfo, nullptr, &instance) != VK_SUCCESS)
-		throw std::runtime_error("Unable to create Vulkan Instance");
-
+	VkResult resultCreate = vkCreateInstance(&data_->instanceInfo, nullptr, &instance);
+	if (resultCreate != VK_SUCCESS)
+	{
+		std::string errMsg = "Unable to create Vulkan Instance";
+		std::string details = util::ErrorHelper::getResultString(resultCreate);
+		throw std::runtime_error((errMsg + " " + details).c_str());
+	}
 	return std::make_shared<Instance>(instance);
 }
 

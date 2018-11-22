@@ -43,7 +43,8 @@ void Startup::run()
 
 void Startup::stop()
 {
-	game_->stop();
+	if (game_)
+		game_->stop();
 	destroyGame();
 }
 
