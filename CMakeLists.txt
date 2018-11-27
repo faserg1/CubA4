@@ -4,6 +4,9 @@ project (CubA4 CXX)
 set (CMAKE_CXX_STANDARD 14)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+#temporary for linux
+set(CMAKE_BUILD_TYPE Debug)
+
 #prepare config
 include (Arch.cmake)
 include (Util.cmake)
