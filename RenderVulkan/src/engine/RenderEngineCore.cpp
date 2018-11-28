@@ -33,7 +33,7 @@ RenderEngineCore::RenderEngineCore(std::shared_ptr<const CubA4::core::info::IApp
 
 RenderEngineCore::~RenderEngineCore()
 {
-	
+	destroyCore();
 }
 
 void RenderEngineCore::initCore(std::shared_ptr<const CubA4::window::IWindow> window)
@@ -111,6 +111,8 @@ void RenderEngineCore::initInstance()
 
 void RenderEngineCore::destroyInstance()
 {
+	if (!instance_)
+		return;
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<InstanceAddon> addon) {addon->destroy(instance_); });
 	instanceAddons_.clear();
@@ -137,6 +139,8 @@ void RenderEngineCore::initDevice()
 
 void RenderEngineCore::destroyDevice()
 {
+	if (!device_)
+		return;
 	std::for_each(deviceAddons_.begin(), deviceAddons_.end(),
 		[this](std::shared_ptr<DeviceAddon> addon) {addon->destroy(device_); });
 	deviceAddons_.clear();

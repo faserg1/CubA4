@@ -31,7 +31,8 @@ VulkanRenderEngine::VulkanRenderEngine(
 
 VulkanRenderEngine::~VulkanRenderEngine()
 {
-	
+	stop();
+	destroy();
 }
 
 void VulkanRenderEngine::init(std::shared_ptr<const CubA4::window::IWindow> window)
@@ -76,6 +77,8 @@ void VulkanRenderEngine::run()
 
 void VulkanRenderEngine::stop()
 {
+	if (!running_)
+		return;
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stopping.");
 	running_ = false;
 	if (renderLoopThread_.joinable())
@@ -99,7 +102,8 @@ void VulkanRenderEngine::rebuildSwapchain()
 
 void VulkanRenderEngine::destroySwapchain()
 {
-	swapchainBuilder_->destroy(swapchain_);
+	if (swapchain_)
+		swapchainBuilder_->destroy(swapchain_);
 	swapchain_.reset();
 }
 
