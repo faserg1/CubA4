@@ -80,7 +80,9 @@ target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 
 #thridparty link libraries
 target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main phonon Boost::filesystem)
-
+message(${SDL2})
+message(${SDL2main})
+message(${SDL2test})
 #system libraries
 use_system_loader_library(CubA4Loader)
 
@@ -103,6 +105,7 @@ elseif(UNIX)
 	add_custom_command(TARGET CubA4Loader POST_BUILD
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_SO} ${COPY_SO_OUTPUT_DIR}
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${STEAM_AUDIO_SO} ${COPY_SO_OUTPUT_DIR}
+	   #COMMAND "${CMAKE_COMMAND}" -E create_symlink ${COPY_SO_OUTPUT_DIR}/{SDL2_SO} ${COPY_SO_OUTPUT_DIR}/${SDL2}
 	)
 endif (WIN32)
 
