@@ -67,7 +67,7 @@ use_library(CubA4Loader ModLoader)
 use_library(CubA4Loader Network)
 
 #find thrid-party libraries
-find_library(SDL2 PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
+find_library(SDL2 PATHS ${SDL_LIBRARY_DIR})
 find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 find_library(SDL2test PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 
