@@ -81,6 +81,8 @@ target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 #thridparty link libraries
 target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main phonon Boost::filesystem)
 message(${SDL2})
+message(${SDL2main})
+message(${SDL2test})
 #system libraries
 use_system_loader_library(CubA4Loader)
 
