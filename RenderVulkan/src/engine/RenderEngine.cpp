@@ -70,7 +70,7 @@ void VulkanRenderEngine::run()
 {
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
 	running_ = true;
-	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);а
+	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
 }
 
