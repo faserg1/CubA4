@@ -54,7 +54,7 @@ void Render::record(uint32_t imgIndex)
 	renderPassBeginInfo.renderPass = renderPass_->getRenderPass();
 
 	VkClearValue colorAttachmentClearValue = {};
-	float clrClearFloat[4] = { 0.2f,0.2f,0.2f,0.f };
+	float clrClearFloat[4] = { 0.2f,0.3f,0.4f,0.f };
 	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
 	std::vector<VkClearValue> clearValues = 

@@ -68,6 +68,8 @@ namespace CubA4
 				std::shared_ptr<const vulkan::Instance> getInstance() const;
 				std::shared_ptr<const vulkan::Device> getDevice() const;
 				std::weak_ptr<const vulkan::Surface> getSurface() const;
+
+				void waitDeviceIdle() const;
 			private:
 				std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
 

@@ -5,6 +5,8 @@
 #include <config/IFilePaths.hpp>
 #include <logging/ILogger.hpp>
 
+#include <vulkan/vulkan.h>
+
 #include "../vulkan/Instance.hpp"
 #include "../vulkan/InstanceBuilder.hpp"
 #include "../vulkan/addon/InstanceLayer.hpp"
@@ -45,6 +47,7 @@ void RenderEngineCore::initCore(std::shared_ptr<const CubA4::window::IWindow> wi
 
 void RenderEngineCore::destroyCore()
 {
+	waitDeviceIdle();
 	destroyDevice();
 	destroyInstance();
 }
@@ -67,6 +70,17 @@ std::shared_ptr<const Device> RenderEngineCore::getDevice() const
 std::weak_ptr<const Surface> RenderEngineCore::getSurface() const
 {
 	return surface_;
+}
+
+void RenderEngineCore::waitDeviceIdle() const
+{
+	if (!device_)
+		return;
+	auto waitResult = vkDeviceWaitIdle(device_->getDevice());
+	if (waitResult != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exceptions
+	}
 }
 
 void RenderEngineCore::initInstance()

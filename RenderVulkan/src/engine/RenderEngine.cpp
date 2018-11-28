@@ -70,8 +70,7 @@ void VulkanRenderEngine::run()
 {
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
 	running_ = true;
-	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
-	//TODO: [OOKAMI] запуск основного рендер потока
+	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);а
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
 }
 
@@ -83,7 +82,7 @@ void VulkanRenderEngine::stop()
 	running_ = false;
 	if (renderLoopThread_.joinable())
 		renderLoopThread_.join();
-	//TODO: [OOKAMI] остановка основного рендер потока
+	waitDeviceIdle();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }
 

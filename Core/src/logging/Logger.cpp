@@ -90,6 +90,8 @@ void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level,
 {
 	std::string logMsg = "[" + getLevelString(level) + ":" + getTagString(system) + ":" + tag + "]{" + getTimeString("%x-%X:%%k") + "} " + message + "\n";
 	stream_->out_.write(logMsg.c_str(), logMsg.size());
+	if (level == LogLevel::Error || level == LogLevel::Critical)
+		flush();
 }
 
 void Logger::flush()
