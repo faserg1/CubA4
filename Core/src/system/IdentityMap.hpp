@@ -22,6 +22,8 @@ namespace CubA4
 				void clear() override;
 				int64_t add(const std::string &tag, const std::string &id) override;
 				int64_t get(const std::string &tag, const std::string &id) const override;
+				int64_t get(const std::string &fullId) const override;
+				std::string get(int64_t id) const override;
 			protected:
 			private:
 				int64_t counter_;

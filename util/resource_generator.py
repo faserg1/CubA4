@@ -25,7 +25,7 @@ class ResourceGenerator:
 	def _generate_irs_hpp(self):
 		total = "#ifndef IRS_HPP\n"
 		total += "#define IRS_HPP\n\n"
-		total += "#include <cstdint>\n\n"
+		total += "#include <cstddef>\n\n"
 		total += "namespace CubA4\n{\n\tnamespace irs\n\t{\n"
 		nstabs = "\t\t"
 		total += nstabs + "/// \\brief Получение внутренних файлов\n"
@@ -42,7 +42,7 @@ class ResourceGenerator:
 		total = "#include \"irs.hpp\"\n"
 		total += "#include \"irs-headers.hpp\"\n"
 		total += "#include \"irs-data.hpp\"\n\n"
-		total += "#include <cstdint>\n\n"
+		total += "#include <cstddef>\n\n"
 		total += "namespace CubA4\n{\n\tnamespace irs\n\t{\n"
 		nstabs = "\t\t"
 		total += nstabs + "const void *findFile(const char *name, std::size_t &size)\n{\n"

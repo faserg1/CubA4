@@ -9,7 +9,7 @@ using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::window;
 
-SDLExtension::SDLExtension(std::shared_ptr<IWindow> window) :
+SDLExtension::SDLExtension(std::shared_ptr<const IWindow> window) :
 	window_(window)
 {
 	

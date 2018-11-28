@@ -29,7 +29,7 @@ namespace CubA4
 			public:
 				virtual ~IRenderEngine() = default;
 
-				virtual void init(std::shared_ptr<window::IWindow> window) = 0;
+				virtual void init(std::shared_ptr<const window::IWindow> window) = 0;
 				virtual void destroy() = 0;
 
 				virtual void setGame(std::shared_ptr<const CubA4::core::game::IGame> game) = 0;

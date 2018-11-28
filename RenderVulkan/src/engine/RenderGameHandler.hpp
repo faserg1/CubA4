@@ -27,7 +27,7 @@ namespace CubA4
 				~RenderGameHandler();
 
 				void setGame(std::shared_ptr<const CubA4::core::game::IGame> game);
-				void worldChanged(std::shared_ptr<CubA4::mod::world::IWorld> newWorld) override;
+				void worldChanged(std::shared_ptr<const CubA4::mod::world::IWorld> newWorld) override;
 			protected:
 			private:
 				std::unique_ptr<CubA4::core::util::ISubscription> gameSubscription_;

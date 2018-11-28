@@ -26,6 +26,16 @@ Render::~Render()
 	destroyMainCommandPool();
 }
 
+void Render::setup()
+{
+
+}
+
+void Render::unload()
+{
+
+}
+
 void Render::record(uint32_t imgIndex)
 {
 	// TODO: [OOKAMI] Если ничего на обновление не пришло - выйти из функции
@@ -61,8 +71,9 @@ void Render::record(uint32_t imgIndex)
 
 	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+	////////////////////////////////////////////////////////////
 	//record in parallel second command buffers (subpasses)
-
+	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(cmdBuffer);
 	vkEndCommandBuffer(cmdBuffer);
 }

@@ -24,4 +24,5 @@ void ModRenderManager::registerRenderModel(std::shared_ptr<const CubA4::render::
 {
 	if (map_.find(renderModel->getId()) != map_.end())
 		return;
+	map_.insert(std::make_pair(renderModel->getId(), renderModel));
 }

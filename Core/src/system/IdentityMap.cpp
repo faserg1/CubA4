@@ -42,9 +42,22 @@ int64_t IdentityMap::add(const std::string &tag, const std::string &id)
 
 int64_t IdentityMap::get(const std::string &tag, const std::string &id) const
 {
-	auto pair = map_.right.find(makeId(tag, id));
+	return get(makeId(tag, id));
+}
+
+int64_t IdentityMap::get(const std::string &fullId) const
+{
+	auto pair = map_.right.find(fullId);
 	if (pair == map_.right.end())
 		return -1;
+	return pair->second;
+}
+
+std::string IdentityMap::get(int64_t id) const
+{
+	auto pair = map_.left.find(id);
+	if (pair == map_.left.end())
+		return {};
 	return pair->second;
 }
 

@@ -21,7 +21,7 @@ Window::~Window()
 
 }
 
-SDL_Window *Window::getSDLWindow()
+SDL_Window *Window::getSDLWindow() const
 {
 	return window_;
 }
