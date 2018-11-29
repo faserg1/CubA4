@@ -17,7 +17,7 @@ ResourceManager::~ResourceManager()
 	destroyBuildInDescriptorSetLayout();
 }
 
-std::shared_ptr<VkDescriptorSetLayout> ResourceManager::getBuiltInLayout() const
+sVkDescriptorSetLayout ResourceManager::getBuiltInLayout() const
 {
 	return builtInLayout_;
 }
@@ -47,7 +47,7 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	}
 	device_->getMarker().setName(layout, "BuiltIn Layout");
 	auto dev = device_;
-	builtInLayout_ = std::shared_ptr<VkDescriptorSetLayout>(layout, [dev](VkDescriptorSetLayout layout)
+	builtInLayout_ = createSharedVulkanObject(layout, [dev](VkDescriptorSetLayout layout)
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
 	});
@@ -65,7 +65,7 @@ void ResourceManager::createBuiltInDescriptorPool()
 	VkDescriptorPoolCreateInfo poolCreateInfo = {};
 	poolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolCreateInfo.maxSets = 1;
-	
+
 	VkDescriptorPoolSize uniforms;
 	uniforms.descriptorCount = 2;
 	uniforms.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;

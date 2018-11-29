@@ -14,6 +14,7 @@ set(RenderVulkanSourceVulkanUtil
 )
 set(RenderVulkanHeaderVulkanUtil
 	${RenderVulkanSourceVulkanUtilDir}/ErrorHelper.hpp
+	${RenderVulkanSourceVulkanUtilDir}/VulkanHandlerContainer.hpp
 )
 set(RenderVulkanSourceEngineModel
 	${RenderVulkanSourceEngineModelDir}/ModelManager.cpp

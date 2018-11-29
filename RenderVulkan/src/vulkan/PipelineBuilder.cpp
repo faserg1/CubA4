@@ -23,7 +23,7 @@ PipelineBuilder::PipelineBuilder(std::shared_ptr<const Device> device) :
 
 PipelineBuilder::~PipelineBuilder()
 {
-	
+
 }
 
 void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
@@ -51,10 +51,10 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
 	std::vector<VkDescriptorSetLayout> layouts;
-	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), layouts.begin(), 
-		[](std::shared_ptr<VkDescriptorSetLayout> pLayout) -> VkDescriptorSetLayout
+	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), layouts.begin(),
+		[](sVkDescriptorSetLayout pLayout) -> VkDescriptorSetLayout
 		{
-			return *pLayout;
+			return pLayout->get();
 		});
 
 	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts_.size());
@@ -158,7 +158,7 @@ void PipelineBuilder::prepareVertexInput()
 	vertexInputInfo_.pVertexBindingDescriptions = vertexBindingDescriptions_.data();
 	vertexInputInfo_.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttrDescriptions_.size());
 	vertexInputInfo_.pVertexAttributeDescriptions = vertexAttrDescriptions_.data();
-	
+
 }
 
 void PipelineBuilder::prepareInputAssembly()
@@ -229,10 +229,10 @@ void PipelineBuilder::prepareViewport()
 
 void PipelineBuilder::prepareDescriptorSets()
 {
-	
+
 }
 
 void PipelineBuilder::preparePushConstants()
 {
-	
+
 }

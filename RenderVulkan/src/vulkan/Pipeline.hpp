@@ -4,6 +4,7 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <vector>
+#include "util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
@@ -27,7 +28,7 @@ namespace CubA4
 				VkPipelineLayout layout;
 				VkPipelineBindPoint bindPoint;
 
-				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts;
+				std::vector<sVkDescriptorSetLayout> descriptorSetLayouts;
 				std::vector<std::shared_ptr<const engine::material::IShader>> shaders;
 			};
 
@@ -48,7 +49,7 @@ namespace CubA4
 				const VkPipelineLayout layout_;
 				const VkPipelineBindPoint bindPoint_;
 
-				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts_;
+				std::vector<sVkDescriptorSetLayout> descriptorSetLayouts_;
 				std::vector<std::shared_ptr<const engine::material::IShader>> shaders_;
 			};
 		}

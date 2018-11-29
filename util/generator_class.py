@@ -11,7 +11,7 @@ class GeneratorClass(GeneratorBase):
 		self.set_virtual_destructor(False)
 		self.set_default_constructor(False)
 		self.set_default_destructor(False)
-	
+
 	def generate(self):
 		#Header
 		self._generate_guard(self._file_hpp)
@@ -19,10 +19,10 @@ class GeneratorClass(GeneratorBase):
 		self._generate_class_proto(self._file_hpp)
 		#Source
 		self._generate_cpp(self._file_cpp)
-		
+
 	def save(self):
 		self._save_header(self._file_hpp)
 		self._save_source(self._file_cpp)
-	
+
 	_file_hpp = None
 	_file_cpp = None

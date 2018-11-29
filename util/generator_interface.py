@@ -12,13 +12,13 @@ class GeneratorInterface(GeneratorBase):
 		self.set_default_destructor(True)
 		if self._ctr_access == "public":
 			self.set_access_constructor("protected")
-		
+
 	def generate(self):
 		self._generate_guard(self._file_hpp)
 		self._generate_namespaces(self._file_hpp)
 		self._generate_class_proto(self._file_hpp)
-		
+
 	def save(self):
 		self._save_header(self._file_hpp)
-		
+
 	_file_hpp = None

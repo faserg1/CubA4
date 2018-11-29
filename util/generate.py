@@ -39,7 +39,7 @@ def generate_common(generator, params):
 def patcher_options(patcher, params):
 	if "--dry-run" in params:
 		patcher.set_dry_run(True)
-		
+
 def generate_class(full_name, module, params):
 	generator = GeneratorClass(full_name, module)
 	generate_common(generator, params)
@@ -54,7 +54,7 @@ def generate_class(full_name, module, params):
 	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
 	patcher_options(patcher, params)
 	patcher.patch()
-	
+
 def generate_interface(full_name, module, params):
 	generator = GeneratorInterface(full_name, module)
 	generate_common(generator, params)

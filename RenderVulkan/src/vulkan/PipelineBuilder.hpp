@@ -4,6 +4,7 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <vector>
+#include "util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
@@ -31,7 +32,7 @@ namespace CubA4
 				~PipelineBuilder();
 
 				void useShader(std::shared_ptr<const engine::material::IShader> shader);
-				void addBuiltInDescriptorSetLayout(std::shared_ptr<VkDescriptorSetLayout> builtInLayout);
+				void addBuiltInDescriptorSetLayout(sVkDescriptorSetLayout builtInLayout);
 
 				VkGraphicsPipelineCreateInfo build();
 				void fillPipelineInfo(PipelineInfo &pipelineInfo) const;
@@ -55,11 +56,11 @@ namespace CubA4
 
 				std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 				VkPipelineColorBlendStateCreateInfo colorBlendInfo_;
-				
+
 				std::vector<VkViewport> viewports_;
 				std::vector<VkRect2D> scissors_;
 				std::vector<VkDynamicState> dynamicStates_;
-				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts_;
+				std::vector<sVkDescriptorSetLayout> descriptorSetLayouts_;
 				std::vector<VkPushConstantRange> pushConstantsRanges_;
 				std::vector<VkPipelineShaderStageCreateInfo> stages_;
 			private:

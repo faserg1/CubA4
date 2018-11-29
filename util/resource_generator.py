@@ -12,7 +12,7 @@ class ResourceGenerator:
 		self._rf = ResourceFinder(module_name)
 		self._rf.find_all()
 		self._gen_path = os.path.join(self._cwd, self._module_name, "gen")
-		
+
 	def generate(self):
 		files = self._rf.get_files()
 		if not os.path.exists(self._gen_path):
@@ -21,7 +21,7 @@ class ResourceGenerator:
 		self._generate_irs_cpp()
 		self._generate_irs_headers_hpp(files)
 		self._generate_irs_data_hpp(files)
-	
+
 	def _generate_irs_hpp(self):
 		total = "#ifndef IRS_HPP\n"
 		total += "#define IRS_HPP\n\n"
@@ -37,7 +37,7 @@ class ResourceGenerator:
 		total += "#endif // IRS_HPP\n"
 		filename = os.path.join(self._gen_path, "irs.hpp")
 		self._write(filename, total)
-	
+
 	def _generate_irs_cpp(self):
 		total = "#include \"irs.hpp\"\n"
 		total += "#include \"irs-headers.hpp\"\n"
@@ -58,7 +58,7 @@ class ResourceGenerator:
 		total += "\t}\n}\n\n"
 		filename = os.path.join(self._gen_path, "irs.cpp")
 		self._write(filename, total)
-		
+
 	def _generate_irs_headers_hpp(self, files):
 		total = "#include <map>\n"
 		total += "#include <string>\n\n"
@@ -80,7 +80,7 @@ class ResourceGenerator:
 		total += "\t};\n}\n"
 		filename = os.path.join(self._gen_path, "irs-headers.hpp")
 		self._write(filename, total)
-		
+
 	def _generate_irs_data_hpp(self, files):
 		total = "constexpr unsigned char data[] = {\n\t"
 		for file in files:
@@ -93,11 +93,11 @@ class ResourceGenerator:
 		total = total[:-1] + "};"
 		filename = os.path.join(self._gen_path, "irs-data.hpp")
 		self._write(filename, total)
-			
+
 	def _write(self, filename, data):
 		with open(filename, "wb") as file:
 			file.write(data.encode("UTF-8"))
-	
+
 	_cwd = ""
 	_module_name = ""
 	_rf = None

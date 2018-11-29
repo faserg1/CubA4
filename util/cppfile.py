@@ -26,7 +26,7 @@ class CppFile:
 		#indent
 		if add_indent:
 			self._indent_count += 1
-			
+
 	def to_string(self):
 		total = ""
 		for line in self._lines:
@@ -34,7 +34,7 @@ class CppFile:
 		if sys.platform.startswith("win32"):
 			total = total.replace("\n", "\r\n")
 		return total
-	
+
 	_lines = []
 	_current_line = 0
 	_indent_count = 0

@@ -24,7 +24,7 @@ class CmdLineParser:
 		print("--header-folder:<folder> — Set folder for .hpp files.")
 		print("--source-folder:<folder> — Set folder for .cpp files.")
 		print("--module-namespace — Will not ignore module namespace")
-	
+
 	def parse(self):
 		if len(sys.argv) == 2:
 			arg = sys.argv[1]
@@ -54,7 +54,7 @@ class CmdLineParser:
 			self._parse_cls(full_name, module, params)
 		elif type == "interface":
 			self._parse_ifc(full_name, module, params)
-	
+
 	def _check(self, type, full_name, module):
 		if type != "class" and type != "interface":
 			print("Invalid type <" + type + ">!")
@@ -64,16 +64,16 @@ class CmdLineParser:
 			print("Module <" + module + "> not found.")
 			return False
 		return True
-		
-	
+
+
 	def _parse_name(self, name):
 		return name.split(".")
-		
+
 	def _parse_cls(self, full_name, module, params):
 		self._cls_func(full_name, module, params)
-	
+
 	def _parse_ifc(self, full_name, module, params):
 		self._ifc_func(full_name, module, params)
-	
+
 	_cls_func = None
 	_ifc_func = None

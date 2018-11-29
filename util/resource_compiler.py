@@ -7,7 +7,7 @@ class ResourceCompiler:
 	def __init__(self, path):
 		self._path = path
 		self._tempfile = tempfile.TemporaryFile(mode="w+")
-		
+
 	def compile(self):
 		f = open(self._path, "rb")
 		try:
@@ -21,6 +21,6 @@ class ResourceCompiler:
 			f.close()
 		self._tempfile.seek(0, 0)
 		return self._tempfile.read()
-		
+
 	_path = ""
 	_tempfile = None

@@ -29,7 +29,7 @@ def last_appearance(text, compiled_re):
 	if not last_result:
 		return
 	return FindResult(last_result.start(0), last_result.end(0))
-	
+
 def camel_case(input_str, first_drop = False):
 	output_str = ""
 	need_upper = not first_drop
@@ -42,7 +42,7 @@ def camel_case(input_str, first_drop = False):
 			need_upper = False
 		output_str += symbol
 	return output_str
-	
+
 def split_path(path):
 	parts = []
 	while True:
@@ -54,15 +54,15 @@ def split_path(path):
 				parts.append(path)
 			break
 	return parts[::-1]
-	
+
 def var_to_pattern(text):
 	return text.replace("$", "\\$").replace("{", "\\{").replace("}", "\\}")
-	
+
 def check_exists_and_get(source, target):
 	if source.startswith(target):
 		after = source[len(target):]
 		return after if len(after) else None
-		
+
 def format_for(str, every, place):
 	total = ""
 	parts = [str[i:i+every] for i in range(0, len(str), every)]

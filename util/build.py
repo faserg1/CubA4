@@ -26,7 +26,7 @@ def check_tool(cmd_tool):
 	cmd = "--tool"
 	if cmd in sys.argv:
 		return cmd_tool == sys.argv[sys.argv.index(cmd)+1].replace("\"", "")
-	
+
 def check_env(cmd, filepath, env):
 	total_file_path = os.path.join(env_dir, filepath)
 	path = ""
@@ -42,10 +42,10 @@ def check_env(cmd, filepath, env):
 
 def check_boost():
 	check_env("--boost", "boost.txt", "BOOST_ROOT")
-	
+
 def check_vulkan():
 	check_env("--vulkan", "vulkan.txt", "VULKAN_SDK")
-	
+
 if not os.path.isdir(env_dir):
 	os.makedirs(env_dir)
 

@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vulkan/vulkan.h>
+#include "../vulkan/util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
@@ -21,11 +22,11 @@ namespace CubA4
 				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device);
 				~ResourceManager();
 
-				std::shared_ptr<VkDescriptorSetLayout> getBuiltInLayout() const;
+				vulkan::sVkDescriptorSetLayout getBuiltInLayout() const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
-				std::shared_ptr<VkDescriptorSetLayout> builtInLayout_;
+				vulkan::sVkDescriptorSetLayout builtInLayout_;
 				VkDescriptorPool builtInPool_;
 			private:
 				void createBuildInDescriptorSetLayout();
