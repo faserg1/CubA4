@@ -47,7 +47,7 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	}
 	device_->getMarker().setName(layout, "BuiltIn Layout");
 	auto dev = device_;
-	builtInLayout_ = createSharedVulkanObject(layout, [dev](VkDescriptorSetLayout layout)
+	builtInLayout_ = util::createSharedVulkanObject(layout, [dev](VkDescriptorSetLayout layout)
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
 	});
