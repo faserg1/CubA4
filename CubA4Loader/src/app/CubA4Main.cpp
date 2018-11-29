@@ -32,6 +32,13 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_, info_);
 }
 
+AppMain::~AppMain()
+{
+	unload();
+	if (log_)
+		log_->log(LogLevel::Info, "CubA4 Loader destroyed.");
+}
+
 int AppMain::exec()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -51,13 +58,11 @@ int AppMain::exec()
 	catch (const std::exception &ex)
 	{
 		log_->log(LogLevel::Critical, ex.what());
-		unload();
 		return 1;
 	}
 	///////////////////////////
 	loop();
 	///////////////////////////
-	unload();
 	return 0;
 }
 

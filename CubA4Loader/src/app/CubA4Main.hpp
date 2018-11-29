@@ -43,6 +43,7 @@ namespace CubA4
 		{
 		public:
 			explicit AppMain(int argc, const char *const argv[]);
+			~AppMain();
 
 			int exec();
 
