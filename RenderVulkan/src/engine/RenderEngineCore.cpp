@@ -109,7 +109,7 @@ void RenderEngineCore::initInstance()
 	else
 		throw std::runtime_error("Window destroyed! Cannot init surface!");
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(CUBA4_DEBUG)
 	auto vkDebugExt = std::make_shared<DebugExtension>(logger_);
 	addExt(vkDebugExt);
 

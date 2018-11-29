@@ -38,21 +38,31 @@ VulkanRenderEngine::~VulkanRenderEngine()
 void VulkanRenderEngine::init(std::shared_ptr<const CubA4::window::IWindow> window)
 {
 	initCore(window);
+	logger_->flush();
 	initSwapchain();
+	logger_->flush();
 	initPresentation();
+	logger_->flush();
 	initRender();
+	logger_->flush();
 	setup();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine initialized.");
+	logger_->flush();
 }
 
 void VulkanRenderEngine::destroy()
 {
 	unload();
+	logger_->flush();
 	destroyRender();
+	logger_->flush();
 	destroyPresentation();
+	logger_->flush();
 	destroySwapchain();
-	destroyCore();
+	logger_->flush();
+	destroyCore();	
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
+	logger_->flush();
 }
 
 
@@ -72,6 +82,7 @@ void VulkanRenderEngine::run()
 	running_ = true;
 	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
+	logger_->flush();
 }
 
 void VulkanRenderEngine::stop()
@@ -84,6 +95,7 @@ void VulkanRenderEngine::stop()
 		renderLoopThread_.join();
 	waitDeviceIdle();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
+	logger_->flush();
 }
 
 
@@ -92,6 +104,7 @@ void VulkanRenderEngine::initSwapchain()
 	if (!swapchainBuilder_)
 		swapchainBuilder_ = std::make_shared<SwapchainBuilder>(getDevice(), getSurface(), getConfig());
 	swapchain_ = swapchainBuilder_->build();
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain builded.");
 }
 
 void VulkanRenderEngine::rebuildSwapchain()
@@ -101,9 +114,12 @@ void VulkanRenderEngine::rebuildSwapchain()
 
 void VulkanRenderEngine::destroySwapchain()
 {
-	if (swapchain_)
-		swapchainBuilder_->destroy(swapchain_);
+	if (!swapchain_)
+		return;
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Destroing swapchain.");
+	swapchainBuilder_->destroy(swapchain_);
 	swapchain_.reset();
+	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain destroyed.");
 }
 
 
