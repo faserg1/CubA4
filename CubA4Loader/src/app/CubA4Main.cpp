@@ -24,10 +24,10 @@ using namespace CubA4::core::logging;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
 	core_(CubA4::core::Core::create(argc, argv)),
-	info_(std::make_shared<AppInfo>())
+	info_(std::make_shared<AppInfo>()), running_(true)
 {
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
-	log_->log(LogLevel::Info, "CubA4 Loader start.");
+	log_->log(LogLevel::Info, "CubA4 Loader created.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
 	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_, info_);
 }
@@ -52,8 +52,11 @@ int AppMain::exec()
 	try
 	{
 		if (!setup())
+		{
+			log_->log(LogLevel::Critical, "Не удалось инициализировать CubA4Loader!");
 			// TODO: [OOKAMI] В ядро положить коды ошибок
 			return 1;
+		}			
 	}
 	catch (const std::exception &ex)
 	{
@@ -61,7 +64,9 @@ int AppMain::exec()
 		return 1;
 	}
 	///////////////////////////
+	log_->log(LogLevel::Info, "CubA4 Loader start.");
 	loop();
+	log_->log(LogLevel::Info, "CubA4 Loader stopped.");
 	///////////////////////////
 	return 0;
 }
@@ -106,6 +111,7 @@ bool AppMain::setup()
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->setGame(core_->getStartup()->getGame());
 	run();
+	return true;
 }
 
 void AppMain::unload()
