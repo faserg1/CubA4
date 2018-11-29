@@ -17,7 +17,7 @@ ResourceManager::~ResourceManager()
 	destroyBuildInDescriptorSetLayout();
 }
 
-VkDescriptorSetLayout ResourceManager::getBuiltInLayout() const
+std::shared_ptr<VkDescriptorSetLayout> ResourceManager::getBuiltInLayout() const
 {
 	return builtInLayout_;
 }
@@ -47,7 +47,7 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	}
 	device_->getMarker().setName(layout, "BuiltIn Layout");
 	auto dev = device_;
-	builtInLayout_ = std::shared_ptr(layout, [dev](VkDescriptorSetLayout layout)
+	builtInLayout_ = std::shared_ptr<VkDescriptorSetLayout>(layout, [dev](VkDescriptorSetLayout layout)
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
 	});
