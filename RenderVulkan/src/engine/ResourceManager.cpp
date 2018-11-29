@@ -39,16 +39,23 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	descriptorSetLayoutInfo.bindingCount = 2;
 	descriptorSetLayoutInfo.pBindings = bindingInfos;
-	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &builtInLayout_) != VK_SUCCESS)
+	VkDescriptorSetLayout layout = {};
+	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &layout) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exceptions, etc
+		return;
 	}
-	device_->getMarker().setName(builtInLayout_, "BuiltIn Layout");
+	device_->getMarker().setName(layout, "BuiltIn Layout");
+	auto dev = device_;
+	builtInLayout_ = std::shared_ptr(layout, [dev](VkDescriptorSetLayout layout)
+	{
+		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
+	});
 }
 
 void ResourceManager::destroyBuildInDescriptorSetLayout()
 {
-	vkDestroyDescriptorSetLayout(device_->getDevice(), builtInLayout_, nullptr);
+	builtInLayout_.reset();
 }
 
 void ResourceManager::createBuiltInDescriptorPool()

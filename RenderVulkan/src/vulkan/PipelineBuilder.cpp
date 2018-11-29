@@ -36,7 +36,7 @@ void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
 	shaders_.push_back(shader);
 }
 
-void PipelineBuilder::addBuiltInDescriptorSetLayout(VkDescriptorSetLayout builtInLayout)
+void PipelineBuilder::addBuiltInDescriptorSetLayout(std::shared_ptr<VkDescriptorSetLayout> builtInLayout)
 {
 	descriptorSetLayouts_.push_back(builtInLayout);
 }
@@ -49,8 +49,17 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 	//Create pipeline layout
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+
+	std::vector<VkDescriptorSetLayout> layouts;
+	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), layouts.begin(), 
+		[](std::shared_ptr<VkDescriptorSetLayout> pLayout) -> VkDescriptorSetLayout
+		{
+			return *pLayout;
+		});
+
 	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts_.size());
 	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts_.data();
+
 	pipelineLayoutInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstantsRanges_.size());
 	pipelineLayoutInfo.pPushConstantRanges = pushConstantsRanges_.data();
 	if (vkCreatePipelineLayout(device_->getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout_) != VK_SUCCESS)

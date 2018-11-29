@@ -27,7 +27,7 @@ namespace CubA4
 				VkPipelineLayout layout;
 				VkPipelineBindPoint bindPoint;
 
-				std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
+				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts;
 				std::vector<std::shared_ptr<const engine::material::IShader>> shaders;
 			};
 
@@ -48,7 +48,7 @@ namespace CubA4
 				const VkPipelineLayout layout_;
 				const VkPipelineBindPoint bindPoint_;
 
-				std::vector<VkDescriptorSetLayout> descriptorSetLayouts_;
+				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts_;
 				std::vector<std::shared_ptr<const engine::material::IShader>> shaders_;
 			};
 		}

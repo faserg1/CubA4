@@ -31,7 +31,7 @@ namespace CubA4
 				~PipelineBuilder();
 
 				void useShader(std::shared_ptr<const engine::material::IShader> shader);
-				void addBuiltInDescriptorSetLayout(VkDescriptorSetLayout builtInLayout);
+				void addBuiltInDescriptorSetLayout(std::shared_ptr<VkDescriptorSetLayout> builtInLayout);
 
 				VkGraphicsPipelineCreateInfo build();
 				void fillPipelineInfo(PipelineInfo &pipelineInfo) const;
@@ -59,7 +59,7 @@ namespace CubA4
 				std::vector<VkViewport> viewports_;
 				std::vector<VkRect2D> scissors_;
 				std::vector<VkDynamicState> dynamicStates_;
-				std::vector<VkDescriptorSetLayout> descriptorSetLayouts_;
+				std::vector<std::shared_ptr<VkDescriptorSetLayout>> descriptorSetLayouts_;
 				std::vector<VkPushConstantRange> pushConstantsRanges_;
 				std::vector<VkPipelineShaderStageCreateInfo> stages_;
 			private:

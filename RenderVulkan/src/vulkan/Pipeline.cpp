@@ -13,11 +13,6 @@ Pipeline::~Pipeline()
 {
 	vkDestroyPipeline(device_->getDevice(), pipeline_, nullptr);
 	vkDestroyPipelineLayout(device_->getDevice(), layout_, nullptr);
-
-	for (auto descriptorSetLayout : descriptorSetLayouts_)
-	{
-		vkDestroyDescriptorSetLayout(device_->getDevice(), descriptorSetLayout, nullptr);
-	}
 }
 
 void Pipeline::bind(VkCommandBuffer cmdBuf) const
