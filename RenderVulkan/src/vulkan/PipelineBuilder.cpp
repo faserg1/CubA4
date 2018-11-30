@@ -4,6 +4,7 @@
 #include "../engine/material/Shader.hpp"
 
 #include <algorithm>
+#include <vulkan/vulkan.h>
 
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::material;
@@ -51,11 +52,11 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
 	std::vector<VkDescriptorSetLayout> layouts;
-	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), layouts.begin(),
-		[](const sVkDescriptorSetLayout &pLayout) -> VkDescriptorSetLayout
-		{
-			return pLayout->get();
-		});
+	auto transformFunction = [](sVkDescriptorSetLayout pLayout) -> VkDescriptorSetLayout
+	{
+		return pLayout->get();
+	};
+	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), std::back_inserter(layouts), transformFunction);
 
 	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(layouts.size());
 	pipelineLayoutInfo.pSetLayouts = layouts.data();
