@@ -4,6 +4,7 @@
 #include <memory>
 #include <functional>
 #include <vulkan/vulkan.h>
+#include <iostream>
 
 namespace CubA4
 {
@@ -14,26 +15,26 @@ namespace CubA4
 			namespace util
 			{
 				template <class TVulkanObject>
-				class VulkanHandlerContainer
+				class VulkanHandlerContainer final
 				{
 				public:
 					explicit VulkanHandlerContainer(TVulkanObject object, std::function<void(TVulkanObject)> deleter) :
 						vulkanObject_(object), deleter_(deleter)
 					{
+						std::cout << "Create object\n";
 					}
-					virtual ~VulkanHandlerContainer()
+					~VulkanHandlerContainer()
 					{
+						std::cout << "Destroy object\n";
 						deleter_(vulkanObject_);
 					}
 					TVulkanObject get() const
 					{
 						return vulkanObject_;
 					}
-				protected:
-
 				private:
-					TVulkanObject vulkanObject_;
-					std::function<void(TVulkanObject)> deleter_;
+					const TVulkanObject vulkanObject_;
+					const std::function<void(TVulkanObject)> deleter_;
 				};
 
 				template <class TVulkanObject>

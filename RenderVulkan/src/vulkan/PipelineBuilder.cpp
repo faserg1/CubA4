@@ -52,7 +52,7 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 
 	std::vector<VkDescriptorSetLayout> layouts;
 	std::transform(descriptorSetLayouts_.begin(), descriptorSetLayouts_.end(), layouts.begin(),
-		[](sVkDescriptorSetLayout pLayout) -> VkDescriptorSetLayout
+		[](const sVkDescriptorSetLayout &pLayout) -> VkDescriptorSetLayout
 		{
 			return pLayout->get();
 		});
