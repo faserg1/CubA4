@@ -21,11 +21,9 @@ namespace CubA4
 					explicit VulkanHandlerContainer(TVulkanObject object, std::function<void(TVulkanObject)> deleter) :
 						vulkanObject_(object), deleter_(deleter)
 					{
-						std::cout << "Create object\n";
 					}
 					~VulkanHandlerContainer()
 					{
-						std::cout << "Destroy object\n";
 						deleter_(vulkanObject_);
 					}
 					TVulkanObject get() const
