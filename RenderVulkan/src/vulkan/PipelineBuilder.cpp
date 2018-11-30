@@ -36,7 +36,7 @@ void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
 	shaders_.push_back(shader);
 }
 
-void PipelineBuilder::addBuiltInDescriptorSetLayout(std::shared_ptr<VkDescriptorSetLayout> builtInLayout)
+void PipelineBuilder::addBuiltInDescriptorSetLayout(sVkDescriptorSetLayout builtInLayout)
 {
 	descriptorSetLayouts_.push_back(builtInLayout);
 }
