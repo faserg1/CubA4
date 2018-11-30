@@ -47,10 +47,11 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 	}
 	device_->getMarker().setName(layout, "BuiltIn Layout");
 	auto dev = device_;
-	builtInLayout_ = util::createSharedVulkanObject(layout, [dev](VkDescriptorSetLayout layout)
+	std::function<void(VkDescriptorSetLayout)> deleter = [dev](VkDescriptorSetLayout layout)
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
-	});
+	};
+	builtInLayout_ = util::createSharedVulkanObject(layout, deleter);
 }
 
 void ResourceManager::destroyBuildInDescriptorSetLayout()
