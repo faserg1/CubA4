@@ -57,8 +57,8 @@ VkGraphicsPipelineCreateInfo PipelineBuilder::build()
 			return pLayout->get();
 		});
 
-	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts_.size());
-	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts_.data();
+	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(layouts.size());
+	pipelineLayoutInfo.pSetLayouts = layouts.data();
 
 	pipelineLayoutInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstantsRanges_.size());
 	pipelineLayoutInfo.pPushConstantRanges = pushConstantsRanges_.data();
