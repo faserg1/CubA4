@@ -36,10 +36,6 @@ namespace CubA4
 
 				std::shared_ptr<IRenderManager> getRenderManager() const override;
 			protected:
-				void initSwapchain();
-				void rebuildSwapchain();
-				void destroySwapchain();
-
 				void initPresentation();
 				void destroyPresentation();
 
@@ -51,9 +47,6 @@ namespace CubA4
 
 				void loop();
 			private:
-				std::shared_ptr<vulkan::SwapchainBuilder> swapchainBuilder_;
-				std::shared_ptr<const vulkan::Swapchain> swapchain_;
-
 				std::shared_ptr<Presentaion> presetation_;
 				std::shared_ptr<Render> render_;
 

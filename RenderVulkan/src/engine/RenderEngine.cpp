@@ -2,9 +2,6 @@
 
 #include <logging/ILogger.hpp>
 
-#include "../vulkan/Swapchain.hpp"
-#include "../vulkan/SwapchainBuilder.hpp"
-
 #include "./Presentaion.hpp"
 #include "./Render.hpp"
 
@@ -38,31 +35,19 @@ VulkanRenderEngine::~VulkanRenderEngine()
 void VulkanRenderEngine::init(std::shared_ptr<const CubA4::window::IWindow> window)
 {
 	initCore(window);
-	logger_->flush();
-	initSwapchain();
-	logger_->flush();
 	initPresentation();
-	logger_->flush();
 	initRender();
-	logger_->flush();
 	setup();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine initialized.");
-	logger_->flush();
 }
 
 void VulkanRenderEngine::destroy()
 {
 	unload();
-	logger_->flush();
 	destroyRender();
-	logger_->flush();
 	destroyPresentation();
-	logger_->flush();
-	destroySwapchain();
-	logger_->flush();
 	destroyCore();	
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
-	logger_->flush();
 }
 
 
@@ -82,7 +67,6 @@ void VulkanRenderEngine::run()
 	running_ = true;
 	renderLoopThread_ = std::thread(&VulkanRenderEngine::loop, this);
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Started.");
-	logger_->flush();
 }
 
 void VulkanRenderEngine::stop()
@@ -95,38 +79,13 @@ void VulkanRenderEngine::stop()
 		renderLoopThread_.join();
 	waitDeviceIdle();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
-	logger_->flush();
-}
-
-
-void VulkanRenderEngine::initSwapchain()
-{
-	if (!swapchainBuilder_)
-		swapchainBuilder_ = std::make_shared<SwapchainBuilder>(getDevice(), getSurface(), getConfig());
-	swapchain_ = swapchainBuilder_->build();
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain builded.");
-}
-
-void VulkanRenderEngine::rebuildSwapchain()
-{
-
-}
-
-void VulkanRenderEngine::destroySwapchain()
-{
-	if (!swapchain_)
-		return;
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Destroing swapchain.");
-	swapchainBuilder_->destroy(swapchain_);
-	swapchain_.reset();
-	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain destroyed.");
 }
 
 
 void VulkanRenderEngine::initPresentation()
 {
 	if (!presetation_)
-		presetation_ = std::make_shared<Presentaion>(getDevice(), swapchain_);
+		presetation_ = std::make_shared<Presentaion>(getDevice(), getSwapchain());
 
 }
 
@@ -139,7 +98,7 @@ void VulkanRenderEngine::destroyPresentation()
 void VulkanRenderEngine::initRender()
 {
 	if (!render_)
-		render_ = std::make_shared<Render>(getDevice(), swapchain_);
+		render_ = std::make_shared<Render>(getDevice(), getSwapchain());
 }
 
 void VulkanRenderEngine::destroyRender()

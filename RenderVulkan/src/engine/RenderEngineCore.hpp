@@ -68,6 +68,7 @@ namespace CubA4
 				std::shared_ptr<const vulkan::Instance> getInstance() const;
 				std::shared_ptr<const vulkan::Device> getDevice() const;
 				std::weak_ptr<const vulkan::Surface> getSurface() const;
+				std::shared_ptr<const vulkan::Swapchain> getSwapchain() const;
 
 				void waitDeviceIdle() const;
 			private:
@@ -83,12 +84,19 @@ namespace CubA4
 				std::shared_ptr<vulkan::DeviceBuilder> deviceBuilder_;
 				std::shared_ptr<const vulkan::Device> device_;
 				std::vector<std::shared_ptr<vulkan::addon::DeviceAddon>> deviceAddons_;
+
+				std::shared_ptr<vulkan::SwapchainBuilder> swapchainBuilder_;
+				std::shared_ptr<const vulkan::Swapchain> swapchain_;
 			private:
 				void initInstance();
 				void destroyInstance();
 
 				void initDevice();
 				void destroyDevice();
+
+				void initSwapchain();
+				void rebuildSwapchain();
+				void destroySwapchain();
 			};
 		}
 	}
