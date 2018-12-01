@@ -14,12 +14,7 @@ Addon::~Addon()
 
 bool Addon::available() const
 {
-	auto all = allNames();
-	auto required = names();
-	//Всё это необходимо отсортировать, прежде чем искать
-	std::sort(all.begin(), all.end());
-	std::sort(required.begin(), required.end());
-	return std::includes(all.begin(), all.end(), required.begin(), required.end());
+	return checkNames(std::move(names()));
 }
 
 std::string Addon::joinNames() const
@@ -32,4 +27,14 @@ std::string Addon::joinNames() const
 	});
 	temp.pop_back();
 	return temp;
+}
+
+bool Addon::checkNames(std::vector<std::string> required) const
+{
+	auto all = allNames();
+	//Всё это необходимо отсортировать, прежде чем искать
+	std::sort(all.begin(), all.end());
+	std::sort(required.begin(), required.end());
+	// Поиск имён.
+	return std::includes(all.begin(), all.end(), required.begin(), required.end());
 }
