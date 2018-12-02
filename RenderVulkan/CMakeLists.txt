@@ -7,8 +7,15 @@ set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceEngineWorldDir ${RenderVulkanSourceEngineDir}/world)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanSourceEngineWorld
+	${RenderVulkanSourceEngineWorldDir}/RenderChunk.cpp
+)
+set(RenderVulkanHeaderEngineWorld
+	${RenderVulkanSourceEngineWorldDir}/RenderChunk.hpp
+)
 set(RenderVulkanSourceVulkanUtil
 	${RenderVulkanSourceVulkanUtilDir}/ErrorHelper.cpp
 )
@@ -127,6 +134,7 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderChunkCompiler.cpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.cpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.cpp
+	${RenderVulkanSourceEngineDir}/RenderChunkCompilerCore.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.hpp
@@ -139,6 +147,7 @@ set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderChunkCompiler.hpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.hpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.hpp
+	${RenderVulkanSourceEngineDir}/RenderChunkCompilerCore.hpp
 )
 
 set(RenderVulkanHeaders
@@ -150,6 +159,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderEngineMaterial}
 	${RenderVulkanHeaderEngineModel}
 	${RenderVulkanHeaderVulkanUtil}
+	${RenderVulkanHeaderEngineWorld}
 )
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 
@@ -163,6 +173,7 @@ set(RenderVulkanSources
 	${RenderVulkanSourceEngineMaterial}
 	${RenderVulkanSourceEngineModel}
 	${RenderVulkanSourceVulkanUtil}
+	${RenderVulkanSourceEngineWorld}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
@@ -180,6 +191,8 @@ source_group("resources" FILES ${irs_resources})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanHeaderEngineModel})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanHeaderVulkanUtil})
 source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanSourceVulkanUtil})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderVulkanHeaderEngineWorld})
+source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderVulkanSourceEngineWorld})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 
@@ -198,6 +211,7 @@ target_include_directories(RenderVulkan PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(RenderVulkan PRIVATE Boost::filesystem)
 
 use_base_library(RenderVulkan CoreBase)
+use_base_library(RenderVulkan ModBase)
 use_base_library(RenderVulkan RenderBase)
 
 #set output directory

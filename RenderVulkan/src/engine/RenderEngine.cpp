@@ -7,6 +7,7 @@
 
 #include "./RenderManager.hpp"
 #include "./RenderGameHandler.hpp"
+#include "./RenderChunkCompiler.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -111,6 +112,7 @@ void VulkanRenderEngine::setup()
 {
 	renderManager_ = std::make_shared<RenderManager>(getDevice(), render_);
 	renderGameHandler_ = std::make_shared<RenderGameHandler>();
+	renderChunkCompiler_ = std::make_shared<RenderChunkCompiler>(getDevice(), render_->getRenderPass());
 	//TODO: [OOKAMI] настройка Presentation & Render
 }
 

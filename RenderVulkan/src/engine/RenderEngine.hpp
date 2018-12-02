@@ -16,6 +16,7 @@ namespace CubA4
 			class Render;
 			class RenderManager;
 			class RenderGameHandler;
+			class RenderChunkCompiler;
 
 			class VulkanRenderEngine :
 				public virtual IRenderEngine,
@@ -52,6 +53,7 @@ namespace CubA4
 
 				std::shared_ptr<RenderManager> renderManager_;
 				std::shared_ptr<RenderGameHandler> renderGameHandler_;
+				std::shared_ptr<RenderChunkCompiler> renderChunkCompiler_;
 
 				bool running_;
 				std::thread renderLoopThread_;

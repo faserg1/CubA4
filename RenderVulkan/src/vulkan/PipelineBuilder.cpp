@@ -2,6 +2,7 @@
 #include "./Pipeline.hpp"
 #include "./Device.hpp"
 #include "../engine/material/Shader.hpp"
+#include <world/IChunk.hpp>
 
 #include <algorithm>
 #include <vulkan/vulkan.h>
@@ -138,20 +139,44 @@ void PipelineBuilder::prepareVertexInput()
 	const uint16_t posSize = sizeof(float) * 3;
 	const uint16_t vertexSize = posSize;
 
+	const uint16_t posChunkSize = sizeof(CubA4::mod::world::BlockInChunkPos);
+	const uint16_t instanceInfoSize = posChunkSize;
+
+	// Bindings
+
 	vertexBindingDescriptions_.push_back(
 		{
 			0, //binding
 			vertexSize, //stride
-			VK_VERTEX_INPUT_RATE_VERTEX
+			VK_VERTEX_INPUT_RATE_VERTEX //input rate
 		}
 	);
+
+	vertexBindingDescriptions_.push_back(
+		{
+			0, //binding
+			instanceInfoSize, //stride
+			VK_VERTEX_INPUT_RATE_INSTANCE //input rate
+		}
+	);
+
+	//Attributes
 
 	vertexAttrDescriptions_.push_back(
 		{
 			0, //location
 			0, //binding
 			VK_FORMAT_R32G32B32_SFLOAT, //format,
-			0
+			0, //offset
+		}
+	);
+
+	vertexAttrDescriptions_.push_back(
+		{
+			1, //location
+			0, //binding
+			VK_FORMAT_R8G8B8_UINT, //format,
+			0 //offset
 		}
 	);
 

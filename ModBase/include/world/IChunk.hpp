@@ -23,7 +23,6 @@ namespace CubA4
 				TPosType x;
 				TPosType y;
 				TPosType z;
-				TPosType unused;
 				friend bool operator==(const BasePos &one, const BasePos &other)
 				{
 					return one.x == other.x

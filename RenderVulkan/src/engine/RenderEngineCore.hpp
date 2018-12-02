@@ -53,14 +53,11 @@ namespace CubA4
 			class RenderEngineCore
 			{
 			public:
+			protected:
 				explicit RenderEngineCore(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<const CubA4::core::ICore> core);
 				explicit RenderEngineCore(const RenderEngineCore &) = delete;
 				~RenderEngineCore();
-			protected:
-				const std::shared_ptr<const CubA4::core::info::IApplicationInfo> info_;
-				const std::shared_ptr<const CubA4::core::ICore> core_;
-				const std::shared_ptr<CubA4::core::logging::ILogger> logger_;
-			protected:
+
 				void initCore(std::shared_ptr<const CubA4::window::IWindow> window);
 				void destroyCore();
 
@@ -71,6 +68,10 @@ namespace CubA4
 				std::shared_ptr<const vulkan::Swapchain> getSwapchain() const;
 
 				void waitDeviceIdle() const;
+			protected:
+				const std::shared_ptr<const CubA4::core::info::IApplicationInfo> info_;
+				const std::shared_ptr<const CubA4::core::ICore> core_;
+				const std::shared_ptr<CubA4::core::logging::ILogger> logger_;
 			private:
 				std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
 

@@ -20,28 +20,32 @@ namespace CubA4
 		{
 			namespace model
 			{
+				struct RenderModelData
+				{
+					std::shared_ptr<const vulkan::Memory> vertexBufferMemory;
+					std::shared_ptr<const vulkan::Memory> indexBufferMemory;
+					VkBuffer vertexBuffer;
+					VkBuffer indexBuffer;
+					std::string id;
+					uint32_t vertexCount;
+					uint32_t indexCount;
+				};
+
 				class RenderModel :
 					public virtual IRenderModel
 				{
 				public:
-					explicit RenderModel(std::shared_ptr<const vulkan::Device> device,
-						std::shared_ptr<const vulkan::Memory> vertexBufferMemory,
-						std::shared_ptr<const vulkan::Memory> indexBufferMemory,
-						VkBuffer vertexBuffer,
-						VkBuffer indexBuffer,
-						const std::string &id);
+					explicit RenderModel(std::shared_ptr<const vulkan::Device> device, RenderModelData data);
 					~RenderModel();
 
 					std::string getId() const override;
-					void bind(VkCommandBuffer cmdBuffer, uint32_t index = 0);
+					uint32_t getVertexCount() const;
+					uint32_t getIndexCount() const;
+					void bind(VkCommandBuffer cmdBuffer, uint32_t index = 0) const;
 				protected:
 				private:
-					const std::shared_ptr<const vulkan::Device> device_;
-					const std::shared_ptr<const vulkan::Memory> vertexBufferMemory_;
-					const std::shared_ptr<const vulkan::Memory> indexBufferMemory_;
-					const VkBuffer vertexBuffer_;
-					const VkBuffer indexBuffer_;
-					const std::string id_;
+					std::shared_ptr<const vulkan::Device> device_;
+					const RenderModelData data_;
 				};
 			}
 		}

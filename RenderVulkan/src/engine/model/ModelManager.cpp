@@ -29,8 +29,9 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	VkBuffer vertexBuffer, vertexTransitBuffer;
 	VkBuffer indexBuffer, indexTransitBuffer;
 
-	uint64_t verticesSize = vertices.size() * sizeof(CubA4::core::model::Vertex);
-	uint64_t indicesSize = 0;
+	uint64_t verticesSize = vertices.size() * sizeof(CubA4::core::model::Vertex); ///< Размер буфера вершин, в байтах
+	uint64_t indexCount = 0; ///< Количество индексов вершин
+	uint64_t indicesSize = 0; ///< Размер буфера индексов, в байтах
 
 	const unsigned char bufferCount = 4;
 	VkBufferCreateInfo bufferInfos[bufferCount] = {};
@@ -92,8 +93,10 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	{
 		auto verticesCount = faces[faceIndex];
 		faceIndex += verticesCount;
-		indicesSize += (verticesCount - 2) * 3; // triangle fan
+		indexCount += (verticesCount - 2) * 3; // triangle fan
 	}
+
+	indicesSize = indexCount * sizeof(uint16_t);
 
 	VkBufferCreateInfo &indexBufferInfo = bufferInfos[2], &indexTransitBufferInfo = bufferInfos[3];
 	indexTransitBufferInfo.size = indexBufferInfo.size = indicesSize;
@@ -131,8 +134,8 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 
 	
 	auto mappedIndexMemory = memoryIndexTransitBuffer->map(0, VK_WHOLE_SIZE);
-	auto *idxPtr = static_cast<unsigned short*>(mappedIndexMemory.get());
-	unsigned short triangleIndices[3] = {};
+	auto *idxPtr = static_cast<uint16_t*>(mappedIndexMemory.get());
+	uint16_t triangleIndices[3] = {};
 	auto saveTriangle = [&idxPtr, &triangleIndices]()
 	{
 		memcpy(idxPtr, triangleIndices, sizeof(triangleIndices));
@@ -157,12 +160,12 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 			//record first triangle
 			if (vertexIndex < 3)
 			{
-				triangleIndices[vertexIndex] = static_cast<unsigned short>(faces[faceIndex]);
+				triangleIndices[vertexIndex] = static_cast<uint16_t>(faces[faceIndex]);
 			}
 			else //record next triangles
 			{
 				triangleIndices[1] = triangleIndices[2];
-				triangleIndices[2] = static_cast<unsigned short>(faces[faceIndex]);
+				triangleIndices[2] = static_cast<uint16_t>(faces[faceIndex]);
 				saveTriangle();
 			}
 		}
@@ -176,5 +179,14 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 
-	return std::make_shared<RenderModel>(device_, memoryVertexBuffer, memoryIndexBuffer, vertexBuffer, indexBuffer, renderModelDef.getId());
+	RenderModelData rmData = {};
+	rmData.vertexBufferMemory = memoryVertexBuffer;
+	rmData.indexBufferMemory = memoryIndexBuffer;
+	rmData.vertexBuffer = vertexBuffer;
+	rmData.indexBuffer = indexBuffer;
+	rmData.id = renderModelDef.getId();
+	rmData.vertexCount = static_cast<uint32_t>(vertices.size());
+	rmData.indexCount = static_cast<uint32_t>(indexCount);
+
+	return std::make_shared<RenderModel>(device_, rmData);
 }

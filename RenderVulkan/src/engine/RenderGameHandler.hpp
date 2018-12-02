@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <game/IGameSubscriber.hpp>
+#include <world/IWorldSubscriber.hpp>
 #include <util/ISubscription.hpp>
 
 namespace CubA4
@@ -20,7 +21,8 @@ namespace CubA4
 		namespace engine
 		{
 			class RenderGameHandler :
-				public virtual CubA4::core::game::IGameSubscriber
+				public virtual CubA4::core::game::IGameSubscriber,
+				public virtual CubA4::mod::world::IWorldSubscriber
 			{
 			public:
 				explicit RenderGameHandler();
@@ -31,6 +33,10 @@ namespace CubA4
 			protected:
 			private:
 				std::unique_ptr<CubA4::core::util::ISubscription> gameSubscription_;
+				std::unique_ptr<CubA4::core::util::ISubscription> worldSubscription_;
+				std::shared_ptr<const CubA4::mod::world::IWorld> currentWorld_;
+			private:
+				void recompileWorld();
 			};
 		}
 	}
