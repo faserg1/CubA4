@@ -9,6 +9,8 @@
 #include <engine/material/IShaderFactory.hpp>
 #include <engine/material/IMaterialLayoutBuilder.hpp>
 #include <engine/material/IMaterialLayoutSetFactory.hpp>
+#include <engine/material/IMaterialFactory.hpp>
+#include <engine/material/IMaterialBuilder.hpp>
 #include <engine/model/IModelManager.hpp>
 #include "../../gen/irs.hpp"
 #include <stdexcept>
@@ -67,10 +69,20 @@ void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material:
 
 void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory)
 {
+	auto renderManager = manager_->getModRenderManager();
 	auto defaultLayoutBuilder = layoutFactory->createMaterialLayout();
 	defaultLayoutBuilder->useShader(shaders_.find("default.frag")->second);
 	defaultLayoutBuilder->useShader(shaders_.find("default.vert")->second);
 	auto layouts = layoutFactory->build();
+	renderManager->registerMaterialLayout(layouts[0], "default");
+}
+
+void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory)
+{
+	auto renderManager = manager_->getModRenderManager();
+	auto defaultMaterialBuilder = materialFactory->createMaterial(renderManager->getMaterialLayout("default"));
+	auto defaultMaterial = defaultMaterialBuilder->build();
+	renderManager->registerMaterial(defaultMaterial, "default");
 }
 
 void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager)

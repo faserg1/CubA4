@@ -1,6 +1,7 @@
 #include "./MaterialManager.hpp"
 #include "./ShaderFactory.hpp"
 #include "./MaterialLayoutSetFactory.hpp"
+#include "./MaterialFactory.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
@@ -11,6 +12,7 @@ MaterialManager::MaterialManager(std::shared_ptr<const Device> device,
 	device_(device), render_(render), resourceManager_(resourceManager)
 {
 	shaderFactory_ = std::make_shared<ShaderFactory>(device);
+	materialFactory_ = std::make_shared<MaterialFactory>();
 }
 
 MaterialManager::~MaterialManager()
@@ -26,4 +28,9 @@ std::shared_ptr<IShaderFactory> MaterialManager::getShaderFactory() const
 std::shared_ptr<IMaterialLayoutSetFactory> MaterialManager::getMaterialLayoutSetFactory() const
 {
 	return std::make_shared<MaterialLayoutSetFactory>(device_, render_, resourceManager_);
+}
+
+std::shared_ptr<IMaterialFactory> MaterialManager::getMaterialFactory() const
+{
+	return materialFactory_;
 }

@@ -21,11 +21,12 @@ namespace CubA4
 				class IMaterialLayoutSetFactory
 				{
 				public:
-					virtual ~IMaterialLayoutSetFactory() = default;
+					
 					virtual std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() = 0;
 					virtual std::vector<std::shared_ptr<const IMaterialLayout>> build() = 0;
 				protected:
 					explicit IMaterialLayoutSetFactory() = default;
+					virtual ~IMaterialLayoutSetFactory() = default;
 				private:
 				};
 			}

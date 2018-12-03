@@ -44,6 +44,7 @@ set(RenderVulkanSourceEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/FragmentShader.cpp
 	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.cpp
+	${RenderVulkanSourceEngineMaterialDir}/MaterialBuilder.cpp
 )
 set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/Material.hpp
@@ -56,6 +57,7 @@ set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/FragmentShader.hpp
 	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.hpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.hpp
+	${RenderVulkanSourceEngineMaterialDir}/MaterialBuilder.hpp
 )
 set(RenderVulkanSourceConfig
 	${RenderVulkanSourceConfigDir}/RenderConfig.cpp

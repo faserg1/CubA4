@@ -31,6 +31,7 @@ set(RenderBaseHeaderEngineMaterial
 	${RenderBaseIncludeEngineMaterialDir}/IFragmentShader.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IShaderFactory.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialManager.hpp
+	${RenderBaseIncludeEngineMaterialDir}/IMaterialBuilder.hpp
 )
 
 set(RenderBaseHeaders 

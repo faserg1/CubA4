@@ -25,7 +25,7 @@ namespace CubA4
 					explicit ShaderFactory(std::shared_ptr<const vulkan::Device> device);
 					~ShaderFactory();
 
-					std::shared_ptr<IShader> createFromBinary(const void *data, size_t size, ShaderType type, std::string entryPoint) const override;
+					std::shared_ptr<const IShader> createFromBinary(const void *data, size_t size, ShaderType type, std::string entryPoint) const override;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;

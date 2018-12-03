@@ -29,6 +29,8 @@ namespace CubA4
 			namespace material
 			{
 				class IMaterialLayoutSetFactory;
+				class IMaterialLayout;
+				class IMaterialFactory;
 				class IShaderFactory;
 				class IShader;
 			}
@@ -62,10 +64,11 @@ namespace CubA4
 				std::shared_ptr<const CubA4::core::ICore> core_;
 				std::shared_ptr<manager::ModManager> manager_;
 				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
-				std::map<std::string, std::shared_ptr<CubA4::render::engine::material::IShader>> shaders_;
+				std::map<std::string, std::shared_ptr<const CubA4::render::engine::material::IShader>> shaders_;
 			private:
 				void loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory);
 				void createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory);
+				void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
 				void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
 			};
 		}

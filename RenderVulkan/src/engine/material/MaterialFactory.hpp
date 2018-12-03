@@ -1,6 +1,9 @@
 #ifndef MATERIALFACTORY_HPP
 #define MATERIALFACTORY_HPP
 
+#include <memory>
+#include <engine/material/IMaterialFactory.hpp>
+
 namespace CubA4
 {
 	namespace render
@@ -9,11 +12,14 @@ namespace CubA4
 		{
 			namespace material
 			{
-				class MaterialFactory
+				class MaterialFactory :
+					public virtual IMaterialFactory
 				{
 				public:
 					explicit MaterialFactory();
 					~MaterialFactory();
+
+					std::shared_ptr<IMaterialBuilder> createMaterial(std::shared_ptr<const IMaterialLayout> layout) override;
 				protected:
 				private:
 				};

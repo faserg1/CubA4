@@ -17,7 +17,7 @@ ShaderFactory::~ShaderFactory()
 	
 }
 
-std::shared_ptr<IShader> ShaderFactory::createFromBinary(const void *data, size_t size, ShaderType type, std::string entryPoint) const
+std::shared_ptr<const IShader> ShaderFactory::createFromBinary(const void *data, size_t size, ShaderType type, std::string entryPoint) const
 {
 	if (!data || !size)
 		return {};
