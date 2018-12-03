@@ -24,3 +24,8 @@ std::shared_ptr<const IModInfo> ModLibrary::getModInfo() const
 {
 	return modInfo_;
 }
+
+void ModLibrary::destroy()
+{
+	modInfo_.reset();
+}

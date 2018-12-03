@@ -167,6 +167,10 @@ void ModLoader::destroy()
 		mod->preunload();
 	}
 	loadedMods_.clear();
+	for (auto library : modLibs_)
+	{
+		library->destroy();
+	}
 }
 
 void ModLoader::unload()

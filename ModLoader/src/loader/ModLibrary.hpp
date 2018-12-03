@@ -17,6 +17,7 @@ namespace CubA4
 			ModLibrary(boost::filesystem::path path);
 			bool isValidLibrary() const;
 			std::shared_ptr<const CubA4::mod::IModInfo> getModInfo() const;
+			void destroy();
 		private:
 			const char *importSymbolName_;
 			boost::dll::shared_library library_;
