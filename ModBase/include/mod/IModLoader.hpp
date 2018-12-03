@@ -28,7 +28,7 @@ namespace CubA4
 			virtual void find() = 0;
 			virtual void load() = 0;
 			virtual void setup(IEnvironmentBuilderFactory builderFactory) = 0;
-			virtual void destroy() = 0;
+			virtual void shutdown() = 0;
 			virtual void unload() = 0;
 		protected:
 			explicit IModLoader() = default;

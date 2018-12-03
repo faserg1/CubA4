@@ -11,6 +11,11 @@ namespace CubA4
 	{
 		namespace engine
 		{
+			namespace material
+			{
+				class IMaterial;
+			}
+
 			namespace model
 			{
 				class IRenderModel;
@@ -26,10 +31,11 @@ namespace CubA4
 				public virtual IObject
 			{
 			public:
-				virtual ~IBlock() = default;
+				virtual std::shared_ptr<const CubA4::render::engine::material::IMaterial> getRenderMaterial() const = 0;
 				virtual std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getRenderModel() const = 0;
 			protected:
 				explicit IBlock() = default;
+				virtual ~IBlock() = default;
 			};
 		}
 	}

@@ -5,6 +5,9 @@
 #include <world/IChunk.hpp>
 #include <object/IBlock.hpp>
 #include "model/RenderModel.hpp"
+#include "material/MaterialLayout.hpp"
+#include "material/Material.hpp"
+#include "../vulkan/Pipeline.hpp"
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
@@ -51,11 +54,18 @@ std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunkInter
 	{
 		auto usedBlock = usedBlocks[idx];
 		auto cmdBuffer = buffers[idx];
+
 		auto renderModel = std::dynamic_pointer_cast<const model::RenderModel>(usedBlock->getRenderModel());
+		auto renderMaterial = std::dynamic_pointer_cast<const material::Material>(usedBlock->getRenderMaterial());
+		auto renderMaterialLayout = renderMaterial->getLayout();
+		auto pipeline = renderMaterialLayout->getPipeline();
+
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		renderModel->bind(cmdBuffer);
+		pipeline->bind(cmdBuffer);
+		
 		vkCmdDrawIndexed(cmdBuffer,
 			renderModel->getIndexCount(), static_cast<uint32_t>(blockChunkPositions.size()),
 			0, 0, 0);

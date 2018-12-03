@@ -23,6 +23,8 @@ namespace CubA4
 				public:
 					explicit MaterialLayout(std::shared_ptr<vulkan::Pipeline> pipeline);
 					~MaterialLayout();
+
+					std::shared_ptr<vulkan::Pipeline> getPipeline() const;
 				protected:
 				private:
 					const std::shared_ptr<vulkan::Pipeline> pipeline_;

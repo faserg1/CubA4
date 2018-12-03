@@ -154,7 +154,7 @@ void PipelineBuilder::prepareVertexInput()
 
 	vertexBindingDescriptions_.push_back(
 		{
-			0, //binding
+			1, //binding
 			instanceInfoSize, //stride
 			VK_VERTEX_INPUT_RATE_INSTANCE //input rate
 		}
@@ -174,7 +174,7 @@ void PipelineBuilder::prepareVertexInput()
 	vertexAttrDescriptions_.push_back(
 		{
 			1, //location
-			0, //binding
+			1, //binding
 			VK_FORMAT_R8G8B8_UINT, //format,
 			0 //offset
 		}

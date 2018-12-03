@@ -1,8 +1,9 @@
 #include "../../include/block/TestBlock.hpp"
 using namespace CubA4::mod::block;
 
-TestBlock::TestBlock(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel) :
-	renderModel_(renderModel)
+TestBlock::TestBlock(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel,
+	std::shared_ptr<const CubA4::render::engine::material::IMaterial> renderMaterial) :
+	renderModel_(renderModel), renderMaterial_(renderMaterial)
 {
 	
 }
@@ -25,4 +26,9 @@ std::wstring TestBlock::getName() const
 std::shared_ptr<const CubA4::render::engine::model::IRenderModel> TestBlock::getRenderModel() const
 {
 	return renderModel_;
+}
+
+std::shared_ptr<const CubA4::render::engine::material::IMaterial> TestBlock::getRenderMaterial() const
+{
+	return renderMaterial_;
 }

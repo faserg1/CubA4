@@ -13,3 +13,7 @@ MaterialLayout::~MaterialLayout()
 	
 }
 
+std::shared_ptr<Pipeline> MaterialLayout::getPipeline() const
+{
+	return pipeline_;
+}

@@ -28,7 +28,7 @@ namespace CubA4
 				virtual void unload() = 0;
 
 				virtual void setup() = 0;
-				virtual void destroy() = 0;
+				virtual void shutdown() = 0;
 
 				virtual void run() = 0;
 				virtual void stop() = 0;

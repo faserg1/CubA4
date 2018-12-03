@@ -41,6 +41,8 @@ void WorldSetup::init(std::shared_ptr<IEnvironmentBuilder> builder)
 {
 	log_->log(LogLevel::Info, "Initialisating world");
 	auto renderManager = manager_->getModRenderManager();
-	builder->registerObject(std::make_shared<TestBlock>(renderManager->getModel("block")));
+	auto defaultRenderBlock = renderManager->getModel("block");
+	auto defaultRenderMaterial = renderManager->getMaterial("default");
+	builder->registerObject(std::make_shared<TestBlock>(defaultRenderBlock, defaultRenderMaterial));
 	builder->createWorld(std::make_shared<CubA4::mod::world::TestWorld>());
 }

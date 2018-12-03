@@ -160,7 +160,7 @@ void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::
 	}
 }
 
-void ModLoader::destroy()
+void ModLoader::shutdown()
 {
 	for (auto mod : loadedMods_)
 	{

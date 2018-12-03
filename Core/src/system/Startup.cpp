@@ -40,9 +40,9 @@ void Startup::setup()
 	initMods();
 }
 
-void Startup::destroy()
+void Startup::shutdown()
 {
-	modLoader_->destroy();
+	modLoader_->shutdown();
 }
 
 void Startup::run()

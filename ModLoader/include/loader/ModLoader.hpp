@@ -38,7 +38,7 @@ namespace CubA4
 			void find() override;
 			void load() override;
 			void setup(IEnvironmentBuilderFactory builderFactory) override;
-			void destroy() override;
+			void shutdown() override;
 			void unload() override;
 		private:
 			const std::weak_ptr<const core::ICore> core_;

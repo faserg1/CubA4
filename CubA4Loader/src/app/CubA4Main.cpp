@@ -34,7 +34,7 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 
 AppMain::~AppMain()
 {
-	unload();
+	shutdown();
 	if (log_)
 		log_->log(LogLevel::Info, "CubA4 Loader destroyed.");
 }
@@ -116,12 +116,12 @@ bool AppMain::setup()
 	return true;
 }
 
-void AppMain::unload()
+void AppMain::shutdown()
 {
 	log_->flush();
 	stop();
-	unloadGame();
-	core_->getStartup()->destroy();
+	shutdownGame();
+	core_->getStartup()->shutdown();
 	destroyRender();
 	core_->getStartup()->unload();
 	unloadRender();
@@ -135,7 +135,7 @@ bool AppMain::setupGame()
 	return true;
 }
 
-void AppMain::unloadGame()
+void AppMain::shutdownGame()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->setGame({});

@@ -58,10 +58,10 @@ namespace CubA4
 			void destroyRender();
 
 			bool setup();
-			void unload();
+			void shutdown();
 
 			bool setupGame();
-			void unloadGame();
+			void shutdownGame();
 
 			void run();
 			void stop();

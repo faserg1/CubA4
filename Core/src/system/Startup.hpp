@@ -35,7 +35,7 @@ namespace CubA4
 				void unload() override;
 
 				void setup() override;
-				void destroy() override;
+				void shutdown() override;
 
 				void run() override;
 				void stop() override;

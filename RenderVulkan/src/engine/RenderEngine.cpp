@@ -44,7 +44,7 @@ void VulkanRenderEngine::init(std::shared_ptr<const CubA4::window::IWindow> wind
 
 void VulkanRenderEngine::destroy()
 {
-	unload();
+	shutdown();
 	destroyRender();
 	destroyPresentation();
 	destroyCore();	
@@ -116,7 +116,7 @@ void VulkanRenderEngine::setup()
 	//TODO: [OOKAMI] настройка Presentation & Render
 }
 
-void VulkanRenderEngine::unload()
+void VulkanRenderEngine::shutdown()
 {
 	renderChunkCompiler_.reset();
 	renderGameHandler_.reset();
