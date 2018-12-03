@@ -31,8 +31,11 @@ namespace CubA4
 				explicit Startup(std::weak_ptr<const ICore> core);
 				~Startup();
 
-				void setup(system::IAppCallback &appCallback) override;
+				void load(system::IAppCallback &appCallback) override;
 				void unload() override;
+
+				void setup() override;
+				void destroy() override;
 
 				void run() override;
 				void stop() override;

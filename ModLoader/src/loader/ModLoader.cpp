@@ -37,7 +37,7 @@ ModLoader::ModLoader(std::weak_ptr<const ICore> core, std::shared_ptr<const CubA
 
 ModLoader::~ModLoader()
 {
-	
+	unload();
 }
 
 void ModLoader::find()
@@ -104,7 +104,7 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 	for (auto modInfo : modInfos)
 	{
 		//TODO: [OOKAMI] Check for mod deps
-		auto mod = modInfo->getMod();
+		auto mod = modInfo->createMod();
 		if (mod)
 		{
 			mods.push_back(mod);
@@ -155,15 +155,21 @@ void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::
 	for (auto mod : mods)
 	{
 		auto builder = builders.find(mod->getInfo().getIdName())->second;
+		loadedMods_.push_back(mod);
 		mod->done(builder);
 	}
 }
 
-void ModLoader::unload()
+void ModLoader::destroy()
 {
 	for (auto mod : loadedMods_)
 	{
 		mod->preunload();
 	}
+	loadedMods_.clear();
+}
+
+void ModLoader::unload()
+{
 	modLibs_.clear();
 }

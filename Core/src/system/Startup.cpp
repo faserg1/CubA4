@@ -21,17 +21,28 @@ Startup::~Startup()
 	
 }
 
-void Startup::setup(system::IAppCallback &appCallback)
+void Startup::load(system::IAppCallback &appCallback)
 {
 	appCallback_ = &appCallback;
 	modLoader_ = appCallback_->getModLoader();
-	initGame();
-	initMods();
+	modLoader_->find();
+	modLoader_->load();
 }
 
 void Startup::unload()
 {
 	unloadMods();
+}
+
+void Startup::setup()
+{	
+	initGame();
+	initMods();
+}
+
+void Startup::destroy()
+{
+	modLoader_->destroy();
 }
 
 void Startup::run()
@@ -55,9 +66,6 @@ std::shared_ptr<CubA4::core::game::IGame> Startup::getGame() const
 
 void Startup::initMods()
 {
-	modLoader_->find();
-	modLoader_->load();
-
 	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
 	modLoader_->setup([&envBuilderData](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>
 	{

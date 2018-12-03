@@ -24,9 +24,8 @@ namespace CubA4
 			std::vector<std::string> getPreferedMods() const override;
 			const core::info::IVersionDependency &getModDependency(std::string modIdName) const override;
 
-			std::shared_ptr<IMod> getMod() const override;
+			std::shared_ptr<IMod> createMod() const override;
 		private:
-			std::shared_ptr<IMod> mod_;
 		};
 	}
 }

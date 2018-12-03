@@ -102,14 +102,16 @@ void AppMain::stop()
 }
 
 bool AppMain::setup()
-{
+{	
+	// перед созданием окна, нужно спросить у renderInfo флаги для его создания
 	loadRender();
 	if (!createWindow())
 		return false;
+	core_->getStartup()->load(*this);
 	initRender();
-	core_->getStartup()->setup(*this);
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->setGame(core_->getStartup()->getGame());
+	core_->getStartup()->setup();
+	if (!setupGame())
+		return false;
 	run();
 	return true;
 }
@@ -118,10 +120,25 @@ void AppMain::unload()
 {
 	log_->flush();
 	stop();
-	core_->getStartup()->unload();
+	unloadGame();
+	core_->getStartup()->destroy();
 	destroyRender();
+	core_->getStartup()->unload();
 	unloadRender();
 	SDL_Quit();
+}
+
+bool AppMain::setupGame()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->setGame(core_->getStartup()->getGame());
+	return true;
+}
+
+void AppMain::unloadGame()
+{
+	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+	renderEngine->setGame({});
 }
 
 void AppMain::loop()
@@ -189,6 +206,11 @@ void AppMain::unloadRender()
 bool AppMain::createWindow()
 {
 	auto *renderInfo = renderLoader_->getCurrentRenderInfo();
+	if (!renderInfo)
+	{
+		core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Critical, "Rener info is not initialized!");
+		return false;
+	}
 	try
 	{
 		window_ = CubA4::window::Window::createWindow(1024, 720, renderInfo->getSDLWindowFlags());

@@ -7,7 +7,7 @@ using namespace CubA4::core;
 ModVanilla::ModVanilla(const IModInfo &modInfo) :
 	modInfo_(modInfo)
 {
-	manager_ = std::make_shared<manager::ModManager>();
+	
 }
 
 ModVanilla::~ModVanilla()
@@ -18,6 +18,7 @@ ModVanilla::~ModVanilla()
 void ModVanilla::load(std::shared_ptr<const ICore> core)
 {
 	core_ = core;
+	manager_ = std::make_shared<manager::ModManager>();
 	renderStartup_.load(core, manager_);
 	worldSetup_.load(core, manager_);
 }
@@ -49,7 +50,7 @@ void ModVanilla::done(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> 
 
 void ModVanilla::preunload()
 {
-
+	manager_.reset();
 }
 
 const IModInfo &ModVanilla::getInfo() const

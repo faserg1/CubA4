@@ -60,6 +60,9 @@ namespace CubA4
 			bool setup();
 			void unload();
 
+			bool setupGame();
+			void unloadGame();
+
 			void run();
 			void stop();
 

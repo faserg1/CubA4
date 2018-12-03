@@ -118,6 +118,8 @@ void VulkanRenderEngine::setup()
 
 void VulkanRenderEngine::unload()
 {
+	renderChunkCompiler_.reset();
+	renderGameHandler_.reset();
 	renderManager_.reset();
 }
 

@@ -15,6 +15,8 @@ RenderGameHandler::~RenderGameHandler()
 
 void RenderGameHandler::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
 {
+	if (!game) // Game destroing
+		return;
 	gameSubscription_ = game->subscribe(this);
 }
 

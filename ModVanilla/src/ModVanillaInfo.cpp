@@ -11,7 +11,7 @@ static const auto appDep = VersionDependency(Version(0, 0), Version(0, 0, 1));
 
 ModVanillaInfo::ModVanillaInfo()
 {
-	mod_ = std::make_shared<ModVanilla>(*this);
+	
 }
 
 ModVanillaInfo::~ModVanillaInfo()
@@ -55,7 +55,7 @@ const IVersionDependency &ModVanillaInfo::getModDependency(std::string modIdName
 	throw std::runtime_error("Мод " + modIdName + " не нужен для загрузки.");
 }
 
-std::shared_ptr<IMod> ModVanillaInfo::getMod() const
+std::shared_ptr<IMod> ModVanillaInfo::createMod() const
 {
-	return mod_;
+	return std::make_shared<ModVanilla>(*this);
 }
