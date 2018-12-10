@@ -1,5 +1,5 @@
-#ifndef IAPPCALLBACK_HPP
-#define IAPPCALLBACK_HPP
+#ifndef COREBASE_IAPPCALLBACK_HPP
+#define COREBASE_IAPPCALLBACK_HPP
 
 #include <memory>
 
@@ -39,4 +39,4 @@ namespace CubA4
 	}
 }
 
-#endif // IAPPCALLBACK_HPP
+#endif // COREBASE_IAPPCALLBACK_HPP

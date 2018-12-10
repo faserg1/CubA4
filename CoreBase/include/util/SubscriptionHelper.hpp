@@ -1,8 +1,8 @@
-#ifndef SUBSCRIPTIONHELPER_HPP
-#define SUBSCRIPTIONHELPER_HPP
+#ifndef COREBASE_SUBSCRIPTIONHELPER_HPP
+#define COREBASE_SUBSCRIPTIONHELPER_HPP
 
 #include <vector>
-#include <util/ISubscription.hpp>
+#include "ISubscription.hpp"
 #include <functional>
 #include <memory>
 
@@ -74,4 +74,4 @@ namespace CubA4
 	}
 }
 
-#endif // SUBSCRIPTIONHELPER_HPP
+#endif // COREBASE_SUBSCRIPTIONHELPER_HPP

@@ -10,7 +10,6 @@ set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
 set(CoreHeaderUtil
 	${CoreSourceUtilDir}/ChunkPosHash.hpp
-	${CoreSourceUtilDir}/SubscriptionHelper.hpp
 )
 set(CoreSourceGame
 	${CoreSourceGameDir}/Game.cpp

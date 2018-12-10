@@ -1,5 +1,5 @@
-#ifndef IRENDERMODEL_HPP
-#define IRENDERMODEL_HPP
+#ifndef RENDERBASE_IRENDERMODEL_HPP
+#define RENDERBASE_IRENDERMODEL_HPP
 
 #include <string>
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // IRENDERMODEL_HPP
+#endif // RENDERBASE_IRENDERMODEL_HPP

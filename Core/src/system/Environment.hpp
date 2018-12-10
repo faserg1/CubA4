@@ -1,5 +1,5 @@
-#ifndef ENVIRONMENT_HPP
-#define ENVIRONMENT_HPP
+#ifndef CORE_ENVIRONMENT_HPP
+#define CORE_ENVIRONMENT_HPP
 
 #include <system/IEnvironment.hpp>
 #include "EnvironmentContext.hpp"
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // ENVIRONMENT_HPP
+#endif // CORE_ENVIRONMENT_HPP

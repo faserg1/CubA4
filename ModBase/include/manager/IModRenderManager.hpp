@@ -1,5 +1,5 @@
-#ifndef IMODRENDERMANAGER_HPP
-#define IMODRENDERMANAGER_HPP
+#ifndef MODBASE_IMODRENDERMANAGER_HPP
+#define MODBASE_IMODRENDERMANAGER_HPP
 
 #include <memory>
 #include <string>
@@ -42,4 +42,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODRENDERMANAGER_HPP
+#endif // MODBASE_IMODRENDERMANAGER_HPP

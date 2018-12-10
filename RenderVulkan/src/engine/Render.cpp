@@ -5,13 +5,17 @@
 #include "../vulkan/RenderPass.hpp"
 #include "../vulkan/RenderPassBuilder.hpp"
 
+#include "./pipeline/RenderEnginePipeline.hpp"
+#include "./world/RenderChunk.hpp"
+
 #include <cstring>
 
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
 Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain) :
-	device_(device), swapchain_(swapchain)
+	device_(device), swapchain_(swapchain), chunksLocked_(false)
 {
 	createMainCommandPool();
 	createRenderPass();
@@ -26,19 +30,20 @@ Render::~Render()
 	destroyMainCommandPool();
 }
 
-void Render::setup()
+void Render::setup(std::shared_ptr<RenderEnginePipeline> pipeline)
 {
-
+	chunkUpdateSubscription_ = pipeline->subscribe(this);
 }
 
-void Render::unload()
+void Render::shutdown()
 {
-
+	chunkUpdateSubscription_->unsubscribe();
 }
 
 void Render::record(uint32_t imgIndex)
 {
-	// TODO: [OOKAMI] Если ничего на обновление не пришло - выйти из функции
+	if (!framebuffersData_[imgIndex].dirty)
+		return;
 
 	auto cmdBuffer = framebuffersData_[imgIndex].cmdBuffer;
 	auto framebuffer = framebuffersData_[imgIndex].framebuffer;
@@ -46,7 +51,7 @@ void Render::record(uint32_t imgIndex)
 
 	VkCommandBufferBeginInfo cmdBeginInfo = {};
 	cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+	cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -66,13 +71,24 @@ void Render::record(uint32_t imgIndex)
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
 
-	vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
-	vkResetFences(device_->getDevice(), 1, &fence);
+	// vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
+	// vkResetFences(device_->getDevice(), 1, &fence);
 
 	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 	////////////////////////////////////////////////////////////
-	//record in parallel second command buffers (subpasses)
+	while (chunksLocked_);
+	chunksLocked_ = true;
+	////////////////////////
+	auto chunks = chunks_;
+	////////////////////////
+	chunksLocked_ = false;
+	framebuffersData_[imgIndex].dirty = false;
+
+	for (auto chunk : chunks)
+	{
+		chunk->executeFrom(cmdBuffer);
+	}
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(cmdBuffer);
 	vkEndCommandBuffer(cmdBuffer);
@@ -97,7 +113,7 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	submitInfo.pWaitSemaphores = waitSemaphores.data();
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, framebuffersData_[imgIndex].fence);
+	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
 
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
@@ -214,4 +230,18 @@ void Render::destroyFramebuffers()
 		vkDestroyFence(device_->getDevice(), framebufferData.fence, nullptr);
 	}
 	vkResetCommandPool(device_->getDevice(), mainCommandPool_, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+}
+
+void Render::chunkCompiled(std::shared_ptr<const CubA4::render::engine::world::RenderChunk> renderChunk)
+{
+	while (chunksLocked_);
+	chunksLocked_ = true;
+	////////////////////////
+	chunks_.push_back(renderChunk);
+	////////////////////////
+	chunksLocked_ = false;
+	for (auto &framebuffer : framebuffersData_)
+	{
+		framebuffer.dirty = true;
+	}
 }

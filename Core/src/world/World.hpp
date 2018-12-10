@@ -1,12 +1,12 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#ifndef CORE_WORLD_HPP
+#define CORE_WORLD_HPP
 
 #include <world/IWorld.hpp>
 #include <world/IChunk.hpp>
 #include <vector>
 #include <unordered_map>
 #include "../util/ChunkPosHash.hpp"
-#include "../util/SubscriptionHelper.hpp"
+#include <util/SubscriptionHelper.hpp>
 
 namespace CubA4
 {
@@ -41,4 +41,4 @@ namespace CubA4
 	}
 }
 
-#endif // WORLD_HPP
+#endif // CORE_WORLD_HPP

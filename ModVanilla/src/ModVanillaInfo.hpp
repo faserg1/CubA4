@@ -1,5 +1,5 @@
-#ifndef MODVANILLAINFO_HPP
-#define MODVANILLAINFO_HPP
+#ifndef MODVANILLA_MODVANILLAINFO_HPP
+#define MODVANILLA_MODVANILLAINFO_HPP
 
 #include <IModInfo.hpp>
 #include <memory>
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODVANILLAINFO_HPP
+#endif // MODVANILLA_MODVANILLAINFO_HPP

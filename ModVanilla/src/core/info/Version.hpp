@@ -1,5 +1,5 @@
-#ifndef VERSION_HPP
-#define VERSION_HPP
+#ifndef MODVANILLA_VERSION_HPP
+#define MODVANILLA_VERSION_HPP
 
 #include <info/IVersion.hpp>
 
@@ -38,4 +38,4 @@ namespace CubA4
 	}
 }
 
-#endif // VERSION_HPP
+#endif // MODVANILLA_VERSION_HPP

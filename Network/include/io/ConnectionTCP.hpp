@@ -1,5 +1,5 @@
-#ifndef CONNECTIONTCP_HPP
-#define CONNECTIONTCP_HPP
+#ifndef NETWORK_CONNECTIONTCP_HPP
+#define NETWORK_CONNECTIONTCP_HPP
 
 #include "Connection.hpp"
 #include <boost/asio/ip/tcp.hpp>
@@ -46,4 +46,4 @@ namespace CubA4
 	}
 }
 
-#endif // CONNECTIONTCP_HPP
+#endif // NETWORK_CONNECTIONTCP_HPP

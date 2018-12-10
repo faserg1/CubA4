@@ -1,5 +1,5 @@
-#ifndef TESTWORLD_HPP
-#define TESTWORLD_HPP
+#ifndef MODVANILLA_TESTWORLD_HPP
+#define MODVANILLA_TESTWORLD_HPP
 
 #include <world/IWorldDefinition.hpp>
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // TESTWORLD_HPP
+#endif // MODVANILLA_TESTWORLD_HPP

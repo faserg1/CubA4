@@ -1,5 +1,5 @@
-#ifndef CORECONFIG_HPP
-#define CORECONFIG_HPP
+#ifndef CORE_CORECONFIG_HPP
+#define CORE_CORECONFIG_HPP
 
 #include <config/ICoreConfig.hpp>
 #include <memory>
@@ -36,4 +36,4 @@ namespace CubA4
 	}
 }
 
-#endif// CORECONFIG_HPP
+#endif // CORE_CORECONFIG_HPP

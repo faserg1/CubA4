@@ -1,5 +1,5 @@
-#ifndef IRENDER_INFO_HPP
-#define IRENDER_INFO_HPP
+#ifndef RENDERBASE_IRENDER_INFO_HPP
+#define RENDERBASE_IRENDER_INFO_HPP
 
 #include <cstdint>
 #include <string>
@@ -38,4 +38,4 @@ namespace CubA4
 	}
 }
 
-#endif // IRENDER_INFO_HPP
+#endif // RENDERBASE_IRENDER_INFO_HPP

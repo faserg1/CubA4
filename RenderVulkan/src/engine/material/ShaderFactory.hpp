@@ -1,5 +1,5 @@
-#ifndef SHADERFACTORY_HPP
-#define SHADERFACTORY_HPP
+#ifndef RENDERVULKAN_SHADERFACTORY_HPP
+#define RENDERVULKAN_SHADERFACTORY_HPP
 
 #include <memory>
 #include <string>
@@ -35,4 +35,4 @@ namespace CubA4
 	}
 }
 
-#endif // SHADERFACTORY_HPP
+#endif // RENDERVULKAN_SHADERFACTORY_HPP

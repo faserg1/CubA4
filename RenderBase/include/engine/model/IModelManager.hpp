@@ -1,5 +1,5 @@
-#ifndef IMODELMANAGER_HPP
-#define IMODELMANAGER_HPP
+#ifndef RENDERBASE_IMODELMANAGER_HPP
+#define RENDERBASE_IMODELMANAGER_HPP
 
 #include <memory>
 
@@ -35,4 +35,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODELMANAGER_HPP
+#endif // RENDERBASE_IMODELMANAGER_HPP

@@ -2,8 +2,10 @@
 #include <game/IGame.hpp>
 #include <world/IWorld.hpp>
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::pipeline;
 
-RenderGameHandler::RenderGameHandler()
+RenderGameHandler::RenderGameHandler(std::shared_ptr<IRenderEnginePipelineUpdater> updater) :
+	updater_(updater)
 {
 	
 }

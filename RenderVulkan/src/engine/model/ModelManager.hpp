@@ -1,5 +1,5 @@
-#ifndef MODELMANAGER_HPP
-#define MODELMANAGER_HPP
+#ifndef RENDERVULKAN_MODELMANAGER_HPP
+#define RENDERVULKAN_MODELMANAGER_HPP
 
 #include <memory>
 #include <engine/model/IModelManager.hpp>
@@ -39,4 +39,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODELMANAGER_HPP
+#endif // RENDERVULKAN_MODELMANAGER_HPP

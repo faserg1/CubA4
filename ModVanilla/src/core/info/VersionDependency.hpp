@@ -1,5 +1,5 @@
-#ifndef VERSIONDEPENDENCY_HPP
-#define VERSIONDEPENDENCY_HPP
+#ifndef MODVANILLA_VERSIONDEPENDENCY_HPP
+#define MODVANILLA_VERSIONDEPENDENCY_HPP
 
 #include <info/IVersionDependency.hpp>
 #include "Version.hpp"
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // VERSIONDEPENDENCY_HPP
+#endif // MODVANILLA_VERSIONDEPENDENCY_HPP

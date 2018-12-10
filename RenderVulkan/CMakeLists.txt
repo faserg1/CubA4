@@ -7,9 +7,22 @@ set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceEnginePipelineDir ${RenderVulkanSourceEngineDir}/pipeline)
 set(RenderVulkanSourceEngineWorldDir ${RenderVulkanSourceEngineDir}/world)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanHeaderEnginePipeline
+	${RenderVulkanSourceEnginePipelineDir}/IRenderEnginePipelineSubscriber.hpp
+	${RenderVulkanSourceEnginePipelineDir}/RenderChunkCompilerCore.hpp
+	${RenderVulkanSourceEnginePipelineDir}/RenderEnginePipeline.hpp
+	${RenderVulkanSourceEnginePipelineDir}/RenderChunkCompiler.hpp
+	${RenderVulkanSourceEnginePipelineDir}/IRenderEnginePipelineUpdater.hpp
+)
+set(RenderVulkanSourceEnginePipeline
+	${RenderVulkanSourceEnginePipelineDir}/RenderChunkCompilerCore.cpp
+	${RenderVulkanSourceEnginePipelineDir}/RenderEnginePipeline.cpp
+	${RenderVulkanSourceEnginePipelineDir}/RenderChunkCompiler.cpp
+)
 set(RenderVulkanSourceEngineWorld
 	${RenderVulkanSourceEngineWorldDir}/RenderChunk.cpp
 )
@@ -133,10 +146,8 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.cpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.cpp
 	${RenderVulkanSourceEngineDir}/MemoryManager.cpp
-	${RenderVulkanSourceEngineDir}/RenderChunkCompiler.cpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.cpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.cpp
-	${RenderVulkanSourceEngineDir}/RenderChunkCompilerCore.cpp
 )
 set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.hpp
@@ -146,10 +157,8 @@ set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/MemoryAllocator.hpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.hpp
 	${RenderVulkanSourceEngineDir}/MemoryManager.hpp
-	${RenderVulkanSourceEngineDir}/RenderChunkCompiler.hpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.hpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.hpp
-	${RenderVulkanSourceEngineDir}/RenderChunkCompilerCore.hpp
 )
 
 set(RenderVulkanHeaders
@@ -162,9 +171,8 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderEngineModel}
 	${RenderVulkanHeaderVulkanUtil}
 	${RenderVulkanHeaderEngineWorld}
+	${RenderVulkanHeaderEnginePipeline}
 )
-source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
-
 set(RenderVulkanSources
 	${RenderVulkanSourceDir}/VulkanInfo.cpp
 	${RenderVulkanSourceDir}/Loader.cpp
@@ -176,7 +184,10 @@ set(RenderVulkanSources
 	${RenderVulkanSourceEngineModel}
 	${RenderVulkanSourceVulkanUtil}
 	${RenderVulkanSourceEngineWorld}
+	${RenderVulkanSourceEnginePipeline}
 )
+
+source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
 source_group("${SOURCE_GROUP_SOURCE_START}engine" FILES ${RenderVulkanSourceEngine})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan" FILES ${RenderVulkanHeaderVulkan})
 source_group("${SOURCE_GROUP_SOURCE_START}vulkan" FILES ${RenderVulkanSourceVulkan})
@@ -187,14 +198,16 @@ source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${RenderVulkanSourceConf
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderVulkanHeaderEngineMaterial})
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderVulkanSourceEngineMaterial})
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanSourceEngineModel})
-
-add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
-source_group("resources" FILES ${irs_resources})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderVulkanHeaderEngineModel})
 source_group("${SOURCE_GROUP_HEADER_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanHeaderVulkanUtil})
 source_group("${SOURCE_GROUP_SOURCE_START}vulkan${SOURCE_GROUP_SEP}util" FILES ${RenderVulkanSourceVulkanUtil})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderVulkanHeaderEngineWorld})
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderVulkanSourceEngineWorld})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanHeaderEnginePipeline})
+source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanSourceEnginePipeline})
+
+add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
+source_group("resources" FILES ${irs_resources})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 

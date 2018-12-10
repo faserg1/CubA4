@@ -7,10 +7,12 @@
 
 #include "./RenderManager.hpp"
 #include "./RenderGameHandler.hpp"
-#include "./RenderChunkCompiler.hpp"
+#include "./pipeline/RenderChunkCompiler.hpp"
+#include "./pipeline/RenderEnginePipeline.hpp"
 
 #include <algorithm>
 #include <stdexcept>
+#include <ctime>
 using namespace CubA4::core::logging;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
@@ -110,22 +112,33 @@ void VulkanRenderEngine::destroyRender()
 
 void VulkanRenderEngine::setup()
 {
+	// Создание компонентов
 	renderManager_ = std::make_shared<RenderManager>(getDevice(), render_);
-	renderGameHandler_ = std::make_shared<RenderGameHandler>();
-	renderChunkCompiler_ = std::make_shared<RenderChunkCompiler>(getDevice(), render_->getRenderPass());
-	//TODO: [OOKAMI] настройка Presentation & Render
+	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(getDevice(), render_->getRenderPass());
+	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_);
+	
+	render_->setup(renderEnginePipeline_);
+
+	renderGameHandler_ = std::make_shared<RenderGameHandler>(renderEnginePipeline_);
 }
 
 void VulkanRenderEngine::shutdown()
 {
-	renderChunkCompiler_.reset();
+	// Разрушение компонентов
 	renderGameHandler_.reset();
+
+	render_->shutdown();
+
+	renderEnginePipeline_.reset();
+	renderChunkCompiler_.reset();
 	renderManager_.reset();
 }
 
 void VulkanRenderEngine::loop()
 {
 	auto acquireSemaphore = presetation_->getAcquireSignalSemaphore();
+	unsigned short fps = 0;
+	auto start = clock();
 	while (running_)
 	{
 		auto imgIndex = presetation_->acquire();
@@ -135,5 +148,15 @@ void VulkanRenderEngine::loop()
 		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
 		//
 		presetation_->send(imgIndex, { renderDoneSemaphore });
+		
+		
+		fps++;
+		auto currentClock = clock();
+		if (currentClock > start + CLOCKS_PER_SEC)
+		{
+			logger_->log(LogSourceSystem::Render, "RENDERENGINE", LogLevel::Debug, "Current framerate: " + std::to_string(fps));
+			fps = 0;
+			start = currentClock;
+		}
 	}
 }

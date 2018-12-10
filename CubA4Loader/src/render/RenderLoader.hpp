@@ -1,5 +1,5 @@
-#ifndef RENDER_LOADER_HPP
-#define RENDER_LOADER_HPP
+#ifndef CUBA4LOADER_RENDER_LOADER_HPP
+#define CUBA4LOADER_RENDER_LOADER_HPP
 
 #include <vector>
 #include <memory>
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDER_LOADER_HPP
+#endif // CUBA4LOADER_RENDER_LOADER_HPP

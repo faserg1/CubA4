@@ -1,5 +1,5 @@
-#ifndef EXPORT_HELPER_HPP
-#define EXPORT_HELPER_HPP
+#ifndef RENDERBASE_EXPORT_HELPER_HPP
+#define RENDERBASE_EXPORT_HELPER_HPP
 
 #if defined (_MSC_VER) || defined(__MINGW32)
 #define RENDER_LIBRARY_EXPORT __declspec(dllexport) 
@@ -7,4 +7,4 @@
 #define RENDER_LIBRARY_EXPORT __attribute__((visibility("default")))
 #endif
 
-#endif // EXPORT_HELPER_HPP
+#endif // RENDERBASE_EXPORT_HELPER_HPP

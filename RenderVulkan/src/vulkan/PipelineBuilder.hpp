@@ -1,5 +1,5 @@
-#ifndef PIPELINEBUILDER_HPP
-#define PIPELINEBUILDER_HPP
+#ifndef RENDERVULKAN_PIPELINEBUILDER_HPP
+#define RENDERVULKAN_PIPELINEBUILDER_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -81,4 +81,4 @@ namespace CubA4
 	}
 }
 
-#endif // PIPELINEBUILDER_HPP
+#endif // RENDERVULKAN_PIPELINEBUILDER_HPP

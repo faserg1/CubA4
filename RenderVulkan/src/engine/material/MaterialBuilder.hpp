@@ -1,5 +1,5 @@
-#ifndef MATERIALBUILDER_HPP
-#define MATERIALBUILDER_HPP
+#ifndef RENDERVULKAN_MATERIALBUILDER_HPP
+#define RENDERVULKAN_MATERIALBUILDER_HPP
 
 #include <memory>
 #include <engine/material/IMaterialBuilder.hpp>
@@ -31,4 +31,4 @@ namespace CubA4
 	}
 }
 
-#endif // MATERIALBUILDER_HPP
+#endif // RENDERVULKAN_MATERIALBUILDER_HPP

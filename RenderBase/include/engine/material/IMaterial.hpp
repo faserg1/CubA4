@@ -1,5 +1,5 @@
-#ifndef IMATERIAL_HPP
-#define IMATERIAL_HPP
+#ifndef RENDERBASE_IMATERIAL_HPP
+#define RENDERBASE_IMATERIAL_HPP
 
 namespace CubA4
 {
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMATERIAL_HPP
+#endif // RENDERBASE_IMATERIAL_HPP

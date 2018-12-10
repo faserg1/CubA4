@@ -1,5 +1,5 @@
-#ifndef CHUNK_HPP
-#define CHUNK_HPP
+#ifndef CORE_CHUNK_HPP
+#define CORE_CHUNK_HPP
 
 #include <world/IChunk.hpp>
 #include <vector>
@@ -47,4 +47,4 @@ namespace CubA4
 	}
 }
 
-#endif // CHUNK_HPP
+#endif // CORE_CHUNK_HPP

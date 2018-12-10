@@ -1,5 +1,5 @@
-#ifndef ICORE_HPP
-#define ICORE_HPP
+#ifndef COREBASE_ICORE_HPP
+#define COREBASE_ICORE_HPP
 
 #include <memory>
 
@@ -49,4 +49,4 @@ namespace CubA4
 	}
 }
 
-#endif // ICORE_HPP
+#endif // COREBASE_ICORE_HPP

@@ -1,5 +1,5 @@
-#ifndef ICOREEXCEPTION_HPP
-#define ICOREEXCEPTION_HPP
+#ifndef COREBASE_ICOREEXCEPTION_HPP
+#define COREBASE_ICOREEXCEPTION_HPP
 
 namespace core
 {
@@ -18,4 +18,4 @@ namespace core
 	}
 }
 
-#endif // ICOREEXCEPTION_HPP
+#endif // COREBASE_ICOREEXCEPTION_HPP

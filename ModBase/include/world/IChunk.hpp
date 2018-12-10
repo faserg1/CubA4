@@ -1,5 +1,5 @@
-#ifndef ICHUNK_HPP
-#define ICHUNK_HPP
+#ifndef MODBASE_ICHUNK_HPP
+#define MODBASE_ICHUNK_HPP
 
 #include <vector>
 #include <memory>
@@ -44,8 +44,6 @@ namespace CubA4
 			class IChunk
 			{
 			public:
-				virtual ~IChunk() = default;
-
 				/* \brief Получает используемые блоки в чанке
 				 */
 				virtual std::vector<std::shared_ptr<const object::IBlock>> &&getUsedBlocks() const = 0;
@@ -58,9 +56,10 @@ namespace CubA4
 				virtual const ChunkPos &getChunkPos() const = 0;
 			protected:
 				explicit IChunk() = default;
+				virtual ~IChunk() = default;
 			};
 		}
 	}
 }
 
-#endif // ICHUNK_HPP
+#endif // MODBASE_ICHUNK_HPP

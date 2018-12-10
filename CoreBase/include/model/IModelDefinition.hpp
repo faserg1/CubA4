@@ -1,5 +1,5 @@
-#ifndef IMODELDEFINITION_HPP
-#define IMODELDEFINITION_HPP
+#ifndef COREBASE_IMODELDEFINITION_HPP
+#define COREBASE_IMODELDEFINITION_HPP
 
 #include <vector>
 #include <string>
@@ -32,4 +32,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODELDEFINITION_HPP
+#endif // COREBASE_IMODELDEFINITION_HPP

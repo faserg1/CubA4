@@ -1,5 +1,5 @@
-#ifndef ISUBSCRIPTION_HPP
-#define ISUBSCRIPTION_HPP
+#ifndef COREBASE_ISUBSCRIPTION_HPP
+#define COREBASE_ISUBSCRIPTION_HPP
 
 namespace CubA4
 {
@@ -20,4 +20,4 @@ namespace CubA4
 	}
 }
 
-#endif // ISUBSCRIPTION_HPP
+#endif // COREBASE_ISUBSCRIPTION_HPP

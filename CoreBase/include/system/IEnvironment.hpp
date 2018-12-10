@@ -1,5 +1,5 @@
-#ifndef IENVIRONMENT_HPP
-#define IENVIRONMENT_HPP
+#ifndef COREBASE_IENVIRONMENT_HPP
+#define COREBASE_IENVIRONMENT_HPP
 
 #include <cstdint>
 #include <memory>
@@ -47,4 +47,4 @@ namespace CubA4
 	}
 }
 
-#endif // IENVIRONMENT_HPP
+#endif // COREBASE_IENVIRONMENT_HPP

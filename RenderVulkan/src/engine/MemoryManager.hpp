@@ -1,5 +1,5 @@
-#ifndef MEMORYMANAGER_HPP
-#define MEMORYMANAGER_HPP
+#ifndef RENDERVULKAN_MEMORYMANAGER_HPP
+#define RENDERVULKAN_MEMORYMANAGER_HPP
 
 #include <map>
 #include <memory>
@@ -38,4 +38,4 @@ namespace CubA4
 	}
 }
 
-#endif // MEMORYMANAGER_HPP
+#endif // RENDERVULKAN_MEMORYMANAGER_HPP

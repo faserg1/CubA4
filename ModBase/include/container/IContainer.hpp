@@ -1,5 +1,5 @@
-#ifndef ICONTAINER_HPP
-#define ICONTAINER_HPP
+#ifndef MODBASE_ICONTAINER_HPP
+#define MODBASE_ICONTAINER_HPP
 
 namespace CubA4
 {
@@ -16,4 +16,4 @@ namespace CubA4
 }
 
 
-#endif // ICONTAINER_HPP
+#endif // MODBASE_ICONTAINER_HPP

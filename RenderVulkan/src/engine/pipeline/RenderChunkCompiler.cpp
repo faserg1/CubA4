@@ -1,15 +1,16 @@
 #include "./RenderChunkCompiler.hpp"
-#include "../vulkan/Device.hpp"
-#include "../vulkan/RenderPass.hpp"
-#include "world/RenderChunk.hpp"
+#include "../../vulkan/Device.hpp"
+#include "../../vulkan/RenderPass.hpp"
+#include "../../vulkan/Pipeline.hpp"
+#include "../world/RenderChunk.hpp"
 #include <world/IChunk.hpp>
 #include <object/IBlock.hpp>
-#include "model/RenderModel.hpp"
-#include "material/MaterialLayout.hpp"
-#include "material/Material.hpp"
-#include "../vulkan/Pipeline.hpp"
+#include "../model/RenderModel.hpp"
+#include "../material/MaterialLayout.hpp"
+#include "../material/Material.hpp"
 
-using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::pipeline;
+using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
 RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass) :
@@ -21,12 +22,12 @@ RenderChunkCompiler::~RenderChunkCompiler()
 {
 }
 
-std::shared_future<std::shared_ptr<const world::RenderChunk>> RenderChunkCompiler::compileChunk(std::shared_ptr<CubA4::mod::world::IChunk> chunk)
+std::future<std::shared_ptr<const RenderChunk>> RenderChunkCompiler::compileChunk(std::shared_ptr<const CubA4::mod::world::IChunk> chunk)
 {
-	return std::async(std::launch::async, &RenderChunkCompiler::compileChunkInternal, this, chunk).share();
+	return std::async(std::launch::async, &RenderChunkCompiler::compileChunkInternal, this, chunk);
 }
 
-std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunkInternal(std::shared_ptr<CubA4::mod::world::IChunk> chunk)
+std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk)
 {
 	auto poolWrapper = lockCommandPool();
 	auto usedBlocks = chunk->getUsedBlocks();
@@ -71,5 +72,12 @@ std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunkInter
 			0, 0, 0);
 		vkEndCommandBuffer(cmdBuffer);
 	}
-	return std::make_shared<world::RenderChunk>();
+
+	std::function<void()> deleter = [this, neededPool = poolWrapper->vkPool, buffers]()
+	{
+		auto poolWrapper = lockCommandPool(neededPool);
+		vkFreeCommandBuffers(device_->getDevice(), poolWrapper->vkPool, static_cast<uint32_t>(buffers.size()), buffers.data());
+	};
+
+	return std::make_shared<world::RenderChunk>(chunk->getChunkPos(), buffers, deleter);
 }

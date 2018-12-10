@@ -1,5 +1,5 @@
-#ifndef SDLEXTENSION_HPP
-#define SDLEXTENSION_HPP
+#ifndef RENDERVULKAN_SDLEXTENSION_HPP
+#define RENDERVULKAN_SDLEXTENSION_HPP
 
 #include <memory>
 #include "InstanceExtension.hpp"
@@ -42,4 +42,4 @@ namespace CubA4
 	}
 }
 
-#endif // SDLEXTENSION_HPP
+#endif // RENDERVULKAN_SDLEXTENSION_HPP

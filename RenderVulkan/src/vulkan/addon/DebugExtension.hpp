@@ -1,5 +1,5 @@
-#ifndef DEBUGEXTENSION_HPP
-#define DEBUGEXTENSION_HPP
+#ifndef RENDERVULKAN_DEBUGEXTENSION_HPP
+#define RENDERVULKAN_DEBUGEXTENSION_HPP
 
 #include "InstanceExtension.hpp"
 #include <memory>
@@ -50,4 +50,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEBUGEXTENSION_HPP
+#endif // RENDERVULKAN_DEBUGEXTENSION_HPP

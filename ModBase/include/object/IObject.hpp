@@ -1,5 +1,5 @@
-#ifndef IOBJECT_HPP
-#define IOBJECT_HPP
+#ifndef MODBASE_IOBJECT_HPP
+#define MODBASE_IOBJECT_HPP
 
 #include <string>
 #include <cstdint>
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // IOBJECT_HPP
+#endif // MODBASE_IOBJECT_HPP

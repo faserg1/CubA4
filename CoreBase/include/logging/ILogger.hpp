@@ -1,5 +1,5 @@
-#ifndef ILOGGER_HPP
-#define ILOGGER_HPP
+#ifndef COREBASE_ILOGGER_HPP
+#define COREBASE_ILOGGER_HPP
 
 #include <string>
 #include <memory>
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // ILOGGER_HPP
+#endif // COREBASE_ILOGGER_HPP

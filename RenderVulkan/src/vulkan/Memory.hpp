@@ -1,5 +1,5 @@
-#ifndef MEMORY_HPP
-#define MEMORY_HPP
+#ifndef RENDERVULKAN_MEMORY_HPP
+#define RENDERVULKAN_MEMORY_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -36,4 +36,4 @@ namespace CubA4
 	}
 }
 
-#endif // MEMORY_HPP
+#endif // RENDERVULKAN_MEMORY_HPP

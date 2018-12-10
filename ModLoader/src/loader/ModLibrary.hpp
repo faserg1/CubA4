@@ -1,5 +1,5 @@
-#ifndef MOD_LIBRARY_HPP
-#define MOD_LIBRARY_HPP
+#ifndef MODLOADER_MOD_LIBRARY_HPP
+#define MODLOADER_MOD_LIBRARY_HPP
 
 #include <boost/filesystem.hpp>
 #include <boost/dll.hpp>
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // MOD_LIBRARY_HPP
+#endif // MODLOADER_MOD_LIBRARY_HPP

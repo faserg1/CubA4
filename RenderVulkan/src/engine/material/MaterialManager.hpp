@@ -1,5 +1,5 @@
-#ifndef MATERIALMANAGER_HPP
-#define MATERIALMANAGER_HPP
+#ifndef RENDERVULKAN_MATERIALMANAGER_HPP
+#define RENDERVULKAN_MATERIALMANAGER_HPP
 
 #include <memory>
 #include <engine/material/IMaterialManager.hpp>
@@ -49,4 +49,4 @@ namespace CubA4
 	}
 }
 
-#endif // MATERIALMANAGER_HPP
+#endif // RENDERVULKAN_MATERIALMANAGER_HPP

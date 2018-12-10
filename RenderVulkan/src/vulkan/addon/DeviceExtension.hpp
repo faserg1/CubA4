@@ -1,5 +1,5 @@
-#ifndef DEVICEEXTENSION_HPP
-#define DEVICEEXTENSION_HPP
+#ifndef RENDERVULKAN_DEVICEEXTENSION_HPP
+#define RENDERVULKAN_DEVICEEXTENSION_HPP
 
 #include <memory>
 #include "DeviceAddon.hpp"
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEVICEEXTENSION_HPP
+#endif // RENDERVULKAN_DEVICEEXTENSION_HPP

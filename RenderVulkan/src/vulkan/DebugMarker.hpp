@@ -1,5 +1,5 @@
-#ifndef DEBUGMARKER_HPP
-#define DEBUGMARKER_HPP
+#ifndef RENDERVULKAN_DEBUGMARKER_HPP
+#define RENDERVULKAN_DEBUGMARKER_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -43,4 +43,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEBUGMARKER_HPP
+#endif // RENDERVULKAN_DEBUGMARKER_HPP

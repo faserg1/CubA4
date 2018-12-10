@@ -1,5 +1,5 @@
-#ifndef INSTANCEBUILDER_HPP
-#define INSTANCEBUILDER_HPP
+#ifndef RENDERVULKAN_INSTANCEBUILDER_HPP
+#define RENDERVULKAN_INSTANCEBUILDER_HPP
 
 #include <memory>
 #include <string>
@@ -51,4 +51,4 @@ namespace CubA4
 	}
 }
 
-#endif // INSTANCEBUILDER_HPP
+#endif // RENDERVULKAN_INSTANCEBUILDER_HPP

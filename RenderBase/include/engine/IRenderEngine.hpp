@@ -1,5 +1,5 @@
-#ifndef IRENDERENGINE_HPP
-#define IRENDERENGINE_HPP
+#ifndef RENDERBASE_IRENDERENGINE_HPP
+#define RENDERBASE_IRENDERENGINE_HPP
 
 #include <memory>
 
@@ -46,4 +46,4 @@ namespace CubA4
 	}
 }
 
-#endif // IRENDERENGINE_HPP
+#endif // RENDERBASE_IRENDERENGINE_HPP

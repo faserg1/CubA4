@@ -1,5 +1,5 @@
-#ifndef RENDERMANAGER_HPP
-#define RENDERMANAGER_HPP
+#ifndef RENDERVULKAN_RENDERMANAGER_HPP
+#define RENDERVULKAN_RENDERMANAGER_HPP
 
 #include <memory>
 #include <engine/IRenderManager.hpp>
@@ -50,4 +50,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERMANAGER_HPP
+#endif // RENDERVULKAN_RENDERMANAGER_HPP

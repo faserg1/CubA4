@@ -1,5 +1,5 @@
-#ifndef APPINFO_HPP
-#define APPINFO_HPP
+#ifndef CUBA4LOADER_APPINFO_HPP
+#define CUBA4LOADER_APPINFO_HPP
 
 #include <info/IApplicationInfo.hpp>
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // APPINFO_HPP
+#endif // CUBA4LOADER_APPINFO_HPP

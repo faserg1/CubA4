@@ -1,5 +1,5 @@
-#ifndef SEMAPHORE_HPP
-#define SEMAPHORE_HPP
+#ifndef RENDERVULKAN_SEMAPHORE_HPP
+#define RENDERVULKAN_SEMAPHORE_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // SEMAPHORE_HPP
+#endif // RENDERVULKAN_SEMAPHORE_HPP

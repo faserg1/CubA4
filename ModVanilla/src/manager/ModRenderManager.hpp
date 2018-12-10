@@ -1,5 +1,5 @@
-#ifndef MODRENDERMANAGER_HPP
-#define MODRENDERMANAGER_HPP
+#ifndef MODVANILLA_MODRENDERMANAGER_HPP
+#define MODVANILLA_MODRENDERMANAGER_HPP
 
 #include <memory>
 #include <manager/IModRenderManager.hpp>
@@ -37,4 +37,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODRENDERMANAGER_HPP
+#endif // MODVANILLA_MODRENDERMANAGER_HPP

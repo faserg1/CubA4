@@ -1,5 +1,5 @@
-#ifndef IINSTANCEADDON_HPP
-#define IINSTANCEADDON_HPP
+#ifndef RENDERVULKAN_IINSTANCEADDON_HPP
+#define RENDERVULKAN_IINSTANCEADDON_HPP
 
 #include <memory>
 #include "Addon.hpp"
@@ -33,4 +33,4 @@ namespace CubA4
 	}
 }
 
-#endif // IINSTANCEADDON_HPP
+#endif // RENDERVULKAN_IINSTANCEADDON_HPP

@@ -1,5 +1,5 @@
-#ifndef IMODLOADER_HPP
-#define IMODLOADER_HPP
+#ifndef MODBASE_IMODLOADER_HPP
+#define MODBASE_IMODLOADER_HPP
 
 #include <memory>
 #include <functional>
@@ -36,4 +36,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODLOADER_HPP
+#endif // MODBASE_IMODLOADER_HPP

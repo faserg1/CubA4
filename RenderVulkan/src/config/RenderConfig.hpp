@@ -1,5 +1,5 @@
-#ifndef RENDERCONFIG_HPP
-#define RENDERCONFIG_HPP
+#ifndef RENDERVULKAN_RENDERCONFIG_HPP
+#define RENDERVULKAN_RENDERCONFIG_HPP
 
 #include <config/IRenderConfig.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERCONFIG_HPP
+#endif // RENDERVULKAN_RENDERCONFIG_HPP

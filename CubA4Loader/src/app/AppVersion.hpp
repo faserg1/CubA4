@@ -1,5 +1,5 @@
-#ifndef APPVERSION_HPP
-#define APPVERSION_HPP
+#ifndef CUBA4LOADER_APPVERSION_HPP
+#define CUBA4LOADER_APPVERSION_HPP
 
 #include <info/IVersion.hpp>
 
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // APPVERSION_HPP
+#endif // CUBA4LOADER_APPVERSION_HPP

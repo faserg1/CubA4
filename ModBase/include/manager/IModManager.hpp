@@ -1,5 +1,5 @@
-#ifndef IMODMANAGER_HPP
-#define IMODMANAGER_HPP
+#ifndef MODBASE_IMODMANAGER_HPP
+#define MODBASE_IMODMANAGER_HPP
 
 #include <memory>
 
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODMANAGER_HPP
+#endif // MODBASE_IMODMANAGER_HPP

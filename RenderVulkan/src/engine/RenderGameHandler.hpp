@@ -1,5 +1,5 @@
-#ifndef RENDERGAMEHANDLER_HPP
-#define RENDERGAMEHANDLER_HPP
+#ifndef RENDERVULKAN_RENDERGAMEHANDLER_HPP
+#define RENDERVULKAN_RENDERGAMEHANDLER_HPP
 
 #include <memory>
 #include <game/IGameSubscriber.hpp>
@@ -20,18 +20,24 @@ namespace CubA4
 	{
 		namespace engine
 		{
+			namespace pipeline
+			{
+				class IRenderEnginePipelineUpdater;
+			}
+
 			class RenderGameHandler :
 				public virtual CubA4::core::game::IGameSubscriber,
 				public virtual CubA4::mod::world::IWorldSubscriber
 			{
 			public:
-				explicit RenderGameHandler();
+				explicit RenderGameHandler(std::shared_ptr<pipeline::IRenderEnginePipelineUpdater> updater);
 				~RenderGameHandler();
 
 				void setGame(std::shared_ptr<const CubA4::core::game::IGame> game);
 				void worldChanged(std::shared_ptr<const CubA4::mod::world::IWorld> newWorld) override;
 			protected:
 			private:
+				const std::shared_ptr<pipeline::IRenderEnginePipelineUpdater> updater_;
 				std::unique_ptr<CubA4::core::util::ISubscription> gameSubscription_;
 				std::unique_ptr<CubA4::core::util::ISubscription> worldSubscription_;
 				std::shared_ptr<const CubA4::mod::world::IWorld> currentWorld_;
@@ -42,4 +48,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERGAMEHANDLER_HPP
+#endif // RENDERVULKAN_RENDERGAMEHANDLER_HPP

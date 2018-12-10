@@ -1,5 +1,5 @@
-#ifndef LOGGER_HPP
-#define LOGGER_HPP
+#ifndef CORE_LOGGER_HPP
+#define CORE_LOGGER_HPP
 
 #include <logging/ILogger.hpp>
 #include <string>
@@ -49,4 +49,4 @@ namespace CubA4
 	}
 }
 
-#endif // LOGGER_HPP
+#endif // CORE_LOGGER_HPP

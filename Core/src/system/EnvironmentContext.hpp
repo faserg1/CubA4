@@ -1,5 +1,5 @@
-#ifndef ENVIRONMENTCONTEXT_HPP
-#define ENVIRONMENTCONTEXT_HPP
+#ifndef CORE_ENVIRONMENTCONTEXT_HPP
+#define CORE_ENVIRONMENTCONTEXT_HPP
 
 #include "IdentityMap.hpp"
 #include <map>
@@ -42,4 +42,4 @@ namespace CubA4
 	}
 }
 
-#endif // ENVIRONMENTCONTEXT_HPP
+#endif // CORE_ENVIRONMENTCONTEXT_HPP

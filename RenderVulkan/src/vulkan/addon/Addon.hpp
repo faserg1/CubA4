@@ -1,5 +1,5 @@
-#ifndef ADDON_HPP 
-#define ADDON_HPP 
+#ifndef RENDERVULKAN_ADDON_HPP 
+#define RENDERVULKAN_ADDON_HPP 
 
 #include <string>
 #include <vector>
@@ -47,4 +47,4 @@ namespace CubA4
 	}
 }
 
-#endif // ADDON_HPP
+#endif // RENDERVULKAN_ADDON_HPP

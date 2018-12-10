@@ -1,5 +1,5 @@
-#ifndef PHYSICALDEVICE_HPP
-#define PHYSICALDEVICE_HPP
+#ifndef RENDERVULKAN_PHYSICALDEVICE_HPP
+#define RENDERVULKAN_PHYSICALDEVICE_HPP
 
 #include <vulkan/vulkan.h>
 
@@ -24,4 +24,4 @@ namespace CubA4
 	}
 }
 
-#endif // PHYSICALDEVICE_HPP
+#endif // RENDERVULKAN_PHYSICALDEVICE_HPP

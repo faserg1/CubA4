@@ -1,5 +1,5 @@
-#ifndef DEVICE_HPP 
-#define DEVICE_HPP 
+#ifndef RENDERVULKAN_DEVICE_HPP 
+#define RENDERVULKAN_DEVICE_HPP 
 #include <vulkan/vulkan.h>
 
 #include "DebugMarker.hpp"
@@ -34,4 +34,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEVICE_HPP
+#endif // RENDERVULKAN_DEVICE_HPP

@@ -1,5 +1,5 @@
-#ifndef RENDERENGINE_HPP
-#define RENDERENGINE_HPP
+#ifndef RENDERVULKAN_RENDERENGINE_HPP
+#define RENDERVULKAN_RENDERENGINE_HPP
 
 #include <engine/IRenderEngine.hpp>
 #include <vector>
@@ -16,7 +16,12 @@ namespace CubA4
 			class Render;
 			class RenderManager;
 			class RenderGameHandler;
-			class RenderChunkCompiler;
+
+			namespace pipeline
+			{
+				class RenderChunkCompiler;
+				class RenderEnginePipeline;
+			}
 
 			class VulkanRenderEngine :
 				public virtual IRenderEngine,
@@ -53,7 +58,8 @@ namespace CubA4
 
 				std::shared_ptr<RenderManager> renderManager_;
 				std::shared_ptr<RenderGameHandler> renderGameHandler_;
-				std::shared_ptr<RenderChunkCompiler> renderChunkCompiler_;
+				std::shared_ptr<pipeline::RenderChunkCompiler> renderChunkCompiler_;
+				std::shared_ptr<pipeline::RenderEnginePipeline> renderEnginePipeline_;
 
 				bool running_;
 				std::thread renderLoopThread_;
@@ -62,4 +68,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERENGINE_HPP
+#endif // RENDERVULKAN_RENDERENGINE_HPP

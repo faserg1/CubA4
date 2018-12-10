@@ -1,5 +1,5 @@
-#ifndef LISTENER_HPP
-#define LISTENER_HPP
+#ifndef NETWORK_LISTENER_HPP
+#define NETWORK_LISTENER_HPP
 
 #include <functional>
 #include <memory>
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // LISTENER_HPP
+#endif // NETWORK_LISTENER_HPP

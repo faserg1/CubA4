@@ -1,5 +1,5 @@
-#ifndef IVERTEXSHADER_HPP
-#define IVERTEXSHADER_HPP
+#ifndef RENDERBASE_IVERTEXSHADER_HPP
+#define RENDERBASE_IVERTEXSHADER_HPP
 
 #include "IShader.hpp"
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // IVERTEXSHADER_HPP
+#endif // RENDERBASE_IVERTEXSHADER_HPP

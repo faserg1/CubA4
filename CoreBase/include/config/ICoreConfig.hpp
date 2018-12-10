@@ -1,5 +1,5 @@
-#ifndef ICORECONFIG_HPP
-#define ICORECONFIG_HPP
+#ifndef COREBASE_ICORECONFIG_HPP
+#define COREBASE_ICORECONFIG_HPP
 
 #include <string>
 
@@ -31,4 +31,4 @@ namespace CubA4
 	}
 }
 
-#endif // ICORECONFIG_HPP
+#endif // COREBASE_ICORECONFIG_HPP

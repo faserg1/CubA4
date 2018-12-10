@@ -1,5 +1,5 @@
-#ifndef CONNECTIONUDP_HPP
-#define CONNECTIONUDP_HPP
+#ifndef NETWORK_CONNECTIONUDP_HPP
+#define NETWORK_CONNECTIONUDP_HPP
 
 #include "Connection.hpp"
 #include <boost/asio/ip/udp.hpp>
@@ -41,4 +41,4 @@ namespace CubA4
 	}
 }
 
-#endif // CONNECTIONUDP_HPP
+#endif // NETWORK_CONNECTIONUDP_HPP

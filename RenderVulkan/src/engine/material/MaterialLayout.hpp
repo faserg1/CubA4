@@ -1,5 +1,5 @@
-#ifndef MATERIALLAYOUT_HPP
-#define MATERIALLAYOUT_HPP
+#ifndef RENDERVULKAN_MATERIALLAYOUT_HPP
+#define RENDERVULKAN_MATERIALLAYOUT_HPP
 
 #include <memory>
 #include <engine/material/IMaterialLayout.hpp>
@@ -34,4 +34,4 @@ namespace CubA4
 	}
 }
 
-#endif // MATERIALLAYOUT_HPP
+#endif // RENDERVULKAN_MATERIALLAYOUT_HPP

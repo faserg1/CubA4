@@ -1,5 +1,5 @@
-#ifndef BLOCKMODEL_HPP
-#define BLOCKMODEL_HPP
+#ifndef MODVANILLA_BLOCKMODEL_HPP
+#define MODVANILLA_BLOCKMODEL_HPP
 
 #include <model/IRenderModelDefinition.hpp>
 
@@ -27,4 +27,4 @@ namespace CubA4
 	}
 }
 
-#endif // BLOCKMODEL_HPP
+#endif // MODVANILLA_BLOCKMODEL_HPP

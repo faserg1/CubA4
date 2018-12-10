@@ -11,6 +11,7 @@ set(CoreBaseIncludeConfigDir ${CoreBaseIncludeDir}/config)
 set(CoreBaseIncludeLoggingDir ${CoreBaseIncludeDir}/logging)
 set(CoreBaseHeaderUtil
 	${CoreBaseIncludeUtilDir}/ISubscription.hpp
+	${CoreBaseIncludeUtilDir}/SubscriptionHelper.hpp
 )
 set(CoreBaseHeaderGame
 	${CoreBaseIncludeGameDir}/IGame.hpp

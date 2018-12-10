@@ -1,5 +1,5 @@
-#ifndef IMOD_HPP
-#define IMOD_HPP
+#ifndef MODBASE_IMOD_HPP
+#define MODBASE_IMOD_HPP
 
 #include <memory>
 
@@ -59,4 +59,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMOD_HPP
+#endif // MODBASE_IMOD_HPP

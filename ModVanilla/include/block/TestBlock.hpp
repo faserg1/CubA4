@@ -1,5 +1,5 @@
-#ifndef TESTBLOCK_HPP
-#define TESTBLOCK_HPP
+#ifndef MODVANILLA_TESTBLOCK_HPP
+#define MODVANILLA_TESTBLOCK_HPP
 
 #include <object/IBlock.hpp>
 
@@ -31,4 +31,4 @@ namespace CubA4
 	}
 }
 
-#endif // TESTBLOCK_HPP
+#endif // MODVANILLA_TESTBLOCK_HPP

@@ -1,5 +1,5 @@
-#ifndef PACKET_HPP
-#define PACKET_HPP
+#ifndef NETWORK_PACKET_HPP
+#define NETWORK_PACKET_HPP
 
 #include "NetworkLibrary.hpp"
 #include <cstdint>
@@ -55,4 +55,4 @@ namespace CubA4
 	}
 }
 
-#endif // PACKET_HPP
+#endif // NETWORK_PACKET_HPP

@@ -1,5 +1,5 @@
-#ifndef ILOGGERTAGGED_HPP
-#define ILOGGERTAGGED_HPP
+#ifndef COREBASE_ILOGGERTAGGED_HPP
+#define COREBASE_ILOGGERTAGGED_HPP
 
 #include <string>
 #include "LogCommon.hpp"
@@ -24,4 +24,4 @@ namespace CubA4
 	}
 }
 
-#endif // ILOGGERTAGGED_HPP
+#endif // COREBASE_ILOGGERTAGGED_HPP

@@ -1,5 +1,5 @@
-#ifndef DEVICELAYER_HPP
-#define DEVICELAYER_HPP
+#ifndef RENDERVULKAN_DEVICELAYER_HPP
+#define RENDERVULKAN_DEVICELAYER_HPP
 
 #include "DeviceAddon.hpp"
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEVICELAYER_HPP
+#endif // RENDERVULKAN_DEVICELAYER_HPP

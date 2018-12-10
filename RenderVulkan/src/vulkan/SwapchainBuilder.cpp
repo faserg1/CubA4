@@ -94,6 +94,7 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build()
 	swapchainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 	swapchainInfo.preTransform = data_->caps.currentTransform;
 	swapchainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+	//swapchainInfo.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
 	swapchainInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 	swapchainInfo.clipped = VK_FALSE;
 	VkSwapchainKHR swapchain;

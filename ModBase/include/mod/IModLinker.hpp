@@ -1,5 +1,5 @@
-#ifndef IMODLINKER_HPP
-#define IMODLINKER_HPP
+#ifndef MODBASE_IMODLINKER_HPP
+#define MODBASE_IMODLINKER_HPP
 
 #include <memory>
 #include <string>
@@ -22,4 +22,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODLINKER_HPP
+#endif // MODBASE_IMODLINKER_HPP

@@ -1,5 +1,5 @@
-#ifndef RENDERSTARTUP_HPP
-#define RENDERSTARTUP_HPP
+#ifndef MODVANILLA_RENDERSTARTUP_HPP
+#define MODVANILLA_RENDERSTARTUP_HPP
 
 #include <memory>
 #include <string>
@@ -75,4 +75,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERSTARTUP_HPP
+#endif // MODVANILLA_RENDERSTARTUP_HPP

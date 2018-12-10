@@ -1,5 +1,5 @@
-#ifndef ISHADERFACTORY_HPP
-#define ISHADERFACTORY_HPP
+#ifndef RENDERBASE_ISHADERFACTORY_HPP
+#define RENDERBASE_ISHADERFACTORY_HPP
 
 #include <string>
 #include <memory>
@@ -33,4 +33,4 @@ namespace CubA4
 	}
 }
 
-#endif // ISHADERFACTORY_HPP
+#endif // RENDERBASE_ISHADERFACTORY_HPP

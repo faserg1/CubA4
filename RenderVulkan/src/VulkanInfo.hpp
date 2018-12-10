@@ -1,5 +1,5 @@
-#ifndef VULKAN_INFO_HPP
-#define VULKAN_INFO_HPP
+#ifndef RENDERVULKAN_VULKAN_INFO_HPP
+#define RENDERVULKAN_VULKAN_INFO_HPP
 
 #include <IRenderInfo.hpp>
 
@@ -26,4 +26,4 @@ namespace CubA4
 	}
 }
 
-#endif // VULKAN_INFO_HPP
+#endif // RENDERVULKAN_VULKAN_INFO_HPP

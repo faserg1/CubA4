@@ -1,5 +1,5 @@
-#ifndef MATERIAL_HPP
-#define MATERIAL_HPP
+#ifndef RENDERVULKAN_MATERIAL_HPP
+#define RENDERVULKAN_MATERIAL_HPP
 
 #include <memory>
 #include <engine/material/IMaterial.hpp>
@@ -31,4 +31,4 @@ namespace CubA4
 	}
 }
 
-#endif // MATERIAL_HPP
+#endif // RENDERVULKAN_MATERIAL_HPP

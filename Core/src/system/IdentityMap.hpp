@@ -1,5 +1,5 @@
-#ifndef IDENTITYMAP_HPP
-#define IDENTITYMAP_HPP
+#ifndef CORE_IDENTITYMAP_HPP
+#define CORE_IDENTITYMAP_HPP
 
 #include <system/IIdentityiMap.hpp>
 #include <boost/bimap.hpp>
@@ -37,4 +37,4 @@ namespace CubA4
 	}
 }
 
-#endif // IDENTITYMAP_HPP
+#endif // CORE_IDENTITYMAP_HPP

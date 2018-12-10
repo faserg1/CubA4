@@ -1,5 +1,5 @@
-#ifndef ISTARTUP_HPP
-#define ISTARTUP_HPP
+#ifndef COREBASE_ISTARTUP_HPP
+#define COREBASE_ISTARTUP_HPP
 
 #include <memory>
 
@@ -43,4 +43,4 @@ namespace CubA4
 	}
 }
 
-#endif // ISTARTUP_HPP
+#endif // COREBASE_ISTARTUP_HPP

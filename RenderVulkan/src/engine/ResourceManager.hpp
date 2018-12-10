@@ -1,5 +1,5 @@
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef RENDERVULKAN_RESOURCEMANAGER_HPP
+#define RENDERVULKAN_RESOURCEMANAGER_HPP
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -39,4 +39,4 @@ namespace CubA4
 	}
 }
 
-#endif // RESOURCEMANAGER_HPP
+#endif // RENDERVULKAN_RESOURCEMANAGER_HPP

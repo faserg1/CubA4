@@ -1,5 +1,5 @@
-#ifndef IFILEPATHS_HPP
-#define IFILEPATHS_HPP
+#ifndef COREBASE_IFILEPATHS_HPP
+#define COREBASE_IFILEPATHS_HPP
 
 #include <string>
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // IFILEPATHS_HPP
+#endif // COREBASE_IFILEPATHS_HPP

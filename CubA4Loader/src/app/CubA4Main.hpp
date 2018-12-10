@@ -1,5 +1,5 @@
-#ifndef CUBA4MAIN_HPP
-#define CUBA4MAIN_HPP
+#ifndef CUBA4LOADER_CUBA4MAIN_HPP
+#define CUBA4LOADER_CUBA4MAIN_HPP
 
 #include <memory>
 #include <system/IAppCallback.hpp>
@@ -81,4 +81,4 @@ namespace CubA4
 	}
 }
 
-#endif // CUBA4MAIN_HPP
+#endif // CUBA4LOADER_CUBA4MAIN_HPP

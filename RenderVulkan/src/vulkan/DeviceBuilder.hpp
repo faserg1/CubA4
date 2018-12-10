@@ -1,5 +1,5 @@
-#ifndef DEVICEBUILDER_HPP
-#define DEVICEBUILDER_HPP
+#ifndef RENDERVULKAN_DEVICEBUILDER_HPP
+#define RENDERVULKAN_DEVICEBUILDER_HPP
 
 #include <memory>
 #include <vector>
@@ -52,4 +52,4 @@ namespace CubA4
 	}
 }
 
-#endif // DEVICEBUILDER_HPP
+#endif // RENDERVULKAN_DEVICEBUILDER_HPP

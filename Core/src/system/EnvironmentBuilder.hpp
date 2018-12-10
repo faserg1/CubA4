@@ -1,5 +1,5 @@
-#ifndef ENVIRONMENTBUILDER_HPP
-#define ENVIRONMENTBUILDER_HPP
+#ifndef CORE_ENVIRONMENTBUILDER_HPP
+#define CORE_ENVIRONMENTBUILDER_HPP
 
 #include <memory>
 #include <system/IEnvironmentBuilder.hpp>
@@ -33,4 +33,4 @@ namespace CubA4
 	}
 }
 
-#endif // ENVIRONMENTBUILDER_HPP
+#endif // CORE_ENVIRONMENTBUILDER_HPP

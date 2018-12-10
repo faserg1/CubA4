@@ -1,5 +1,5 @@
-#ifndef STARTUP_HPP
-#define STARTUP_HPP
+#ifndef CORE_STARTUP_HPP
+#define CORE_STARTUP_HPP
 
 #include <memory>
 #include <system/IStartup.hpp>
@@ -57,4 +57,4 @@ namespace CubA4
 	}
 }
 
-#endif // STARTUP_HPP
+#endif // CORE_STARTUP_HPP

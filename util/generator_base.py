@@ -65,7 +65,7 @@ class GeneratorBase:
 
 	def _generate_guard(self, file):
 		name = self._get_name()
-		upper_file_name = name.upper() + "_HPP"
+		upper_file_name = self._module_name.upper() + "_" + name.upper() + "_HPP"
 		header_guard_starts = "#ifndef " + upper_file_name + "\n"
 		header_guard_define = "#define " + upper_file_name + "\n"
 		header_guard_ends = "#endif // " + upper_file_name + "\n"

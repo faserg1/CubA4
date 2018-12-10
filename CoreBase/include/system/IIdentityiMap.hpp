@@ -1,5 +1,5 @@
-#ifndef IIDENTITYIMAP_HPP
-#define IIDENTITYIMAP_HPP
+#ifndef COREBASE_IIDENTITYIMAP_HPP
+#define COREBASE_IIDENTITYIMAP_HPP
 
 #include <string>
 #include <functional>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // IIDENTITYIMAP_HPP
+#endif // COREBASE_IIDENTITYIMAP_HPP

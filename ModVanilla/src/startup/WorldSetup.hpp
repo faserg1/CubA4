@@ -1,5 +1,5 @@
-#ifndef WORLDSETUP_HPP
-#define WORLDSETUP_HPP
+#ifndef MODVANILLA_WORLDSETUP_HPP
+#define MODVANILLA_WORLDSETUP_HPP
 
 #include <memory>
 
@@ -46,4 +46,4 @@ namespace CubA4
 	}
 }
 
-#endif // WORLDSETUP_HPP
+#endif // MODVANILLA_WORLDSETUP_HPP

@@ -1,5 +1,5 @@
-#ifndef LOGCOMMON_HPP
-#define LOGCOMMON_HPP
+#ifndef COREBASE_LOGCOMMON_HPP
+#define COREBASE_LOGCOMMON_HPP
 
 namespace CubA4
 {
@@ -31,4 +31,4 @@ namespace CubA4
 	}
 }
 
-#endif // LOGCOMMON_HPP
+#endif // COREBASE_LOGCOMMON_HPP

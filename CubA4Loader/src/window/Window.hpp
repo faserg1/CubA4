@@ -1,5 +1,5 @@
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#ifndef CUBA4LOADER_WINDOW_HPP
+#define CUBA4LOADER_WINDOW_HPP
 
 #include <cstdint>
 #include <memory>
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // WINDOW_HPP
+#endif // CUBA4LOADER_WINDOW_HPP

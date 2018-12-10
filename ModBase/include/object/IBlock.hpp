@@ -1,5 +1,5 @@
-#ifndef IBLOCK_HPP
-#define IBLOCK_HPP
+#ifndef MODBASE_IBLOCK_HPP
+#define MODBASE_IBLOCK_HPP
 
 #include "IObject.hpp"
 #include <cstdint>
@@ -41,4 +41,4 @@ namespace CubA4
 	}
 }
 
-#endif // IBLOCK_HPP
+#endif // MODBASE_IBLOCK_HPP

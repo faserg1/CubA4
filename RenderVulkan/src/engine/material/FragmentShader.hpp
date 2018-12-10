@@ -1,5 +1,5 @@
-#ifndef FRAGMENTSHADER_HPP
-#define FRAGMENTSHADER_HPP
+#ifndef RENDERVULKAN_FRAGMENTSHADER_HPP
+#define RENDERVULKAN_FRAGMENTSHADER_HPP
 
 #include "Shader.hpp"
 #include <engine/material/IFragmentShader.hpp>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // FRAGMENTSHADER_HPP
+#endif // RENDERVULKAN_FRAGMENTSHADER_HPP

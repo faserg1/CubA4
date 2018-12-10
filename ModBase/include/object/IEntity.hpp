@@ -1,5 +1,5 @@
-#ifndef IENTITY_HPP
-#define IENTITY_HPP
+#ifndef MODBASE_IENTITY_HPP
+#define MODBASE_IENTITY_HPP
 
 #include "IObject.hpp"
 
@@ -22,4 +22,4 @@ namespace CubA4
 }
 
 
-#endif // IENTITY_HPP
+#endif // MODBASE_IENTITY_HPP

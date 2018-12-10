@@ -1,5 +1,5 @@
-#ifndef ERRORHELPER_HPP
-#define ERRORHELPER_HPP
+#ifndef RENDERVULKAN_ERRORHELPER_HPP
+#define RENDERVULKAN_ERRORHELPER_HPP
 
 #include <vulkan/vulkan.h>
 #include <string>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // ERRORHELPER_HPP
+#endif // RENDERVULKAN_ERRORHELPER_HPP

@@ -1,5 +1,5 @@
-#ifndef RENDERPASS_HPP
-#define RENDERPASS_HPP
+#ifndef RENDERVULKAN_RENDERPASS_HPP
+#define RENDERVULKAN_RENDERPASS_HPP
 
 #include <vulkan/vulkan.h>
 #include <memory>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERPASS_HPP
+#endif // RENDERVULKAN_RENDERPASS_HPP

@@ -1,5 +1,5 @@
-#ifndef VERTEXSHADER_HPP
-#define VERTEXSHADER_HPP
+#ifndef RENDERVULKAN_VERTEXSHADER_HPP
+#define RENDERVULKAN_VERTEXSHADER_HPP
 
 #include "Shader.hpp"
 #include <engine/material/IVertexShader.hpp>
@@ -28,4 +28,4 @@ namespace CubA4
 	}
 }
 
-#endif // VERTEXSHADER_HPP
+#endif // RENDERVULKAN_VERTEXSHADER_HPP

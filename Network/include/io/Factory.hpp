@@ -1,5 +1,5 @@
-#ifndef FACTORY_HPP
-#define FACTORY_HPP
+#ifndef NETWORK_FACTORY_HPP
+#define NETWORK_FACTORY_HPP
 
 #include <memory>
 #include <string>
@@ -43,4 +43,4 @@ namespace CubA4
 	}
 }
 
-#endif // FACTORY_HPP
+#endif // NETWORK_FACTORY_HPP

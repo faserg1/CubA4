@@ -1,5 +1,5 @@
-#ifndef MODMANAGER_HPP
-#define MODMANAGER_HPP
+#ifndef MODVANILLA_MODMANAGER_HPP
+#define MODVANILLA_MODMANAGER_HPP
 
 #include <memory>
 #include <manager/IModManager.hpp>
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODMANAGER_HPP
+#endif // MODVANILLA_MODMANAGER_HPP

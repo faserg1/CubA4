@@ -1,5 +1,5 @@
-#ifndef IVERSION_HPP
-#define IVERSION_HPP
+#ifndef COREBASE_IVERSION_HPP
+#define COREBASE_IVERSION_HPP
 
 #include <string>
 
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // IVERSION_HPP
+#endif // COREBASE_IVERSION_HPP

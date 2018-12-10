@@ -1,5 +1,5 @@
-#ifndef RECEIVER_HPP
-#define RECEIVER_HPP
+#ifndef NETWORK_RECEIVER_HPP
+#define NETWORK_RECEIVER_HPP
 
 namespace CubA4
 {
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // RECEIVER_HPP
+#endif // NETWORK_RECEIVER_HPP

@@ -1,5 +1,5 @@
-#ifndef MODEXCEPTION_HPP
-#define MODEXCEPTION_HPP
+#ifndef MODBASE_MODEXCEPTION_HPP
+#define MODBASE_MODEXCEPTION_HPP
 
 #include <string>
 
@@ -18,4 +18,4 @@ namespace CubA4
 	}
 }
 
-#endif // MODEXCEPTION_HPP
+#endif // MODBASE_MODEXCEPTION_HPP

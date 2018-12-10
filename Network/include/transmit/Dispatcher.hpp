@@ -1,5 +1,5 @@
-#ifndef DISPATCHER_HPP
-#define DISPATCHER_HPP
+#ifndef NETWORK_DISPATCHER_HPP
+#define NETWORK_DISPATCHER_HPP
 
 namespace CubA4
 {
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // DISPATCHER_HPP
+#endif // NETWORK_DISPATCHER_HPP

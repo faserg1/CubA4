@@ -1,5 +1,5 @@
-#ifndef SENDER_HPP
-#define SENDER_HPP
+#ifndef NETWORK_SENDER_HPP
+#define NETWORK_SENDER_HPP
 
 namespace CubA4
 {
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // SENDER_HPP
+#endif // NETWORK_SENDER_HPP

@@ -1,5 +1,5 @@
-#ifndef LISTENERTCP_HPP
-#define LISTENERTCP_HPP
+#ifndef NETWORK_LISTENERTCP_HPP
+#define NETWORK_LISTENERTCP_HPP
 
 #include "Listener.hpp"
 #include <boost/asio/ip/tcp.hpp>
@@ -46,4 +46,4 @@ namespace CubA4
 	}
 }
 
-#endif // LISTENERTCP_HPP
+#endif // NETWORK_LISTENERTCP_HPP

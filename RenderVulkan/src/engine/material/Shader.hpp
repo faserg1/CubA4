@@ -1,5 +1,5 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#ifndef RENDERVULKAN_SHADER_HPP
+#define RENDERVULKAN_SHADER_HPP
 
 #include <engine/material/IShader.hpp>
 #include <vulkan/vulkan.h>
@@ -37,4 +37,4 @@ namespace CubA4
 	}
 }
 
-#endif // SHADER_HPP
+#endif // RENDERVULKAN_SHADER_HPP

@@ -1,5 +1,5 @@
-#ifndef PRESENTAION_HPP
-#define PRESENTAION_HPP
+#ifndef RENDERVULKAN_PRESENTAION_HPP
+#define RENDERVULKAN_PRESENTAION_HPP
 
 #include <memory>
 #include <vector>
@@ -39,4 +39,4 @@ namespace CubA4
 	}
 }
 
-#endif // PRESENTAION_HPP
+#endif // RENDERVULKAN_PRESENTAION_HPP

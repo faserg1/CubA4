@@ -1,5 +1,5 @@
-#ifndef CONNECTION_HPP
-#define CONNECTION_HPP
+#ifndef NETWORK_CONNECTION_HPP
+#define NETWORK_CONNECTION_HPP
 
 #include "NetworkLibrary.hpp"
 #include <functional>
@@ -38,4 +38,4 @@ namespace CubA4
 	}
 }
 
-#endif // CONNECTION_HPP
+#endif // NETWORK_CONNECTION_HPP

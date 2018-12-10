@@ -1,5 +1,5 @@
-#ifndef FILEPATHS_HPP
-#define FILEPATHS_HPP
+#ifndef CORE_FILEPATHS_HPP
+#define CORE_FILEPATHS_HPP
 
 #include <config/IFilePaths.hpp>
 #include <boost/filesystem.hpp>
@@ -29,4 +29,4 @@ namespace CubA4
 	}
 }
 
-#endif // FILEPATHS_HPP
+#endif // CORE_FILEPATHS_HPP

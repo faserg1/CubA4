@@ -1,5 +1,5 @@
-#ifndef INSTANCELAYER_HPP
-#define INSTANCELAYER_HPP
+#ifndef RENDERVULKAN_INSTANCELAYER_HPP
+#define RENDERVULKAN_INSTANCELAYER_HPP
 
 #include "InstanceAddon.hpp"
 #include <memory>
@@ -30,4 +30,4 @@ namespace CubA4
 	}
 }
 
-#endif // INSTANCELAYER_HPP
+#endif // RENDERVULKAN_INSTANCELAYER_HPP

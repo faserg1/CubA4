@@ -1,5 +1,5 @@
-#ifndef IMODVANILLA_HPP
-#define IMODVANILLA_HPP
+#ifndef MODVANILLA_IMODVANILLA_HPP
+#define MODVANILLA_IMODVANILLA_HPP
 
 #include <mod/IMod.hpp>
 
@@ -19,4 +19,4 @@ namespace CubA4
 	}
 }
 
-#endif // IMODVANILLA_HPP
+#endif // MODVANILLA_IMODVANILLA_HPP

@@ -1,5 +1,5 @@
-#ifndef CORE_HPP
-#define CORE_HPP
+#ifndef CORE_CORE_HPP
+#define CORE_CORE_HPP
 
 #include <ICore.hpp>
 #include <CoreExportHelper.hpp>
@@ -47,4 +47,4 @@ namespace CubA4
 	}
 }
 
-#endif // CORE_HPP
+#endif // CORE_CORE_HPP

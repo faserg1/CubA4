@@ -1,5 +1,5 @@
-#ifndef ISHADER_HPP
-#define ISHADER_HPP
+#ifndef RENDERBASE_ISHADER_HPP
+#define RENDERBASE_ISHADER_HPP
 
 #include <string>
 
@@ -33,4 +33,4 @@ namespace CubA4
 	}
 }
 
-#endif // ISHADER_HPP
+#endif // RENDERBASE_ISHADER_HPP

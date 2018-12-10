@@ -1,5 +1,5 @@
-#ifndef IWOLRD_HPP
-#define IWOLRD_HPP
+#ifndef MODBASE_IWOLRD_HPP
+#define MODBASE_IWOLRD_HPP
 
 #include <string>
 #include "IChunk.hpp"
@@ -40,4 +40,4 @@ namespace CubA4
 	}
 }
 
-#endif // IWOLRD_HPP
+#endif // MODBASE_IWOLRD_HPP

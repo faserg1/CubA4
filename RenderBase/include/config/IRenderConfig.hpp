@@ -1,5 +1,5 @@
-#ifndef IRENDERCONFIG_HPP
-#define IRENDERCONFIG_HPP
+#ifndef RENDERBASE_IRENDERCONFIG_HPP
+#define RENDERBASE_IRENDERCONFIG_HPP
 
 #include <tuple>
 
@@ -25,4 +25,4 @@ namespace CubA4
 	}
 }
 
-#endif // IRENDERCONFIG_HPP
+#endif // RENDERBASE_IRENDERCONFIG_HPP

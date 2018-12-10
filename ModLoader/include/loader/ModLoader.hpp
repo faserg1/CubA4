@@ -1,5 +1,5 @@
-#ifndef LOADER_MOD_LOADER
-#define LOADER_MOD_LOADER
+#ifndef MODLOADER_MODLOADER_HPP
+#define MODLOADER_MODLOADER_HPP
 
 #include <memory>
 #include <vector>
@@ -53,4 +53,4 @@ namespace CubA4
 	}
 }
 
-#endif
+#endif // MODLOADER_MODLOADER_HPP

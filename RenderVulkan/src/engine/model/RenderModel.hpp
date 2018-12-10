@@ -1,5 +1,5 @@
-#ifndef RENDERMODEL_HPP
-#define RENDERMODEL_HPP
+#ifndef RENDERVULKAN_RENDERMODEL_HPP
+#define RENDERVULKAN_RENDERMODEL_HPP
 
 #include <engine/model/IRenderModel.hpp>
 #include <vulkan/vulkan.h>
@@ -52,4 +52,4 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERMODEL_HPP
+#endif // RENDERVULKAN_RENDERMODEL_HPP

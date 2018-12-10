@@ -1,5 +1,5 @@
-#ifndef IITEM_HPP
-#define IITEM_HPP
+#ifndef MODBASE_IITEM_HPP
+#define MODBASE_IITEM_HPP
 
 #include "IEntity.hpp"
 
@@ -21,4 +21,4 @@ namespace CubA4
 	}
 }
 
-#endif // IITEM_HPP
+#endif // MODBASE_IITEM_HPP
