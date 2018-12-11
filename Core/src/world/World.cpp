@@ -63,6 +63,16 @@ void World::placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block,
 	}
 }
 
+std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> World::getChunks() const
+{
+	std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> result(loadedChunks_.size());
+	std::transform(loadedChunks_.begin(), loadedChunks_.end(), result.begin(), [](auto pair) -> std::shared_ptr<const CubA4::mod::world::IChunk>
+	{
+		return pair.second;
+	});
+	return std::move(result);
+}
+
 void World::resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos)
 {
 	blockPos.x = globalPos.x % ChunkSize;

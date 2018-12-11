@@ -22,6 +22,16 @@ namespace CubA4
 
 	namespace mod
 	{
+		namespace object
+		{
+			class IBlock;
+		}
+
+		namespace world
+		{
+			class IWorld;
+		}
+
 		namespace manager
 		{
 			class ModManager;
@@ -37,10 +47,14 @@ namespace CubA4
 
 				void load(std::shared_ptr<const core::ICore> core, std::shared_ptr<manager::ModManager> manager);
 				void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
+				void done();
 			protected:
 			private:
 				std::shared_ptr<manager::ModManager> manager_;
 				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
+
+				std::shared_ptr<const CubA4::mod::object::IBlock> testBlock_;
+				std::shared_ptr<const CubA4::mod::world::IWorld> testWorld_;
 			};
 		}
 	}

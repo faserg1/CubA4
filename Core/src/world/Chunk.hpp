@@ -23,8 +23,8 @@ namespace CubA4
 			explicit Chunk(const CubA4::mod::world::ChunkPos &chunkPos);
 			~Chunk();
 
-			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> &&getUsedBlocks() const override;
-			std::vector<CubA4::mod::world::BlockInChunkPos> &&getChunkPositions(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
+			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> getUsedBlocks() const override;
+			std::vector<CubA4::mod::world::BlockInChunkPos> getChunkPositions(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
 			const CubA4::mod::world::ChunkPos &getChunkPos() const override;
 
 			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<CubA4::mod::world::BlockInChunkPos> positions);

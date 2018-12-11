@@ -4,6 +4,8 @@
 #include <ICore.hpp>
 #include <system/IEnvironmentBuilder.hpp>
 
+#include <world/IWorld.hpp>
+
 #include "../manager/ModManager.hpp"
 #include "../manager/ModRenderManager.hpp"
 #include "../manager/ModBlockManager.hpp"
@@ -43,6 +45,18 @@ void WorldSetup::init(std::shared_ptr<IEnvironmentBuilder> builder)
 	auto renderManager = manager_->getModRenderManager();
 	auto defaultRenderBlock = renderManager->getModel("block");
 	auto defaultRenderMaterial = renderManager->getMaterial("default");
-	builder->registerObject(std::make_shared<TestBlock>(defaultRenderBlock, defaultRenderMaterial));
-	builder->createWorld(std::make_shared<CubA4::mod::world::TestWorld>());
+	testBlock_ = std::make_shared<TestBlock>(defaultRenderBlock, defaultRenderMaterial);
+	builder->registerObject(testBlock_);
+	testWorld_ = builder->createWorld(std::make_shared<CubA4::mod::world::TestWorld>());
+}
+
+void WorldSetup::done()
+{
+	// Testing rendering. later delete the ugly shit!
+	auto modWorld = std::const_pointer_cast<CubA4::mod::world::IWorld>(testWorld_);
+	modWorld->placeBlocks(testBlock_,
+	{
+		{0, 0, 0},
+		{1, 1, 1}
+	});
 }

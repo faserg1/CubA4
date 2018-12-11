@@ -45,6 +45,7 @@ void ModVanilla::configure(std::shared_ptr<CubA4::core::system::IEnvironmentBuil
 
 void ModVanilla::done(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder)
 {
+	worldSetup_.done();
 	core_->getLogger()->flush();
 }
 

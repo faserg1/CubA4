@@ -29,6 +29,7 @@ namespace CubA4
 			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
 
 			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, const std::vector<CubA4::mod::world::BlockGlobalPos> positions) override;
+			std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> getChunks() const override;
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition_;

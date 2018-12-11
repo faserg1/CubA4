@@ -1,13 +1,13 @@
 #include "./RenderGameHandler.hpp"
 #include <game/IGame.hpp>
 #include <world/IWorld.hpp>
+#include "pipeline/IRenderEnginePipelineUpdater.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::pipeline;
 
 RenderGameHandler::RenderGameHandler(std::shared_ptr<IRenderEnginePipelineUpdater> updater) :
 	updater_(updater)
 {
-	
 }
 
 RenderGameHandler::~RenderGameHandler()
@@ -31,5 +31,6 @@ void RenderGameHandler::worldChanged(std::shared_ptr<const CubA4::mod::world::IW
 
 void RenderGameHandler::recompileWorld()
 {
-	
+	auto chunks = currentWorld_->getChunks();
+	updater_->pushChunks(std::move(chunks));
 }
