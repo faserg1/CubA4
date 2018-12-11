@@ -30,6 +30,16 @@ Render::~Render()
 	destroyMainCommandPool();
 }
 
+Render::FramebufferData::FramebufferData() :
+	dirty(true)
+{
+}
+
+Render::FramebufferData::FramebufferData(const FramebufferData &) :
+	dirty(true)
+{
+}
+
 void Render::setup(std::shared_ptr<RenderEnginePipeline> pipeline)
 {
 	chunkUpdateSubscription_ = pipeline->subscribe(this);

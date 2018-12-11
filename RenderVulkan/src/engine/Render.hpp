@@ -60,15 +60,15 @@ namespace CubA4
 
 				struct FramebufferData
 				{
-					FramebufferData() = default;
-					FramebufferData(const FramebufferData &) {}
+					FramebufferData();
+					FramebufferData(const FramebufferData &);
 					VkFence fence;
 					VkFramebuffer framebuffer;
 					VkImage image;
 					VkImageView imageView;
 					VkCommandBuffer cmdBuffer;
 					std::shared_ptr<const vulkan::Semaphore> renderDoneSemaphore;
-					std::atomic_bool dirty = true;
+					std::atomic_bool dirty;
 				};
 				std::vector<FramebufferData> framebuffersData_;
 
