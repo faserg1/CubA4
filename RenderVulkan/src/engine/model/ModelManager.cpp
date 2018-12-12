@@ -101,7 +101,7 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	VkBufferCreateInfo &indexBufferInfo = bufferInfos[2], &indexTransitBufferInfo = bufferInfos[3];
 	indexTransitBufferInfo.size = indexBufferInfo.size = indicesSize;
 	indexTransitBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-	indexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+	indexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 
 	if (vkCreateBuffer(device_->getDevice(), &indexTransitBufferInfo, nullptr, &indexTransitBuffer) != VK_SUCCESS)
 	{

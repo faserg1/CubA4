@@ -53,6 +53,7 @@ void RenderStartup::preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBui
 	auto materialManager = renderManager->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
 	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
+	createMaterials(materialManager->getMaterialFactory());
 	createModels(renderManager->getModelManager());
 }
 

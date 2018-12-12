@@ -81,8 +81,15 @@ void Render::record(uint32_t imgIndex)
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
 
-	// vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
-	// vkResetFences(device_->getDevice(), 1, &fence);
+	auto waitResult = vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
+	switch (waitResult)
+	{
+	case VK_SUCCESS:
+		break;
+	case VK_TIMEOUT:
+		return;
+	}
+	vkResetFences(device_->getDevice(), 1, &fence);
 
 	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
@@ -123,7 +130,7 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	submitInfo.pWaitSemaphores = waitSemaphores.data();
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, framebuffersData_[imgIndex].fence);
 
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
@@ -186,6 +193,7 @@ void Render::createFramebuffers()
 		//create fence
 		VkFenceCreateInfo fenceCreateInfo = {};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 		if (vkCreateFence(device_->getDevice(), &fenceCreateInfo, nullptr, &framebufferData.fence) != VK_SUCCESS)
 		{
 			//TODO: [OOKAMI] Exception, etc
