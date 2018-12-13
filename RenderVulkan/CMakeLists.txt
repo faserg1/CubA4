@@ -120,6 +120,7 @@ set(RenderVulkanSourceVulkan
 	${RenderVulkanSourceVulkanDir}/RenderPassBuilder.cpp
 	${RenderVulkanSourceVulkanDir}/RenderPass.cpp
 	${RenderVulkanSourceVulkanDir}/DebugMarker.cpp
+	${RenderVulkanSourceVulkanDir}/CommandPool.cpp
 )
 set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/Instance.hpp
@@ -137,6 +138,7 @@ set(RenderVulkanHeaderVulkan
 	${RenderVulkanSourceVulkanDir}/RenderPassBuilder.hpp
 	${RenderVulkanSourceVulkanDir}/RenderPass.hpp
 	${RenderVulkanSourceVulkanDir}/DebugMarker.hpp
+	${RenderVulkanSourceVulkanDir}/CommandPool.hpp
 )
 set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/RenderEngine.cpp

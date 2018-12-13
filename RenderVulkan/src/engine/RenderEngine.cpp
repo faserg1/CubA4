@@ -127,7 +127,8 @@ void VulkanRenderEngine::shutdown()
 	// Разрушение компонентов
 	renderGameHandler_.reset();
 
-	render_->shutdown();
+	if (render_)
+		render_->shutdown();
 
 	renderEnginePipeline_.reset();
 	renderChunkCompiler_.reset();

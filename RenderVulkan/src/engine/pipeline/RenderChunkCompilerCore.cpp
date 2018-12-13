@@ -16,76 +16,31 @@ RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> d
 
 RenderChunkCompilerCore::~RenderChunkCompilerCore()
 {
-	destroyCommandPools();
-}
-
-RenderChunkCompilerCore::CommandPool::CommandPool(VkCommandPool pool) :
-	vkPool(pool), available(true)
-{
-
-}
-
-RenderChunkCompilerCore::CommandPool::CommandPool(CommandPool &&obj) :
-	vkPool(obj.vkPool), available(obj.available.load())
-{
-	obj.available = false;
+	
 }
 
 void RenderChunkCompilerCore::initCommandPools()
 {
-	VkCommandPoolCreateInfo info = {};
-	info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	commandPools_.reserve(commandPoolsCount);
 	for (unsigned short i = 0; i < commandPoolsCount; i++)
-	{
-		VkCommandPool pool;
-		vkCreateCommandPool(device_->getDevice(), &info, nullptr, &pool);
-		commandPools_.push_back(pool);
-		std::string debugName = "RenderChunkCompilerCore CommandPool " + std::to_string(i);
-		device_->getMarker().setName(pool, debugName.c_str());
-	}
+		commandPools_.push_back(std::make_shared<CommandPool>(device_, 0));
 }
 
-void RenderChunkCompilerCore::destroyCommandPools()
-{
-	for (auto &pool : commandPools_)
-	{
-		vkDestroyCommandPool(device_->getDevice(), pool.vkPool, nullptr);
-	}
-}
 
-std::shared_ptr<const RenderChunkCompilerCore::CommandPool> RenderChunkCompilerCore::lockCommandPool(VkCommandPool specialPool)
+std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::lockCommandPool()
 {
-	auto it = commandPools_.end();
-	if (specialPool != VK_NULL_HANDLE)
-	{
-		it = std::find_if(commandPools_.begin(), commandPools_.end(), [specialPool](RenderChunkCompilerCore::CommandPool &pool) -> bool
-		{
-			return pool.vkPool == specialPool;
-		});
-		if (it == commandPools_.end())
-			return {};
-		while (!it->available);
-		it->available = false;
-		RenderChunkCompilerCore::CommandPool &pool = *it;
-		return std::shared_ptr<const RenderChunkCompilerCore::CommandPool>(&pool, [](RenderChunkCompilerCore::CommandPool *pool)
-		{
-			pool->available = true;
-		});
-	}
 	while (true)
 	{
-		it = std::find_if(commandPools_.begin(), commandPools_.end(), [](RenderChunkCompilerCore::CommandPool &pool) -> bool
+		std::unique_ptr<const CommandPool::CommandPoolLock> lock;
+		for (auto pool : commandPools_)
 		{
-			return pool.available;
-		});
+			lock = pool->tryLock();
+			if (lock)
+				break;
+		}
 		
-		if (it == commandPools_.end())
+		if (!lock)
 			continue;
-		it->available = false;
-		RenderChunkCompilerCore::CommandPool &pool = *it;
-		return std::shared_ptr<const RenderChunkCompilerCore::CommandPool>(&pool, [](RenderChunkCompilerCore::CommandPool *pool)
-		{
-			pool->available = true;
-		});
+		return std::move(lock);
 	}
 }

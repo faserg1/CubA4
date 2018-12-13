@@ -35,7 +35,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 
 	VkCommandBufferAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = poolWrapper->vkPool;
+	allocInfo.commandPool = poolWrapper->getPool()->getPool();
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
 	allocInfo.commandBufferCount = static_cast<uint32_t>(usedBlocks.size());
 	vkAllocateCommandBuffers(device_->getDevice(), &allocInfo, buffers.data());
@@ -73,10 +73,14 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkEndCommandBuffer(cmdBuffer);
 	}
 
-	std::function<void()> deleter = [this, neededPool = poolWrapper->vkPool, buffers]()
+	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), buffers]()
 	{
-		auto poolWrapper = lockCommandPool(neededPool);
-		vkFreeCommandBuffers(device_->getDevice(), poolWrapper->vkPool, static_cast<uint32_t>(buffers.size()), buffers.data());
+		decltype(poolWrapper) lock;
+		do
+		{
+			lock = neededPool->tryLock();
+		} while (!lock);
+		vkFreeCommandBuffers(dev->getDevice(), lock->getPool()->getPool(), static_cast<uint32_t>(buffers.size()), buffers.data());
 	};
 
 	return std::make_shared<world::RenderChunk>(chunk->getChunkPos(), buffers, deleter);
