@@ -31,12 +31,12 @@ Render::~Render()
 }
 
 Render::FramebufferData::FramebufferData() :
-	dirty(true)
+	dirty(true), needUpdate(false), recorded(false)
 {
 }
 
 Render::FramebufferData::FramebufferData(const FramebufferData &) :
-	dirty(true)
+	dirty(true), needUpdate(false), recorded(false)
 {
 }
 
@@ -52,7 +52,7 @@ void Render::shutdown()
 
 void Render::record(uint32_t imgIndex)
 {
-	if (!framebuffersData_[imgIndex].dirty)
+	if (!framebuffersData_[imgIndex].needUpdate && framebuffersData_[imgIndex].recorded)
 		return;
 
 	auto cmdBuffer = framebuffersData_[imgIndex].cmdBuffer;
@@ -81,15 +81,18 @@ void Render::record(uint32_t imgIndex)
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
 
-	auto waitResult = vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
-	switch (waitResult)
+	if (framebuffersData_[imgIndex].recorded)
 	{
-	case VK_SUCCESS:
-		break;
-	case VK_TIMEOUT:
-		return;
+		auto waitResult = vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, 50);
+		switch (waitResult)
+		{
+		case VK_SUCCESS:
+			break;
+		case VK_TIMEOUT:
+			return;
+		}
+		vkResetFences(device_->getDevice(), 1, &fence);
 	}
-	vkResetFences(device_->getDevice(), 1, &fence);
 
 	vkBeginCommandBuffer(cmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
@@ -100,7 +103,6 @@ void Render::record(uint32_t imgIndex)
 	auto chunks = chunks_;
 	////////////////////////
 	chunksLocked_ = false;
-	framebuffersData_[imgIndex].dirty = false;
 
 	for (auto chunk : chunks)
 	{
@@ -109,10 +111,14 @@ void Render::record(uint32_t imgIndex)
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(cmdBuffer);
 	vkEndCommandBuffer(cmdBuffer);
+	framebuffersData_[imgIndex].needUpdate = false;
+	framebuffersData_[imgIndex].recorded = true;
 }
 
 std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr<const Semaphore> awaitSemaphore)
 {
+	if (!framebuffersData_[imgIndex].recorded)
+		return {};
 	//send command buffer to queue
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -130,7 +136,16 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 	submitInfo.pWaitSemaphores = waitSemaphores.data();
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, framebuffersData_[imgIndex].fence);
+	bool needUpdate = framebuffersData_[imgIndex].dirty && !framebuffersData_[imgIndex].needUpdate;
+
+	vkQueueSubmit(device_->getQueue(), 1, &submitInfo,
+		(needUpdate ? framebuffersData_[imgIndex].fence : VK_NULL_HANDLE));
+
+	if (needUpdate)
+	{
+		framebuffersData_[imgIndex].needUpdate = true;
+		framebuffersData_[imgIndex].dirty = false;
+	}
 
 	return framebuffersData_[imgIndex].renderDoneSemaphore;
 }
@@ -193,7 +208,7 @@ void Render::createFramebuffers()
 		//create fence
 		VkFenceCreateInfo fenceCreateInfo = {};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+		//fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 		if (vkCreateFence(device_->getDevice(), &fenceCreateInfo, nullptr, &framebufferData.fence) != VK_SUCCESS)
 		{
 			//TODO: [OOKAMI] Exception, etc

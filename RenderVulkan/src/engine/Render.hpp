@@ -69,6 +69,8 @@ namespace CubA4
 					VkCommandBuffer cmdBuffer;
 					std::shared_ptr<const vulkan::Semaphore> renderDoneSemaphore;
 					std::atomic_bool dirty;
+					std::atomic_bool needUpdate;
+					std::atomic_bool recorded;
 				};
 				std::vector<FramebufferData> framebuffersData_;
 

@@ -147,8 +147,9 @@ void VulkanRenderEngine::loop()
 			continue;
 		render_->record(imgIndex);
 		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
-		//
-		presetation_->send(imgIndex, { renderDoneSemaphore });
+
+		if (renderDoneSemaphore)
+			presetation_->send(imgIndex, { renderDoneSemaphore });
 		
 		
 		fps++;
