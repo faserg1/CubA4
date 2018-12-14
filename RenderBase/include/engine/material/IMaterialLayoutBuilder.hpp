@@ -21,9 +21,6 @@ namespace CubA4
 				{
 				public:
 					virtual void setType(MaterialType type) = 0;
-
-					// addSampler()
-					// add..*
 				protected:
 					explicit IMaterialLayoutBuilder() = default;
 					virtual ~IMaterialLayoutBuilder() = default;

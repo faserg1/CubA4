@@ -8,13 +8,14 @@
 #include "../model/RenderModel.hpp"
 #include "../material/MaterialLayout.hpp"
 #include "../material/Material.hpp"
+#include "../world/WorldManager.hpp"
 
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
-RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass) :
-	RenderChunkCompilerCore(device), renderPass_(renderPass)
+RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass, std::shared_ptr<const IWorldManager> worldManager) :
+	RenderChunkCompilerCore(device), renderPass_(renderPass), worldManager_(std::dynamic_pointer_cast<const WorldManager>(worldManager))
 {
 }
 
@@ -52,6 +53,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	beginInfo.pInheritanceInfo = &inheritanceInfo;
 
 	auto chunkPos = chunk->getChunkPos();
+	auto worldSet = worldManager_->getWorldDescriptorSetLayout();
+	VkDescriptorSet sets[] = { worldSet->get() };
 
 	for (std::size_t idx = 0; idx < usedBlocks.size(); idx++)
 	{
@@ -66,13 +69,18 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
-		renderModel->bind(cmdBuffer);
+		/////////////////////////////////////////////////
 		pipeline->bind(cmdBuffer);
+
 		vkCmdPushConstants(cmdBuffer, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(chunkPos), &chunkPos);
+		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, 1, sets, 0, nullptr);
+		
+		renderModel->bind(cmdBuffer);
 		
 		vkCmdDrawIndexed(cmdBuffer,
 			renderModel->getIndexCount(), static_cast<uint32_t>(blockChunkPositions.size()),
 			0, 0, 0);
+		/////////////////////////////////////////////////
 		vkEndCommandBuffer(cmdBuffer);
 	}
 

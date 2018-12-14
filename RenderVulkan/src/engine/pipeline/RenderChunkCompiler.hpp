@@ -31,6 +31,8 @@ namespace CubA4
 		{
 			namespace world
 			{
+				class IWorldManager;
+				class WorldManager;
 				class RenderChunk;
 			}
 
@@ -40,16 +42,18 @@ namespace CubA4
 					public RenderChunkCompilerCore
 				{
 				public:
-					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::RenderPass> renderPass);
+					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device,
+						std::shared_ptr<const vulkan::RenderPass> renderPass, std::shared_ptr<const world::IWorldManager> worldManager);
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
 
 					std::future<std::shared_ptr<const world::RenderChunk>> compileChunk(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
 				protected:
 				private:
-					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
+					const std::shared_ptr<const vulkan::RenderPass> renderPass_;
+					const std::shared_ptr<const world::WorldManager> worldManager_;
 				private:
-					std::shared_ptr<const vulkan::RenderPass> renderPass_;
+					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
 				};
 			}
 		}

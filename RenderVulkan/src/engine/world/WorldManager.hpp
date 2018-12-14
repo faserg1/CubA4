@@ -4,7 +4,7 @@
 #include <memory>
 #include <engine/world/IWorldManager.hpp>
 #include <vulkan/vulkan.h>
-
+#include "../../vulkan/util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
@@ -36,10 +36,18 @@ namespace CubA4
 					**/
 					void setCameraRotation(double roll, double pitch, double yaw) override;
 					void setFieldOfView(float degrees) override;
+
+					vulkan::sVkDescriptorSet getWorldDescriptorSetLayout() const;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<ResourceManager> resourceManager_;
+
+					vulkan::sVkDescriptorPool pool_;
+					vulkan::sVkDescriptorSetLayout layout_;
+					vulkan::sVkDescriptorSet worldSet_;
+				private:
+					void allocateSets();
 				};
 			}
 		}
