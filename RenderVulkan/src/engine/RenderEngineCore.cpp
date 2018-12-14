@@ -177,7 +177,7 @@ void RenderEngineCore::destroyDevice()
 void RenderEngineCore::initSwapchain()
 {
 	if (!swapchainBuilder_)
-		swapchainBuilder_ = std::make_shared<SwapchainBuilder>(getDevice(), getSurface(), getConfig());
+		swapchainBuilder_ = std::make_shared<SwapchainBuilder>(getDevice(), getSurface(), config_);
 	swapchain_ = swapchainBuilder_->build();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain builded.");
 }

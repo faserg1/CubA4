@@ -46,6 +46,7 @@ namespace CubA4
 			#define DEFINE_SHARED_VULKAN_CONTAINER(TVulkanObjectName) using s##TVulkanObjectName = \
 				std::shared_ptr<util::VulkanHandlerContainer<TVulkanObjectName>>
 			DEFINE_SHARED_VULKAN_CONTAINER(VkDescriptorSetLayout);
+			DEFINE_SHARED_VULKAN_CONTAINER(VkDescriptorPool);
 			#undef DEFINE_SHARED_VULKAN_CONTAINER
 		}
 	}

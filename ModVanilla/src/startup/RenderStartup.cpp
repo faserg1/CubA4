@@ -59,21 +59,14 @@ void RenderStartup::preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBui
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
 {
-	size_t shaderSize;
-	const void *data = irs::findFile("compiled/default.frag.spv", shaderSize);
-	auto fragShader = shaderFactory->createFromBinary(data, shaderSize, CubA4::render::engine::material::ShaderType::Fragment, "main");
-	shaders_.insert(std::make_pair("default.frag", fragShader));
-	data = irs::findFile("compiled/default.vert.spv", shaderSize);
-	auto vertexShader = shaderFactory->createFromBinary(data, shaderSize, CubA4::render::engine::material::ShaderType::Vertex, "main");
-	shaders_.insert(std::make_pair("default.vert", vertexShader));
+	// NOTE: [OOKAMI] Теперь в этом месте нужно будет грузить только шейдеры для пост-процессинга
 }
 
 void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory)
 {
 	auto renderManager = manager_->getModRenderManager();
 	auto defaultLayoutBuilder = layoutFactory->createMaterialLayout();
-	defaultLayoutBuilder->useShader(shaders_.find("default.frag")->second);
-	defaultLayoutBuilder->useShader(shaders_.find("default.vert")->second);
+	defaultLayoutBuilder->setType(CubA4::render::engine::material::MaterialType::Default);
 	auto layouts = layoutFactory->build();
 	renderManager->registerMaterialLayout(layouts[0], "default");
 }

@@ -23,17 +23,15 @@ namespace CubA4
 				~ResourceManager();
 
 				vulkan::sVkDescriptorSetLayout getBuiltInLayout() const;
+				vulkan::sVkDescriptorPool getBuiltInPool() const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
 				vulkan::sVkDescriptorSetLayout builtInLayout_;
-				VkDescriptorPool builtInPool_;
+				vulkan::sVkDescriptorPool builtInPool_;
 			private:
 				void createBuildInDescriptorSetLayout();
-				void destroyBuildInDescriptorSetLayout();
-
 				void createBuiltInDescriptorPool();
-				void destroyBuiltInDescriptorPool();
 			};
 		}
 	}

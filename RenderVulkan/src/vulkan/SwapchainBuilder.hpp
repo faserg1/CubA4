@@ -24,7 +24,7 @@ namespace CubA4
 			{
 			public:
 				explicit SwapchainBuilder(std::shared_ptr<const Device> device,
-					std::weak_ptr<const Surface> surface, std::shared_ptr<const config::IRenderConfig> config);
+					std::weak_ptr<const Surface> surface, std::shared_ptr<config::IRenderConfig> config);
 				~SwapchainBuilder();
 
 				std::shared_ptr<Swapchain> build();
@@ -35,7 +35,7 @@ namespace CubA4
 				std::shared_ptr<SwapchainBuilderData> data_;
 				std::shared_ptr<const Device> device_;
 				std::weak_ptr<const Surface> surface_;
-				std::shared_ptr<const config::IRenderConfig> config_;
+				std::shared_ptr<config::IRenderConfig> config_;
 			};
 		}
 	}

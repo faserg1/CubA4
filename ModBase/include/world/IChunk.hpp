@@ -1,6 +1,9 @@
 #ifndef MODBASE_ICHUNK_HPP
 #define MODBASE_ICHUNK_HPP
 
+/** \file Интерфейс чанка
+*/
+
 #include <vector>
 #include <memory>
 #include <type_traits>

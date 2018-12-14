@@ -4,8 +4,12 @@ set(RenderBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(RenderBaseIncludeConfigDir ${RenderBaseIncludeDir}/config)
 set(RenderBaseIncludeWindowDir ${RenderBaseIncludeDir}/window)
 set(RenderBaseIncludeEngineDir ${RenderBaseIncludeDir}/engine)
+set(RenderBaseIncludeEngineWorldDir ${RenderBaseIncludeEngineDir}/world)
 set(RenderBaseIncludeEngineModelDir ${RenderBaseIncludeEngineDir}/model)
 set(RenderBaseIncludeEngineMaterialDir ${RenderBaseIncludeEngineDir}/material)
+set(RenderBaseHeaderEngineWorld
+	${RenderBaseIncludeEngineWorldDir}/IWorldManager.hpp
+)
 set(RenderBaseHeaderEngineModel
 	${RenderBaseIncludeEngineModelDir}/IModelManager.hpp
 	${RenderBaseIncludeEngineModelDir}/IRenderModel.hpp
@@ -42,12 +46,14 @@ set(RenderBaseHeaders
 	${RenderBaseHeaderWindow}
 	${RenderBaseHeaderConfig}
 	${RenderBaseHeaderEngineModel}
+	${RenderBaseHeaderEngineWorld}
 	)
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderBaseHeaderEngine})
 source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${RenderBaseHeaderWindow})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${RenderBaseHeaderConfig})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}material" FILES ${RenderBaseHeaderEngineMaterial})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}model" FILES ${RenderBaseHeaderEngineModel})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderBaseHeaderEngineWorld})
 
 add_library(RenderBase INTERFACE)
 target_include_directories(RenderBase INTERFACE include)

@@ -7,6 +7,8 @@ using namespace CubA4::render::config;
 constexpr const char *renderResolutionWidthKey = "render.resolution.width";
 constexpr const char *renderResolutionHeightKey = "render.resolution.height";
 
+constexpr const char *renderPresentMethodKey = "render.present.method";
+
 RenderConfig::RenderConfig(std::string configsPath)
 {
 	auto configPathsDirectory = boost::filesystem::path(configsPath);
@@ -43,6 +45,17 @@ void RenderConfig::setRenderResolution(std::tuple<unsigned, unsigned> res)
 {
 	configTree_->put(renderResolutionWidthKey, std::get<0>(res));
 	configTree_->put(renderResolutionHeightKey, std::get<1>(res));
+	flushConfig();
+}
+
+std::string RenderConfig::getPresentMethod(std::string methodByDefault) const
+{
+	return configTree_->get<std::string>(renderPresentMethodKey, methodByDefault);
+}
+
+void RenderConfig::setPresentMethod(std::string method)
+{
+	configTree_->put(renderPresentMethodKey, method);
 	flushConfig();
 }
 

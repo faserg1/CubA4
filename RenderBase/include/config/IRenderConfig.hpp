@@ -2,6 +2,7 @@
 #define RENDERBASE_IRENDERCONFIG_HPP
 
 #include <tuple>
+#include <string>
 
 namespace CubA4
 {
@@ -14,6 +15,9 @@ namespace CubA4
 			public:
 				virtual std::tuple<unsigned, unsigned> getRenderResolution(std::tuple<unsigned, unsigned> = {0, 0}) const = 0;
 				virtual void setRenderResolution(std::tuple<unsigned, unsigned> res) = 0;
+
+				virtual std::string getPresentMethod(std::string = {}) const = 0;
+				virtual void setPresentMethod(std::string method) = 0;
 
 				virtual void reload() = 0;
 			protected:

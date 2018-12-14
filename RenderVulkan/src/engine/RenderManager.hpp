@@ -28,6 +28,11 @@ namespace CubA4
 				class ModelManager;
 			}
 
+			namespace world
+			{
+				class WorldManager;
+			}
+
 			class RenderManager :
 				public virtual IRenderManager
 			{
@@ -38,6 +43,7 @@ namespace CubA4
 
 				std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
 				std::shared_ptr<model::IModelManager> getModelManager() const override;
+				std::shared_ptr<world::IWorldManager> getWorldManager() const override;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
@@ -45,6 +51,7 @@ namespace CubA4
 				std::shared_ptr<ResourceManager> resourceManager_;
 				std::shared_ptr<material::MaterialManager> materialManager_;
 				std::shared_ptr<model::ModelManager> modelManager_;
+				std::shared_ptr<world::WorldManager> worldManager_;
 			};
 		}
 	}

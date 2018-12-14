@@ -24,6 +24,8 @@ namespace CubA4
 
 			namespace material
 			{
+				class ShaderFactory;
+
 				class MaterialLayoutBuilder :
 					public virtual IMaterialLayoutBuilder
 				{
@@ -33,7 +35,7 @@ namespace CubA4
 						std::shared_ptr<const ResourceManager> resourceManager);
 					~MaterialLayoutBuilder();
 
-					void useShader(std::shared_ptr<const IShader> shader) override;
+					void setType(MaterialType type) override;
 
 					/** \brief Подготовка MaterialLayout к созданию
 					* \param[out] pipelineCreateInfo 
@@ -45,6 +47,7 @@ namespace CubA4
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<const Render> render_;
 					const std::shared_ptr<const ResourceManager> resourceManager_;
+					const std::unique_ptr<ShaderFactory> shaderFactory_;
 					CubA4::render::vulkan::PipelineBuilder pipelineBuilder_;
 				};
 			}

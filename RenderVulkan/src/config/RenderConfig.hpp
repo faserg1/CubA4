@@ -19,6 +19,10 @@ namespace CubA4
 
 				std::tuple<unsigned, unsigned> getRenderResolution(std::tuple<unsigned, unsigned> = { 0, 0 }) const override;
 				void setRenderResolution(std::tuple<unsigned, unsigned> res) override;
+
+				std::string getPresentMethod(std::string = {}) const override;
+				void setPresentMethod(std::string method) override;
+
 				void reload() override;
 			protected:
 			private:

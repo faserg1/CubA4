@@ -51,6 +51,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT | VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = &inheritanceInfo;
 
+	auto chunkPos = chunk->getChunkPos();
+
 	for (std::size_t idx = 0; idx < usedBlocks.size(); idx++)
 	{
 		auto usedBlock = usedBlocks[idx];
@@ -66,6 +68,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		renderModel->bind(cmdBuffer);
 		pipeline->bind(cmdBuffer);
+		vkCmdPushConstants(cmdBuffer, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(chunkPos), &chunkPos);
 		
 		vkCmdDrawIndexed(cmdBuffer,
 			renderModel->getIndexCount(), static_cast<uint32_t>(blockChunkPositions.size()),

@@ -260,5 +260,9 @@ void PipelineBuilder::prepareDescriptorSets()
 
 void PipelineBuilder::preparePushConstants()
 {
-
+	VkPushConstantRange chunkPositionRange;
+	chunkPositionRange.offset = 0;
+	chunkPositionRange.size = sizeof(CubA4::mod::world::ChunkPos);
+	chunkPositionRange.stageFlags = VK_SHADER_STAGE_ALL;
+	pushConstantsRanges_.push_back(chunkPositionRange);
 }

@@ -25,9 +25,11 @@ set(RenderVulkanSourceEnginePipeline
 )
 set(RenderVulkanSourceEngineWorld
 	${RenderVulkanSourceEngineWorldDir}/RenderChunk.cpp
+	${RenderVulkanSourceEngineWorldDir}/WorldManager.cpp
 )
 set(RenderVulkanHeaderEngineWorld
 	${RenderVulkanSourceEngineWorldDir}/RenderChunk.hpp
+	${RenderVulkanSourceEngineWorldDir}/WorldManager.hpp
 )
 set(RenderVulkanSourceVulkanUtil
 	${RenderVulkanSourceVulkanUtilDir}/ErrorHelper.cpp

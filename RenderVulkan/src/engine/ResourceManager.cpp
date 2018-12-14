@@ -13,13 +13,17 @@ ResourceManager::ResourceManager(std::shared_ptr<const Device> device) :
 
 ResourceManager::~ResourceManager()
 {
-	destroyBuiltInDescriptorPool();
-	destroyBuildInDescriptorSetLayout();
+
 }
 
 sVkDescriptorSetLayout ResourceManager::getBuiltInLayout() const
 {
 	return builtInLayout_;
+}
+
+sVkDescriptorPool ResourceManager::getBuiltInPool() const
+{
+	return builtInPool_;
 }
 
 void ResourceManager::createBuildInDescriptorSetLayout()
@@ -41,17 +45,12 @@ void ResourceManager::createBuildInDescriptorSetLayout()
 		return;
 	}
 	device_->getMarker().setName(layout, "BuiltIn Layout");
-	auto dev = device_;
-	std::function<void(VkDescriptorSetLayout)> deleter = [dev](VkDescriptorSetLayout layout)
+
+	std::function<void(VkDescriptorSetLayout)> deleter = [dev = device_](VkDescriptorSetLayout layout)
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
 	};
 	builtInLayout_ = util::createSharedVulkanObject(layout, deleter);
-}
-
-void ResourceManager::destroyBuildInDescriptorSetLayout()
-{
-	builtInLayout_.reset();
 }
 
 void ResourceManager::createBuiltInDescriptorPool()
@@ -63,7 +62,7 @@ void ResourceManager::createBuiltInDescriptorPool()
 	poolCreateInfo.maxSets = 1;
 
 	VkDescriptorPoolSize uniforms;
-	uniforms.descriptorCount = 2;
+	uniforms.descriptorCount = 1;
 	uniforms.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 
 	sizes.push_back(uniforms);
@@ -71,15 +70,19 @@ void ResourceManager::createBuiltInDescriptorPool()
 	poolCreateInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
 	poolCreateInfo.pPoolSizes = sizes.data();
 
-	if (vkCreateDescriptorPool(device_->getDevice(), &poolCreateInfo, nullptr, &builtInPool_) != VK_SUCCESS)
+	VkDescriptorPool pool = {};
+
+	if (vkCreateDescriptorPool(device_->getDevice(), &poolCreateInfo, nullptr, &pool) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exceptions, etc
 	}
 
-	device_->getMarker().setName(builtInPool_, "Builtin pool");
-}
+	device_->getMarker().setName(pool, "Builtin pool");
 
-void ResourceManager::destroyBuiltInDescriptorPool()
-{
-	vkDestroyDescriptorPool(device_->getDevice(), builtInPool_, nullptr);
+	std::function<void(VkDescriptorPool pool)> deleter = [dev = device_](VkDescriptorPool pool)
+	{
+		vkDestroyDescriptorPool(dev->getDevice(), pool, nullptr);
+	};
+
+	builtInPool_ = util::createSharedVulkanObject(pool, deleter);
 }

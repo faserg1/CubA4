@@ -11,13 +11,17 @@ namespace CubA4
 		{
 			namespace material
 			{
-				class IShader;
+				enum class MaterialType
+				{
+					Default, ///< Тип материала по умолчанию
+				};
 
 				///Строитель описания материала
 				class IMaterialLayoutBuilder
 				{
 				public:
-					virtual void useShader(std::shared_ptr<const IShader> shader) = 0;
+					virtual void setType(MaterialType type) = 0;
+
 					// addSampler()
 					// add..*
 				protected:

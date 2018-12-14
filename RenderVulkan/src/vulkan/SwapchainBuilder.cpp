@@ -28,7 +28,7 @@ namespace CubA4
 }
 
 SwapchainBuilder::SwapchainBuilder(
-	std::shared_ptr<const Device> device, std::weak_ptr<const Surface> surface, std::shared_ptr<const IRenderConfig> config) :
+	std::shared_ptr<const Device> device, std::weak_ptr<const Surface> surface, std::shared_ptr<IRenderConfig> config) :
 	data_(std::make_shared<SwapchainBuilderData>()), device_(device), surface_(surface), config_(config)
 {
 	if (auto surface = surface_.lock())
@@ -87,6 +87,26 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build()
 	}
 	if (!choosedFormat)
 		choosedFormat = formats[0].format;
+
+	auto presentMethod = config_->getPresentMethod("fifo");
+	
+
+	if (presentMethod == "fifo")
+		swapchainInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+	else if (presentMethod == "immediate")
+		swapchainInfo.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+	else if (presentMethod == "fifo_relaxed")
+		swapchainInfo.presentMode = VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+	else if (presentMethod == "mailbox")
+		swapchainInfo.presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+	else
+	{
+		swapchainInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+		presentMethod = "fifo";
+	}
+
+	config_->setPresentMethod(presentMethod);
+
 	swapchainInfo.imageFormat = choosedFormat;
 	swapchainInfo.imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
 	swapchainInfo.imageExtent = data_->caps.currentExtent;
@@ -94,8 +114,6 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build()
 	swapchainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 	swapchainInfo.preTransform = data_->caps.currentTransform;
 	swapchainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	//swapchainInfo.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
-	swapchainInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 	swapchainInfo.clipped = VK_FALSE;
 	VkSwapchainKHR swapchain;
 	if (vkCreateSwapchainKHR(device_->getDevice(), &swapchainInfo, nullptr, &swapchain) != VK_SUCCESS)
