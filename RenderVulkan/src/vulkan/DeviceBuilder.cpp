@@ -80,6 +80,16 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	createInfo.ppEnabledLayerNames = cStrExtensions.data();
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(cStrExtensions.size());
 	createInfo.ppEnabledExtensionNames = cStrExtensions.data();
+	
+	VkPhysicalDeviceFeatures availableFeatures = {}, enabledFeatures = {};
+	vkGetPhysicalDeviceFeatures(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
+
+	if (!availableFeatures.shaderInt64)
+	{
+		throw std::runtime_error("Cannot create device without shaderInt64 feature!");
+	}
+	enabledFeatures.shaderInt64 = VK_TRUE;
+	createInfo.pEnabledFeatures = &enabledFeatures;
 
 	float queuePriorities[1] = { 1.f };
 	VkDeviceQueueCreateInfo qCreateInfo = {};

@@ -1,10 +1,170 @@
 #include "./MemoryManager.hpp"
+#include "./MemoryAllocator.hpp"
 #include "../vulkan/Device.hpp"
+#include "../vulkan/Memory.hpp"
+#include <list>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
-MemoryManager::MemoryManager(std::shared_ptr<const Device> device) :
-	device_(device)
+namespace
+{
+	uint64_t calcAlign(uint64_t size, uint64_t align)
+	{
+		if (!size)
+			return 0;
+		auto res = size % align;
+		if (res == 0)
+			return size;
+		return size + align - res;
+	}
+}
+
+namespace CubA4
+{
+	namespace render
+	{
+		namespace engine
+		{
+			class MemoryBlock;
+			class MemoryPart;
+
+			class MemoryBlock :
+				public std::enable_shared_from_this<MemoryBlock>,
+				public virtual IMemoryBlock
+			{
+			public:
+				MemoryBlock(std::shared_ptr<Memory> memory);
+				VkMemoryPropertyFlags getFlags() const override;
+				uint32_t getMemoryTypeIndex() const override;
+				std::shared_ptr<Memory> getMemory() const;
+				std::shared_ptr<MemoryPart> allocatePart(uint64_t size, uint64_t alignment);
+				void freePart(const MemoryPart *part);
+			private:
+				std::shared_ptr<Memory> memory_;
+				std::list<std::weak_ptr<MemoryPart>> parts_;
+			};
+
+			class MemoryPart :
+				public virtual IMemoryPart
+			{
+			public:
+				MemoryPart(std::shared_ptr<MemoryBlock> block, VkDeviceSize offset, VkDeviceSize size);
+				~MemoryPart();
+				std::shared_ptr<Memory> getMemory() const override;
+				VkDeviceSize getOffset() const override;
+				VkDeviceSize getSize() const override;
+				std::shared_ptr<const IMemoryBlock> getBlock() const override;
+			private:
+				const std::shared_ptr<MemoryBlock> block_;
+				const VkDeviceSize offset_;
+				const VkDeviceSize size_;
+			};
+		}
+	}
+}
+
+MemoryBlock::MemoryBlock(std::shared_ptr<Memory> memory) :
+	memory_(memory)
+{
+
+}
+
+VkMemoryPropertyFlags MemoryBlock::getFlags() const
+{
+	return memory_->getFlags();
+}
+
+uint32_t MemoryBlock::getMemoryTypeIndex() const
+{
+	return memory_->getMemoryTypeIndex();
+}
+
+std::shared_ptr<Memory> MemoryBlock::getMemory() const
+{
+	return memory_;
+}
+
+std::shared_ptr<MemoryPart> MemoryBlock::allocatePart(uint64_t size, uint64_t alignment)
+{
+	if (!parts_.size())
+	{
+		auto part = std::make_shared<MemoryPart>(shared_from_this(), 0, size);
+		parts_.push_back(part);
+		return part;
+	}
+	VkDeviceSize lastOffset = 0;
+	auto partIterator = parts_.begin();
+	for (auto part : parts_)
+	{
+		auto locked = part.lock();
+		auto partOffset = locked->getOffset();
+		auto lastOffsetTemp = lastOffset;
+		lastOffset = locked->getOffset() + locked->getSize();
+
+		if (calcAlign(lastOffsetTemp, alignment) + size <= partOffset)
+		{
+			auto offset = calcAlign(lastOffsetTemp, alignment);
+			auto part = std::make_shared<MemoryPart>(shared_from_this(), offset, size);
+			parts_.insert(partIterator, part);
+			return part;
+		}
+		partIterator++;
+	}
+	if (calcAlign(lastOffset, alignment) + size <= memory_->getSize())
+	{
+		auto offset = calcAlign(lastOffset, alignment);
+		auto part = std::make_shared<MemoryPart>(shared_from_this(), offset, size);
+		parts_.push_back(part);
+		return part;
+	}
+	return {};
+}
+
+void MemoryBlock::freePart(const MemoryPart *part)
+{
+	parts_.remove_if([part](std::weak_ptr<MemoryPart> value) -> bool
+	{
+		auto locked = value.lock();
+		if (!locked)
+			return true;
+		return locked->getOffset() == part->getOffset() && locked->getSize() == part->getSize();
+	});
+}
+
+
+MemoryPart::MemoryPart(std::shared_ptr<MemoryBlock> block, VkDeviceSize offset, VkDeviceSize size) :
+	block_(block), offset_(offset), size_(size)
+{
+}
+
+MemoryPart::~MemoryPart()
+{
+	block_->freePart(this);
+}
+
+std::shared_ptr<Memory> MemoryPart::getMemory() const
+{
+	return block_->getMemory();
+}
+
+VkDeviceSize MemoryPart::getOffset() const
+{
+	return offset_;
+}
+
+VkDeviceSize MemoryPart::getSize() const
+{
+	return size_;
+}
+
+std::shared_ptr<const IMemoryBlock> MemoryPart::getBlock() const
+{
+	return block_;
+}
+
+
+MemoryManager::MemoryManager(std::shared_ptr<const Device> device, uint32_t blockSize) :
+	device_(device), allocator_(std::make_shared<MemoryAllocator>(device)), blockSize_(blockSize)
 {
 	VkCommandPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -65,6 +225,33 @@ std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, V
 	return submitCmdBuffer(updateCmd, bufferUpdateDone);
 }
 
+uint32_t MemoryManager::calcAlign(uint32_t size, uint32_t align)
+{
+	return static_cast<uint32_t>(::calcAlign(size, align));
+}
+
+std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes)
+{
+	if (size > blockSize_)
+		return {};
+	for (auto block : memoryBlocks_)
+	{
+		const uint32_t memoryTypeBits = (1 << block->getMemoryTypeIndex());
+		const bool isRequiredMemoryType = supportedTypes & memoryTypeBits;
+		if (!isRequiredMemoryType)
+			continue;
+		auto memBlock = std::dynamic_pointer_cast<MemoryBlock>(block);
+		auto part = memBlock->allocatePart(size, alignment);
+		if (!part)
+			continue;
+		return part;
+	}
+	auto newBlock = allocateBlock(supportedTypes);
+	memoryBlocks_.push_back(newBlock);
+	auto newMemBlock = std::dynamic_pointer_cast<MemoryBlock>(newBlock);
+	return newMemBlock->allocatePart(size, alignment);
+}
+
 bool MemoryManager::allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence)
 {
 	VkFenceCreateInfo fenceInfo = {};
@@ -103,4 +290,12 @@ std::shared_future<bool> MemoryManager::submitCmdBuffer(VkCommandBuffer cmdBuffe
 		vkFreeCommandBuffers(device_->getDevice(), transitPool_, 1, &cmdBuffer);
 		return result;
 	}).share();
+}
+
+std::shared_ptr<IMemoryBlock> MemoryManager::allocateBlock(uint32_t supportedTypes)
+{
+	auto memory = allocator_->allocate(blockSize_, MemoryAllocationPrefered::Device, supportedTypes);
+	if (!memory)
+		return {};
+	return std::make_shared<MemoryBlock>(memory);
 }

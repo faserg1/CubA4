@@ -1,5 +1,6 @@
 #include "./RenderChunkCompiler.hpp"
 #include "../../vulkan/Device.hpp"
+#include "../../vulkan/Memory.hpp"
 #include "../../vulkan/RenderPass.hpp"
 #include "../../vulkan/Pipeline.hpp"
 #include "../world/RenderChunk.hpp"
@@ -9,6 +10,8 @@
 #include "../material/MaterialLayout.hpp"
 #include "../material/Material.hpp"
 #include "../world/WorldManager.hpp"
+#include "../MemoryManager.hpp"
+#include <algorithm>
 
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
@@ -55,6 +58,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	auto chunkPos = chunk->getChunkPos();
 	auto worldSet = worldManager_->getWorldDescriptorSetLayout();
 	VkDescriptorSet sets[] = { worldSet->get() };
+	std::vector<VkBuffer> instanceInfos;
+	std::vector<std::shared_ptr<const CubA4::render::engine::IMemoryPart>> memoryParts;
 
 	for (std::size_t idx = 0; idx < usedBlocks.size(); idx++)
 	{
@@ -67,6 +72,33 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		auto pipeline = renderMaterialLayout->getPipeline();
 
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
+		const uint32_t blocksSize = static_cast<uint32_t>(blockChunkPositions.size()) * sizeof(CubA4::mod::world::BlockInChunkPos);
+		
+		VkBufferCreateInfo instanceBufferInfo = {};
+		VkBuffer instanceInfo = {};
+		instanceBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		instanceBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+		instanceBufferInfo.size = blocksSize;
+		auto resultInstanceBufferCreate = vkCreateBuffer(device_->getDevice(), &instanceBufferInfo, nullptr, &instanceInfo);
+		if (resultInstanceBufferCreate != VK_SUCCESS)
+		{
+			// TODO: [OOKAMI] Exception, etc
+			continue;
+		}
+		instanceInfos.push_back(instanceInfo);
+		VkMemoryRequirements req;
+		vkGetBufferMemoryRequirements(device_->getDevice(), instanceInfo, &req);
+
+		auto part = memManager_->allocatePart(req.size, req.alignment, req.memoryTypeBits);
+		vkBindBufferMemory(device_->getDevice(), instanceInfo, part->getMemory()->getMemory(), part->getOffset());
+		memoryParts.push_back(part);
+
+		if (blocksSize < 65536)
+			memManager_->updateBuffer(blockChunkPositions.data(), instanceInfo, 0, blocksSize);
+		else
+		{
+			//TODO: [OOKMAI] Написать копировалку
+		}
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		/////////////////////////////////////////////////
@@ -76,6 +108,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, 1, sets, 0, nullptr);
 		
 		renderModel->bind(cmdBuffer);
+		const VkDeviceSize offset = 0;
+		vkCmdBindVertexBuffers(cmdBuffer, 1, 1, &instanceInfo, &offset);
 		
 		vkCmdDrawIndexed(cmdBuffer,
 			renderModel->getIndexCount(), static_cast<uint32_t>(blockChunkPositions.size()),
@@ -84,8 +118,10 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkEndCommandBuffer(cmdBuffer);
 	}
 
-	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), buffers]()
+	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), buffers, instanceInfos, memoryParts]()
 	{
+		for (auto instanceInfo : instanceInfos)
+			vkDestroyBuffer(dev->getDevice(), instanceInfo, nullptr);
 		decltype(poolWrapper) lock;
 		do
 		{

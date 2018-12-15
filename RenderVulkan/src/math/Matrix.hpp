@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <cmath>
-#include <type_traits>
+#include <string.h>
 
 namespace CubA4
 {

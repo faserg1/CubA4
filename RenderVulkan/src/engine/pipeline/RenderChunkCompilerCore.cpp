@@ -1,15 +1,19 @@
 #include "./RenderChunkCompilerCore.hpp"
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/DebugMarker.hpp"
+#include <world/IChunk.hpp>
+#include "../MemoryManager.hpp"
 #include <algorithm>
 #include <string>
+#include <cmath>
+using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
 constexpr const unsigned short commandPoolsCount = 64;
 
 RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> device) :
-	device_(device)
+	device_(device), memManager_(std::make_shared<MemoryManager>(device))
 {
 	initCommandPools();
 }
@@ -25,7 +29,6 @@ void RenderChunkCompilerCore::initCommandPools()
 	for (unsigned short i = 0; i < commandPoolsCount; i++)
 		commandPools_.push_back(std::make_shared<CommandPool>(device_, 0));
 }
-
 
 std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::lockCommandPool()
 {

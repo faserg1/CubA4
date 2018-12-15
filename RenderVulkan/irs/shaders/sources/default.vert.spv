@@ -1,41 +1,54 @@
 OpCapability Shader
+OpCapability Int64
 OpMemoryModel Logical Simple
-OpEntryPoint Vertex %main "main" %inPos %outPos
+OpEntryPoint Vertex %main "main" %inPos %inPosInstance %outPos
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
 OpName %matricies "matricies"
 OpName %type_matrix_struct "MatrixStruct"
-OpMemberName %type_matrix_struct 0 "world"
+OpMemberName %type_matrix_struct 0 "view_global_pos"
 OpMemberName %type_matrix_struct 1 "view"
 OpMemberName %type_matrix_struct 2 "projection"
+
+OpName %chunk_pos "chunk_pos"
+
+OpName %inPos "input_vertex"
+OpName %inPosInstance "input_intance_position"
+OpName %outPos "output_vertex"
 
 ; !!!!!!!!!!! decorations
 OpDecorate %inPos Binding 0
 OpDecorate %inPos Location 0
+OpDecorate %inPosInstance Binding 1
+OpDecorate %inPosInstance Location 1
 OpDecorate %outPos BuiltIn Position
 
 OpDecorate %type_matrix_struct Block
 OpMemberDecorate %type_matrix_struct 0 Offset 0
-OpMemberDecorate %type_matrix_struct 1 Offset 64
-OpMemberDecorate %type_matrix_struct 2 Offset 128
-OpMemberDecorate %type_matrix_struct 0 MatrixStride 16
+OpMemberDecorate %type_matrix_struct 1 Offset 32 ;
+OpMemberDecorate %type_matrix_struct 2 Offset 96 ; 64 + 32
+
 OpMemberDecorate %type_matrix_struct 1 MatrixStride	16
 OpMemberDecorate %type_matrix_struct 2 MatrixStride 16
 
 OpDecorate %matricies DescriptorSet 0
 OpDecorate %matricies Binding 0
 
+OpDecorate %chunk_pos Offset 0
+
 ; !!!!!!!!!!! types
 %type_void = OpTypeVoid ; void
 %type_uint_32 = OpTypeInt 32 0 ; int 32 unsigned
 %type_float_32 = OpTypeFloat 32 ; float
+%type_int_64 = OpTypeInt 64 1 ; int 64 signed
 
 %func_void = OpTypeFunction %type_void ; void ()
 
+%type_vec3_int_64 = OpTypeVector %type_int_64 3 ; int64 x3
 %type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
 %type_mat4x4_float_32 = OpTypeMatrix %type_vec4_float_32 4 ; float 4x4
-%type_matrix_struct = OpTypeStruct %type_mat4x4_float_32 %type_mat4x4_float_32 %type_mat4x4_float_32 ;struct: world view projection
+%type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ;struct: world view projection
 
 ; !!!!!!!!!!! pointers
 
@@ -46,11 +59,15 @@ OpDecorate %matricies Binding 0
 ; uniform
 %p_uniform_struct = OpTypePointer Uniform %type_matrix_struct
 %p_mat4x4_float_32_uniform = OpTypePointer Uniform %type_mat4x4_float_32
+%p_vec3_int64_uniform = OpTypePointer Uniform %type_vec3_int_64
+
+;push constants
+%p_vec3_int64_push = OpTypePointer PushConstant %type_vec3_int_64
 
 ; !!!!!!!!!!! constants
 
 ; Matrix positions
-%world_matrix_pos = OpConstant %type_uint_32 0
+%global_view_pos = OpConstant %type_uint_32 0
 %view_matrix_pos = OpConstant %type_uint_32 1
 %projection_matrix_pos = OpConstant %type_uint_32 2
 
@@ -58,10 +75,12 @@ OpDecorate %matricies Binding 0
 
 ; vectors
 %inPos = OpVariable %p_vec4_float_32_in Input ; input float
+%inPosInstance = OpVariable %p_vec4_float_32_in Input ; input float
 %outPos = OpVariable %p_vec4_float_32_out Output ; output float
 
 ; matricies
 %matricies = OpVariable %p_uniform_struct Uniform
+%chunk_pos = OpVariable %p_vec3_int64_push PushConstant
 
 ; !!!!!!!!!!! program
 
@@ -71,19 +90,31 @@ OpDecorate %matricies Binding 0
 
 ; load matricies
 
-%world_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %world_matrix_pos
+%global_view = OpAccessChain %p_vec3_int64_uniform %matricies %global_view_pos
 %view_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %view_matrix_pos
 %projection_matrix = OpAccessChain %p_mat4x4_float_32_uniform %matricies %projection_matrix_pos
 
-%loaded_matrix_world = OpLoad %type_mat4x4_float_32 %world_matrix
+%loaded_global_view = OpLoad %type_vec3_int_64 %global_view
 %loaded_matrix_view = OpLoad %type_mat4x4_float_32 %view_matrix
 %loaded_matrix_projection = OpLoad %type_mat4x4_float_32 %projection_matrix
 
 ; load vertex
 
 %loaded_vertex = OpLoad %type_vec4_float_32 %inPos ; load vertex position
+%loaded_instance_position = OpLoad %type_vec4_float_32 %inPosInstance
+
+; load push constant
+
+%loaded_chunk_pos = OpLoad %type_vec3_int_64 %chunk_pos
 
 ; math
+
+; Вычисление разницы позицый между камерой и текущим чанком
+%chunk_from_view = OpISub %type_vec3_int_64 %loaded_chunk_pos %loaded_global_view
+; Конвертируем в float
+%chunk_from_view_f = OpConvertSToF %type_vec4_float_32 %chunk_from_view
+; Перемещаем вершину к чанку
+%moved_vertex = OpFAdd %type_vec4_float_32 %loaded_vertex %chunk_from_view_f
 
 ; OpStore %outPos %done_vertex
 

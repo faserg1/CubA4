@@ -13,10 +13,14 @@ namespace CubA4
 		namespace vulkan
 		{
 			class Device;
+			class Memory;
 		}
 
 		namespace engine
 		{
+			class MemoryAllocator;
+			class MemoryManager;
+
 			namespace pipeline
 			{
 				class RenderChunkCompilerCore
@@ -30,7 +34,8 @@ namespace CubA4
 					std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> lockCommandPool();
 				protected:
 					const std::shared_ptr<const vulkan::Device> device_;
-				private:
+					const std::shared_ptr<MemoryManager> memManager_;
+				private:					
 					std::vector<std::shared_ptr<vulkan::CommandPool>> commandPools_;
 				private:
 					void initCommandPools();
