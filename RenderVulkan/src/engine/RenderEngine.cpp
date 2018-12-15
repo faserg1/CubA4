@@ -26,7 +26,6 @@ VulkanRenderEngine::VulkanRenderEngine(
 	RenderEngineCore(info, core),
 	running_(false)
 {
-	
 }
 
 VulkanRenderEngine::~VulkanRenderEngine()

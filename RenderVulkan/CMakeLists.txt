@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.12)
 link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
+set(RenderVulkanSourceMathDir ${RenderVulkanSourceDir}/math)
 set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
@@ -11,6 +12,11 @@ set(RenderVulkanSourceEnginePipelineDir ${RenderVulkanSourceEngineDir}/pipeline)
 set(RenderVulkanSourceEngineWorldDir ${RenderVulkanSourceEngineDir}/world)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanHeaderMath
+	${RenderVulkanSourceMathDir}/Matrix.hpp
+	${RenderVulkanSourceMathDir}/Vector.hpp
+	${RenderVulkanSourceMathDir}/Math.hpp
+)
 set(RenderVulkanHeaderEnginePipeline
 	${RenderVulkanSourceEnginePipelineDir}/IRenderEnginePipelineSubscriber.hpp
 	${RenderVulkanSourceEnginePipelineDir}/RenderChunkCompilerCore.hpp
@@ -176,6 +182,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderVulkanUtil}
 	${RenderVulkanHeaderEngineWorld}
 	${RenderVulkanHeaderEnginePipeline}
+	${RenderVulkanHeaderMath}
 )
 set(RenderVulkanSources
 	${RenderVulkanSourceDir}/VulkanInfo.cpp
@@ -212,6 +219,7 @@ source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}pipeline" FIL
 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
+source_group("${SOURCE_GROUP_HEADER_START}math" FILES ${RenderVulkanHeaderMath})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 

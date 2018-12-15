@@ -68,6 +68,8 @@ namespace CubA4
 
 			void loop();
 
+			void doSomeTestThings();
+		private:
 			bool running_;
 			std::shared_ptr<CubA4::core::ICore> core_;
 			std::shared_ptr<CubA4::core::info::IApplicationInfo> info_;

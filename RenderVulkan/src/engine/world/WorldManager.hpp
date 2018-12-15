@@ -18,6 +18,8 @@ namespace CubA4
 		namespace engine
 		{
 			class ResourceManager;
+			class MemoryAllocator;
+			class MemoryManager;
 
 			namespace world
 			{
@@ -28,13 +30,13 @@ namespace CubA4
 					explicit WorldManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<ResourceManager> resourceManager);
 					~WorldManager();
 
-					void setCameraPosition(double x, double y, double z) override;
+					void setCameraPosition(CubA4::mod::world::ChunkPos globalPos, float x, float y, float z) override;
 					/**
 					\param roll Вращение вокруг оси x
 					\param pitch Вращение вокруг оси y
 					\param yaw Вращение вокруг оси z
 					**/
-					void setCameraRotation(double roll, double pitch, double yaw) override;
+					void setCameraRotation(float roll, float pitch, float yaw) override;
 					void setFieldOfView(float degrees) override;
 
 					vulkan::sVkDescriptorSet getWorldDescriptorSetLayout() const;
@@ -42,12 +44,35 @@ namespace CubA4
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<ResourceManager> resourceManager_;
+					const std::shared_ptr<MemoryAllocator> memoryAllocator_;
+					const std::shared_ptr<MemoryManager> memoryManager_;
 
 					vulkan::sVkDescriptorPool pool_;
 					vulkan::sVkDescriptorSetLayout layout_;
 					vulkan::sVkDescriptorSet worldSet_;
+					vulkan::sVkBuffer worldBuffer_;
+
+					struct
+					{
+						CubA4::mod::world::ChunkPos viewGlobalPos;
+						float viewX;
+						float viewY;
+						float viewZ;
+
+						float viewRoll;
+						float viewPitch;
+						float viewYaw;
+
+						float projectionFov;
+						float projectionAspect;
+					} worldData_;
 				private:
 					void allocateSets();
+					void allocateBuffers();
+					void writeSets();
+
+					void updateViewMatrix();
+					void updateProjectionMatrix();
 				};
 			}
 		}

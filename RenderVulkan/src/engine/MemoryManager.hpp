@@ -26,6 +26,7 @@ namespace CubA4
 				~MemoryManager();
 
 				std::shared_future<bool> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
+				std::shared_future<bool> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size);
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;

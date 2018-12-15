@@ -43,6 +43,28 @@ std::shared_future<bool> MemoryManager::copyBufferToBuffer(VkBuffer src, VkBuffe
 	return submitCmdBuffer(copyCmd, bufferCopyDone);
 }
 
+std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size)
+{
+	VkCommandBuffer updateCmd;
+	VkFence bufferUpdateDone;
+	if (!allocateCmdBuffer(updateCmd, bufferUpdateDone))
+	{
+		return {};
+	}
+
+	device_->getMarker().setName(bufferUpdateDone, "Fence buffer update awaiter");
+	device_->getMarker().setName(updateCmd, "Command buffer for update buffer");
+
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+	vkBeginCommandBuffer(updateCmd, &beginInfo);
+	vkCmdUpdateBuffer(updateCmd, dst, offset, size, data);
+	vkEndCommandBuffer(updateCmd);
+
+	return submitCmdBuffer(updateCmd, bufferUpdateDone);
+}
+
 bool MemoryManager::allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence)
 {
 	VkFenceCreateInfo fenceInfo = {};

@@ -19,6 +19,12 @@
 
 #include <system/IStartup.hpp>
 
+
+//TODO: [OOKAMI] Загловки для теста
+#include <engine/IRenderManager.hpp>
+#include <engine/world/IWorldManager.hpp>
+#include <ctime>
+
 using namespace CubA4::app;
 using namespace CubA4::core::logging;
 
@@ -92,6 +98,12 @@ void AppMain::run()
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->run();
 	core_->getStartup()->run();
+
+	//TODO: [OOKAMI] Убрать тестовые вещи
+	auto rm = getRenderManager();
+	auto wm = rm->getWorldManager();
+	wm->setFieldOfView(60);
+	wm->setCameraPosition({}, 5, 5, 0);
 }
 
 void AppMain::stop()
@@ -141,11 +153,20 @@ void AppMain::shutdownGame()
 	renderEngine->setGame({});
 }
 
+void AppMain::doSomeTestThings()
+{
+	auto rm = getRenderManager();
+	auto wm = rm->getWorldManager();
+	double cl = clock();
+	wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
+}
+
 void AppMain::loop()
 {
 	SDL_Event event;
 	while (running_)
 	{
+		doSomeTestThings();
 		if (SDL_WaitEvent(&event))
 		{
 			switch (event.type)

@@ -33,10 +33,10 @@ std::vector<unsigned short> BlockModel::getFaceIndices() const
 	return {
 		4, 0, 1, 2, 3, //up
 		4, 4, 5, 6, 7, //down
-		4, 0, 3, 4, 7, //front
-		4, 1, 2, 5, 6, //back
-		4, 0, 1, 4, 5, //right
-		4, 2, 3, 6, 7 //left
+		4, 0, 3, 7, 4, //front
+		4, 1, 2, 6, 5, //back
+		4, 0, 1, 5, 4, //right
+		4, 2, 3, 7, 6 //left
 	};
 }
 
