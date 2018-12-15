@@ -5,6 +5,7 @@
 #include <memory>
 #include <future>
 #include <vulkan/vulkan.h>
+#include <vector>
 
 namespace CubA4
 {
