@@ -72,7 +72,12 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		auto pipeline = renderMaterialLayout->getPipeline();
 
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
-		const uint32_t blocksSize = static_cast<uint32_t>(blockChunkPositions.size()) * sizeof(CubA4::mod::world::BlockInChunkPos);
+		std::vector<CubA4::mod::world::BasePos<float>> positions(blockChunkPositions.size());
+		std::transform(blockChunkPositions.begin(), blockChunkPositions.end(), positions.begin(), [](CubA4::mod::world::BlockInChunkPos &pos) -> CubA4::mod::world::BasePos<float>
+		{
+			return {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)};
+		});
+		const uint32_t blocksSize = static_cast<uint32_t>(positions.size()) * sizeof(CubA4::mod::world::BasePos<float>);
 		
 		VkBufferCreateInfo instanceBufferInfo = {};
 		VkBuffer instanceInfo = {};
@@ -94,7 +99,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		memoryParts.push_back(part);
 
 		if (blocksSize < 65536)
-			memManager_->updateBuffer(blockChunkPositions.data(), instanceInfo, 0, blocksSize);
+			memManager_->updateBuffer(positions.data(), instanceInfo, 0, blocksSize);
 		else
 		{
 			//TODO: [OOKMAI] Написать копировалку

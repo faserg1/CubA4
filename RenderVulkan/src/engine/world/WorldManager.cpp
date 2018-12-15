@@ -46,6 +46,7 @@ void WorldManager::setCameraRotation(float roll, float pitch, float yaw)
 void WorldManager::setFieldOfView(float degrees)
 {
 	worldData_.projectionFov = static_cast<float>(degrees * math::Pi / 360);
+	worldData_.projectionAspect = 1024.f / 720.f;
 	updateProjectionMatrix();
 }
 

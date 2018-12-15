@@ -103,7 +103,7 @@ void AppMain::run()
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	wm->setFieldOfView(60);
-	wm->setCameraPosition({}, 5, 5, 0);
+	wm->setCameraPosition({}, 5, 5, 5);
 }
 
 void AppMain::stop()

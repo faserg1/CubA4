@@ -139,7 +139,7 @@ void PipelineBuilder::prepareVertexInput()
 	const uint16_t posSize = sizeof(float) * 3;
 	const uint16_t vertexSize = posSize;
 
-	const uint16_t posChunkSize = sizeof(CubA4::mod::world::BlockInChunkPos);
+	const uint16_t posChunkSize = sizeof(float) * 3;
 	const uint16_t instanceInfoSize = posChunkSize;
 
 	// Bindings
@@ -175,7 +175,7 @@ void PipelineBuilder::prepareVertexInput()
 		{
 			1, //location
 			1, //binding
-			VK_FORMAT_R8G8B8_UINT, //format,
+			VK_FORMAT_R32G32B32_SFLOAT, //format,
 			0 //offset
 		}
 	);
