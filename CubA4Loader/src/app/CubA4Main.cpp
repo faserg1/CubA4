@@ -103,7 +103,7 @@ void AppMain::run()
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	wm->setFieldOfView(60);
-	wm->setCameraPosition({}, 5, 5, 5);
+	wm->setCameraPosition({}, 10, 10, -10);
 }
 
 void AppMain::stop()
@@ -155,10 +155,22 @@ void AppMain::shutdownGame()
 
 void AppMain::doSomeTestThings()
 {
+	static float l = -10;
+	const float speed = 0.1;
+	static bool up = true;
+	if (up)
+		l += speed;
+	else
+		l -= 0.1;
+	if (l > 10)
+		up = false;
+	else if (l < -1)
+		up = true;
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	double cl = clock();
-	wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
+	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
+	wm->setCameraPosition({}, -10, 0, l);
 }
 
 void AppMain::loop()

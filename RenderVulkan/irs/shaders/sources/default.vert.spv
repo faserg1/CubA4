@@ -31,6 +31,8 @@ OpMemberDecorate %type_matrix_struct 2 Offset 96 ; 64 + 32
 
 OpMemberDecorate %type_matrix_struct 1 MatrixStride	16
 OpMemberDecorate %type_matrix_struct 2 MatrixStride 16
+OpMemberDecorate %type_matrix_struct 1 RowMajor
+OpMemberDecorate %type_matrix_struct 2 RowMajor
 
 OpDecorate %matricies DescriptorSet 0
 OpDecorate %matricies Binding 0
@@ -47,6 +49,7 @@ OpDecorate %chunk_pos Offset 0
 
 %type_vec3_int_64 = OpTypeVector %type_int_64 3 ; int64 x3
 %type_vec4_int_64 = OpTypeVector %type_int_64 4 ; int64 x4
+%type_vec3_float_32 = OpTypeVector %type_float_32 3 ; float x4
 %type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
 %type_mat4x4_float_32 = OpTypeMatrix %type_vec4_float_32 4 ; float 4x4
 %type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ;struct: world view projection
@@ -55,6 +58,7 @@ OpDecorate %chunk_pos Offset 0
 
 ; vectors 
 %p_vec4_float_32_in = OpTypePointer Input %type_vec4_float_32 ; pointer to input float
+%p_vec3_float_32_in = OpTypePointer Input %type_vec3_float_32 ; pointer to input float
 %p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output float
 
 ; uniform
@@ -75,12 +79,14 @@ OpDecorate %chunk_pos Offset 0
 ; Placeholders
 
 %const_zero_int64 = OpConstant %type_int_64 0
+%const_zero_float32 = OpConstant %type_float_32 0
+%const_one_float32 = OpConstant %type_float_32 1
 
 ; !!!!!!!!!!! vars
 
 ; vectors
-%inPos = OpVariable %p_vec4_float_32_in Input ; input float
-%inPosInstance = OpVariable %p_vec4_float_32_in Input ; input float
+%inPos = OpVariable %p_vec3_float_32_in Input ; input float
+%inPosInstance = OpVariable %p_vec3_float_32_in Input ; input float
 %outPos = OpVariable %p_vec4_float_32_out Output ; output float
 
 ; matricies
@@ -105,8 +111,8 @@ OpDecorate %chunk_pos Offset 0
 
 ; load vertex
 
-%loaded_vertex = OpLoad %type_vec4_float_32 %inPos ; load vertex position
-%loaded_instance_position = OpLoad %type_vec4_float_32 %inPosInstance
+%loaded_vertex = OpLoad %type_vec3_float_32 %inPos ; load vertex position
+%loaded_instance_position = OpLoad %type_vec3_float_32 %inPosInstance
 
 ; load push constant
 
@@ -116,16 +122,17 @@ OpDecorate %chunk_pos Offset 0
 
 ; Вычисление разницы позицый между камерой и текущим чанком
 %chunk_from_view_vec3 = OpISub %type_vec3_int_64 %loaded_chunk_pos %loaded_global_view
-; пересобираем полученную разницу в vec4
-%chunk_from_view_vec4 = OpCompositeConstruct %type_vec4_int_64 %chunk_from_view_vec3 %const_zero_int64
 ; Конвертируем в float
-%chunk_from_view_f = OpConvertSToF %type_vec4_float_32 %chunk_from_view_vec4
+%chunk_from_view_f = OpConvertSToF %type_vec3_float_32 %chunk_from_view_vec3
 ; Перемещаем вершину к инстансу
-%moved_vertex = OpFAdd %type_vec4_float_32 %loaded_vertex %loaded_instance_position
+%moved_vertex = OpFAdd %type_vec3_float_32 %loaded_vertex %loaded_instance_position
 ; Перемещаем вершину к чанку
-%moved_vertex_2 = OpFAdd %type_vec4_float_32 %moved_vertex %chunk_from_view_f
+%moved_vertex_2 = OpFAdd %type_vec3_float_32 %moved_vertex %chunk_from_view_f
 
-%viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %moved_vertex_2 %loaded_matrix_view
+; пересобираем полученную разницу в vec4
+%calculated_vertex = OpCompositeConstruct %type_vec4_float_32 %moved_vertex_2 %const_one_float32
+
+%viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %calculated_vertex %loaded_matrix_view
 %projected_vertex = OpVectorTimesMatrix %type_vec4_float_32 %viewed_vertex %loaded_matrix_projection
 
 OpStore %outPos %projected_vertex

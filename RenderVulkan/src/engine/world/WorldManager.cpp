@@ -132,9 +132,14 @@ void WorldManager::updateViewMatrix()
 	math::Matrix viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
-	math::Math::rotateByZ(viewMatrix, worldData_.viewYaw);
+	viewMatrix = math::Math::lookAtLH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, { 0, 0, -1 });
+
+	/*math::Math::rotateByZ(viewMatrix, worldData_.viewYaw);
 	math::Math::rotateByY(viewMatrix, worldData_.viewPitch);
-	math::Math::translate(viewMatrix, worldData_.viewX, worldData_.viewY, worldData_.viewZ);
+	math::Math::translate(viewMatrix, worldData_.viewX, worldData_.viewY, worldData_.viewZ);*/
+
+	float vMatrix[4][4];
+	memcpy(vMatrix, viewMatrix.data(), sizeof(float) * 16);
 
 	memoryManager_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
 }
@@ -142,9 +147,12 @@ void WorldManager::updateViewMatrix()
 void WorldManager::updateProjectionMatrix()
 {
 	//TODO: [OOKAMI] Set normal aspect ratio
-	auto projection = math::Math::perspectiveLH(worldData_.projectionFov , worldData_.projectionAspect, 0.01, 16 * 32);
+	auto projection = math::Math::perspectiveLH(worldData_.projectionFov, worldData_.projectionAspect, 0.01, 16 * 32);
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;
+
+	float projMatrix[4][4];
+	memcpy(projMatrix, projection.data(), sizeof(float) * 16);
 
 	memoryManager_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }
