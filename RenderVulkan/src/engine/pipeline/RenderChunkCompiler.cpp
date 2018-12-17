@@ -76,7 +76,6 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		VkRect2D scissor = {};
 		scissor.extent.width = 1024;
 		scissor.extent.height = 720;
-		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		VkViewport viewport = {};
 		viewport.x = 0;
@@ -85,7 +84,6 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		viewport.maxDepth = 16 * 32;
 		viewport.width = scissor.extent.width;
 		viewport.height = scissor.extent.height;
-		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
 
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
 		std::vector<CubA4::mod::world::BasePos<float>> positions(blockChunkPositions.size());
@@ -124,6 +122,9 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		/////////////////////////////////////////////////
 		pipeline->bind(cmdBuffer);
+
+		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		vkCmdPushConstants(cmdBuffer, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(chunkPos), &chunkPos);
 		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, 1, sets, 0, nullptr);

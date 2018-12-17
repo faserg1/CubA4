@@ -159,5 +159,6 @@ void VulkanRenderEngine::loop()
 			fps = 0;
 			start = currentClock;
 		}
+		std::this_thread::yield();
 	}
 }
