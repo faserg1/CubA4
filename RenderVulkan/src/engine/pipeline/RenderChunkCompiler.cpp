@@ -80,8 +80,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		VkViewport viewport = {};
 		viewport.x = 0;
 		viewport.y = 0;
-		viewport.minDepth = 0.01;
-		viewport.maxDepth = 16 * 32;
+		viewport.minDepth = 0;
+		viewport.maxDepth = 1;
 		viewport.width = scissor.extent.width;
 		viewport.height = scissor.extent.height;
 

@@ -15,6 +15,7 @@ namespace CubA4
 		namespace vulkan
 		{
 			class Device;
+			class Memory;
 			class Swapchain;
 			class Semaphore;
 			class RenderPass;
@@ -66,6 +67,11 @@ namespace CubA4
 					VkFramebuffer framebuffer;
 					VkImage image;
 					VkImageView imageView;
+
+					std::shared_ptr<vulkan::Memory> depthMemory;
+					VkImage depthImage;
+					VkImageView depthImageView;
+
 					VkCommandBuffer cmdBuffer;
 					std::shared_ptr<const vulkan::Semaphore> renderDoneSemaphore;
 					std::atomic_bool dirty;

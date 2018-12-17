@@ -61,6 +61,28 @@ std::shared_ptr<Memory> MemoryAllocator::allocate(size_t size, MemoryAllocationP
 	return std::make_shared<Memory>(device_, memory, info.allocationSize, props.memoryTypes[info.memoryTypeIndex].propertyFlags, info.memoryTypeIndex);
 }
 
+std::shared_ptr<Memory> MemoryAllocator::allocateAndBind(VkBuffer buffer, MemoryAllocationPrefered preference)
+{
+	VkMemoryRequirements memReq = {};
+	vkGetBufferMemoryRequirements(device_->getDevice(), buffer, &memReq);
+
+	auto mem = allocate(memReq.size, preference, memReq.memoryTypeBits);
+	vkBindBufferMemory(device_->getDevice(), buffer, mem->getMemory(), 0);
+
+	return mem;
+}
+
+std::shared_ptr<Memory> MemoryAllocator::allocateAndBind(VkImage image, MemoryAllocationPrefered preference)
+{
+	VkMemoryRequirements memReq = {};
+	vkGetImageMemoryRequirements(device_->getDevice(), image, &memReq);
+
+	auto mem = allocate(memReq.size, preference, memReq.memoryTypeBits);
+	vkBindImageMemory(device_->getDevice(), image, mem->getMemory(), 0);
+
+	return mem;
+}
+
 static int32_t findProperties(const VkPhysicalDeviceMemoryProperties* pMemoryProperties,
 	uint32_t memoryTypeBitsRequirement,
 	VkMemoryPropertyFlags requiredProperties)

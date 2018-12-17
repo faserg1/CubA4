@@ -35,9 +35,20 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
+	VkAttachmentDescription depthAttachment = {};
+	depthAttachment.format = VK_FORMAT_D32_SFLOAT_S8_UINT;
+	depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
 	std::vector<VkAttachmentDescription> attachments =
 	{
-		colorAttachment
+		colorAttachment,
+		depthAttachment,
 	};
 
 	renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -47,6 +58,10 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 	colorAttachmentReference.attachment = 0;
 	colorAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentReference depthAttachmentReference = {};
+	depthAttachmentReference.attachment = 1;
+	depthAttachmentReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
 	//И так, по началу будем расчитывать на то, что существует один проход рендеринга с одним подпроходом.
 	//В дальнейшем подпроходов может быть больше, к примеру:
 	//Отрисовка атмосферы (кубмап), отрисовка основных объектов, отрисовка скелетонов, где то тут прозрачные объекты, пост обработка
@@ -55,6 +70,7 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 	mainSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	mainSubpass.colorAttachmentCount = 1;
 	mainSubpass.pColorAttachments = &colorAttachmentReference;
+	mainSubpass.pDepthStencilAttachment = &depthAttachmentReference;
 
 	std::vector<VkSubpassDescription> subpasses =
 	{

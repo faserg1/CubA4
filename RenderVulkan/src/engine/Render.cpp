@@ -1,4 +1,5 @@
 #include "./Render.hpp"
+#include "./MemoryAllocator.hpp"
 #include "../vulkan/Device.hpp"
 #include "../vulkan/Swapchain.hpp"
 #include "../vulkan/Semaphore.hpp"
@@ -72,9 +73,13 @@ void Render::record(uint32_t imgIndex)
 	float clrClearFloat[4] = { 0.2f,0.3f,0.4f,0.f };
 	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
+	VkClearValue depthAttachmentsClearValue = {};
+	
+
 	std::vector<VkClearValue> clearValues = 
 	{
-		colorAttachmentClearValue
+		colorAttachmentClearValue,
+		depthAttachmentsClearValue
 	};
 	renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 	renderPassBeginInfo.pClearValues = clearValues.data();
@@ -200,6 +205,9 @@ void Render::createFramebuffers()
 	vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, cmdBuffers.data());
 
 	uint32_t imgIdx = 0;
+
+	MemoryAllocator allocator(device_);
+
 	for (auto &framebufferData : framebuffersData_)
 	{
 		framebufferData.renderDoneSemaphore = Semaphore::create(device_);
@@ -213,6 +221,7 @@ void Render::createFramebuffers()
 		if (vkCreateFence(device_->getDevice(), &fenceCreateInfo, nullptr, &framebufferData.fence) != VK_SUCCESS)
 		{
 			//TODO: [OOKAMI] Exception, etc
+			return;
 		}
 
 		//create image view
@@ -228,14 +237,59 @@ void Render::createFramebuffers()
 		if (vkCreateImageView(device_->getDevice(), &imageViewCreateInfo, nullptr, &framebufferData.imageView) != VK_SUCCESS)
 		{
 			//TODO: [OOKAMI] Exception, etc
+			return;
 		}
 
+		// TODO: [OOKAMI] Хранить формат в едином месте
+		VkImageCreateInfo depthInfo = {};
+		depthInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		depthInfo.format = VK_FORMAT_D32_SFLOAT_S8_UINT;
+		depthInfo.imageType = VK_IMAGE_TYPE_2D;
+		depthInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		depthInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		depthInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+		depthInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+		depthInfo.extent.width = swapchain_->getResolution().width;
+		depthInfo.extent.height = swapchain_->getResolution().height;
+		depthInfo.extent.depth = 1;
+		depthInfo.arrayLayers = 1;
+		depthInfo.mipLevels = 1;
+		
+		if (vkCreateImage(device_->getDevice(), &depthInfo, nullptr, &framebufferData.depthImage) != VK_SUCCESS)
+		{
+			//TODO: [OOKAMI] Exception, etc
+			return;
+		}
+
+		framebufferData.depthMemory = allocator.allocateAndBind(framebufferData.depthImage, MemoryAllocationPrefered::Device);
+
+		//create depth image view
+		VkImageViewCreateInfo depthImageViewCreateInfo = {};
+		depthImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		depthImageViewCreateInfo.image = framebufferData.depthImage;
+		depthImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		depthImageViewCreateInfo.format = depthInfo.format;
+		depthImageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+		depthImageViewCreateInfo.subresourceRange.layerCount = 1;
+		depthImageViewCreateInfo.subresourceRange.levelCount = 1;
+
+		if (vkCreateImageView(device_->getDevice(), &depthImageViewCreateInfo, nullptr, &framebufferData.depthImageView) != VK_SUCCESS)
+		{
+			//TODO: [OOKAMI] Exception, etc
+			return;
+		}
+
+		
+
 		//create framebuffer
+
+		VkImageView attachments[] = { framebufferData.imageView, framebufferData.depthImageView};
+
 		VkFramebufferCreateInfo framebufferCreateInfo = {};
 		framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferCreateInfo.renderPass = renderPass_->getRenderPass();
-		framebufferCreateInfo.attachmentCount = 1;
-		framebufferCreateInfo.pAttachments = &framebufferData.imageView;
+		framebufferCreateInfo.attachmentCount = 2;
+		framebufferCreateInfo.pAttachments = attachments;
 		framebufferCreateInfo.layers = 1;
 		framebufferCreateInfo.width = swapchain_->getResolution().width;
 		framebufferCreateInfo.height = swapchain_->getResolution().height;
@@ -243,6 +297,7 @@ void Render::createFramebuffers()
 		if (vkCreateFramebuffer(device_->getDevice(), &framebufferCreateInfo, nullptr, &framebufferData.framebuffer) != VK_SUCCESS)
 		{
 			//TODO: [OOKAMI] Exception, etc
+			return;
 		}
 
 		//index increment
@@ -257,6 +312,15 @@ void Render::destroyFramebuffers()
 		//destroy framebuffer
 		vkDestroyFramebuffer(device_->getDevice(), framebufferData.framebuffer, nullptr);
 
+		//destroy depth image view
+		vkDestroyImageView(device_->getDevice(), framebufferData.depthImageView, nullptr);
+
+		//destroy depth image
+		vkDestroyImage(device_->getDevice(), framebufferData.depthImage, nullptr);
+
+		//destroy depth image memory
+		framebufferData.depthMemory.reset();
+
 		//destroy image view
 		vkDestroyImageView(device_->getDevice(), framebufferData.imageView, nullptr);
 
@@ -264,6 +328,7 @@ void Render::destroyFramebuffers()
 		vkDestroyFence(device_->getDevice(), framebufferData.fence, nullptr);
 	}
 	vkResetCommandPool(device_->getDevice(), mainCommandPool_, VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+	framebuffersData_.clear();
 }
 
 void Render::chunkCompiled(std::shared_ptr<const CubA4::render::engine::world::RenderChunk> renderChunk)

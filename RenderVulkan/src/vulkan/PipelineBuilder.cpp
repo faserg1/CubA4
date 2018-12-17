@@ -213,7 +213,7 @@ void PipelineBuilder::prepareDepthStencil()
 	depthStencilInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	depthStencilInfo_.depthTestEnable = VK_TRUE;
 	depthStencilInfo_.depthWriteEnable = VK_TRUE;
-	depthStencilInfo_.depthCompareOp = VK_COMPARE_OP_LESS;
+	depthStencilInfo_.depthCompareOp = VK_COMPARE_OP_GREATER;
 }
 
 void PipelineBuilder::prepareColorBlending()

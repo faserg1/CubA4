@@ -2,6 +2,7 @@
 #define RENDERVULKAN_MEMORYALLOCATOR_HPP
 
 #include <memory>
+#include <vulkan/vulkan.h>
 
 namespace CubA4
 {
@@ -28,6 +29,8 @@ namespace CubA4
 				~MemoryAllocator();
 
 				std::shared_ptr<vulkan::Memory> allocate(size_t size, MemoryAllocationPrefered preference, uint32_t supportedTypes);
+				std::shared_ptr<vulkan::Memory> allocateAndBind(VkBuffer buffer, MemoryAllocationPrefered preference);
+				std::shared_ptr<vulkan::Memory> allocateAndBind(VkImage image, MemoryAllocationPrefered preference);
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
