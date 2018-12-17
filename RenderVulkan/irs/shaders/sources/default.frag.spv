@@ -1,9 +1,10 @@
 OpCapability Shader
 OpMemoryModel Logical Simple
-OpEntryPoint Fragment %main "main"
+OpEntryPoint Fragment %main "main" %out 
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
+OpName %out "out"
 
 ; !!!!!!!!!!! decorations
 
@@ -11,11 +12,31 @@ OpName %main "main"
 %type_void = OpTypeVoid ; void
 %func_void = OpTypeFunction %type_void ; void ()
 
+%type_float_32 = OpTypeFloat 32 ; float
+%type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
+
+; !!!!!!!!!!! constants
+
+%const_one = OpConstant %type_float_32 1
+%const_zero = OpConstant %type_float_32 0
+
+%constant_pink = OpConstantComposite %type_vec4_float_32 %const_one %const_zero  %const_one %const_zero
+
+; !!!!!!!!!!! pointers
+
+%p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output
+
+; !!!!!!!!!!! variables
+
+%out = OpVariable %p_vec4_float_32_out Output
+
 ; !!!!!!!!!!! program
 
 %main = OpFunction %type_void None %func_void ;main
 %main_begin = OpLabel
 ; !!!! main function block going here
+
+OpStore %out %constant_pink
 
 ; !!!! main function block done here
 OpReturn

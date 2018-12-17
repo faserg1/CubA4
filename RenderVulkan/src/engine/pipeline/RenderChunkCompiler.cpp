@@ -71,6 +71,22 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		auto renderMaterialLayout = renderMaterial->getLayout();
 		auto pipeline = renderMaterialLayout->getPipeline();
 
+		// TODO: [OOKAMI] Передать реальные данные
+
+		VkRect2D scissor = {};
+		scissor.extent.width = 1024;
+		scissor.extent.height = 720;
+		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
+
+		VkViewport viewport = {};
+		viewport.x = 0;
+		viewport.y = 0;
+		viewport.minDepth = 0.01;
+		viewport.maxDepth = 16 * 32;
+		viewport.width = scissor.extent.width;
+		viewport.height = scissor.extent.height;
+		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
 		std::vector<CubA4::mod::world::BasePos<float>> positions(blockChunkPositions.size());
 		std::transform(blockChunkPositions.begin(), blockChunkPositions.end(), positions.begin(), [](CubA4::mod::world::BlockInChunkPos &pos) -> CubA4::mod::world::BasePos<float>

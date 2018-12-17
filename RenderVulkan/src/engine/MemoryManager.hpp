@@ -43,6 +43,13 @@ namespace CubA4
 				virtual ~IMemoryPart() = default;
 			};
 
+			enum class BufferBarrierType
+			{
+				None,
+				Vertex,
+				Uniform,
+			};
+
 			class MemoryAllocator;
 			class MemoryManager
 			{
@@ -51,7 +58,7 @@ namespace CubA4
 				~MemoryManager();
 
 				std::shared_future<bool> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
-				std::shared_future<bool> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size);
+				std::shared_future<bool> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType = BufferBarrierType::None);
 
 				uint32_t calcAlign(uint32_t size, uint32_t align);
 

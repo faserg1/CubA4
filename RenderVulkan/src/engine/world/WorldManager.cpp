@@ -128,7 +128,7 @@ void WorldManager::writeSets()
 
 void WorldManager::updateViewMatrix()
 {
-	memoryManager_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos));
+	memoryManager_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos), BufferBarrierType::Uniform);
 	math::Matrix viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
@@ -136,7 +136,7 @@ void WorldManager::updateViewMatrix()
 	math::Math::rotateByY(viewMatrix, worldData_.viewPitch);
 	math::Math::translate(viewMatrix, worldData_.viewX, worldData_.viewY, worldData_.viewZ);
 
-	memoryManager_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize);
+	memoryManager_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
 }
 
 void WorldManager::updateProjectionMatrix()
@@ -146,5 +146,5 @@ void WorldManager::updateProjectionMatrix()
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
-	memoryManager_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize);
+	memoryManager_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }

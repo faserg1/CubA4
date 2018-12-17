@@ -52,7 +52,10 @@ void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Se
 	info.waitSemaphoreCount = static_cast<uint32_t>(awaitVkSemaphores.size());
 	info.pWaitSemaphores = awaitVkSemaphores.data();
 	info.pImageIndices = &imageIndex;
-	if (vkQueuePresentKHR(device_->getQueue(), &info) != VK_SUCCESS)
+
+	auto q = device_->getQueue();
+
+	if (vkQueuePresentKHR(q->get(), &info) != VK_SUCCESS)
 	{
 		//TODO: [OOKAMI] Разберись с этим...
 	}

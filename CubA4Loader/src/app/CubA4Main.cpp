@@ -167,7 +167,7 @@ void AppMain::loop()
 	while (running_)
 	{
 		doSomeTestThings();
-		if (SDL_WaitEvent(&event))
+		if (SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{

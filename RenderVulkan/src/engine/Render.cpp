@@ -24,7 +24,7 @@ Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapc
 
 Render::~Render()
 {
-	vkQueueWaitIdle(device_->getQueue());
+	vkQueueWaitIdle(device_->getQueue()->get());
 	destroyFramebuffers();
 	destroyRenderPass();
 	destroyMainCommandPool();
@@ -138,7 +138,8 @@ std::shared_ptr<const Semaphore> Render::send(uint32_t imgIndex, std::shared_ptr
 
 	bool needUpdate = framebuffersData_[imgIndex].dirty && !framebuffersData_[imgIndex].needUpdate;
 
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo,
+	auto q = device_->getQueue();
+	vkQueueSubmit(q->get(), 1, &submitInfo,
 		(needUpdate ? framebuffersData_[imgIndex].fence : VK_NULL_HANDLE));
 
 	if (needUpdate)

@@ -203,7 +203,7 @@ std::shared_future<bool> MemoryManager::copyBufferToBuffer(VkBuffer src, VkBuffe
 	return submitCmdBuffer(copyCmd, bufferCopyDone);
 }
 
-std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size)
+std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType)
 {
 	VkCommandBuffer updateCmd;
 	VkFence bufferUpdateDone;
@@ -215,11 +215,56 @@ std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, V
 	device_->getMarker().setName(bufferUpdateDone, "Fence buffer update awaiter");
 	device_->getMarker().setName(updateCmd, "Command buffer for update buffer");
 
+	// TODO: [OOKAMI] Барьер скорее всего нужен только на выход, чтобы была видна запись.
+
+	VkBufferMemoryBarrier bufferBarier = {};
+	bufferBarier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+	bufferBarier.buffer = dst;
+	bufferBarier.size = size;
+	bufferBarier.offset = offset;
+
+	auto &in = bufferBarier, out = bufferBarier;
+	VkPipelineStageFlags outFlags = {};
+
+	in.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	out.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	
+	switch (bufferBarrierType)
+	{
+	case CubA4::render::engine::BufferBarrierType::Vertex:
+		in.srcAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+		out.dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+		outFlags = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+		break;
+	case CubA4::render::engine::BufferBarrierType::Uniform:
+		in.srcAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+		out.dstAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+		outFlags = VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT; // before the all shaders stages
+		break;
+	default:
+		break;
+	}
+
 	VkCommandBufferBeginInfo beginInfo = {};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 	vkBeginCommandBuffer(updateCmd, &beginInfo);
+	if (bufferBarrierType != BufferBarrierType::None)
+	{
+		/*vkCmdPipelineBarrier(updateCmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+			0, nullptr,
+			1, &in,
+			0, nullptr);*/
+	}
 	vkCmdUpdateBuffer(updateCmd, dst, offset, size, data);
+	if (bufferBarrierType != BufferBarrierType::None)
+	{
+		vkCmdPipelineBarrier(updateCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, outFlags, 0,
+			0, nullptr,
+			1, &out,
+			0, nullptr);
+	}
+		
 	vkEndCommandBuffer(updateCmd);
 
 	return submitCmdBuffer(updateCmd, bufferUpdateDone);
@@ -278,8 +323,8 @@ std::shared_future<bool> MemoryManager::submitCmdBuffer(VkCommandBuffer cmdBuffe
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &cmdBuffer;
-
-	vkQueueSubmit(device_->getQueue(), 1, &submitInfo, fence);
+	auto q = device_->getQueue();
+	vkQueueSubmit(q->get(), 1, &submitInfo, fence);
 
 	return std::async(std::launch::async, [=]() -> bool
 	{

@@ -1,7 +1,9 @@
 #ifndef RENDERVULKAN_DEVICE_HPP 
-#define RENDERVULKAN_DEVICE_HPP 
-#include <vulkan/vulkan.h>
+#define RENDERVULKAN_DEVICE_HPP
 
+#include <vulkan/vulkan.h>
+#include <memory>
+#include <atomic>
 #include "DebugMarker.hpp"
 
 namespace CubA4
@@ -12,6 +14,15 @@ namespace CubA4
 		{
 			class DebugMarker;
 
+			class IQueue
+			{
+			public:
+				virtual VkQueue get() const = 0;
+				virtual ~IQueue() = default;
+			protected:
+				IQueue() = default;
+			};
+
 			class Device
 			{
 			public:
@@ -20,7 +31,8 @@ namespace CubA4
 
 				VkDevice getDevice() const;
 				VkPhysicalDevice getPhysicalDevice() const;
-				VkQueue getQueue() const;
+				std::unique_ptr<IQueue> getQueue() const;
+				//VkQueue getQueue() const;
 
 				DebugMarker &getMarker() const;
 			protected:
@@ -28,6 +40,7 @@ namespace CubA4
 				VkDevice device_;
 				VkPhysicalDevice physicalDevice_;
 				VkQueue queue_;
+				mutable std::atomic_bool queueLock_;
 				mutable DebugMarker marker_;
 			};
 		}
