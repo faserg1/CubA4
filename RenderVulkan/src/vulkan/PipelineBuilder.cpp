@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <vulkan/vulkan.h>
+#include <string.h>
 
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::material;
@@ -109,6 +110,21 @@ void PipelineBuilder::fillPipelineInfo(PipelineInfo &pipelineInfo) const
 
 void PipelineBuilder::prepareStages()
 {
+	VkSpecializationMapEntry chunkSizeEntry = {};
+	chunkSizeEntry.constantID = 0;
+	chunkSizeEntry.offset = 0;
+	chunkSizeEntry.size = sizeof(int32_t);
+	vertexShaderSpecEntries_.push_back(chunkSizeEntry);
+
+	vertexShaderSpecData_.resize(chunkSizeEntry.size);
+	int32_t chunkSizeConst = CubA4::mod::world::ChunkSize;
+	memcpy(vertexShaderSpecData_.data(), &chunkSizeConst, chunkSizeEntry.size);
+
+	vertexShaderSpec_.mapEntryCount = static_cast<uint32_t>(vertexShaderSpecEntries_.size());
+	vertexShaderSpec_.pMapEntries = vertexShaderSpecEntries_.data();
+	vertexShaderSpec_.dataSize = static_cast<uint32_t>(vertexShaderSpecData_.size());
+	vertexShaderSpec_.pData = vertexShaderSpecData_.data();
+
 	stages_.clear();
 	std::for_each(shaders_.begin(), shaders_.end(), [this](std::shared_ptr<const IShader> shader)
 	{
@@ -118,6 +134,7 @@ void PipelineBuilder::prepareStages()
 		{
 		case ShaderType::Vertex:
 			stageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+			stageInfo.pSpecializationInfo = &vertexShaderSpec_;
 			break;
 		case ShaderType::Fragment:
 			stageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;

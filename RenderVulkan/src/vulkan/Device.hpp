@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.h>
 #include <memory>
-#include <atomic>
+#include <mutex>
 #include "DebugMarker.hpp"
 
 namespace CubA4
@@ -23,15 +23,21 @@ namespace CubA4
 				IQueue() = default;
 			};
 
+			enum class QueueType
+			{
+				Render,
+				Transmit
+			};
+
 			class Device
 			{
 			public:
-				explicit Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue);
+				explicit Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue, VkQueue transmit);
 				~Device();
 
 				VkDevice getDevice() const;
 				VkPhysicalDevice getPhysicalDevice() const;
-				std::unique_ptr<IQueue> getQueue() const;
+				std::unique_ptr<IQueue> getQueue(QueueType type = QueueType::Render) const;
 				//VkQueue getQueue() const;
 
 				DebugMarker &getMarker() const;
@@ -39,8 +45,11 @@ namespace CubA4
 			private:
 				VkDevice device_;
 				VkPhysicalDevice physicalDevice_;
-				VkQueue queue_;
-				mutable std::atomic_bool queueLock_;
+				struct QueueData
+				{
+					VkQueue queue;
+					mutable std::mutex mutex;
+				} renderQueue_, transmitQueue_;
 				mutable DebugMarker marker_;
 			};
 		}

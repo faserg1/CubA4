@@ -323,7 +323,7 @@ std::shared_future<bool> MemoryManager::submitCmdBuffer(VkCommandBuffer cmdBuffe
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &cmdBuffer;
-	auto q = device_->getQueue();
+	auto q = device_->getQueue(QueueType::Transmit);
 	vkQueueSubmit(q->get(), 1, &submitInfo, fence);
 
 	return std::async(std::launch::async, [=]() -> bool

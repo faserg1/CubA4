@@ -91,10 +91,10 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	enabledFeatures.shaderInt64 = VK_TRUE;
 	createInfo.pEnabledFeatures = &enabledFeatures;
 
-	float queuePriorities[1] = { 1.f };
+	float queuePriorities[2] = { 1.f, 1.f };
 	VkDeviceQueueCreateInfo qCreateInfo = {};
 	qCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	qCreateInfo.queueCount = 1;
+	qCreateInfo.queueCount = 2;
 	qCreateInfo.queueFamilyIndex = data_->queueFamilyIndex;
 	qCreateInfo.pQueuePriorities = queuePriorities;
 	
@@ -105,10 +105,11 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	if (vkCreateDevice(data_->choosedDevice->getPhysicalDevice(), &createInfo, nullptr, &device) != VK_SUCCESS)
 		throw std::runtime_error("Cannot create device");
 
-	VkQueue queue;
+	VkQueue queue, transmitQueue;
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 0, &queue);
+	vkGetDeviceQueue(device, data_->queueFamilyIndex, 1, &transmitQueue);
 
-	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue);
+	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue, transmitQueue);
 }
 
 void DeviceBuilder::destroy(std::shared_ptr<const Device> device)

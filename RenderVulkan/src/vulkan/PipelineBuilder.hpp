@@ -54,6 +54,10 @@ namespace CubA4
 				VkPipelineDynamicStateCreateInfo dynamicStateInfo_;
 				VkPipelineViewportStateCreateInfo viewportStateInfo_;
 
+				VkSpecializationInfo vertexShaderSpec_;
+				std::vector<VkSpecializationMapEntry> vertexShaderSpecEntries_;
+				std::vector<unsigned char> vertexShaderSpecData_;
+
 				std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 				VkPipelineColorBlendStateCreateInfo colorBlendInfo_;
 

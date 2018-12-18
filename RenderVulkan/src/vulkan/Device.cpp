@@ -33,9 +33,11 @@ namespace CubA4
 	}
 }
 
-Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue) :
-	device_(device), physicalDevice_(physicalDevice), queue_(queue), queueLock_(false), marker_(*this)
+Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue renderQueue, VkQueue transmitQueue) :
+	device_(device), physicalDevice_(physicalDevice), marker_(*this)
 {
+	renderQueue_.queue = renderQueue;
+	transmitQueue_.queue = transmitQueue;
 	marker_.setName(device_, "Default logical device");
 }
 
@@ -54,15 +56,30 @@ VkPhysicalDevice Device::getPhysicalDevice() const
 	return physicalDevice_;
 }
 
-std::unique_ptr<IQueue> Device::getQueue() const
+std::unique_ptr<IQueue> Device::getQueue(QueueType type) const
 {
-	std::function<void()> deleter = [&lock = queueLock_]()
+	const Device::QueueData *data = nullptr;
+	bool needLock = true;
+	switch (type)
 	{
-		lock = false;
+	case CubA4::render::vulkan::QueueType::Render:
+		data = &renderQueue_;
+		needLock = false;
+		break;
+	case CubA4::render::vulkan::QueueType::Transmit:
+		data = &transmitQueue_;
+		break;
+	default:
+		return {};
+	}
+	std::function<void()> deleter = [data, needLock]()
+	{
+		if (needLock)
+			data->mutex.unlock();
 	};
-	while (queueLock_);
-	queueLock_ = true;
-	return std::make_unique<Queue>(queue_, deleter);
+	if (needLock)
+		data->mutex.lock();
+	return std::make_unique<Queue>(data->queue, deleter);
 }
 
 DebugMarker &Device::getMarker() const

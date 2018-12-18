@@ -39,8 +39,11 @@ OpDecorate %matricies Binding 0
 
 OpDecorate %chunk_pos Offset 0
 
+OpDecorate %chunk_size_const SpecId 0
+
 ; !!!!!!!!!!! types
 %type_void = OpTypeVoid ; void
+%type_int_32 = OpTypeInt 32 1 ; int 32 signed
 %type_uint_32 = OpTypeInt 32 0 ; int 32 unsigned
 %type_float_32 = OpTypeFloat 32 ; float
 %type_int_64 = OpTypeInt 64 1 ; int 64 signed
@@ -82,6 +85,10 @@ OpDecorate %chunk_pos Offset 0
 %const_zero_float32 = OpConstant %type_float_32 0
 %const_one_float32 = OpConstant %type_float_32 1
 
+; !!!!!!!!!!! Spec constants
+
+%chunk_size_const = OpSpecConstant %type_int_32 1
+
 ; !!!!!!!!!!! vars
 
 ; vectors
@@ -122,8 +129,14 @@ OpDecorate %chunk_pos Offset 0
 
 ; Вычисление разницы позицый между камерой и текущим чанком
 %chunk_from_view_vec3 = OpISub %type_vec3_int_64 %loaded_chunk_pos %loaded_global_view
+; Размер чанка в 64
+%chunk_size_64 = OpSConvert %type_int_64 %chunk_size_const
+; Делаем вектор из размера чанка
+%chunk_size_vector = OpCompositeConstruct %type_vec3_int_64 %chunk_size_64 %chunk_size_64 %chunk_size_64
+; Умножаем разницу позиций на размер чанка
+%chunk_from_view_vec3_scaled = OpIMul %type_vec3_int_64 %chunk_from_view_vec3 %chunk_size_vector
 ; Конвертируем в float
-%chunk_from_view_f = OpConvertSToF %type_vec3_float_32 %chunk_from_view_vec3
+%chunk_from_view_f = OpConvertSToF %type_vec3_float_32 %chunk_from_view_vec3_scaled
 ; Перемещаем вершину к инстансу
 %moved_vertex = OpFAdd %type_vec3_float_32 %loaded_vertex %loaded_instance_position
 ; Перемещаем вершину к чанку

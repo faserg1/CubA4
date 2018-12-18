@@ -37,9 +37,9 @@ namespace CubA4
 			/*Позиция блока в чанке */
 			using BlockInChunkPos = BasePos<uint8_t>;
 			/*Позиция чанка в мире */
-			using ChunkPos = BasePos<uint64_t>;
+			using ChunkPos = BasePos<int64_t>;
 			/*Глобальная позиция блока*/
-			using BlockGlobalPos = BasePos<uint64_t>;
+			using BlockGlobalPos = BasePos<int64_t>;
 
 			/* Размер грани чанка */
 			constexpr uint8_t ChunkSize = 16;
