@@ -52,10 +52,10 @@ OpDecorate %chunk_size_const SpecId 0
 
 %type_vec3_int_64 = OpTypeVector %type_int_64 3 ; int64 x3
 %type_vec4_int_64 = OpTypeVector %type_int_64 4 ; int64 x4
-%type_vec3_float_32 = OpTypeVector %type_float_32 3 ; float x4
+%type_vec3_float_32 = OpTypeVector %type_float_32 3 ; float x3
 %type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
 %type_mat4x4_float_32 = OpTypeMatrix %type_vec4_float_32 4 ; float 4x4
-%type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ;struct: world view projection
+%type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ; struct: view_global_pos view projection
 
 ; !!!!!!!!!!! pointers
 
