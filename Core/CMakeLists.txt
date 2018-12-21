@@ -20,10 +20,12 @@ set(CoreHeaderGame
 set(CoreSourceWorld
 	${CoreSourceWorldDir}/World.cpp
 	${CoreSourceWorldDir}/Chunk.cpp
+	${CoreSourceWorldDir}/ChunkRange.cpp
 )
 set(CoreHeaderWorld
 	${CoreSourceWorldDir}/World.hpp
 	${CoreSourceWorldDir}/Chunk.hpp
+	${CoreSourceWorldDir}/ChunkRange.hpp
 )
 set(CoreSourceSystem
 	${CoreSourceSystemDir}/Startup.cpp

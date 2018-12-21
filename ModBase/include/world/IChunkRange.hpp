@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "Position.hpp"
+#include <array>
 
 namespace CubA4
 {
@@ -25,7 +26,7 @@ namespace CubA4
 				/* \brief Получает границы диапазона блоков в чанке
 				 * \return Возвращает 3 координаты диапазона чанка
 				*/
-				virtual const BlockInChunkPos *getBounds() const = 0;
+				virtual const std::array<BlockInChunkPos, BoundsSize> &getBounds() const = 0;
 				virtual std::shared_ptr<const IChunkRange> mergeWith(std::shared_ptr<const IChunkRange> range) const = 0;
 			protected:
 				explicit IChunkRange() = default;
