@@ -16,7 +16,7 @@ namespace CubA4
 		{
 		public:
 			explicit ChunkRange(std::shared_ptr<const CubA4::mod::object::IBlock> block,
-				std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> bounds);
+				const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &bounds);
 			~ChunkRange();
 			
 			std::shared_ptr<const CubA4::mod::object::IBlock> getBlock() const override;
@@ -24,16 +24,10 @@ namespace CubA4
 			 * \return Возвращает 3 координаты диапазона чанка
 			*/
 			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &getBounds() const override;
-			std::shared_ptr<const CubA4::mod::world::IChunkRange>
-				mergeWith(std::shared_ptr<const CubA4::mod::world::IChunkRange> range) const override;
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::object::IBlock> block_;
 			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> bounds_;
-		private:
-			CubA4::mod::world::BlockInChunkPos minBound(const std::initializer_list<CubA4::mod::world::BlockInChunkPos> &positions) const;
-			CubA4::mod::world::BlockInChunkPos maxBound(const std::initializer_list<CubA4::mod::world::BlockInChunkPos> &positions) const;
-			std::array<CubA4::mod::world::BlockInChunkPos, 8> points(const CubA4::mod::world::BlockInChunkPos &min, const CubA4::mod::world::BlockInChunkPos &max) const;
 		};
 	}
 }

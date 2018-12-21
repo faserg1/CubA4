@@ -4,6 +4,7 @@
 #include <memory>
 #include <array>
 #include "Position.hpp"
+#include <array>
 
 namespace CubA4
 {
