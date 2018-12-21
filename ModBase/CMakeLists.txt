@@ -36,6 +36,7 @@ set(ModBaseHeaderWorld
 	${ModBaseIncludeWorldDir}/IWorld.hpp
 	${ModBaseIncludeWorldDir}/IWorldSubscriber.hpp
 	${ModBaseIncludeWorldDir}/IChunk.hpp
+	${ModBaseIncludeWorldDir}/IChunkRange.hpp
 	${ModBaseIncludeWorldDir}/IWorldDefinition.hpp
 	${ModBaseIncludeWorldDir}/IWorldGenerator.hpp
 )

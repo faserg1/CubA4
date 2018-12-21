@@ -1,11 +1,13 @@
 #include "./DebugExtension.hpp"
 #include <vulkan/vulkan.h>
 #include "../Instance.hpp"
+#include <config/IRenderConfig.hpp>
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::core::logging;
+using namespace CubA4::render::config;
 
 #define getVkFuncInstancePtr(instance, funcName) (PFN_##funcName)(vkGetInstanceProcAddr(instance, #funcName))
 
@@ -33,10 +35,13 @@ namespace CubA4
 	}
 }
 
-DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger) :
-	data_(std::make_shared<DebugExtensionData>())
+DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger, std::shared_ptr<IRenderConfig> cfg) :
+	loggerTagged_(logger->createTaggedLog(LogSourceSystem::Render, "VULKAN")), data_(std::make_shared<DebugExtensionData>())
 {
-	loggerTagged_ = logger->createTaggedLog(LogSourceSystem::Render, "VULKAN");
+	logLevel_ = cfg->getLoggingLevel(3);
+	if (logLevel_ < 0 || logLevel_ > 4)
+		logLevel_ = 3;
+	cfg->setLoggingLevel(logLevel_);
 }
 
 DebugExtension::~DebugExtension()
@@ -68,19 +73,24 @@ void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
 
 void DebugExtension::createDebugUtils(std::shared_ptr<const Instance> instance)
 {
-	VkDebugUtilsMessengerCreateInfoEXT callback;
+	VkDebugUtilsMessengerCreateInfoEXT callback = {};
 	callback.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-	callback.pNext = nullptr;
 	callback.flags = 0;
-	callback.messageSeverity =
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
 	callback.messageType =
 		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	switch (logLevel_)
+	{
+	case 4:
+		callback.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+	case 3:
+		callback.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT;
+	case 2:
+		callback.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+	case 1:
+		callback.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	}
 	auto logCallback = [](
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -122,12 +132,17 @@ void DebugExtension::createDebugReport(std::shared_ptr<const Instance> instance)
 {
 	VkDebugReportCallbackCreateInfoEXT reportInfo = {};
 	reportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
-	reportInfo.flags = 
-		VK_DEBUG_REPORT_INFORMATION_BIT_EXT |
-		VK_DEBUG_REPORT_WARNING_BIT_EXT |
-		VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
-		VK_DEBUG_REPORT_ERROR_BIT_EXT |
-		VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+	switch (logLevel_)
+	{
+	case 4:
+		reportInfo.flags |= VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+	case 3:
+		reportInfo.flags |= VK_DEBUG_REPORT_INFORMATION_BIT_EXT;
+	case 2:
+		reportInfo.flags |= VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
+	case 1:
+		reportInfo.flags |= VK_DEBUG_REPORT_ERROR_BIT_EXT;
+	}
 	auto logCallback = [](
 		VkDebugReportFlagsEXT                       flags,
 		VkDebugReportObjectTypeEXT                  objectType,

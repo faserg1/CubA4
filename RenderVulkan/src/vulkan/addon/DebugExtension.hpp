@@ -16,6 +16,11 @@ namespace CubA4
 	}
 	namespace render
 	{
+		namespace config
+		{
+			class IRenderConfig;
+		}
+
 		namespace vulkan
 		{
 			namespace addon
@@ -26,7 +31,7 @@ namespace CubA4
 					public InstanceExtension
 				{
 				public:
-					explicit DebugExtension(std::shared_ptr<core::logging::ILogger> logger);
+					explicit DebugExtension(std::shared_ptr<core::logging::ILogger> logger, std::shared_ptr<config::IRenderConfig> cfg);
 					~DebugExtension();
 
 					std::vector<std::string> names() const override;
@@ -40,10 +45,11 @@ namespace CubA4
 					void createDebugReport(std::shared_ptr<const Instance> instance);
 					void destroyDebugReport(std::shared_ptr<const Instance> instance);
 				private:
+					const std::shared_ptr<core::logging::ILoggerTagged> loggerTagged_;;
+					const std::shared_ptr<DebugExtensionData> data_;
+					int logLevel_;
+				private:
 					void fillFunctionPointers(std::shared_ptr<const Instance> instance);
-
-					std::shared_ptr<DebugExtensionData> data_;
-					std::shared_ptr<core::logging::ILoggerTagged> loggerTagged_;
 				};
 			}
 		}

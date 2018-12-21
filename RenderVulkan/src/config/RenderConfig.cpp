@@ -9,6 +9,8 @@ constexpr const char *renderResolutionHeightKey = "render.resolution.height";
 
 constexpr const char *renderPresentMethodKey = "render.present.method";
 
+constexpr const char *renderLoggingLevel = "render.log.level";
+
 RenderConfig::RenderConfig(std::string configsPath)
 {
 	auto configPathsDirectory = boost::filesystem::path(configsPath);
@@ -56,6 +58,17 @@ std::string RenderConfig::getPresentMethod(std::string methodByDefault) const
 void RenderConfig::setPresentMethod(std::string method)
 {
 	configTree_->put(renderPresentMethodKey, method);
+	flushConfig();
+}
+
+int RenderConfig::getLoggingLevel(int lvl) const
+{
+	return configTree_->get<int>(renderLoggingLevel, lvl);
+}
+
+void RenderConfig::setLoggingLevel(int lvl)
+{
+	configTree_->put(renderLoggingLevel, lvl);
 	flushConfig();
 }
 

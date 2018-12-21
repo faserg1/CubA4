@@ -18,7 +18,7 @@ std::vector<std::string> StandardValidationLayer::names() const
 	std::vector<std::string> metaName = {
 		"VK_LAYER_LUNARG_standard_validation"
 	};
-	std::vector<std::string> nativeNames = {
+	std::vector<std::string> oldNativeNames = {
 		"VK_LAYER_GOOGLE_threading",
 		"VK_LAYER_LUNARG_parameter_validation",
 		"VK_LAYER_LUNARG_device_limits",
@@ -28,8 +28,17 @@ std::vector<std::string> StandardValidationLayer::names() const
 		"VK_LAYER_LUNARG_swapchain",
 		"VK_LAYER_GOOGLE_unique_objects",
 	};
+	std::vector<std::string> nativeNames = {
+		"VK_LAYER_GOOGLE_threading",
+		"VK_LAYER_LUNARG_parameter_validation",
+		"VK_LAYER_LUNARG_object_tracker",
+		"VK_LAYER_LUNARG_core_validation",
+		"VK_LAYER_GOOGLE_unique_objects",
+	};
 	if (checkNames(metaName))
 		return std::move(metaName);
+	if (checkNames(oldNativeNames))
+		return std::move(oldNativeNames);
 	return std::move(nativeNames);
 }
 

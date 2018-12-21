@@ -1,9 +1,9 @@
 #include "Logger.hpp"
 #include <logging/ILoggerTagged.hpp>
 #include <boost/filesystem.hpp>
-#include <ostream>
-#include <boost/iostreams/stream_buffer.hpp>
-#include <boost/iostreams/device/file.hpp>
+
+#include "LoggerStreams.hpp"
+
 #include <stdexcept>
 #include <chrono>
 #include <iomanip>
@@ -17,27 +17,6 @@ namespace CubA4
 	{
 		namespace logging
 		{
-			class LoggerStreams
-			{
-				friend class CubA4::core::logging::Logger;
-
-				boost::iostreams::stream_buffer<boost::iostreams::file_sink> buf_;
-				std::ostream out_;
-			public:
-				LoggerStreams(std::string filePath) : buf_(filePath), out_(&buf_)
-				{
-
-				}
-				~LoggerStreams()
-				{
-					flush();
-				}
-				void flush()
-				{
-					out_.flush();
-				}
-			};
-
 			namespace
 			{
 				class LoggerTagged :
@@ -89,7 +68,7 @@ Logger::~Logger()
 void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message)
 {
 	std::string logMsg = "[" + getLevelString(level) + ":" + getTagString(system) + ":" + tag + "]{" + getTimeString("%x-%X:%%k") + "} " + message + "\n";
-	stream_->out_.write(logMsg.c_str(), logMsg.size());
+	stream_->write(logMsg);
 	if (level == LogLevel::Error || level == LogLevel::Critical)
 		flush();
 }
@@ -173,6 +152,9 @@ std::string Logger::getNextLogName()
 
 void Logger::openLogStream()
 {
-	stream_ = std::make_shared<LoggerStreams>(getNextLogName());
+	stream_ = std::make_shared<LoggerStreams>([this]() -> std::string
+	{
+		return std::move(getNextLogName());
+	});
 }
 

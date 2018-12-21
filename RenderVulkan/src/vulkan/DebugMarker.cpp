@@ -3,7 +3,7 @@
 using namespace CubA4::render::vulkan;
 
 DebugMarker::DebugMarker(const Device &device) :
-	device_(device)
+	device_(device), setName_(nullptr), setTag_(nullptr)
 {
 	setName_ = (PFN_vkSetDebugUtilsObjectNameEXT) vkGetDeviceProcAddr(device.getDevice(), "vkSetDebugUtilsObjectNameEXT");
 	setTag_ = (PFN_vkSetDebugUtilsObjectTagEXT) vkGetDeviceProcAddr(device.getDevice(), "vkSetDebugUtilsObjectTagEXT");
@@ -76,6 +76,8 @@ VkObjectType DebugMarker::getObjectType(const std::type_info &typeInfo)
 
 void DebugMarker::setName(uint64_t object, VkObjectType objectType, const char *name)
 {
+	if (!setName_)
+		return;
 	VkDebugUtilsObjectNameInfoEXT nameInfo = {};
 	nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
 	nameInfo.objectType = objectType;

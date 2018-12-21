@@ -23,6 +23,9 @@ namespace CubA4
 				std::string getPresentMethod(std::string = {}) const override;
 				void setPresentMethod(std::string method) override;
 
+				int getLoggingLevel(int lvl = 0) const override;
+				void setLoggingLevel(int lvl) override;
+
 				void reload() override;
 			protected:
 			private:

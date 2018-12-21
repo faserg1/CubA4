@@ -24,6 +24,7 @@
 #include <engine/IRenderManager.hpp>
 #include <engine/world/IWorldManager.hpp>
 #include <ctime>
+#include <cmath>
 
 using namespace CubA4::app;
 using namespace CubA4::core::logging;
@@ -103,7 +104,7 @@ void AppMain::run()
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	wm->setFieldOfView(60);
-	wm->setCameraPosition({}, 10, 10, -10);
+	wm->setCameraPosition({-2,0,0}, 0, 0, -10);
 }
 
 void AppMain::stop()
@@ -155,22 +156,25 @@ void AppMain::shutdownGame()
 
 void AppMain::doSomeTestThings()
 {
-	static float l = -10;
+	const float max = 30;
+	static float l = -max;
 	const float speed = 0.1;
 	static bool up = true;
 	if (up)
 		l += speed;
 	else
 		l -= 0.1;
-	if (l > 10)
+	if (l > max)
 		up = false;
-	else if (l < -1)
+	else if (l < -max)
 		up = true;
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	double cl = clock();
 	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
-	wm->setCameraPosition({}, -10, 0, l);
+	double x = sin(cl / CLOCKS_PER_SEC) * 50;
+	double y = cos(cl / CLOCKS_PER_SEC) * 50;
+	wm->setCameraPosition({0, 0, 0}, x, y, l);
 }
 
 void AppMain::loop()

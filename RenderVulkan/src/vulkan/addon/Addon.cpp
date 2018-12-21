@@ -29,6 +29,19 @@ std::string Addon::joinNames() const
 	return temp;
 }
 
+std::string Addon::joinUnavailableNames() const
+{
+	std::string temp;
+	auto names = this->names();
+	std::for_each(names.begin(), names.end(), [&](std::string &name)
+	{
+		if (!checkNames({ name }))
+			temp += name + ",";
+	});
+	temp.pop_back();
+	return temp;
+}
+
 bool Addon::checkNames(std::vector<std::string> required) const
 {
 	auto all = allNames();

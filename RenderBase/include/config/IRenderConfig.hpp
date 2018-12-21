@@ -19,6 +19,9 @@ namespace CubA4
 				virtual std::string getPresentMethod(std::string = {}) const = 0;
 				virtual void setPresentMethod(std::string method) = 0;
 
+				virtual int getLoggingLevel(int lvl = 0) const = 0;
+				virtual void setLoggingLevel(int lvl) = 0;
+
 				virtual void reload() = 0;
 			protected:
 				explicit IRenderConfig() = default;

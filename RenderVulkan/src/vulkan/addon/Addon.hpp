@@ -32,6 +32,7 @@ namespace CubA4
 					bool available() const;
 
 					std::string joinNames() const;
+					std::string joinUnavailableNames() const;
 				protected:
 					explicit Addon();
 					~Addon();
