@@ -2,6 +2,7 @@
 #define MODBASE_POSITION_HPP
 
 #include <type_traits>
+#include <cstdint>
 
 namespace CubA4
 {

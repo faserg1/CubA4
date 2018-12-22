@@ -21,11 +21,13 @@ set(CoreSourceWorld
 	${CoreSourceWorldDir}/World.cpp
 	${CoreSourceWorldDir}/Chunk.cpp
 	${CoreSourceWorldDir}/ChunkRange.cpp
+	${CoreSourceWorldDir}/ChunkRangeBuilder.cpp
 )
 set(CoreHeaderWorld
 	${CoreSourceWorldDir}/World.hpp
 	${CoreSourceWorldDir}/Chunk.hpp
 	${CoreSourceWorldDir}/ChunkRange.hpp
+	${CoreSourceWorldDir}/ChunkRangeBuilder.hpp
 )
 set(CoreSourceSystem
 	${CoreSourceSystemDir}/Startup.cpp

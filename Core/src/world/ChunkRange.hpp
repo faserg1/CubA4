@@ -20,9 +20,6 @@ namespace CubA4
 			~ChunkRange();
 			
 			std::shared_ptr<const CubA4::mod::object::IBlock> getBlock() const override;
-			/* \brief Получает границы диапазона блоков в чанке
-			 * \return Возвращает 3 координаты диапазона чанка
-			*/
 			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &getBounds() const override;
 		protected:
 		private:
