@@ -222,24 +222,21 @@ std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, V
 	bufferBarier.buffer = dst;
 	bufferBarier.size = size;
 	bufferBarier.offset = offset;
+	bufferBarier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
-	auto &in = bufferBarier, out = bufferBarier;
-	VkPipelineStageFlags outFlags = {};
+	VkPipelineStageFlags stageFlags = {};
 
-	in.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-	out.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	
 	
 	switch (bufferBarrierType)
 	{
 	case CubA4::render::engine::BufferBarrierType::Vertex:
-		in.srcAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
-		out.dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
-		outFlags = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+		bufferBarier.dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+		stageFlags = VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
 		break;
 	case CubA4::render::engine::BufferBarrierType::Uniform:
-		in.srcAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
-		out.dstAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
-		outFlags = VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT; // before the all shaders stages
+		bufferBarier.dstAccessMask = VK_ACCESS_UNIFORM_READ_BIT;
+		stageFlags = VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT; // before the all shaders stages
 		break;
 	default:
 		break;
@@ -249,19 +246,12 @@ std::shared_future<bool> MemoryManager::updateBuffer(void *data, VkBuffer dst, V
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 	vkBeginCommandBuffer(updateCmd, &beginInfo);
-	if (bufferBarrierType != BufferBarrierType::None)
-	{
-		/*vkCmdPipelineBarrier(updateCmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
-			0, nullptr,
-			1, &in,
-			0, nullptr);*/
-	}
 	vkCmdUpdateBuffer(updateCmd, dst, offset, size, data);
 	if (bufferBarrierType != BufferBarrierType::None)
 	{
-		vkCmdPipelineBarrier(updateCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, outFlags, 0,
+		vkCmdPipelineBarrier(updateCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, stageFlags, 0,
 			0, nullptr,
-			1, &out,
+			1, &bufferBarier,
 			0, nullptr);
 	}
 		
