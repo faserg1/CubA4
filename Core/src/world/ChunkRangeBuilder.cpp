@@ -24,16 +24,30 @@ bool ChunkRangeBuilder::isIntersects(scIChunkRange first, scIChunkRange second)
 	if (first->getBlock() != second->getBlock())
 		return false;
 	auto bounds1 = minMaxBounds(first->getBounds()), bounds2 = minMaxBounds(second->getBounds());
+	uint8_t firstCounter = 0, secondCounter = 0;
 
-	return false;
+	auto test = [](uint8_t &counter, const BlockInChunkPos &min1, const BlockInChunkPos &max2, decltype(BlockInChunkPos::x) BlockInChunkPos::*pos)
+	{
+		counter += (min1.*pos <= max2.*pos ? 1 : 0);
+	};
+
+	test(firstCounter, bounds1[MinIndex], bounds2[MaxIndex], &BlockInChunkPos::x);
+	test(firstCounter, bounds1[MinIndex], bounds2[MaxIndex], &BlockInChunkPos::y);
+	test(firstCounter, bounds1[MinIndex], bounds2[MaxIndex], &BlockInChunkPos::z);
+
+	test(secondCounter, bounds2[MinIndex], bounds1[MaxIndex], &BlockInChunkPos::x);
+	test(secondCounter, bounds2[MinIndex], bounds1[MaxIndex], &BlockInChunkPos::y);
+	test(secondCounter, bounds2[MinIndex], bounds1[MaxIndex], &BlockInChunkPos::z);
+
+	return firstCounter > 1 && secondCounter > 1;
 }
 
 std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkRangeBuilder::minMaxBounds(const std::array<BlockInChunkPos, BoundsSize> &positions)
 {
 	static_assert(MinMaxBoundsSize == 2, "Количество точек для минимальной/максимальной границы должно равнятся двум.");
 	std::array<BlockInChunkPos, MinMaxBoundsSize> bounds;
-	bounds[0] = minBound(positions);
-	bounds[1] = maxBound(positions);
+	bounds[MinIndex] = minBound(positions);
+	bounds[MaxIndex] = maxBound(positions);
 	return std::move(bounds);
 }
 
@@ -75,3 +89,36 @@ std::array<BlockInChunkPos, 8> ChunkRangeBuilder::points(const BlockInChunkPos &
 	}
 	return std::move(coords);
 }
+
+void ChunkRangeBuilder::test()
+{
+	std::array<BIC, CubA4::mod::world::BoundsSize> minMax1 =
+	{
+		BIC {4, 4, 4},
+		BIC {0, 0, 0}
+	}, minMax2 = 
+	{
+		BIC {7, 7, 7},
+		BIC {3, 3, 3}
+	}, minMax3 =
+	{
+		BIC {0, 0, 0},
+		BIC {5, 5, 5}
+	}, minMax4 =
+	{
+		BIC {3, 6, 8},
+		BIC {14, 14, 14}
+	};
+	auto cr1 = std::make_shared<ChunkRange>(nullptr, minMax3);
+	auto cr2 = std::make_shared<ChunkRange>(nullptr, minMax4);
+
+	auto result = isIntersects(cr1, cr2);
+}
+
+static int testThings()
+{
+	ChunkRangeBuilder::test();
+	return 0;
+}
+
+int j = testThings();

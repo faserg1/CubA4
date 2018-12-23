@@ -22,6 +22,8 @@ namespace CubA4
 		class ChunkRange;
 
 		constexpr const uint8_t MinMaxBoundsSize = 2;
+		constexpr const uint8_t MinIndex = 0;
+		constexpr const uint8_t MaxIndex = 1;
 
 		class ChunkRangeBuilder final
 		{
@@ -37,6 +39,7 @@ namespace CubA4
 			~ChunkRangeBuilder() = delete;
 
 			static sChunkRanges rebuildChunkRanges(const scIChunkRanges ranges);
+			static void test();
 		protected:
 		private:
 			static std::vector<sChunkRanges> findAdjacent(const scIChunkRanges ranges);
