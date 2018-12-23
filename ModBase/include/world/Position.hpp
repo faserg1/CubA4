@@ -10,6 +10,16 @@ namespace CubA4
 	{
 		namespace world
 		{
+			namespace
+			{
+				template <typename T>
+				constexpr T ipow(T num, unsigned int pow)
+				{
+					return (pow >= sizeof(unsigned int) * 8) ? 0 :
+						pow == 0 ? 1 : num * ipow(num, pow - 1);
+				}
+			}
+
 			template <typename TPosType>
 			struct BasePos
 			{
@@ -32,8 +42,10 @@ namespace CubA4
 			/*Глобальная позиция блока*/
 			using BlockGlobalPos = BasePos<int64_t>;
 
-			/* Размер грани чанка */
-			constexpr uint8_t ChunkSize = 16;
+			/* Длинна грани чанка. (Объем чанка = длинна в кубе) */
+			constexpr uint16_t ChunkSize = 16;
+			static_assert(ChunkSize >= 8, "Чанк не может быть размером меньше 8.");
+			static_assert(ChunkSize <= ipow(2, sizeof(decltype(BlockInChunkPos::x)) * 8), "Чанк не может привышать размер, превышающий макисмальные позиции блоков в чанке.");
 		}
 	}
 }

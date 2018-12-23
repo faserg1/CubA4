@@ -156,14 +156,14 @@ void AppMain::shutdownGame()
 
 void AppMain::doSomeTestThings()
 {
-	const float max = 30;
+	constexpr const float max = 30;
 	static float l = -max;
-	const float speed = 0.1;
+	const float speed = 0.1f;
 	static bool up = true;
 	if (up)
 		l += speed;
 	else
-		l -= 0.1;
+		l -= 0.1f;
 	if (l > max)
 		up = false;
 	else if (l < -max)
@@ -174,7 +174,7 @@ void AppMain::doSomeTestThings()
 	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
 	double x = sin(cl / CLOCKS_PER_SEC) * 50;
 	double y = cos(cl / CLOCKS_PER_SEC) * 50;
-	wm->setCameraPosition({0, 0, 0}, x, y, l);
+	wm->setCameraPosition({0, 0, 0}, static_cast<float>(x), static_cast<float>(y), l);
 }
 
 void AppMain::loop()

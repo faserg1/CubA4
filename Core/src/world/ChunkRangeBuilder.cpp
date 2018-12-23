@@ -21,8 +21,20 @@ bool ChunkRangeBuilder::isAdjacent(scIChunkRange first, scIChunkRange second)
 
 bool ChunkRangeBuilder::isIntersects(scIChunkRange first, scIChunkRange second)
 {
-	auto bounds = first->getBounds();
+	if (first->getBlock() != second->getBlock())
+		return false;
+	auto bounds1 = minMaxBounds(first->getBounds()), bounds2 = minMaxBounds(second->getBounds());
+
 	return false;
+}
+
+std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkRangeBuilder::minMaxBounds(const std::array<BlockInChunkPos, BoundsSize> &positions)
+{
+	static_assert(MinMaxBoundsSize == 2, "Количество точек для минимальной/максимальной границы должно равнятся двум.");
+	std::array<BlockInChunkPos, MinMaxBoundsSize> bounds;
+	bounds[0] = minBound(positions);
+	bounds[1] = maxBound(positions);
+	return std::move(bounds);
 }
 
 BlockInChunkPos ChunkRangeBuilder::minBound(const std::array<BlockInChunkPos, BoundsSize> &positions)

@@ -147,7 +147,7 @@ void WorldManager::updateViewMatrix()
 void WorldManager::updateProjectionMatrix()
 {
 	//TODO: [OOKAMI] Set normal aspect ratio
-	auto projection = math::Math::perspectiveLH(worldData_.projectionFov, worldData_.projectionAspect, 0.01, 16 * 32);
+	auto projection = math::Math::perspectiveLH(worldData_.projectionFov, worldData_.projectionAspect, 0.01f, 16 * 32);
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 

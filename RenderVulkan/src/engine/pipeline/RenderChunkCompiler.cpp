@@ -82,8 +82,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		viewport.y = 0;
 		viewport.minDepth = 0;
 		viewport.maxDepth = 1;
-		viewport.width = scissor.extent.width;
-		viewport.height = scissor.extent.height;
+		viewport.width = static_cast<float>(scissor.extent.width);
+		viewport.height = static_cast<float>(scissor.extent.height);
 
 		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
 		std::vector<CubA4::mod::world::BasePos<float>> positions(blockChunkPositions.size());

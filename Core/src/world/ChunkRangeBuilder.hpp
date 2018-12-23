@@ -21,6 +21,8 @@ namespace CubA4
 	{
 		class ChunkRange;
 
+		constexpr const uint8_t MinMaxBoundsSize = 2;
+
 		class ChunkRangeBuilder final
 		{
 		public:
@@ -40,6 +42,7 @@ namespace CubA4
 			static std::vector<sChunkRanges> findAdjacent(const scIChunkRanges ranges);
 			static bool isAdjacent(scIChunkRange first, scIChunkRange second);
 			static bool isIntersects(scIChunkRange first, scIChunkRange second);
+			static std::array<BIC, MinMaxBoundsSize> minMaxBounds(const std::array<BIC, CubA4::mod::world::BoundsSize> &positions);
 			static BIC minBound(const std::array<BIC, CubA4::mod::world::BoundsSize> &positions);
 			static BIC maxBound(const std::array<BIC, CubA4::mod::world::BoundsSize> &positions);
 			static std::array<BIC, 8> points(const BIC &min, const BIC &max);
