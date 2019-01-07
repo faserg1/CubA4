@@ -21,7 +21,6 @@ RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> d
 
 RenderChunkCompilerCore::~RenderChunkCompilerCore()
 {
-	destroyDescriptorPools();
 }
 
 std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::lockCommandPool()
@@ -42,7 +41,7 @@ std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::loc
 	}
 }
 
-VkDescriptorPool RenderChunkCompilerCore::getDescriptorPool(const std::unique_ptr<const CommandPool::CommandPoolLock> &lock)
+sVkDescriptorPool RenderChunkCompilerCore::getDescriptorPool(const std::unique_ptr<const CommandPool::CommandPoolLock> &lock)
 {
 	auto pool = lock->getPool();
 	auto it = std::find_if(commandPools_.begin(), commandPools_.end(), [pool](std::shared_ptr<CommandPool> checkingPool) -> bool
@@ -84,14 +83,10 @@ void RenderChunkCompilerCore::initDescriptorPools()
 	for (unsigned short i = 0; i < commandPoolsCount; i++)
 	{
 		vkCreateDescriptorPool(device_->getDevice(), &createInfo, nullptr, &pool);
-		descriptorPools_.push_back(pool);
-	}
-}
-
-void RenderChunkCompilerCore::destroyDescriptorPools()
-{
-	for (auto pool : descriptorPools_)
-	{
-		vkDestroyDescriptorPool(device_->getDevice(), pool, nullptr);
+		std::function<void(VkDescriptorPool)> deleter = [dev = device_](VkDescriptorPool pool)
+		{
+			vkDestroyDescriptorPool(dev->getDevice(), pool, nullptr);
+		};
+		descriptorPools_.push_back(util::createSharedVulkanObject(pool, deleter));
 	}
 }

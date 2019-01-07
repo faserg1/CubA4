@@ -33,7 +33,7 @@ sVkDescriptorPool ResourceManager::getBuiltInPool() const
 
 void ResourceManager::createBuildInDescriptorSetLayouts()
 {
-	VkDescriptorSetLayoutBinding worldInfo, chunkInfo = {};
+	VkDescriptorSetLayoutBinding worldInfo = {}, chunkInfo = {};
 	//Matrix info
 	worldInfo.binding = 0;
 	worldInfo.descriptorCount = 1;

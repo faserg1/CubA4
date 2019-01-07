@@ -118,7 +118,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 
 		const auto dataSize = totalRangeBounds.size() * sizeof(decltype(*totalRangeBounds.data()));
 		std::tie(totalRangeBuffer, totalRangeMemoryPart) = createBufferFromData(totalRangeBounds.data(), dataSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-		chunkRangeDescriptorSet = prepareSetWithBuffer(descriptorPool, chunkLayoutSet->get(), totalRangeBuffer, 1);
+		chunkRangeDescriptorSet = prepareSetWithBuffer(descriptorPool->get(), chunkLayoutSet->get(), totalRangeBuffer, 1);
 
 		instanceInfos.push_back(totalRangeBuffer);
 		memoryParts.push_back(totalRangeMemoryPart);
@@ -148,7 +148,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 
 	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, chunkRangeDescriptorSet, buffers, instanceInfos, memoryParts]()
 	{
-		//vkFreeDescriptorSets(dev->getDevice(), dPool, 1, &chunkRangeDescriptorSet);
+		vkFreeDescriptorSets(dev->getDevice(), dPool->get(), 1, &chunkRangeDescriptorSet);
 
 		for (auto instanceInfo : instanceInfos)
 			vkDestroyBuffer(dev->getDevice(), instanceInfo, nullptr);
