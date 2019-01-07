@@ -156,9 +156,6 @@ void PipelineBuilder::prepareVertexInput()
 	const uint16_t posSize = sizeof(float) * 3;
 	const uint16_t vertexSize = posSize;
 
-	const uint16_t posChunkSize = sizeof(float) * 3;
-	const uint16_t instanceInfoSize = posChunkSize;
-
 	// Bindings
 
 	vertexBindingDescriptions_.push_back(
@@ -166,14 +163,6 @@ void PipelineBuilder::prepareVertexInput()
 			0, //binding
 			vertexSize, //stride
 			VK_VERTEX_INPUT_RATE_VERTEX //input rate
-		}
-	);
-
-	vertexBindingDescriptions_.push_back(
-		{
-			1, //binding
-			instanceInfoSize, //stride
-			VK_VERTEX_INPUT_RATE_INSTANCE //input rate
 		}
 	);
 
@@ -185,15 +174,6 @@ void PipelineBuilder::prepareVertexInput()
 			0, //binding
 			VK_FORMAT_R32G32B32_SFLOAT, //format,
 			0, //offset
-		}
-	);
-
-	vertexAttrDescriptions_.push_back(
-		{
-			1, //location
-			1, //binding
-			VK_FORMAT_R32G32B32_SFLOAT, //format,
-			0 //offset
 		}
 	);
 
@@ -272,14 +252,18 @@ void PipelineBuilder::prepareViewport()
 
 void PipelineBuilder::prepareDescriptorSets()
 {
-
+	
 }
 
 void PipelineBuilder::preparePushConstants()
 {
-	VkPushConstantRange chunkPositionRange;
-	chunkPositionRange.offset = 0;
-	chunkPositionRange.size = sizeof(CubA4::mod::world::ChunkPos);
-	chunkPositionRange.stageFlags = VK_SHADER_STAGE_ALL;
-	pushConstantsRanges_.push_back(chunkPositionRange);
+	constexpr const auto chunkPositionSize = sizeof(CubA4::mod::world::ChunkPos);
+	constexpr const auto chunkBlockRangesCountSize = sizeof(uint32_t);
+
+	VkPushConstantRange totalStageAllRange = {};
+	totalStageAllRange.offset = 0;
+	totalStageAllRange.size = chunkPositionSize + chunkBlockRangesCountSize;
+	totalStageAllRange.stageFlags = VK_SHADER_STAGE_ALL;
+
+	pushConstantsRanges_.push_back(totalStageAllRange);
 }

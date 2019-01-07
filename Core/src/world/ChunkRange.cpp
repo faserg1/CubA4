@@ -25,3 +25,18 @@ const std::array<BlockInChunkPos, BoundsSize> &ChunkRange::getBounds() const
 {
 	return bounds_;
 }
+
+uint32_t ChunkRange::getBlockCount() const
+{
+	static_assert(BoundsSize == 2, "Для данной функции BoundsSize должен быть равен 2");
+	auto diff = [](auto a, auto b)
+	{
+		if (a > b)
+			return a - b;
+		return b - a;
+	};
+	return
+		diff(bounds_[0].x, bounds_[1].x) *
+		diff(bounds_[0].y, bounds_[1].y) * 
+		diff(bounds_[0].z, bounds_[1].z);
+}

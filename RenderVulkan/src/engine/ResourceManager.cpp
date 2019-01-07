@@ -7,7 +7,7 @@ using namespace CubA4::render::vulkan;
 ResourceManager::ResourceManager(std::shared_ptr<const Device> device) :
 	device_(device)
 {
-	createBuildInDescriptorSetLayout();
+	createBuildInDescriptorSetLayouts();
 	createBuiltInDescriptorPool();
 }
 
@@ -16,9 +16,14 @@ ResourceManager::~ResourceManager()
 
 }
 
-sVkDescriptorSetLayout ResourceManager::getBuiltInLayout() const
+sVkDescriptorSetLayout ResourceManager::getWorldLayout() const
 {
-	return builtInLayout_;
+	return worldLayout_;
+}
+
+sVkDescriptorSetLayout ResourceManager::getChunkLayout() const
+{
+	return chunkLayout_;
 }
 
 sVkDescriptorPool ResourceManager::getBuiltInPool() const
@@ -26,31 +31,22 @@ sVkDescriptorPool ResourceManager::getBuiltInPool() const
 	return builtInPool_;
 }
 
-void ResourceManager::createBuildInDescriptorSetLayout()
+void ResourceManager::createBuildInDescriptorSetLayouts()
 {
-	VkDescriptorSetLayoutBinding bindingInfos[1] = {};
+	VkDescriptorSetLayoutBinding worldInfo, chunkInfo = {};
 	//Matrix info
-	bindingInfos[0].binding = 0;
-	bindingInfos[0].descriptorCount = 1;
-	bindingInfos[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	bindingInfos[0].stageFlags = VK_SHADER_STAGE_ALL;
-	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
-	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	descriptorSetLayoutInfo.bindingCount = 1;
-	descriptorSetLayoutInfo.pBindings = bindingInfos;
-	VkDescriptorSetLayout layout = {};
-	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &layout) != VK_SUCCESS)
-	{
-		// TODO: [OOKAMI] Exceptions, etc
-		return;
-	}
-	device_->getMarker().setName(layout, "BuiltIn Layout");
+	worldInfo.binding = 0;
+	worldInfo.descriptorCount = 1;
+	worldInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	worldInfo.stageFlags = VK_SHADER_STAGE_ALL;
+	//Chunk range info
+	chunkInfo.binding = 1;
+	chunkInfo.descriptorCount = 1;
+	chunkInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	chunkInfo.stageFlags = VK_SHADER_STAGE_ALL;
 
-	std::function<void(VkDescriptorSetLayout)> deleter = [dev = device_](VkDescriptorSetLayout layout)
-	{
-		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
-	};
-	builtInLayout_ = util::createSharedVulkanObject(layout, deleter);
+	worldLayout_ = createSetFromBindings(&worldInfo, 1, "World info layout set");
+	chunkLayout_ = createSetFromBindings(&chunkInfo, 1, "Chunk info layout set");
 }
 
 void ResourceManager::createBuiltInDescriptorPool()
@@ -85,4 +81,25 @@ void ResourceManager::createBuiltInDescriptorPool()
 	};
 
 	builtInPool_ = util::createSharedVulkanObject(pool, deleter);
+}
+
+sVkDescriptorSetLayout ResourceManager::createSetFromBindings(const VkDescriptorSetLayoutBinding *bindings, size_t count, const char *name)
+{
+	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
+	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	descriptorSetLayoutInfo.bindingCount = static_cast<uint32_t>(count);
+	descriptorSetLayoutInfo.pBindings = bindings;
+	VkDescriptorSetLayout layout = {};
+	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &layout) != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exceptions, etc
+		return {};
+	}
+	device_->getMarker().setName(layout, name);
+
+	std::function<void(VkDescriptorSetLayout)> deleter = [dev = device_](VkDescriptorSetLayout layout)
+	{
+		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
+	};
+	return util::createSharedVulkanObject(layout, deleter);
 }

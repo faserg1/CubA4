@@ -18,6 +18,11 @@ namespace CubA4
 
 	namespace mod
 	{
+		namespace object
+		{
+			class IBlock;
+		}
+
 		namespace world
 		{
 			class IWorldSubscriber;
@@ -33,9 +38,10 @@ namespace CubA4
 
 				virtual std::unique_ptr<CubA4::core::util::ISubscription> subscribe(IWorldSubscriber *subscriber) const = 0;
 
+				// TODO: [OOKAMI] Test the chunk range feature. Delete function later
+				virtual void test(std::shared_ptr<const object::IBlock> block) = 0;
+
 				virtual std::shared_ptr<const IWorldDefinition> getWorldDefinition() const = 0;
-				
-				virtual void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, const std::vector<BlockGlobalPos> positions) = 0;
 				virtual std::vector<std::shared_ptr<const IChunk>> getChunks() const = 0;
 			protected:
 				explicit IWorld() = default;

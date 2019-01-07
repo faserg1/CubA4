@@ -52,32 +52,7 @@ void WorldSetup::init(std::shared_ptr<IEnvironmentBuilder> builder)
 
 void WorldSetup::done()
 {
-	// Testing rendering. later delete the ugly shit!
+	// Testing rendering. later delete this ugly shit!
 	auto modWorld = std::const_pointer_cast<CubA4::mod::world::IWorld>(testWorld_);
-	std::vector<CubA4::mod::world::BlockGlobalPos> blockPositions;
-	const auto chunkSize = CubA4::mod::world::ChunkSize;
-	const auto radius = chunkSize/2;
-	blockPositions.resize(radius*radius*4*2);
-	auto it = blockPositions.begin();
-	std::size_t idx = 0;
-	for (int x = -radius; x < radius; x++)
-	{
-		for (int y = -radius; y < radius; y++, it++, idx++)
-		{
-			*it = CubA4::mod::world::BlockGlobalPos { x, y, 0 };
-			it++;
-			*it = CubA4::mod::world::BlockGlobalPos{ x, y, 4 };
-		}
-	}
-	modWorld->placeBlocks(testBlock_, std::move(blockPositions));
-	/*modWorld->placeBlocks(testBlock_,
-	{
-		{0, 0, 0},
-		{1, 1, 1},
-		{1, 3, 0},
-		{0, 2, 0},
-		{3, 3, 0},
-		{18, 0, 3},
-		{18, 2, 2},
-	});*/
+	modWorld->test(testBlock_);
 }

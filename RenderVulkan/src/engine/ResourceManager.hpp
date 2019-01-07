@@ -22,16 +22,20 @@ namespace CubA4
 				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device);
 				~ResourceManager();
 
-				vulkan::sVkDescriptorSetLayout getBuiltInLayout() const;
+				vulkan::sVkDescriptorSetLayout getWorldLayout() const;
+				vulkan::sVkDescriptorSetLayout getChunkLayout() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
-				vulkan::sVkDescriptorSetLayout builtInLayout_;
+				vulkan::sVkDescriptorSetLayout worldLayout_;
+				vulkan::sVkDescriptorSetLayout chunkLayout_;
 				vulkan::sVkDescriptorPool builtInPool_;
 			private:
-				void createBuildInDescriptorSetLayout();
+				void createBuildInDescriptorSetLayouts();
 				void createBuiltInDescriptorPool();
+
+				vulkan::sVkDescriptorSetLayout createSetFromBindings(const VkDescriptorSetLayoutBinding *bindings, size_t count, const char *name);
 			};
 		}
 	}

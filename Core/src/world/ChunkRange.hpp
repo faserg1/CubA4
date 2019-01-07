@@ -21,6 +21,7 @@ namespace CubA4
 			
 			std::shared_ptr<const CubA4::mod::object::IBlock> getBlock() const override;
 			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &getBounds() const override;
+			uint32_t getBlockCount() const override;
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::object::IBlock> block_;

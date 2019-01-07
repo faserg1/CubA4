@@ -1,5 +1,7 @@
 #include "Chunk.hpp"
+#include "ChunkRange.hpp"
 #include <object/IBlock.hpp>
+#include <algorithm>
 using namespace CubA4::world;
 using namespace CubA4::mod::world;
 using namespace CubA4::mod::object;
@@ -15,39 +17,53 @@ Chunk::~Chunk()
 	
 }
 
-std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
-{
-	Locker locker(globalLock_);
-	auto copy = usedBlocks_;
-	return std::move(copy);
-}
-
-std::vector<BlockInChunkPos> Chunk::getChunkPositions(const std::shared_ptr<const IBlock> usedBlock) const
-{
-	Locker locker(globalLock_);
-	auto copy = usedBlockInfos_.find(usedBlock->getId())->second.chunkPositions;
-	return std::move(copy);
-}
-
 const CubA4::mod::world::ChunkPos &Chunk::getChunkPos() const
 {
 	return chunkPos_;
 }
 
-void Chunk::placeBlocks(std::shared_ptr<const IBlock> block, std::vector<BlockInChunkPos> positions)
+std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
+{
+	decltype(chunkRanges_) rangesCopy;
+	{
+		Locker locker(globalLock_);
+		rangesCopy = chunkRanges_;
+	}
+	std::vector<std::shared_ptr<const IBlock>> usedBlocks;
+	for (std::shared_ptr<ChunkRange> range : rangesCopy)
+	{
+		const auto finded = std::find_if(usedBlocks.begin(), usedBlocks.end(), [range](std::shared_ptr<const IBlock> ptr) -> bool
+		{
+			return ptr == range->getBlock();
+		});
+		if (finded != usedBlocks.end())
+			continue;
+		usedBlocks.push_back(range->getBlock());
+	}
+	return std::move(usedBlocks);
+}
+
+std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges(const std::shared_ptr<const IBlock> usedBlock) const
+{
+	decltype(chunkRanges_) rangesCopy;
+	{
+		Locker locker(globalLock_);
+		rangesCopy = chunkRanges_;
+	}
+	std::vector<std::shared_ptr<const IChunkRange>> rangesUsed;
+	for (std::shared_ptr<ChunkRange> range : rangesCopy)
+	{
+		if (range->getBlock() != usedBlock)
+			continue;
+		rangesUsed.push_back(range);
+	}
+	return std::move(rangesUsed);
+}
+
+void Chunk::addChunkRange(std::shared_ptr<ChunkRange> chunkRange)
 {
 	Locker locker(globalLock_);
-	auto it = usedBlockInfos_.find(block->getId());
-	if (it == usedBlockInfos_.end())
-	{
-		usedBlocks_.push_back(block);
-		usedBlockInfos_.insert(std::make_pair(block->getId(), UsedBlockInfo {block, positions}));
-	}
-	else
-	{
-		auto &chunkPositions = it->second.chunkPositions;
-		chunkPositions.insert(chunkPositions.end(), positions.begin(), positions.end());
-	}
+	chunkRanges_.push_back(chunkRange);
 }
 
 Chunk::Locker::Locker(std::atomic_bool &lock) :

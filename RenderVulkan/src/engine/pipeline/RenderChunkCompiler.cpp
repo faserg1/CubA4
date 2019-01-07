@@ -1,10 +1,12 @@
 #include "./RenderChunkCompiler.hpp"
+#include "../ResourceManager.hpp"
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/Memory.hpp"
 #include "../../vulkan/RenderPass.hpp"
 #include "../../vulkan/Pipeline.hpp"
 #include "../world/RenderChunk.hpp"
 #include <world/IChunk.hpp>
+#include <world/IChunkRange.hpp>
 #include <object/IBlock.hpp>
 #include "../model/RenderModel.hpp"
 #include "../material/MaterialLayout.hpp"
@@ -13,12 +15,15 @@
 #include "../MemoryManager.hpp"
 #include <algorithm>
 
+using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
-RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass, std::shared_ptr<const IWorldManager> worldManager) :
-	RenderChunkCompilerCore(device), renderPass_(renderPass), worldManager_(std::dynamic_pointer_cast<const WorldManager>(worldManager))
+RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
+	std::shared_ptr<ResourceManager> resourceManager, std::shared_ptr<const IWorldManager> worldManager) :
+	RenderChunkCompilerCore(device), renderPass_(renderPass), 
+	resourceManager_(resourceManager), worldManager_(std::dynamic_pointer_cast<const WorldManager>(worldManager))
 {
 }
 
@@ -31,9 +36,16 @@ std::future<std::shared_ptr<const RenderChunk>> RenderChunkCompiler::compileChun
 	return std::async(std::launch::async, &RenderChunkCompiler::compileChunkInternal, this, chunk);
 }
 
+// TODO: [OOKAMI] Отрефакторить это всё! 
+
 std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk)
 {
 	auto poolWrapper = lockCommandPool();
+	auto descriptorPool = getDescriptorPool(poolWrapper);
+
+	auto worldLayoutSet = resourceManager_->getWorldLayout();
+	auto chunkLayoutSet = resourceManager_->getChunkLayout();
+
 	auto usedBlocks = chunk->getUsedBlocks();
 	std::vector<VkCommandBuffer> buffers(usedBlocks.size());
 
@@ -56,10 +68,12 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	beginInfo.pInheritanceInfo = &inheritanceInfo;
 
 	auto chunkPos = chunk->getChunkPos();
-	auto worldSet = worldManager_->getWorldDescriptorSetLayout();
-	VkDescriptorSet sets[] = { worldSet->get() };
+	auto worldSet = worldManager_->getWorldDescriptorSet();
+	
 	std::vector<VkBuffer> instanceInfos;
 	std::vector<std::shared_ptr<const CubA4::render::engine::IMemoryPart>> memoryParts;
+
+	VkDescriptorSet chunkRangeDescriptorSet = VK_NULL_HANDLE;
 
 	for (std::size_t idx = 0; idx < usedBlocks.size(); idx++)
 	{
@@ -85,39 +99,32 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		viewport.width = static_cast<float>(scissor.extent.width);
 		viewport.height = static_cast<float>(scissor.extent.height);
 
-		auto blockChunkPositions = chunk->getChunkPositions(usedBlock);
-		std::vector<CubA4::mod::world::BasePos<float>> positions(blockChunkPositions.size());
-		std::transform(blockChunkPositions.begin(), blockChunkPositions.end(), positions.begin(), [](CubA4::mod::world::BlockInChunkPos &pos) -> CubA4::mod::world::BasePos<float>
-		{
-			return {static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z)};
-		});
-		const uint32_t blocksSize = static_cast<uint32_t>(positions.size()) * sizeof(CubA4::mod::world::BasePos<float>);
-		
-		VkBufferCreateInfo instanceBufferInfo = {};
-		VkBuffer instanceInfo = {};
-		instanceBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		instanceBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-		instanceBufferInfo.size = blocksSize;
-		auto resultInstanceBufferCreate = vkCreateBuffer(device_->getDevice(), &instanceBufferInfo, nullptr, &instanceInfo);
-		if (resultInstanceBufferCreate != VK_SUCCESS)
-		{
-			// TODO: [OOKAMI] Exception, etc
-			continue;
-		}
-		instanceInfos.push_back(instanceInfo);
-		VkMemoryRequirements req;
-		vkGetBufferMemoryRequirements(device_->getDevice(), instanceInfo, &req);
+		auto chunkRanges = chunk->getChunkRanges(usedBlock);
+		uint32_t chunkRangesCount = static_cast<uint32_t>(chunkRanges.size());
+		uint32_t instanceCount = 0;
+		std::vector<CubA4::mod::world::BasePos<float>> totalRangeBounds;
+		totalRangeBounds.reserve(chunkRangesCount * CubA4::mod::world::BoundsSize);
 
-		auto part = memManager_->allocatePart(req.size, req.alignment, req.memoryTypeBits);
-		vkBindBufferMemory(device_->getDevice(), instanceInfo, part->getMemory()->getMemory(), part->getOffset());
-		memoryParts.push_back(part);
-
-		if (blocksSize < 65536)
-			memManager_->updateBuffer(positions.data(), instanceInfo, 0, blocksSize);
-		else
+		for (auto chunkRange : chunkRanges)
 		{
-			//TODO: [OOKMAI] Написать копировалку
+			instanceCount += chunkRange->getBlockCount();
+			auto rangeBounds = chunkRange->getBounds();
+			for (auto rangeBound : rangeBounds)
+				totalRangeBounds.push_back(CubA4::mod::world::convertPos<float>(rangeBound));
 		}
+
+		VkBuffer totalRangeBuffer;
+		std::shared_ptr<const CubA4::render::engine::IMemoryPart> totalRangeMemoryPart;
+
+		const auto dataSize = totalRangeBounds.size() * sizeof(decltype(*totalRangeBounds.data()));
+		std::tie(totalRangeBuffer, totalRangeMemoryPart) = createBufferFromData(totalRangeBounds.data(), dataSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+		chunkRangeDescriptorSet = prepareSetWithBuffer(descriptorPool, chunkLayoutSet->get(), totalRangeBuffer, 1);
+
+		instanceInfos.push_back(totalRangeBuffer);
+		memoryParts.push_back(totalRangeMemoryPart);
+
+		constexpr const uint16_t descriptorSetCount = 2;
+		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get(), chunkRangeDescriptorSet };
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		/////////////////////////////////////////////////
@@ -127,23 +134,25 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
 		vkCmdPushConstants(cmdBuffer, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(chunkPos), &chunkPos);
-		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, 1, sets, 0, nullptr);
+		vkCmdPushConstants(cmdBuffer, pipeline->getLayout(), VK_SHADER_STAGE_ALL, sizeof(chunkPos), sizeof(uint32_t), &chunkRangesCount);
+		vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, descriptorSetCount, sets, 0, nullptr);
 		
 		renderModel->bind(cmdBuffer);
-		const VkDeviceSize offset = 0;
-		vkCmdBindVertexBuffers(cmdBuffer, 1, 1, &instanceInfo, &offset);
 		
 		vkCmdDrawIndexed(cmdBuffer,
-			renderModel->getIndexCount(), static_cast<uint32_t>(blockChunkPositions.size()),
+			renderModel->getIndexCount(), instanceCount,
 			0, 0, 0);
 		/////////////////////////////////////////////////
 		vkEndCommandBuffer(cmdBuffer);
 	}
 
-	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), buffers, instanceInfos, memoryParts]()
+	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, chunkRangeDescriptorSet, buffers, instanceInfos, memoryParts]()
 	{
+		//vkFreeDescriptorSets(dev->getDevice(), dPool, 1, &chunkRangeDescriptorSet);
+
 		for (auto instanceInfo : instanceInfos)
 			vkDestroyBuffer(dev->getDevice(), instanceInfo, nullptr);
+
 		decltype(poolWrapper) lock;
 		do
 		{
@@ -153,4 +162,70 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	};
 
 	return std::make_shared<world::RenderChunk>(chunk->getChunkPos(), buffers, deleter);
+}
+
+std::tuple<VkBuffer, std::shared_ptr<const IMemoryPart>> RenderChunkCompiler::createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const
+{
+	VkBufferCreateInfo bufferInfo = {};
+	VkBuffer instanceInfo = {};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | flags;
+	bufferInfo.size = size;
+	auto result = vkCreateBuffer(device_->getDevice(), &bufferInfo, nullptr, &instanceInfo);
+	if (result != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exception, etc
+		return { VK_NULL_HANDLE, {} };
+	}
+
+	VkMemoryRequirements req;
+	vkGetBufferMemoryRequirements(device_->getDevice(), instanceInfo, &req);
+
+	auto part = memManager_->allocatePart(req.size, req.alignment, req.memoryTypeBits);
+	result = vkBindBufferMemory(device_->getDevice(), instanceInfo, part->getMemory()->getMemory(), part->getOffset());
+	if (result != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exception, etc
+		return { VK_NULL_HANDLE, {} };
+	}
+
+	// TODO: [OOKAMI] Переместить максимальный размер для обновления буфера в константы... Или убрать всё этопод капот... Или просто запретить делать такие объемы данных
+	if (size < 65536)
+		memManager_->updateBuffer(data, instanceInfo, 0, size);
+	else
+	{
+		//TODO: [OOKMAI] Написать копировалку
+	}
+
+	return {instanceInfo, part};
+}
+
+VkDescriptorSet RenderChunkCompiler::prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, uint32_t binding) const
+{
+	VkDescriptorSetLayout layouts[] = { layout };
+
+	VkDescriptorSetAllocateInfo info = {};
+	info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	info.descriptorPool = pool;
+	info.descriptorSetCount = 1;
+	info.pSetLayouts = layouts;
+
+	VkDescriptorSet set = {};
+
+	vkAllocateDescriptorSets(device_->getDevice(), &info, &set);
+
+	VkDescriptorBufferInfo bufferWriteInfo = {};
+	bufferWriteInfo.buffer = buffer;
+	bufferWriteInfo.range = VK_WHOLE_SIZE;
+
+	VkWriteDescriptorSet writeSet = {};
+	writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	writeSet.dstSet = set;
+	writeSet.dstBinding = binding;
+	writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	writeSet.pBufferInfo = &bufferWriteInfo;
+	writeSet.descriptorCount = 1;
+	vkUpdateDescriptorSets(device_->getDevice(), 1, &writeSet, 0, nullptr);
+
+	return set;
 }

@@ -7,6 +7,7 @@
 #include <atomic>
 #include <future>
 #include <cstddef>
+#include <tuple>
 #include "RenderChunkCompilerCore.hpp"
 
 namespace CubA4
@@ -29,6 +30,10 @@ namespace CubA4
 
 		namespace engine
 		{
+			class ResourceManager;
+			class IMemoryPart;
+			
+
 			namespace world
 			{
 				class IWorldManager;
@@ -42,8 +47,8 @@ namespace CubA4
 					public RenderChunkCompilerCore
 				{
 				public:
-					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device,
-						std::shared_ptr<const vulkan::RenderPass> renderPass, std::shared_ptr<const world::IWorldManager> worldManager);
+					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::RenderPass> renderPass,
+						 std::shared_ptr<ResourceManager> resourceManager, std::shared_ptr<const world::IWorldManager> worldManager);
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
 
@@ -51,9 +56,13 @@ namespace CubA4
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::RenderPass> renderPass_;
+					const std::shared_ptr<ResourceManager> resourceManager_;
 					const std::shared_ptr<const world::WorldManager> worldManager_;
 				private:
 					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
+					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::IMemoryPart>>
+						createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const;
+					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, uint32_t binding) const;
 				};
 			}
 		}

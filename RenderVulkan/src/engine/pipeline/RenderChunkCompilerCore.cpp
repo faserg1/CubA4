@@ -16,18 +16,12 @@ RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> d
 	device_(device), memManager_(std::make_shared<MemoryManager>(device))
 {
 	initCommandPools();
+	initDescriptorPools();
 }
 
 RenderChunkCompilerCore::~RenderChunkCompilerCore()
 {
-	
-}
-
-void RenderChunkCompilerCore::initCommandPools()
-{
-	commandPools_.reserve(commandPoolsCount);
-	for (unsigned short i = 0; i < commandPoolsCount; i++)
-		commandPools_.push_back(std::make_shared<CommandPool>(device_, 0));
+	destroyDescriptorPools();
 }
 
 std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::lockCommandPool()
@@ -41,9 +35,63 @@ std::unique_ptr<const CommandPool::CommandPoolLock> RenderChunkCompilerCore::loc
 			if (lock)
 				break;
 		}
-		
+
 		if (!lock)
 			continue;
 		return std::move(lock);
+	}
+}
+
+VkDescriptorPool RenderChunkCompilerCore::getDescriptorPool(const std::unique_ptr<const CommandPool::CommandPoolLock> &lock)
+{
+	auto pool = lock->getPool();
+	auto it = std::find_if(commandPools_.begin(), commandPools_.end(), [pool](std::shared_ptr<CommandPool> checkingPool) -> bool
+	{
+		return pool == checkingPool;
+	});
+	if (it == commandPools_.end())
+	{
+		//TODO: [OOKAMI] exceptions, etc
+		return {};
+	}
+	auto index = std::distance(commandPools_.begin(), it);
+	return descriptorPools_[index];
+}
+
+void RenderChunkCompilerCore::initCommandPools()
+{
+	commandPools_.reserve(commandPoolsCount);
+	for (unsigned short i = 0; i < commandPoolsCount; i++)
+		commandPools_.push_back(std::make_shared<CommandPool>(device_, 0));
+}
+
+void RenderChunkCompilerCore::initDescriptorPools()
+{
+	VkDescriptorPool pool = {};
+	VkDescriptorPoolCreateInfo createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	createInfo.maxSets = 16;
+	createInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	
+	std::vector<VkDescriptorPoolSize> sizes;
+
+	sizes.push_back({ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 16});
+
+	createInfo.pPoolSizes = sizes.data();
+	createInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
+
+
+	for (unsigned short i = 0; i < commandPoolsCount; i++)
+	{
+		vkCreateDescriptorPool(device_->getDevice(), &createInfo, nullptr, &pool);
+		descriptorPools_.push_back(pool);
+	}
+}
+
+void RenderChunkCompilerCore::destroyDescriptorPools()
+{
+	for (auto pool : descriptorPools_)
+	{
+		vkDestroyDescriptorPool(device_->getDevice(), pool, nullptr);
 	}
 }

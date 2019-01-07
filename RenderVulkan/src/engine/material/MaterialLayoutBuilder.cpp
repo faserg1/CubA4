@@ -16,7 +16,8 @@ MaterialLayoutBuilder::MaterialLayoutBuilder(std::shared_ptr<const Device> devic
 	device_(device), render_(render), resourceManager_(resourceManager), pipelineBuilder_(device),
 	shaderFactory_(std::make_unique<ShaderFactory>(device))
 {
-	pipelineBuilder_.addBuiltInDescriptorSetLayout(resourceManager->getBuiltInLayout());
+	pipelineBuilder_.addBuiltInDescriptorSetLayout(resourceManager->getWorldLayout());
+	pipelineBuilder_.addBuiltInDescriptorSetLayout(resourceManager->getChunkLayout());
 }
 
 MaterialLayoutBuilder::~MaterialLayoutBuilder()

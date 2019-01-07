@@ -35,3 +35,8 @@ std::shared_ptr<world::IWorldManager> RenderManager::getWorldManager() const
 {
 	return worldManager_;
 }
+
+std::shared_ptr<ResourceManager> RenderManager::getResourceManager() const
+{
+	return resourceManager_;
+}

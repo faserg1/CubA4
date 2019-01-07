@@ -2,6 +2,7 @@
 #define CORE_CHUNK_HPP
 
 #include <world/IChunk.hpp>
+#include <memory>
 #include <vector>
 #include <map>
 #include <atomic>
@@ -10,11 +11,7 @@ namespace CubA4
 {
 	namespace world
 	{
-		struct UsedBlockInfo
-		{
-			std::shared_ptr<const CubA4::mod::object::IBlock> block;
-			std::vector<CubA4::mod::world::BlockInChunkPos> chunkPositions;
-		};
+		class ChunkRange;
 
 		class Chunk :
 			public virtual CubA4::mod::world::IChunk
@@ -22,18 +19,16 @@ namespace CubA4
 		public:
 			explicit Chunk(const CubA4::mod::world::ChunkPos &chunkPos);
 			~Chunk();
-
-			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> getUsedBlocks() const override;
-			std::vector<CubA4::mod::world::BlockInChunkPos> getChunkPositions(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
 			const CubA4::mod::world::ChunkPos &getChunkPos() const override;
+			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> getUsedBlocks() const override;
+			std::vector<std::shared_ptr<const CubA4::mod::world::IChunkRange>> getChunkRanges(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
 
-			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, std::vector<CubA4::mod::world::BlockInChunkPos> positions);
+			void addChunkRange(std::shared_ptr<ChunkRange> chunkRange);
 		protected:
 		private:
-			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> usedBlocks_;
-			std::map<std::string, UsedBlockInfo> usedBlockInfos_;
 			mutable std::atomic_bool globalLock_;
 			const CubA4::mod::world::ChunkPos chunkPos_;
+			std::vector<std::shared_ptr<ChunkRange>> chunkRanges_;
 		private:
 			class Locker
 			{

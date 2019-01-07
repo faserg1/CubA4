@@ -9,6 +9,11 @@ ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(const scIC
 	return {};
 }
 
+ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::mod::object::IBlock> block, const BIC &start, const BIC &end)
+{
+	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }));
+}
+
 std::vector<ChunkRangeBuilder::sChunkRanges> ChunkRangeBuilder::findAdjacent(const scIChunkRanges ranges)
 {
 	return {};

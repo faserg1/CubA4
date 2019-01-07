@@ -16,7 +16,7 @@ WorldManager::WorldManager(std::shared_ptr<const Device> device, std::shared_ptr
 	memoryAllocator_(std::make_shared<MemoryAllocator>(device)), memoryManager_(std::make_shared<MemoryManager>(device))
 {
 	pool_ = resourceManager_->getBuiltInPool();
-	layout_ = resourceManager_->getBuiltInLayout();
+	layout_ = resourceManager_->getWorldLayout();
 	allocateSets();
 	allocateBuffers();
 	writeSets();
@@ -50,7 +50,7 @@ void WorldManager::setFieldOfView(float degrees)
 	updateProjectionMatrix();
 }
 
-sVkDescriptorSet WorldManager::getWorldDescriptorSetLayout() const
+sVkDescriptorSet WorldManager::getWorldDescriptorSet() const
 {
 	return worldSet_;
 }
@@ -111,7 +111,6 @@ void WorldManager::allocateBuffers()
 
 void WorldManager::writeSets()
 {
-	// TODO: [OOKAMI] Place real buffer
 	VkDescriptorBufferInfo bufferWriteInfo = {};
 	bufferWriteInfo.buffer = worldBuffer_->get();
 	bufferWriteInfo.range = VK_WHOLE_SIZE;

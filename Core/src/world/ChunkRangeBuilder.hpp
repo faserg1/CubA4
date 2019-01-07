@@ -11,6 +11,11 @@ namespace CubA4
 {
 	namespace mod
 	{
+		namespace object
+		{
+			class IBlock;
+		}
+
 		namespace world
 		{
 			class IChunkRange;
@@ -39,6 +44,7 @@ namespace CubA4
 			~ChunkRangeBuilder() = delete;
 
 			static sChunkRanges rebuildChunkRanges(const scIChunkRanges ranges);
+			static sChunkRange buildRange(std::shared_ptr<const CubA4::mod::object::IBlock> block, const BIC &start, const BIC &end);
 			static void test();
 		protected:
 		private:

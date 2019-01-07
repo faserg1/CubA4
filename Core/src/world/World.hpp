@@ -26,9 +26,9 @@ namespace CubA4
 
 			std::unique_ptr<CubA4::core::util::ISubscription> subscribe(CubA4::mod::world::IWorldSubscriber *subscriber) const override;
 
-			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
+			void test(std::shared_ptr<const CubA4::mod::object::IBlock> block) override;
 
-			void placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, const std::vector<CubA4::mod::world::BlockGlobalPos> positions) override;
+			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
 			std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> getChunks() const override;
 		protected:
 		private:
@@ -36,7 +36,6 @@ namespace CubA4
 			mutable CubA4::core::util::SubscriptionHelper<CubA4::mod::world::IWorldSubscriber> subscriptionHelper_;
 			std::unordered_map<const CubA4::mod::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::core::util::ChunkPosHash> loadedChunks_;
 		private:
-			void resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos);
 			std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::mod::world::ChunkPos &chunkPos);
 		};
 	}

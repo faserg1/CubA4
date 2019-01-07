@@ -39,8 +39,17 @@ namespace CubA4
 			using BlockInChunkPos = BasePos<uint8_t>;
 			/*Позиция чанка в мире */
 			using ChunkPos = BasePos<int64_t>;
-			/*Глобальная позиция блока*/
-			using BlockGlobalPos = BasePos<int64_t>;
+
+			template <typename TPosTypeOut, typename TPosTypeIn>
+			BasePos<TPosTypeOut> convertPos(BasePos<TPosTypeIn> pos)
+			{
+				return
+				{
+					static_cast<TPosTypeOut>(pos.x),
+					static_cast<TPosTypeOut>(pos.y),
+					static_cast<TPosTypeOut>(pos.z)
+				};
+			}
 
 			/* Длинна грани чанка. (Объем чанка = длинна в кубе) */
 			constexpr uint16_t ChunkSize = 16;

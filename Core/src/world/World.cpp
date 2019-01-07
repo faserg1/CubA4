@@ -3,6 +3,10 @@
 #include <world/IWorldDefinition.hpp>
 #include <world/IWorldSubscriber.hpp>
 #include <algorithm>
+
+// test
+#include "ChunkRangeBuilder.hpp"
+
 using namespace CubA4::world;
 using namespace CubA4::mod::world;
 
@@ -32,35 +36,20 @@ std::unique_ptr<CubA4::core::util::ISubscription> World::subscribe(IWorldSubscri
 	return std::move(subscriptionHelper_.add(subscriber));
 }
 
+void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
+{
+	// TODO: [OOKAMI] Test chunk range feature. Delete function later
+	auto chunk0 = findChunk({ 0, 0, 0 });
+	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 8, 4, 2 }));
+	subscriptionHelper_.apply([](CubA4::mod::world::IWorldSubscriber *sub)
+	{
+		// TODO: [OOKAMI] А пофиг. Мир все равно должен быть перекомпилирован
+	});
+}
+
 std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const
 {
 	return definition_;
-}
-
-void World::placeBlocks(std::shared_ptr<const CubA4::mod::object::IBlock> block, const std::vector<BlockGlobalPos> positions)
-{
-	CubA4::mod::world::ChunkPos chunkPos;
-	CubA4::mod::world::BlockInChunkPos blockPos;
-	std::unordered_map<const CubA4::mod::world::ChunkPos, std::vector<CubA4::mod::world::BlockInChunkPos>, CubA4::core::util::ChunkPosHash> resolvedPositions;
-	for (const auto &pos : positions)
-	{
-		resolve(pos, chunkPos, blockPos);
-		auto it = resolvedPositions.find(chunkPos);
-		if (it == resolvedPositions.end())
-			resolvedPositions.insert(std::make_pair(chunkPos, std::vector<CubA4::mod::world::BlockInChunkPos>{blockPos}));
-		else
-			it->second.push_back(blockPos);
-	}
-	for (auto &resolvedPosition : resolvedPositions)
-	{
-		auto chunk = findChunk(resolvedPosition.first);
-		if (!chunk)
-		{
-			// TODO: [OOKAMI] Chunk has not loaded? Not found? Why?
-			continue;
-		}
-		chunk->placeBlocks(block, resolvedPosition.second);
-	}
 }
 
 std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> World::getChunks() const
@@ -71,17 +60,6 @@ std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> World::getChunks()
 		return pair.second;
 	});
 	return std::move(result);
-}
-
-void World::resolve(const CubA4::mod::world::BlockGlobalPos &globalPos, CubA4::mod::world::ChunkPos &chunkPos, CubA4::mod::world::BlockInChunkPos &blockPos)
-{
-	blockPos.x = globalPos.x % ChunkSize;
-	blockPos.y = globalPos.y % ChunkSize;
-	blockPos.z = globalPos.z % ChunkSize;
-	
-	chunkPos.x = (globalPos.x - blockPos.x) / ChunkSize;
-	chunkPos.y = (globalPos.y - blockPos.y) / ChunkSize;
-	chunkPos.z = (globalPos.z - blockPos.z) / ChunkSize;
 }
 
 std::shared_ptr<CubA4::world::Chunk> World::findChunk(const CubA4::mod::world::ChunkPos &chunkPos)

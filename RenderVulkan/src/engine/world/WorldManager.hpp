@@ -39,7 +39,7 @@ namespace CubA4
 					void setCameraRotation(float roll, float pitch, float yaw) override;
 					void setFieldOfView(float degrees) override;
 
-					vulkan::sVkDescriptorSet getWorldDescriptorSetLayout() const;
+					vulkan::sVkDescriptorSet getWorldDescriptorSet() const;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
