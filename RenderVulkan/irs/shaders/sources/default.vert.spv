@@ -240,7 +240,7 @@ OpStore %fcp_passed %fcp_passed_and_current
 ; !!!! > Конец тела цикла
 
 ; нужно ли продолжать цикл
-%fcp_is_index_greater = OpUGreaterThan %type_bool %fcp_loaded_instance_index %fcp_passed_and_current
+%fcp_is_index_greater = OpUGreaterThanEqual %type_bool %fcp_loaded_instance_index %fcp_passed_and_current
 OpBranchConditional %fcp_is_index_greater %fcp_loop %fcp_end
 %fcp_end = OpLabel
 
@@ -248,21 +248,18 @@ OpBranchConditional %fcp_is_index_greater %fcp_loop %fcp_end
 
 ; подготовка
 %z_divider = OpIMul %type_uint_32 %fcp_i_total_range_x %fcp_i_total_range_y
-
 %fcp_dif_index_and_passed = OpISub %type_uint_32 %fcp_loaded_instance_index %fcp_passed_loaded
 
 ; поиск смещений
-
-%fcp_z_shift = OpUDiv %type_uint_32 %fcp_loaded_instance_index %z_divider ; Здесь нужна целая часть от деления
+%fcp_z_shift = OpUDiv %type_uint_32 %fcp_dif_index_and_passed %z_divider ; Здесь нужна целая часть от деления
 %fcp_temp1 = OpIMul %type_uint_32 %fcp_z_shift %z_divider
-%fcp_temp2 = OpISub %type_uint_32 %fcp_loaded_instance_index %fcp_temp1
+%fcp_temp2 = OpISub %type_uint_32 %fcp_dif_index_and_passed %fcp_temp1
 %fcp_y_shift = OpUDiv %type_uint_32 %fcp_temp2 %fcp_i_total_range_x ; Здесь нужна целая часть от деления
-%fcp_x_shift = OpUMod %type_uint_32 %fcp_loaded_instance_index %fcp_i_total_range_x ; Здесь нужен остаток от деления
+%fcp_x_shift = OpUMod %type_uint_32 %fcp_dif_index_and_passed %fcp_i_total_range_x ; Здесь нужен остаток от деления
 
 ; сбор вектора из смещений
 %fcp_i_shift = OpCompositeConstruct %type_vec3_uint_32 %fcp_x_shift %fcp_y_shift %fcp_z_shift
 %fcp_shift = OpConvertUToF %type_vec3_float_32 %fcp_i_shift
-
 %fcp_result = OpFAdd %type_vec3_float_32 %fcp_bound1_loaded %fcp_shift
 
 ; !!!! function end
