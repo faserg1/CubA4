@@ -86,12 +86,12 @@ OpDecorate %chunk_size_const SpecId 0
 %type_mat4x4_float_32 = OpTypeMatrix %type_vec4_float_32 4 ; float 4x4
 
 ; array types
-%type_runtime_array_vec3_float_32 = OpTypeRuntimeArray %type_vec3_float_32
+%type_runtime_array_vec3_uint_32 = OpTypeRuntimeArray %type_vec3_uint_32
 
 ; struct types
 
 %type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ; struct: view_global_pos view projection
-%type_chunk_range_struct = OpTypeStruct %type_runtime_array_vec3_float_32
+%type_chunk_range_struct = OpTypeStruct %type_runtime_array_vec3_uint_32
 
 ; function types
 
@@ -111,8 +111,8 @@ OpDecorate %chunk_size_const SpecId 0
 %p_vec3_int64_uniform = OpTypePointer Uniform %type_vec3_int_64
 
 %p_chunk_range_struct_uniform = OpTypePointer Uniform %type_chunk_range_struct
-%p_runtime_array_vec3_float_32_uniform = OpTypePointer Uniform %type_runtime_array_vec3_float_32
-%p_vec3_float_32_uniform = OpTypePointer Uniform %type_vec3_float_32 ; pointer to uniform float
+%p_runtime_array_vec3_uint_32_uniform = OpTypePointer Uniform %type_runtime_array_vec3_uint_32
+%p_vec3_uint_32_uniform = OpTypePointer Uniform %type_vec3_uint_32 ; pointer to uniform float
 
 ;push constants
 %p_vec3_int64_push = OpTypePointer PushConstant %type_vec3_int_64
@@ -137,6 +137,9 @@ OpDecorate %chunk_size_const SpecId 0
 %const_zero_int64 = OpConstant %type_int_64 0
 %const_zero_float32 = OpConstant %type_float_32 0
 %const_one_float32 = OpConstant %type_float_32 1
+
+; Единичный вектор
+%const_vec3_uint32_1_1_1 = OpConstantComposite %type_vec3_uint_32 %const_uint32_1 %const_uint32_1 %const_uint32_1
 
 ; !!!!!!!!!!! Spec constants
 
@@ -186,7 +189,7 @@ OpStore %fcp_passed %const_uint32_0
 %fcp_loaded_instance_index = OpLoad %type_uint_32 %v_instance_index
 
 ; get pointer to array
-%fcp_chunk_ranges_array = OpAccessChain %p_runtime_array_vec3_float_32_uniform %v_chunk_range %const_uint32_0
+%fcp_chunk_ranges_array = OpAccessChain %p_runtime_array_vec3_uint_32_uniform %v_chunk_range %const_uint32_0
 
 OpBranch %fcp_loop
 
@@ -201,23 +204,24 @@ OpBranch %fcp_loop_start
 
 ; Загружаем границы диапазона
 %fcp_index_loaded = OpLoad %type_uint_32 %fcp_index
-%fcp_bound1 = OpAccessChain %p_vec3_float_32_uniform %fcp_chunk_ranges_array %fcp_index_loaded
+%fcp_bound1 = OpAccessChain %p_vec3_uint_32_uniform %fcp_chunk_ranges_array %fcp_index_loaded
 %fcp_index_inc = OpIAdd %type_uint_32 %fcp_index_loaded %const_uint32_1
-%fcp_bound2 = OpAccessChain %p_vec3_float_32_uniform %fcp_chunk_ranges_array %fcp_index_inc
+%fcp_bound2 = OpAccessChain %p_vec3_uint_32_uniform %fcp_chunk_ranges_array %fcp_index_inc
 
 ; Составляем следующий индекс
 %fcp_index_next = OpIAdd %type_uint_32 %fcp_index_loaded %const_uint32_2
 OpStore %fcp_index %fcp_index_next
 
 ; Загружаем границы
-%fcp_bound1_loaded = OpLoad %type_vec3_float_32 %fcp_bound1
-%fcp_bound2_loaded = OpLoad %type_vec3_float_32 %fcp_bound2
+%fcp_bound1_loaded = OpLoad %type_vec3_uint_32 %fcp_bound1
+%fcp_bound2_loaded = OpLoad %type_vec3_uint_32 %fcp_bound2
+
+; диапазоны блоков задаются от и до включительно
+; соответсвенно нужно прибавить единицу на каждую из сторон для конца
+%fcp_bound2_extended = OpIAdd %type_vec3_uint_32 %fcp_bound2_loaded %const_vec3_uint32_1_1_1
 
 ; Вычитаем границы для получения длин диапазона
-%fcp_total_range = OpFSub %type_vec3_float_32 %fcp_bound2_loaded %fcp_bound1_loaded
-
-; конвертация
-%fcp_i_total_range = OpConvertFToU %type_vec3_uint_32 %fcp_total_range
+%fcp_i_total_range = OpISub %type_vec3_uint_32 %fcp_bound2_extended %fcp_bound1_loaded
 
 ; Выгрузка 
 %fcp_i_total_range_x = OpCompositeExtract %type_uint_32 %fcp_i_total_range 0
@@ -258,9 +262,10 @@ OpBranchConditional %fcp_is_index_greater %fcp_loop %fcp_end
 %fcp_x_shift = OpUMod %type_uint_32 %fcp_dif_index_and_passed %fcp_i_total_range_x ; Здесь нужен остаток от деления
 
 ; сбор вектора из смещений
+%fcp_bound1_float = OpConvertUToF %type_vec3_float_32 %fcp_bound1_loaded
 %fcp_i_shift = OpCompositeConstruct %type_vec3_uint_32 %fcp_x_shift %fcp_y_shift %fcp_z_shift
 %fcp_shift = OpConvertUToF %type_vec3_float_32 %fcp_i_shift
-%fcp_result = OpFAdd %type_vec3_float_32 %fcp_bound1_loaded %fcp_shift
+%fcp_result = OpFAdd %type_vec3_float_32 %fcp_bound1_float %fcp_shift
 
 ; !!!! function end
 

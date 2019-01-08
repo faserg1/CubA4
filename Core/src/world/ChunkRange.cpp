@@ -32,8 +32,8 @@ uint32_t ChunkRange::getBlockCount() const
 	auto diff = [](auto a, auto b)
 	{
 		if (a > b)
-			return a - b;
-		return b - a;
+			return a - b + 1;
+		return b - a + 1;
 	};
 	return
 		diff(bounds_[0].x, bounds_[1].x) *

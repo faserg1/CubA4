@@ -14,9 +14,33 @@ ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<con
 	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }));
 }
 
-std::vector<ChunkRangeBuilder::sChunkRanges> ChunkRangeBuilder::findAdjacent(const scIChunkRanges ranges)
+std::vector<ChunkRangeBuilder::scIChunkRanges> ChunkRangeBuilder::findAdjacent(const scIChunkRanges ranges)
 {
-	return {};
+	std::vector<ChunkRangeBuilder::scIChunkRanges> result;
+	auto rangesCopy = ranges;
+	for (auto itChunkRange = rangesCopy.begin(); itChunkRange != rangesCopy.end(); itChunkRange = rangesCopy.begin())
+	{
+		scIChunkRanges adjacentRanges;
+		adjacentRanges.push_back(*itChunkRange);
+		auto chunkRange = *itChunkRange;
+		rangesCopy.erase(itChunkRange);
+		scIChunkRanges::iterator it = rangesCopy.begin();
+		do
+		{
+			it = std::find_if(it, rangesCopy.end(), [chunkRange](scIChunkRange testRange) -> bool
+			{
+				return isAdjacent(chunkRange, testRange);
+			});
+			if (it == rangesCopy.end())
+				break;
+			adjacentRanges.push_back(*it);
+			it = rangesCopy.erase(it);
+		} while (true);
+		adjacentRanges.shrink_to_fit();
+		result.push_back(adjacentRanges);
+	}
+	result.shrink_to_fit();
+	return result;
 }
 
 bool ChunkRangeBuilder::isAdjacent(scIChunkRange first, scIChunkRange second)
@@ -29,6 +53,7 @@ bool ChunkRangeBuilder::isAdjacent(scIChunkRange first, scIChunkRange second)
 	auto test = [](uint8_t &counter, const BlockInChunkPos &min1, const BlockInChunkPos &max2, decltype(BlockInChunkPos::x) BlockInChunkPos::*pos)
 	{
 		// TODO: [OOKAMI] Учитывать, когда чанк может считаться по другому
+		// https://gitlab.com/DARTeam/CubA4Dev/CubA4/issues/80#note_126954698
 		if (max2.*pos <= ChunkSize)
 			counter += (min1.*pos <= max2.*pos + 1 ? 1 : 0);
 		else if (min1.*pos > 0)
@@ -135,12 +160,43 @@ void ChunkRangeBuilder::test()
 	{
 		BIC {3, 6, 8},
 		BIC {14, 14, 14}
+	}, minMax5 = 
+	{
+		BIC {0, 0, 0},
+		BIC {1, 1, 1}
+	}, minMax6 =
+	{
+		BIC {1, 1, 2},
+		BIC {2, 2, 2}
+	}, minMax7 =
+	{
+		BIC {3, 3, 2},
+		BIC {4, 4, 4}
+	}, minMax8 =
+	{
+		BIC {3, 6, 8},
+		BIC {14, 14, 14}
+	}, minMax9 =
+	{
+		BIC {3, 6, 8},
+		BIC {14, 14, 14}
+	}, minMax10 =
+	{
+		BIC {3, 6, 8},
+		BIC {14, 14, 14}
 	};
 	auto cr1 = std::make_shared<ChunkRange>(nullptr, minMax3);
 	auto cr2 = std::make_shared<ChunkRange>(nullptr, minMax4);
 
 	auto result = isAdjacent(cr1, cr2);
 	auto result2 = isIntersects(cr1, cr2);
+
+	auto cr3 = std::make_shared<ChunkRange>(nullptr, minMax5);
+	auto cr4 = std::make_shared<ChunkRange>(nullptr, minMax6);
+	auto cr5 = std::make_shared<ChunkRange>(nullptr, minMax7);
+
+	auto adj = findAdjacent({ cr3, cr4, cr5 });
+	auto size = adj.size();
 }
 
 static int testThings()

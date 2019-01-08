@@ -48,7 +48,7 @@ namespace CubA4
 			static void test();
 		protected:
 		private:
-			static std::vector<sChunkRanges> findAdjacent(const scIChunkRanges ranges);
+			static std::vector<scIChunkRanges> findAdjacent(const scIChunkRanges ranges);
 			static bool isAdjacent(scIChunkRange first, scIChunkRange second);
 			static bool isIntersects(scIChunkRange first, scIChunkRange second);
 			static std::array<BIC, MinMaxBoundsSize> minMaxBounds(const std::array<BIC, CubA4::mod::world::BoundsSize> &positions);

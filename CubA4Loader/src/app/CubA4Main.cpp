@@ -158,12 +158,12 @@ void AppMain::doSomeTestThings()
 {
 	constexpr const float max = 30;
 	static float l = -max;
-	const float speed = 0.1f;
+	const float speed = 0.01f;
 	static bool up = true;
 	if (up)
 		l += speed;
 	else
-		l -= 0.1f;
+		l -= speed;
 	if (l > max)
 		up = false;
 	else if (l < -max)

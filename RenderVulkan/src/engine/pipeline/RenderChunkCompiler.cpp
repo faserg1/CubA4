@@ -104,7 +104,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		auto chunkRanges = chunk->getChunkRanges(usedBlock);
 		uint32_t chunkRangesCount = static_cast<uint32_t>(chunkRanges.size());
 		uint32_t instanceCount = 0;
-		std::vector<CubA4::mod::world::BasePos<float>> totalRangeBounds;
+		std::vector<CubA4::mod::world::BasePos<uint32_t>> totalRangeBounds;
 		totalRangeBounds.reserve(chunkRangesCount * CubA4::mod::world::BoundsSize);
 
 		for (auto chunkRange : chunkRanges)
@@ -112,7 +112,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 			instanceCount += chunkRange->getBlockCount();
 			auto rangeBounds = chunkRange->getBounds();
 			for (auto rangeBound : rangeBounds)
-				totalRangeBounds.push_back(CubA4::mod::world::convertPos<float>(rangeBound));
+				totalRangeBounds.push_back(CubA4::mod::world::convertPos<uint32_t>(rangeBound));
 		}
 
 		VkBuffer totalRangeBuffer;
