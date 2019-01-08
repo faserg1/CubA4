@@ -12,10 +12,12 @@
 #include "../material/MaterialLayout.hpp"
 #include "../material/Material.hpp"
 #include "../world/WorldManager.hpp"
-#include "../MemoryManager.hpp"
+#include "../memory/MemoryManager.hpp"
+#include "../memory/MemoryHelper.hpp"
 #include <algorithm>
 
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
@@ -71,7 +73,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	auto worldSet = worldManager_->getWorldDescriptorSet();
 	
 	std::vector<VkBuffer> instanceInfos;
-	std::vector<std::shared_ptr<const CubA4::render::engine::IMemoryPart>> memoryParts;
+	std::vector<std::shared_ptr<const IMemoryPart>> memoryParts;
 
 	VkDescriptorSet chunkRangeDescriptorSet = VK_NULL_HANDLE;
 
@@ -114,7 +116,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		}
 
 		VkBuffer totalRangeBuffer;
-		std::shared_ptr<const CubA4::render::engine::IMemoryPart> totalRangeMemoryPart;
+		std::shared_ptr<const IMemoryPart> totalRangeMemoryPart;
 
 		const auto dataSize = totalRangeBounds.size() * sizeof(decltype(*totalRangeBounds.data()));
 		std::tie(totalRangeBuffer, totalRangeMemoryPart) = createBufferFromData(totalRangeBounds.data(), dataSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
@@ -178,6 +180,8 @@ std::tuple<VkBuffer, std::shared_ptr<const IMemoryPart>> RenderChunkCompiler::cr
 		return { VK_NULL_HANDLE, {} };
 	}
 
+	MemoryHelper helper(device_);
+
 	VkMemoryRequirements req;
 	vkGetBufferMemoryRequirements(device_->getDevice(), instanceInfo, &req);
 
@@ -191,7 +195,7 @@ std::tuple<VkBuffer, std::shared_ptr<const IMemoryPart>> RenderChunkCompiler::cr
 
 	// TODO: [OOKAMI] Переместить максимальный размер для обновления буфера в константы... Или убрать всё этопод капот... Или просто запретить делать такие объемы данных
 	if (size < 65536)
-		memManager_->updateBuffer(data, instanceInfo, 0, size);
+		helper.updateBuffer(data, instanceInfo, 0, size);
 	else
 	{
 		//TODO: [OOKMAI] Написать копировалку

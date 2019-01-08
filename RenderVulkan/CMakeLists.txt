@@ -8,10 +8,27 @@ set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
 set(RenderVulkanSourceVulkanAddonDir ${RenderVulkanSourceVulkanDir}/addon)
 set(RenderVulkanSourceEngineDir ${RenderVulkanSourceDir}/engine)
+set(RenderVulkanSourceEngineMemoryDir ${RenderVulkanSourceEngineDir}/memory)
 set(RenderVulkanSourceEnginePipelineDir ${RenderVulkanSourceEngineDir}/pipeline)
 set(RenderVulkanSourceEngineWorldDir ${RenderVulkanSourceEngineDir}/world)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanSourceEngineMemory
+	${RenderVulkanSourceEngineMemoryDir}/MemoryHelper.cpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryManager.cpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryAllocator.cpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryBlock.cpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryPart.cpp
+)
+set(RenderVulkanHeaderEngineMemory
+	${RenderVulkanSourceEngineMemoryDir}/MemoryHelper.hpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryManager.hpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryAllocator.hpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryBlock.hpp
+	${RenderVulkanSourceEngineMemoryDir}/MemoryPart.hpp
+	${RenderVulkanSourceEngineMemoryDir}/IMemoryPart.hpp
+	${RenderVulkanSourceEngineMemoryDir}/IMemoryBlock.hpp
+)
 set(RenderVulkanHeaderMath
 	${RenderVulkanSourceMathDir}/Matrix.hpp
 	${RenderVulkanSourceMathDir}/Vector.hpp
@@ -153,9 +170,7 @@ set(RenderVulkanSourceEngine
 	${RenderVulkanSourceEngineDir}/Presentaion.cpp
 	${RenderVulkanSourceEngineDir}/Render.cpp
 	${RenderVulkanSourceEngineDir}/RenderManager.cpp
-	${RenderVulkanSourceEngineDir}/MemoryAllocator.cpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.cpp
-	${RenderVulkanSourceEngineDir}/MemoryManager.cpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.cpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.cpp
 )
@@ -164,9 +179,7 @@ set(RenderVulkanHeaderEngine
 	${RenderVulkanSourceEngineDir}/Presentaion.hpp
 	${RenderVulkanSourceEngineDir}/Render.hpp
 	${RenderVulkanSourceEngineDir}/RenderManager.hpp
-	${RenderVulkanSourceEngineDir}/MemoryAllocator.hpp
 	${RenderVulkanSourceEngineDir}/ResourceManager.hpp
-	${RenderVulkanSourceEngineDir}/MemoryManager.hpp
 	${RenderVulkanSourceEngineDir}/RenderGameHandler.hpp
 	${RenderVulkanSourceEngineDir}/RenderEngineCore.hpp
 )
@@ -183,6 +196,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderEngineWorld}
 	${RenderVulkanHeaderEnginePipeline}
 	${RenderVulkanHeaderMath}
+	${RenderVulkanHeaderEngineMemory}
 )
 set(RenderVulkanSources
 	${RenderVulkanSourceDir}/VulkanInfo.cpp
@@ -196,6 +210,7 @@ set(RenderVulkanSources
 	${RenderVulkanSourceVulkanUtil}
 	${RenderVulkanSourceEngineWorld}
 	${RenderVulkanSourceEnginePipeline}
+	${RenderVulkanSourceEngineMemory}
 )
 
 source_group("${SOURCE_GROUP_HEADER_START}engine" FILES ${RenderVulkanHeaderEngine})
@@ -220,6 +235,8 @@ source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}pipeline" FIL
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
 source_group("${SOURCE_GROUP_HEADER_START}math" FILES ${RenderVulkanHeaderMath})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanHeaderEngineMemory})
+source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanSourceEngineMemory})
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 

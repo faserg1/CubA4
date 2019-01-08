@@ -1,5 +1,5 @@
 #include "./Render.hpp"
-#include "./MemoryAllocator.hpp"
+#include "./memory/MemoryAllocator.hpp"
 #include "../vulkan/Device.hpp"
 #include "../vulkan/Swapchain.hpp"
 #include "../vulkan/Semaphore.hpp"
@@ -12,6 +12,7 @@
 #include <cstring>
 
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 

@@ -1,19 +1,20 @@
 #include "./ModelManager.hpp"
 #include "./RenderModel.hpp"
-#include "../MemoryAllocator.hpp"
-#include "../MemoryManager.hpp"
+#include "../memory/MemoryAllocator.hpp"
+#include "../memory/MemoryHelper.hpp"
 #include "../../vulkan/Memory.hpp"
 #include "../../vulkan/Device.hpp"
 #include <model/IRenderModelDefinition.hpp>
 #include <vulkan/vulkan.h>
 #include <cstring>
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::model;
 using namespace CubA4::render::vulkan;
 
 ModelManager::ModelManager(std::shared_ptr<const Device> device) :
 	device_(device), allocator_(std::make_shared<MemoryAllocator>(device))
 {
-	memoryManager_ = std::make_shared<MemoryManager>(device);
+	memoryHelper_ = std::make_shared<MemoryHelper>(device);
 }
 
 ModelManager::~ModelManager()
@@ -83,7 +84,7 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	vkBindBufferMemory(device_->getDevice(), vertexTransitBuffer, memoryVertexTransitBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), vertexBuffer, memoryVertexBuffer->getMemory(), 0);
 
-	memoryManager_->copyBufferToBuffer(vertexTransitBuffer, vertexBuffer, verticesSize);
+	memoryHelper_->copyBufferToBuffer(vertexTransitBuffer, vertexBuffer, verticesSize);
 
 	vkDestroyBuffer(device_->getDevice(), vertexTransitBuffer, nullptr);
 
@@ -175,7 +176,7 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	vkBindBufferMemory(device_->getDevice(), indexTransitBuffer, memoryIndexTransitBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), indexBuffer, memoryIndexBuffer->getMemory(), 0);
 
-	memoryManager_->copyBufferToBuffer(indexTransitBuffer, indexBuffer, indicesSize);
+	memoryHelper_->copyBufferToBuffer(indexTransitBuffer, indexBuffer, indicesSize);
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 

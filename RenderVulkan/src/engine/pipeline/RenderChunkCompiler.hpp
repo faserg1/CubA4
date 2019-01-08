@@ -31,7 +31,11 @@ namespace CubA4
 		namespace engine
 		{
 			class ResourceManager;
-			class IMemoryPart;
+			
+			namespace memory
+			{
+				class IMemoryPart;
+			}
 			
 
 			namespace world
@@ -60,7 +64,7 @@ namespace CubA4
 					const std::shared_ptr<const world::WorldManager> worldManager_;
 				private:
 					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
-					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::IMemoryPart>>
+					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>>
 						createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const;
 					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, uint32_t binding) const;
 				};

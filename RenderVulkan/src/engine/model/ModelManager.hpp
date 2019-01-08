@@ -15,8 +15,11 @@ namespace CubA4
 
 		namespace engine
 		{
-			class MemoryAllocator;
-			class MemoryManager;
+			namespace memory
+			{
+				class MemoryAllocator;
+				class MemoryHelper;
+			}
 
 			namespace model
 			{
@@ -31,8 +34,8 @@ namespace CubA4
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
-					const std::shared_ptr<MemoryAllocator> allocator_;
-					std::shared_ptr<MemoryManager> memoryManager_;
+					const std::shared_ptr<memory::MemoryAllocator> allocator_;
+					std::shared_ptr<memory::MemoryHelper> memoryHelper_;
 				};
 			}
 		}

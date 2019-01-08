@@ -2,11 +2,13 @@
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/DebugMarker.hpp"
 #include <world/IChunk.hpp>
-#include "../MemoryManager.hpp"
+#include "../memory/MemoryManager.hpp"
 #include <algorithm>
 #include <string>
 #include <cmath>
+
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 

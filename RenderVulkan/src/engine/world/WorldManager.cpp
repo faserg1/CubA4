@@ -2,18 +2,22 @@
 #include "../ResourceManager.hpp"
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/Memory.hpp"
-#include "../MemoryAllocator.hpp"
-#include "../MemoryManager.hpp"
+#include "../memory/MemoryAllocator.hpp"
+#include "../memory/MemoryManager.hpp"
+#include "../memory/MemoryHelper.hpp"
 
 #include "../../math/Math.hpp"
 
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
 WorldManager::WorldManager(std::shared_ptr<const Device> device, std::shared_ptr<ResourceManager> resourceManager) :
 	device_(device), resourceManager_(resourceManager),
-	memoryAllocator_(std::make_shared<MemoryAllocator>(device)), memoryManager_(std::make_shared<MemoryManager>(device))
+	memoryAllocator_(std::make_shared<MemoryAllocator>(device)),
+	memoryManager_(std::make_shared<MemoryManager>(device)),
+	memoryHelper_(std::make_shared<MemoryHelper>(device))
 {
 	pool_ = resourceManager_->getBuiltInPool();
 	layout_ = resourceManager_->getWorldLayout();
@@ -127,7 +131,7 @@ void WorldManager::writeSets()
 
 void WorldManager::updateViewMatrix()
 {
-	memoryManager_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos), BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos), BufferBarrierType::Uniform);
 	math::Matrix viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
@@ -140,7 +144,7 @@ void WorldManager::updateViewMatrix()
 	float vMatrix[4][4];
 	memcpy(vMatrix, viewMatrix.data(), sizeof(float) * 16);
 
-	memoryManager_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
 }
 
 void WorldManager::updateProjectionMatrix()
@@ -153,5 +157,5 @@ void WorldManager::updateProjectionMatrix()
 	float projMatrix[4][4];
 	memcpy(projMatrix, projection.data(), sizeof(float) * 16);
 
-	memoryManager_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }

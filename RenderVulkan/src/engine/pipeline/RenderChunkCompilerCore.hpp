@@ -19,8 +19,11 @@ namespace CubA4
 
 		namespace engine
 		{
-			class MemoryAllocator;
-			class MemoryManager;
+			namespace memory
+			{
+				class MemoryAllocator;
+				class MemoryManager;
+			}
 
 			namespace pipeline
 			{
@@ -36,7 +39,7 @@ namespace CubA4
 					vulkan::sVkDescriptorPool getDescriptorPool(const std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> &lock);
 				protected:
 					const std::shared_ptr<const vulkan::Device> device_;
-					const std::shared_ptr<MemoryManager> memManager_;
+					const std::shared_ptr<memory::MemoryManager> memManager_;
 				private:					
 					std::vector<std::shared_ptr<vulkan::CommandPool>> commandPools_;
 					std::vector<vulkan::sVkDescriptorPool> descriptorPools_;

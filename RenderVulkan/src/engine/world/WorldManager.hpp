@@ -18,8 +18,14 @@ namespace CubA4
 		namespace engine
 		{
 			class ResourceManager;
-			class MemoryAllocator;
-			class MemoryManager;
+
+			namespace memory
+			{
+				class MemoryAllocator;
+				class MemoryManager;
+				class MemoryHelper;
+			}
+			
 
 			namespace world
 			{
@@ -44,8 +50,9 @@ namespace CubA4
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<ResourceManager> resourceManager_;
-					const std::shared_ptr<MemoryAllocator> memoryAllocator_;
-					const std::shared_ptr<MemoryManager> memoryManager_;
+					const std::shared_ptr<memory::MemoryAllocator> memoryAllocator_;
+					const std::shared_ptr<memory::MemoryManager> memoryManager_;
+					const std::shared_ptr<memory::MemoryHelper> memoryHelper_;
 
 					vulkan::sVkDescriptorPool pool_;
 					vulkan::sVkDescriptorSetLayout layout_;
