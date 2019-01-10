@@ -42,7 +42,8 @@ OpMemberDecorate %type_matrix_struct 2 MatrixStride 16
 OpMemberDecorate %type_matrix_struct 1 RowMajor
 OpMemberDecorate %type_matrix_struct 2 RowMajor
 
-OpDecorate %type_chunk_range_struct Block
+; OpRuntimeArray в Uniform только в BufferBlock
+OpDecorate %type_chunk_range_struct BufferBlock
 OpMemberDecorate %type_chunk_range_struct 0 Offset 0
 
 ; uniform buffers
@@ -54,6 +55,8 @@ OpDecorate %v_chunk_range Binding 1 ; Chunk Info
 OpDecorate %v_chunk_range DescriptorSet 1
 
 ; push constants
+
+; TODO: [OOKAMI] Скорее всего, перенести нужно будет в структуру (иначе креш renderdoc)
 
 OpDecorate %v_chunk_pos Offset 0
 OpDecorate %v_chunk_ranges_count Offset 24
