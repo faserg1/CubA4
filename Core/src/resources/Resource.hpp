@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <boost/filesystem.hpp>
-#include <resource/IResource.hpp>
+#include <resources/IResource.hpp>
 #include "../filesystem/File.hpp"
 
 namespace CubA4
