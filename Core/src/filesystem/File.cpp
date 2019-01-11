@@ -30,7 +30,7 @@ std::shared_ptr<void> File::load()
 		// TODO: [OOKAMI] Throw exception here
 		return {};
 	}
-	std::function<void()> deleter = [](void *ptr)
+	std::function<void(decltype(data))> deleter = [](void *ptr)
 	{
 		auto castedPtr = static_cast<decltype(data)>(ptr);
 		delete [] castedPtr;
@@ -45,6 +45,6 @@ size_t File::loadIn(void *data, size_t maxSize, size_t offset)
 	const auto toRead = (maxSize > readToEnd ? readToEnd : maxSize);
 	boost::filesystem::ifstream reader(path_);
 	reader.seekg(offset, std::ios_base::beg);
-	reader.read(data, toRead);
+	reader.read(static_cast<char*>(data), toRead);
 	return toRead;
 }
