@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include "../filesystem/IAbstractDirectory.hpp"
 
 namespace CubA4
 {
