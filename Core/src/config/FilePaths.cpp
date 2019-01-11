@@ -32,3 +32,13 @@ std::string FilePaths::logsPath() const
 {
 	return (initialPath_ / "logs").string();
 }
+
+std::string FilePaths::cachePath() const
+{
+	return (initialPath_ / "cache").string();
+}
+
+std::string FilePaths::resourcesPath() const
+{
+	return (initialPath_ / "resources").string();
+}

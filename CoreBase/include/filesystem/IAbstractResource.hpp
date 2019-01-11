@@ -1,6 +1,8 @@
 #ifndef COREBASE_IABSTRACTRESOURCE_HPP
 #define COREBASE_IABSTRACTRESOURCE_HPP
 
+#include <memory>
+
 namespace CubA4
 {
 	namespace core
@@ -11,12 +13,12 @@ namespace CubA4
 			{
 			public:
 				/// Размер ресурса
-				virtual size_t size() const = 0;
+				virtual uint64_t size() const = 0;
 				/**
 				\brief Возвращает данные ресурса (память выделяется заново)
 				\return Указатель на память с ресурсом
 				*/
-				virtual void *load() = 0;
+				virtual std::shared_ptr<void> load() = 0;
 				/**
 				\brief Загружает ресурс в указанную память
 				\param data Память, в которую нужно загрузить ресурс

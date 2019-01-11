@@ -21,6 +21,8 @@ namespace CubA4
 				std::string modsPath() const override;
 				std::string renderPath() const override;
 				std::string logsPath() const override;
+				std::string cachePath() const override;
+				std::string resourcesPath() const override;
 			protected:
 			private:
 				boost::filesystem::path initialPath_;
