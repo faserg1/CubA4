@@ -13,7 +13,7 @@ namespace CubA4
 		namespace resources
 		{
 			class Resource :
-				public virtual IResource, public filesystem::File
+				public virtual IResource, public CubA4::core::filesystem::File
 			{
 			public:
 				explicit Resource(boost::filesystem::path path);

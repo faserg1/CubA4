@@ -13,7 +13,7 @@ namespace CubA4
 		namespace resources
 		{
 			class Resources :
-				public virtual IResources, public filesystem::Directory
+				public virtual IResources, public CubA4::core::filesystem::Directory
 			{
 			public:
 				explicit Resources(boost::filesystem::path path, bool createIfNotExists = false);

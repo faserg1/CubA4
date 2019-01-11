@@ -13,7 +13,7 @@ namespace CubA4
 		namespace cache
 		{
 			class CacheResource :
-				public virtual ICacheResource, public filesystem::File
+				public virtual ICacheResource, public CubA4::core::filesystem::File
 			{
 			public:
 				explicit CacheResource(boost::filesystem::path path);

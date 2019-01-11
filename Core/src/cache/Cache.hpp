@@ -13,7 +13,7 @@ namespace CubA4
 		namespace cache
 		{
 			class Cache :
-				public virtual ICache, public filesystem::Directory
+				public virtual ICache, public CubA4::core::filesystem::Directory
 			{
 			public:
 				explicit Cache(boost::filesystem::path path, bool createIfNotExists = false);
