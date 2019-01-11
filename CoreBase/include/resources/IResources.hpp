@@ -17,7 +17,7 @@ namespace CubA4
 				public virtual CubA4::core::filesystem::IAbstractDirectory
 			{
 			public:
-				virtual std::shared_ptr<IResource> get(std::string path) const = 0;
+				virtual std::shared_ptr<const IResource> get(std::string path) const = 0;
 				virtual std::shared_ptr<IResources> cd(std::string path) const = 0;
 			protected:
 				explicit IResources() = default;

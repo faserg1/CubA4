@@ -18,8 +18,9 @@ namespace CubA4
 				~File();
 				
 				uint64_t size() const override;
-				std::shared_ptr<void> load() override;
-				size_t loadIn(void *data, size_t maxSize, size_t offset) override;
+				std::shared_ptr<void> load() const override;
+				size_t loadIn(void *data, size_t maxSize, size_t offset) const override;
+				void save(void *data, size_t size) override;
 			protected:
 			private:
 				boost::filesystem::path path_;

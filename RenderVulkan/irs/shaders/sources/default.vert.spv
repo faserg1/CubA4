@@ -11,8 +11,9 @@ OpMemberName %type_matrix_struct 0 "view_global_pos"
 OpMemberName %type_matrix_struct 1 "view"
 OpMemberName %type_matrix_struct 2 "projection"
 
-OpName %v_chunk_pos "v_chunk_pos"
-OpName %v_chunk_ranges_count "v_chunk_ranges_count"
+; OpName %v_chunk_pos "v_chunk_pos"
+; OpName %v_chunk_ranges_count "v_chunk_ranges_count"
+OpName %v_push "v_push"
 OpName %v_chunk_range "v_chunk_range"
 
 OpName %v_inPos "input_vertex"
@@ -43,8 +44,12 @@ OpMemberDecorate %type_matrix_struct 1 RowMajor
 OpMemberDecorate %type_matrix_struct 2 RowMajor
 
 ; OpRuntimeArray в Uniform только в BufferBlock
-OpDecorate %type_chunk_range_struct BufferBlock
+OpDecorate %type_chunk_range_struct Block
 OpMemberDecorate %type_chunk_range_struct 0 Offset 0
+
+OpDecorate %type_push_struct Block
+OpMemberDecorate %type_push_struct 0 Offset 0
+OpMemberDecorate %type_push_struct 1 Offset 24
 
 ; uniform buffers
 
@@ -58,8 +63,8 @@ OpDecorate %v_chunk_range DescriptorSet 1
 
 ; TODO: [OOKAMI] Скорее всего, перенести нужно будет в структуру (иначе креш renderdoc)
 
-OpDecorate %v_chunk_pos Offset 0
-OpDecorate %v_chunk_ranges_count Offset 24
+;OpDecorate %v_chunk_pos Offset 0
+;OpDecorate %v_chunk_ranges_count Offset 24
 
 ; spec ids
 
@@ -95,6 +100,7 @@ OpDecorate %chunk_size_const SpecId 0
 
 %type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ; struct: view_global_pos view projection
 %type_chunk_range_struct = OpTypeStruct %type_runtime_array_vec3_uint_32
+%type_push_struct = OpTypeStruct %type_vec3_int_64 %type_int_32
 
 ; function types
 
@@ -120,6 +126,7 @@ OpDecorate %chunk_size_const SpecId 0
 ;push constants
 %p_vec3_int64_push = OpTypePointer PushConstant %type_vec3_int_64
 %p_int32_push = OpTypePointer PushConstant %type_int_32
+%p_push_struct = OpTypePointer PushConstant %type_push_struct
 
 ; input
 
@@ -166,8 +173,9 @@ OpDecorate %chunk_size_const SpecId 0
 
 ; special
 
-%v_chunk_pos = OpVariable %p_vec3_int64_push PushConstant
-%v_chunk_ranges_count = OpVariable %p_int32_push PushConstant
+;%v_chunk_pos = OpVariable %p_vec3_int64_push PushConstant
+;%v_chunk_ranges_count = OpVariable %p_int32_push PushConstant
+%v_push = OpVariable %p_push_struct PushConstant
 
 ; !!!!!!!!!!! function to find current position in chunk
 
@@ -186,7 +194,8 @@ OpStore %fcp_index %const_uint32_0
 OpStore %fcp_passed %const_uint32_0
 
 ; load push contant
-%fcp_loaded_chunk_ranges_count = OpLoad %type_int_32 %v_chunk_ranges_count
+%fcp_chunk_ranges_count_pointer = OpAccessChain %p_int32_push %v_push %const_uint32_1
+%fcp_loaded_chunk_ranges_count = OpLoad %type_int_32 %fcp_chunk_ranges_count_pointer
 
 ; load instance index
 %fcp_loaded_instance_index = OpLoad %type_uint_32 %v_instance_index
@@ -297,8 +306,8 @@ OpFunctionEnd
 %loaded_instance_position = OpFunctionCall %type_vec3_float_32 %find_current_position 
 
 ; load push constant
-
-%loaded_chunk_pos = OpLoad %type_vec3_int_64 %v_chunk_pos
+%access_chunk_pos = OpAccessChain %p_vec3_int64_push %v_push %const_uint32_0
+%loaded_chunk_pos = OpLoad %type_vec3_int_64 %access_chunk_pos
 
 ; math
 

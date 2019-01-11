@@ -120,7 +120,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 
 		const auto dataSize = totalRangeBounds.size() * sizeof(decltype(*totalRangeBounds.data()));
 		std::tie(totalRangeBuffer, totalRangeMemoryPart) = createBufferFromData(totalRangeBounds.data(), dataSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-		chunkRangeDescriptorSet = prepareSetWithBuffer(descriptorPool->get(), chunkLayoutSet->get(), totalRangeBuffer, 1);
+		const auto dType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		chunkRangeDescriptorSet = prepareSetWithBuffer(descriptorPool->get(), chunkLayoutSet->get(), totalRangeBuffer, dType, 1);
 
 		instanceInfos.push_back(totalRangeBuffer);
 		memoryParts.push_back(totalRangeMemoryPart);
@@ -204,7 +205,7 @@ std::tuple<VkBuffer, std::shared_ptr<const IMemoryPart>> RenderChunkCompiler::cr
 	return {instanceInfo, part};
 }
 
-VkDescriptorSet RenderChunkCompiler::prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, uint32_t binding) const
+VkDescriptorSet RenderChunkCompiler::prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, VkDescriptorType type, uint32_t binding) const
 {
 	VkDescriptorSetLayout layouts[] = { layout };
 
@@ -226,7 +227,7 @@ VkDescriptorSet RenderChunkCompiler::prepareSetWithBuffer(VkDescriptorPool pool,
 	writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 	writeSet.dstSet = set;
 	writeSet.dstBinding = binding;
-	writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	writeSet.descriptorType = type;
 	writeSet.pBufferInfo = &bufferWriteInfo;
 	writeSet.descriptorCount = 1;
 	vkUpdateDescriptorSets(device_->getDevice(), 1, &writeSet, 0, nullptr);

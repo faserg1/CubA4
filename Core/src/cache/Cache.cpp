@@ -19,7 +19,7 @@ std::shared_ptr<ICacheResource> Cache::get(std::string path) const
 	return std::make_shared<CacheResource>(path_ / path);
 }
 
-std::shared_ptr<ICache> Cache::cd(std::string path) const
+std::shared_ptr<ICache> Cache::cd(std::string path, bool createIfNotExists) const
 {
-	return std::make_shared<Cache>(path_ / path);
+	return std::make_shared<Cache>(path_ / path, createIfNotExists);
 }

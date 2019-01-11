@@ -19,7 +19,7 @@ uint64_t File::size() const
 	return static_cast<uint64_t>(boost::filesystem::file_size(path_));
 }
 
-std::shared_ptr<void> File::load()
+std::shared_ptr<void> File::load() const
 {
 	const auto fSize = size();
 	auto *data = new unsigned char[fSize];
@@ -38,7 +38,7 @@ std::shared_ptr<void> File::load()
 	return std::shared_ptr<void>(data, deleter);
 }
 
-size_t File::loadIn(void *data, size_t maxSize, size_t offset)
+size_t File::loadIn(void *data, size_t maxSize, size_t offset) const
 {
 	const auto fSize = size();
 	const auto readToEnd = fSize - offset;
@@ -47,4 +47,10 @@ size_t File::loadIn(void *data, size_t maxSize, size_t offset)
 	reader.seekg(offset, std::ios_base::beg);
 	reader.read(static_cast<char*>(data), toRead);
 	return toRead;
+}
+
+void File::save(void *data, size_t size)
+{
+	boost::filesystem::ofstream reader(path_);
+	reader.write(static_cast<char*>(data), size);
 }

@@ -18,7 +18,7 @@ namespace CubA4
 			{
 			public:
 				virtual std::shared_ptr<ICacheResource> get(std::string path) const = 0;
-				virtual std::shared_ptr<ICache> cd(std::string path) const = 0;
+				virtual std::shared_ptr<ICache> cd(std::string path, bool createIfNotExists = false) const = 0;
 			protected:
 				explicit ICache() = default;
 				virtual ~ICache() = default;

@@ -19,7 +19,7 @@ namespace CubA4
 				explicit Resources(boost::filesystem::path path, bool createIfNotExists = false);
 				~Resources();
 				
-				std::shared_ptr<IResource> get(std::string path) const override;
+				std::shared_ptr<const IResource> get(std::string path) const override;
 				std::shared_ptr<IResources> cd(std::string path) const override;
 			protected:
 			private:

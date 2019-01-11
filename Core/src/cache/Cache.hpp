@@ -20,7 +20,7 @@ namespace CubA4
 				~Cache();
 				
 				std::shared_ptr<ICacheResource> get(std::string path) const override;
-				std::shared_ptr<ICache> cd(std::string path) const override;
+				std::shared_ptr<ICache> cd(std::string path, bool createIfNotExists = false) const override;
 			protected:
 			private:
 				const boost::filesystem::path path_;

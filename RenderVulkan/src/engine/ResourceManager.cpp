@@ -1,11 +1,15 @@
 #include "./ResourceManager.hpp"
 #include "../vulkan/Device.hpp"
+#include "../VulkanInfoConst.hpp"
 #include <vector>
+#include <ICore.hpp>
+#include <cache/ICacheManager.hpp>
+using namespace CubA4::core;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
-ResourceManager::ResourceManager(std::shared_ptr<const Device> device) :
-	device_(device)
+ResourceManager::ResourceManager(std::shared_ptr<const Device> device, std::shared_ptr<const ICore> core) :
+	device_(device), core_(core)
 {
 	createBuildInDescriptorSetLayouts();
 	createBuiltInDescriptorPool();
@@ -29,6 +33,12 @@ sVkDescriptorSetLayout ResourceManager::getChunkLayout() const
 sVkDescriptorPool ResourceManager::getBuiltInPool() const
 {
 	return builtInPool_;
+}
+
+std::shared_ptr<cache::ICache> ResourceManager::getCache() const
+{
+	auto cacheManager = core_->getCacheManager();
+	return cacheManager->getResources(cache::CacheType::Render, RenderEngineId);
 }
 
 void ResourceManager::createBuildInDescriptorSetLayouts()

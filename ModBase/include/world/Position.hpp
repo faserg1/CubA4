@@ -52,7 +52,7 @@ namespace CubA4
 			}
 
 			/* Длинна грани чанка. (Объем чанка = длинна в кубе) */
-			constexpr uint16_t ChunkSize = 16;
+			constexpr uint16_t ChunkSize = 64;
 			static_assert(ChunkSize >= 8, "Чанк не может быть размером меньше 8.");
 			static_assert(ChunkSize <= ipow(2, sizeof(decltype(BlockInChunkPos::x)) * 8), "Чанк не может привышать размер, превышающий макисмальные позиции блоков в чанке.");
 		}

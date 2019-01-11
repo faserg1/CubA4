@@ -14,7 +14,7 @@ Resources::~Resources()
 	
 }
 
-std::shared_ptr<IResource> Resources::get(std::string path) const
+std::shared_ptr<const IResource> Resources::get(std::string path) const
 {
 	return std::make_shared<Resource>(path_ / path);
 }

@@ -1,4 +1,7 @@
 cmake_minimum_required (VERSION 3.12)
+
+set(ModVanillaResourcesDir ${CMAKE_CURRENT_LIST_DIR}/resources)
+
 set(ModVanillaIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ModVanillaIncludeBlockDir ${ModVanillaIncludeDir}/block)
 
@@ -108,6 +111,10 @@ add_library(ModVanilla SHARED ${ModVanillaHeaders} ${ModVanillaSources} ${irs_re
 use_base_library(ModVanilla ModBase)
 use_base_library(ModVanilla CoreBase)
 use_base_library(ModVanilla RenderBase)
+
+add_custom_command(TARGET ModVanilla POST_BUILD
+	   COMMAND "${CMAKE_COMMAND}" -E copy_directory ${ModVanillaResourcesDir} ${RESOURCES_OUTPUT_DIRECTORY}
+	)
 
 #set output directory
 set_target_properties( ModVanilla

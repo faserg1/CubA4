@@ -48,6 +48,7 @@ namespace CubA4
 			static void test();
 		protected:
 		private:
+			static sChunkRanges rebuildAdjacentRanges(const scIChunkRanges ranges);
 			static std::vector<scIChunkRanges> findAdjacent(const scIChunkRanges ranges);
 			static bool isAdjacent(scIChunkRange first, scIChunkRange second);
 			static bool isIntersects(scIChunkRange first, scIChunkRange second);

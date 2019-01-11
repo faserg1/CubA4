@@ -112,7 +112,7 @@ void VulkanRenderEngine::destroyRender()
 void VulkanRenderEngine::setup()
 {
 	// Создание компонентов
-	renderManager_ = std::make_shared<RenderManager>(getDevice(), render_);
+	renderManager_ = std::make_shared<RenderManager>(getDevice(), core_, render_);
 	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(getDevice(), render_->getRenderPass(), renderManager_->getResourceManager(), renderManager_->getWorldManager());
 	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_);
 	

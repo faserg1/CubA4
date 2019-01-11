@@ -13,6 +13,9 @@ set(RenderVulkanSourceEnginePipelineDir ${RenderVulkanSourceEngineDir}/pipeline)
 set(RenderVulkanSourceEngineWorldDir ${RenderVulkanSourceEngineDir}/world)
 set(RenderVulkanSourceEngineModelDir ${RenderVulkanSourceEngineDir}/model)
 set(RenderVulkanSourceEngineMaterialDir ${RenderVulkanSourceEngineDir}/material)
+set(RenderVulkanHeader
+	${RenderVulkanSourceDir}/VulkanInfoConst.hpp
+)
 set(RenderVulkanSourceEngineMemory
 	${RenderVulkanSourceEngineMemoryDir}/MemoryHelper.cpp
 	${RenderVulkanSourceEngineMemoryDir}/MemoryManager.cpp
@@ -197,6 +200,7 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderEnginePipeline}
 	${RenderVulkanHeaderMath}
 	${RenderVulkanHeaderEngineMemory}
+	${RenderVulkanHeader}
 )
 set(RenderVulkanSources
 	${RenderVulkanSourceDir}/VulkanInfo.cpp

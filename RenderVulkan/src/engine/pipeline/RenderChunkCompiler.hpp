@@ -66,7 +66,7 @@ namespace CubA4
 					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
 					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>>
 						createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const;
-					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, uint32_t binding) const;
+					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, VkDescriptorType type, uint32_t binding) const;
 				};
 			}
 		}

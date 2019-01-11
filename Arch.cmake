@@ -22,7 +22,7 @@ endif ()
 if ( CMAKE_COMPILER_IS_GNUCC )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror=return-type")
 elseif ( MSVC )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250 /wd4251 /wd4275")
 endif()
 
 if (UNIX)

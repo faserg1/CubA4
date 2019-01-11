@@ -3,6 +3,8 @@
 
 #include <SDL.h>
 #include <stdexcept>
+#include <thread>
+#include <chrono>
 
 #include "../render/RenderLoader.hpp"
 #include "../window/Window.hpp"
@@ -197,6 +199,7 @@ void AppMain::loop()
 				break;
 			}
 		}
+		//std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 }
 

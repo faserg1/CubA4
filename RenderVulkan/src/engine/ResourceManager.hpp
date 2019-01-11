@@ -7,6 +7,16 @@
 
 namespace CubA4
 {
+	namespace core
+	{
+		class ICore;
+
+		namespace cache
+		{
+			class ICache;
+		}
+	}
+
 	namespace render
 	{
 		namespace vulkan
@@ -19,15 +29,18 @@ namespace CubA4
 			class ResourceManager
 			{
 			public:
-				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device);
+				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const core::ICore> core);
 				~ResourceManager();
 
 				vulkan::sVkDescriptorSetLayout getWorldLayout() const;
 				vulkan::sVkDescriptorSetLayout getChunkLayout() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;
+
+				std::shared_ptr<core::cache::ICache> getCache() const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
+				std::shared_ptr<const core::ICore> core_;
 				vulkan::sVkDescriptorSetLayout worldLayout_;
 				vulkan::sVkDescriptorSetLayout chunkLayout_;
 				vulkan::sVkDescriptorPool builtInPool_;

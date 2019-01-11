@@ -6,12 +6,24 @@ using namespace CubA4::mod::world;
 
 ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(const scIChunkRanges ranges)
 {
-	return {};
+	sChunkRanges rebuildedRanges;
+	auto adjancentRangesCollection = findAdjacent(ranges);
+	for (auto adjancentRanges : adjancentRangesCollection)
+	{
+		auto rebuildedAdjacentRanges = rebuildAdjacentRanges(adjancentRanges);
+		rebuildedRanges.insert(rebuildedRanges.end(), rebuildedAdjacentRanges.begin(), rebuildedAdjacentRanges.end());
+	}
+	return rebuildedRanges;
 }
 
 ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::mod::object::IBlock> block, const BIC &start, const BIC &end)
 {
 	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }));
+}
+
+ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildAdjacentRanges(const scIChunkRanges ranges)
+{
+	return {};
 }
 
 std::vector<ChunkRangeBuilder::scIChunkRanges> ChunkRangeBuilder::findAdjacent(const scIChunkRanges ranges)

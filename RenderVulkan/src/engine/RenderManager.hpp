@@ -6,6 +6,11 @@
 
 namespace CubA4
 {
+	namespace core
+	{
+		class ICore;
+	}
+
 	namespace render
 	{
 		namespace vulkan
@@ -38,6 +43,7 @@ namespace CubA4
 			{
 			public:
 				explicit RenderManager(std::shared_ptr<const vulkan::Device> device,
+					std::shared_ptr<const core::ICore> core,
 					std::shared_ptr<const Render> render);
 				~RenderManager();
 
@@ -49,6 +55,7 @@ namespace CubA4
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
+				const std::shared_ptr<const core::ICore> core_;
 				const std::shared_ptr<const Render> render_;
 				std::shared_ptr<ResourceManager> resourceManager_;
 				std::shared_ptr<material::MaterialManager> materialManager_;

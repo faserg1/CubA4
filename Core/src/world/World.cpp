@@ -44,7 +44,7 @@ void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
 	//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 4, 4, 4 }, { 15, 15, 15 }));
 	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 1, 1, 1 }));
 	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 1, 1, 2 }, { 2, 2, 2 }));
-	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 3, 2 }, { 4, 4, 4 }));
+	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 3, 2 }, { 40, 40, 40 }));
 	subscriptionHelper_.apply([](CubA4::mod::world::IWorldSubscriber *sub)
 	{
 		// TODO: [OOKAMI] А пофиг. Мир все равно должен быть перекомпилирован

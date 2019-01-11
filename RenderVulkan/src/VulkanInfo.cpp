@@ -1,4 +1,5 @@
 #include "VulkanInfo.hpp"
+#include "VulkanInfoConst.hpp"
 #include <SDL_vulkan.h>
 #include "engine/RenderEngine.hpp"
 
@@ -28,7 +29,7 @@ void VulkanInfo::destroy()
 
 std::string VulkanInfo::getRenderEngineId() const
 {
-	return "vulkan";
+	return RenderEngineId;
 }
 
 std::shared_ptr<engine::IRenderEngine> VulkanInfo::getRenderEngine()
