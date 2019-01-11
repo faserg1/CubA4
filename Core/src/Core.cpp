@@ -17,8 +17,8 @@ Core::Core(int argc, const char *const argv[]) :
 {
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
-	resourceManager_ = std::make_shared<ResourcesManager>(paths_->resourcesPath());
-	cacheManager_= std::make_shared<CacheManager>(paths_->cachePath());
+	resourceManager_ = std::make_shared<resources::ResourcesManager>(paths_->resourcesPath());
+	cacheManager_= std::make_shared<cache::CacheManager>(paths_->cachePath());
 }
 
 Core::~Core()
