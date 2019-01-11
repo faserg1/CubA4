@@ -22,6 +22,16 @@ namespace CubA4
 		{
 			class ILogger;
 		}
+		
+		namespace resources
+		{
+			class IResourcesManager;
+		}
+		
+		namespace cache
+		{
+			class ICacheManager;
+		}
 
 		class ICore
 		{
@@ -35,6 +45,10 @@ namespace CubA4
 			virtual std::shared_ptr<config::ICoreConfig> getConfig() const = 0;
 			///Получает логгер
 			virtual std::shared_ptr<logging::ILogger> getLogger() const = 0;
+			///Получает менеджер ресурсов
+			virtual std::shared_ptr<resources::IResourcesManager> getResourcesManager() const = 0;
+			///Получает менеджер кэша
+			virtual std::shared_ptr<cache::ICacheManager> getCacheManager() const = 0;
 
 			//Функции, не помеченные const будут доступны только основному приложению, или там, где ICore не передается по константному указателю.
 			//К примеру, через std::shared_ptr<ICore> будут доступны эти функции

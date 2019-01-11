@@ -44,6 +44,16 @@ std::shared_ptr<logging::ILogger> Core::getLogger() const
 	return logger_;
 }
 
+std::shared_ptr<resources::IResourcesManager> Core::getResourcesManager() const
+{
+	return {};
+}
+
+std::shared_ptr<cache::ICacheManager> Core::getCacheManager() const
+{
+	return {};
+}
+
 std::shared_ptr<system::IStartup> Core::getStartup()
 {
 	if (!startup_)

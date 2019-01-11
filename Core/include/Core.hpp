@@ -25,6 +25,8 @@ namespace CubA4
 			const std::shared_ptr<const config::IFilePaths> getPaths() const override;
 			std::shared_ptr<config::ICoreConfig> getConfig() const override;
 			std::shared_ptr<logging::ILogger> getLogger() const override;
+			std::shared_ptr<resources::IResourcesManager> getResourcesManager() const override;
+			std::shared_ptr<cache::ICacheManager> getCacheManager() const override;
 
 			std::shared_ptr<system::IStartup> getStartup() override;
 
