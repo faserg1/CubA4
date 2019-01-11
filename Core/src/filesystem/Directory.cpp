@@ -35,7 +35,7 @@ std::vector<std::string> Directory::listDirectories() const
 	{
 		auto path = entry->path();
 		if (boost::filesystem::is_directory(path))
-			dirs.push_back(path.filename());
+			dirs.push_back(path.filename().string());
 	}
 	return std::move(dirs);
 }
@@ -47,7 +47,7 @@ std::vector<std::string> Directory::listFiles() const
 	{
 		auto path = entry->path();
 		if (!boost::filesystem::is_directory(path))
-			files.push_back(path.filename());
+			files.push_back(path.filename().string());
 	}
 	return std::move(files);
 }
