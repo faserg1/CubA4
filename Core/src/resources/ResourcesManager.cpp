@@ -1,5 +1,5 @@
 #include "./ResourcesManager.hpp"
-#include "./Resources.hpp>
+#include "./Resources.hpp"
 using namespace CubA4::core::resources;
 
 ResourcesManager::ResourcesManager(boost::filesystem::path path) :
@@ -21,7 +21,7 @@ std::shared_ptr<IResources> ResourcesManager::getResources(ResourcesType type, s
 		case ResourcesType::Mod:
 			p /= "mod";
 			break;
-		case ResourcesManager::Addon:
+		case ResourcesType::Addon:
 			p /= "addon";
 			break;
 	}
