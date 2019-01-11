@@ -31,7 +31,7 @@ bool Directory::isFile(std::string path) const
 std::vector<std::string> Directory::listDirectories() const
 {
 	std::vector<std::string> dirs;
-	for (auto entry = boost::filesystem:::directory_iterator(path_); entry != boost::filesystem:::directory_iterator(); entry++)
+	for (auto entry = boost::filesystem:directory_iterator(path_); entry != boost::filesystem:::directory_iterator(); entry++)
 	{
 		auto path = entry->path();
 		if (boost::filesystem::is_directory(path))
@@ -43,7 +43,7 @@ std::vector<std::string> Directory::listDirectories() const
 std::vector<std::string> Directory::listFiles() const
 {
 	std::vector<std::string> files;
-	for (auto entry = boost::filesystem:::directory_iterator(path_); entry != boost::filesystem:::directory_iterator(); entry++)
+	for (auto entry = boost::filesystem:directory_iterator(path_); entry != boost::filesystem:::directory_iterator(); entry++)
 	{
 		auto path = entry->path();
 		if (!boost::filesystem::is_directory(path))
