@@ -13,7 +13,7 @@ namespace CubA4
 			class ICacheResource;
 			
 			class ICache :
-				public virtual filesystem::IAbstractDirectory
+				public virtual CubA4::core::filesystem::IAbstractDirectory
 			{
 			public:
 				virtual std::shared_ptr<ICacheResource> get(std::string path) const = 0;

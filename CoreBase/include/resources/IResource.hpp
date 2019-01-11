@@ -10,7 +10,7 @@ namespace CubA4
 		namespace resources
 		{
 			class IResource :
-				public virtual filesystem::IAbstractResource
+				public virtual CubA4::core::filesystem::IAbstractResource
 			{
 			public:
 				
