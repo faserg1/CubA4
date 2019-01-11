@@ -16,7 +16,7 @@ namespace CubA4
 				public virtual ICacheResource, public filesystem::File
 			{
 			public:
-				explicit CacheResource(boost::filesystem::path);
+				explicit CacheResource(boost::filesystem::path path);
 				~CacheResource();
 			protected:
 			private:

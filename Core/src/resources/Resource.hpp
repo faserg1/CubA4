@@ -16,7 +16,7 @@ namespace CubA4
 				public virtual IResource, public filesystem::File
 			{
 			public:
-				explicit Resource(boost::filesystem::path);
+				explicit Resource(boost::filesystem::path path);
 				~Resource();
 			protected:
 			private:
