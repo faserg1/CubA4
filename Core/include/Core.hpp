@@ -40,6 +40,8 @@ namespace CubA4
 			const std::shared_ptr<const config::IFilePaths> paths_;
 			std::shared_ptr<config::CoreConfig> config_;
 			std::shared_ptr<logging::ILogger> logger_;
+			std::shared_ptr<resources::IResourcesManager> resourceManager_;
+			std::shared_ptr<cache::ICacheManager> cacheManager_;
 
 			std::shared_ptr<system::IStartup> startup_;
 

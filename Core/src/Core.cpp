@@ -3,6 +3,8 @@
 #include "config/FilePaths.hpp"
 #include "logging/Logger.hpp"
 #include "system/Startup.hpp"
+#include "resources/ResourcesManager.hpp"
+#include "cache/CacheManager.hpp"
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
 #include <sstream>
@@ -15,6 +17,8 @@ Core::Core(int argc, const char *const argv[]) :
 {
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
+	resourceManager_ = std::make_shared<ResourcesManager>(paths_->resourcesPath());
+	cacheManager_= std::make_shared<CacheManager>(paths_->cachePath());
 }
 
 Core::~Core()
@@ -46,12 +50,12 @@ std::shared_ptr<logging::ILogger> Core::getLogger() const
 
 std::shared_ptr<resources::IResourcesManager> Core::getResourcesManager() const
 {
-	return {};
+	return resourceManager_;
 }
 
 std::shared_ptr<cache::ICacheManager> Core::getCacheManager() const
 {
-	return {};
+	return cacheManager_;
 }
 
 std::shared_ptr<system::IStartup> Core::getStartup()
