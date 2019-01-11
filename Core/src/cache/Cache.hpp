@@ -23,7 +23,7 @@ namespace CubA4
 				std::shared_ptr<ICache> cd(std::string path) const override;
 			protected:
 			private:
-				const boost::filesystem::path_;
+				const boost::filesystem::path path_;
 			};
 		}
 	}

@@ -23,7 +23,7 @@ namespace CubA4
 				std::shared_ptr<IResources> cd(std::string path) const override;
 			protected:
 			private:
-				const boost::filesystem::path_;
+				const boost::filesystem::path path_;
 			};
 		}
 	}
