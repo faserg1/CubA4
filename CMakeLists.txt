@@ -59,29 +59,3 @@ add_dependencies(CubA4Server Core Network ModLoader ModVanilla)
 
 #special
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CubA4Loader)
-
-#set( CMAKE_RUNTIME_OUTPUT_DIRECTORY bin )
-#set( CMAKE_LIBRARY_OUTPUT_DIRECTORY lib )
-#set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib )
-
-# Windows Generate batch file (parent folder):
-#@echo off
-#set MY_FUCKING_PATH=%CD%
-#set BOOST_ROOT=D:\Libs\boost_1_67_0
-#
-#cd CubA4
-#
-#if not exist build mkdir build
-#cd build
-#
-#if not exist x32 mkdir x32
-#cd x32
-#cmake -G "Visual Studio 15 2017" ../..
-#cd ..
-#
-#if not exist x64 mkdir x64
-#cd x64
-#cmake -G "Visual Studio 15 2017 Win64" ../..
-#cd ..
-#
-#cd %MY_FUCKING_PATH%
