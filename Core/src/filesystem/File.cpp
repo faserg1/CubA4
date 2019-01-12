@@ -51,6 +51,7 @@ size_t File::loadIn(void *data, size_t maxSize, size_t offset) const
 
 void File::save(void *data, size_t size)
 {
-	boost::filesystem::ofstream reader(path_);
-	reader.write(static_cast<char*>(data), size);
+	boost::filesystem::ofstream writer(path_);
+	writer.write(static_cast<char*>(data), size);
+	writer.flush();
 }

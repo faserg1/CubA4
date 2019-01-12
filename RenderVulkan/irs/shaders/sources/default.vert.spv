@@ -11,8 +11,6 @@ OpMemberName %type_matrix_struct 0 "view_global_pos"
 OpMemberName %type_matrix_struct 1 "view"
 OpMemberName %type_matrix_struct 2 "projection"
 
-; OpName %v_chunk_pos "v_chunk_pos"
-; OpName %v_chunk_ranges_count "v_chunk_ranges_count"
 OpName %v_push "v_push"
 OpName %v_chunk_range "v_chunk_range"
 
@@ -43,7 +41,6 @@ OpMemberDecorate %type_matrix_struct 2 MatrixStride 16
 OpMemberDecorate %type_matrix_struct 1 RowMajor
 OpMemberDecorate %type_matrix_struct 2 RowMajor
 
-; OpRuntimeArray в Uniform только в BufferBlock
 OpDecorate %type_chunk_range_struct Block
 OpMemberDecorate %type_chunk_range_struct 0 Offset 0
 
@@ -91,6 +88,8 @@ OpDecorate %chunk_size_const SpecId 0
 
 ; struct types
 
+; TODO: [OOKAMI] Доделать
+;%type_vertex_in_struct = OpTypeStruct %type_vec3_float_32
 %type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ; struct: view_global_pos view projection
 %type_chunk_range_struct = OpTypeStruct %type_runtime_array_vec3_uint_32
 %type_push_struct = OpTypeStruct %type_vec3_int_64 %type_int_32
@@ -170,8 +169,6 @@ OpDecorate %chunk_size_const SpecId 0
 
 ; special
 
-;%v_chunk_pos = OpVariable %p_vec3_int64_push PushConstant
-;%v_chunk_ranges_count = OpVariable %p_int32_push PushConstant
 %v_push = OpVariable %p_push_struct PushConstant
 
 ; !!!!!!!!!!! function to load bound from chunk range by index
