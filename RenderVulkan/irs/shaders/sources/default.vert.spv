@@ -59,13 +59,6 @@ OpDecorate %v_matricies DescriptorSet 0
 OpDecorate %v_chunk_range Binding 1 ; Chunk Info
 OpDecorate %v_chunk_range DescriptorSet 1
 
-; push constants
-
-; TODO: [OOKAMI] Скорее всего, перенести нужно будет в структуру (иначе креш renderdoc)
-
-;OpDecorate %v_chunk_pos Offset 0
-;OpDecorate %v_chunk_ranges_count Offset 24
-
 ; spec ids
 
 OpDecorate %chunk_size_const SpecId 0
@@ -106,6 +99,7 @@ OpDecorate %chunk_size_const SpecId 0
 
 %func_void = OpTypeFunction %type_void ; void ()
 %func_vec3_float_32 = OpTypeFunction %type_vec3_float_32 ; vec3_float_32 ()
+%func_vec3_uint_32 = OpTypeFunction %type_vec3_uint_32 %type_uint_32 ; vec3_uint_32 (uint_32)
 
 ; !!!!!!!!!!! pointers
 
@@ -115,13 +109,13 @@ OpDecorate %chunk_size_const SpecId 0
 %p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output float
 
 ; uniform
-%p_matrix_struct_uniform = OpTypePointer Uniform %type_matrix_struct
-%p_mat4x4_float_32_uniform = OpTypePointer Uniform %type_mat4x4_float_32
-%p_vec3_int64_uniform = OpTypePointer Uniform %type_vec3_int_64
+%p_matrix_struct_uniform = OpTypePointer UniformConstant %type_matrix_struct
+%p_mat4x4_float_32_uniform = OpTypePointer UniformConstant %type_mat4x4_float_32
+%p_vec3_int64_uniform = OpTypePointer UniformConstant %type_vec3_int_64
 
-%p_chunk_range_struct_uniform = OpTypePointer Uniform %type_chunk_range_struct
-%p_runtime_array_vec3_uint_32_uniform = OpTypePointer Uniform %type_runtime_array_vec3_uint_32
-%p_vec3_uint_32_uniform = OpTypePointer Uniform %type_vec3_uint_32 ; pointer to uniform float
+%p_chunk_range_struct_uniform = OpTypePointer UniformConstant %type_chunk_range_struct
+%p_runtime_array_vec3_uint_32_uniform = OpTypePointer UniformConstant %type_runtime_array_vec3_uint_32
+%p_vec3_uint_32_uniform = OpTypePointer UniformConstant %type_vec3_uint_32 ; pointer to uniform float
 
 ;push constants
 %p_vec3_int64_push = OpTypePointer PushConstant %type_vec3_int_64
@@ -147,6 +141,9 @@ OpDecorate %chunk_size_const SpecId 0
 %const_zero_int64 = OpConstant %type_int_64 0
 %const_zero_float32 = OpConstant %type_float_32 0
 %const_one_float32 = OpConstant %type_float_32 1
+
+; Размер одного элемента chunk range
+%chunk_range_element_size = OpConstant %type_uint_32 12; uint_32 (32 / 8 = 4) * 3 = 12
 
 ; Единичный вектор
 %const_vec3_uint32_1_1_1 = OpConstantComposite %type_vec3_uint_32 %const_uint32_1 %const_uint32_1 %const_uint32_1
@@ -177,6 +174,22 @@ OpDecorate %chunk_size_const SpecId 0
 ;%v_chunk_ranges_count = OpVariable %p_int32_push PushConstant
 %v_push = OpVariable %p_push_struct PushConstant
 
+; !!!!!!!!!!! function to load bound from chunk range by index
+
+%load_chunk_bound = OpFunction %type_vec3_uint_32 None %func_vec3_uint_32
+%lcb_index = OpFunctionParameter %type_uint_32
+%lcb_begin = OpLabel
+
+; get pointer to array
+%lcb_chunk_ranges_array = OpAccessChain %p_runtime_array_vec3_uint_32_uniform %v_chunk_range %const_uint32_0
+%lcb_bound = OpAccessChain %p_vec3_uint_32_uniform %lcb_chunk_ranges_array %lcb_index
+%lcb_bound_loaded = OpLoad %type_vec3_uint_32 %lcb_bound
+
+; %chunk_range_element_size
+
+OpReturnValue %lcb_bound_loaded
+OpFunctionEnd
+
 ; !!!!!!!!!!! function to find current position in chunk
 
 %find_current_position = OpFunction %type_vec3_float_32 None %func_vec3_float_32
@@ -200,9 +213,6 @@ OpStore %fcp_passed %const_uint32_0
 ; load instance index
 %fcp_loaded_instance_index = OpLoad %type_uint_32 %v_instance_index
 
-; get pointer to array
-%fcp_chunk_ranges_array = OpAccessChain %p_runtime_array_vec3_uint_32_uniform %v_chunk_range %const_uint32_0
-
 OpBranch %fcp_loop
 
 ; !!!! > Заголовок цикла
@@ -214,19 +224,17 @@ OpBranch %fcp_loop_start
 
 ; !!!! > Тело цикла здесь
 
-; Загружаем границы диапазона
+; Составляем индексы для границ диапазона
 %fcp_index_loaded = OpLoad %type_uint_32 %fcp_index
-%fcp_bound1 = OpAccessChain %p_vec3_uint_32_uniform %fcp_chunk_ranges_array %fcp_index_loaded
 %fcp_index_inc = OpIAdd %type_uint_32 %fcp_index_loaded %const_uint32_1
-%fcp_bound2 = OpAccessChain %p_vec3_uint_32_uniform %fcp_chunk_ranges_array %fcp_index_inc
+
+; Загружаем границы
+%fcp_bound1_loaded = OpFunctionCall %type_vec3_uint_32 %load_chunk_bound %fcp_index_loaded
+%fcp_bound2_loaded = OpFunctionCall %type_vec3_uint_32 %load_chunk_bound %fcp_index_inc
 
 ; Составляем следующий индекс
 %fcp_index_next = OpIAdd %type_uint_32 %fcp_index_loaded %const_uint32_2
 OpStore %fcp_index %fcp_index_next
-
-; Загружаем границы
-%fcp_bound1_loaded = OpLoad %type_vec3_uint_32 %fcp_bound1
-%fcp_bound2_loaded = OpLoad %type_vec3_uint_32 %fcp_bound2
 
 ; диапазоны блоков задаются от и до включительно
 ; соответсвенно нужно прибавить единицу на каждую из сторон для конца
