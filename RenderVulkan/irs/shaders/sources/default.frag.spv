@@ -1,18 +1,23 @@
 OpCapability Shader
 OpMemoryModel Logical Simple
-OpEntryPoint Fragment %main "main" %out 
+OpEntryPoint Fragment %main "main" %v_inCoord %v_out 
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
-OpName %out "out"
+OpName %v_out "v_out"
+OpName %v_inCoord "v_inCoord"
 
 ; !!!!!!!!!!! decorations
+
+OpDecorate %v_out Location 0
+OpDecorate %v_inCoord Location 1
 
 ; !!!!!!!!!!! types
 %type_void = OpTypeVoid ; void
 %func_void = OpTypeFunction %type_void ; void ()
 
 %type_float_32 = OpTypeFloat 32 ; float
+%type_vec3_float_32 = OpTypeVector %type_float_32 3 ; float x3
 %type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
 
 ; !!!!!!!!!!! constants
@@ -20,15 +25,17 @@ OpName %out "out"
 %const_one = OpConstant %type_float_32 1
 %const_zero = OpConstant %type_float_32 0
 
-%constant_pink = OpConstantComposite %type_vec4_float_32 %const_one %const_zero  %const_one %const_zero
+%constant_pink = OpConstantComposite %type_vec4_float_32 %const_one %const_zero %const_one %const_zero
 
 ; !!!!!!!!!!! pointers
 
+%p_vec3_float_32_out = OpTypePointer Input %type_vec3_float_32 ; pointer to input
 %p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output
 
 ; !!!!!!!!!!! variables
 
-%out = OpVariable %p_vec4_float_32_out Output
+%v_inCoord = OpVariable %p_vec3_float_32_out Input
+%v_out = OpVariable %p_vec4_float_32_out Output
 
 ; !!!!!!!!!!! program
 
@@ -36,7 +43,9 @@ OpName %out "out"
 %main_begin = OpLabel
 ; !!!! main function block going here
 
-OpStore %out %constant_pink
+%loaded_coord = OpLoad %type_vec3_float_32 %v_inCoord
+%new_color = OpCompositeConstruct %type_vec4_float_32 %loaded_coord %const_one
+OpStore %v_out %new_color
 
 ; !!!! main function block done here
 OpReturn

@@ -154,7 +154,8 @@ void PipelineBuilder::prepareVertexInput()
 	vertexInputInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
 	const uint16_t posSize = sizeof(float) * 3;
-	const uint16_t vertexSize = posSize;
+	const uint16_t uvwSize = sizeof(float) * 3;
+	const uint16_t vertexSize = posSize + uvwSize;
 
 	// Bindings
 
@@ -174,6 +175,15 @@ void PipelineBuilder::prepareVertexInput()
 			0, //binding
 			VK_FORMAT_R32G32B32_SFLOAT, //format,
 			0, //offset
+		}
+	);
+
+	vertexAttrDescriptions_.push_back(
+		{
+			1, //location
+			0, //binding
+			VK_FORMAT_R32G32B32_SFLOAT, //format,
+			posSize, //offset
 		}
 	);
 
@@ -210,7 +220,7 @@ void PipelineBuilder::prepareDepthStencil()
 	depthStencilInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	depthStencilInfo_.depthTestEnable = VK_TRUE;
 	depthStencilInfo_.depthWriteEnable = VK_TRUE;
-	depthStencilInfo_.depthCompareOp = VK_COMPARE_OP_GREATER;
+	depthStencilInfo_.depthCompareOp = VK_COMPARE_OP_LESS;
 }
 
 void PipelineBuilder::prepareColorBlending()

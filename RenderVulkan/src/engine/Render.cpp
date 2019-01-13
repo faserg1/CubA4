@@ -10,6 +10,7 @@
 #include "./world/RenderChunk.hpp"
 
 #include <cstring>
+#include <cstdint>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
@@ -75,6 +76,7 @@ void Render::record(uint32_t imgIndex)
 	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
 	VkClearValue depthAttachmentsClearValue = {};
+	depthAttachmentsClearValue.depthStencil.depth = FLT_MAX;
 	
 
 	std::vector<VkClearValue> clearValues = 

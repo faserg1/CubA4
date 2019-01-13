@@ -25,12 +25,21 @@ ModelManager::~ModelManager()
 std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef)
 {
 	auto vertices = renderModelDef.getVertices();
+	auto uvws = renderModelDef.getUVWCoords();
 	auto faces = renderModelDef.getFaceIndices();
+
+	if (vertices.size() != uvws.size())
+	{
+		//TODO: [OOKAMI] Exception — count must be same
+		return {};
+	}
 
 	VkBuffer vertexBuffer, vertexTransitBuffer;
 	VkBuffer indexBuffer, indexTransitBuffer;
 
-	uint64_t verticesSize = vertices.size() * sizeof(CubA4::core::model::Vertex); ///< Размер буфера вершин, в байтах
+	uint64_t verticesSize = ///< Размер буфера вершин, в байтах
+		vertices.size() * sizeof(CubA4::core::model::Vertex) +
+		uvws.size() * sizeof(CubA4::core::model::UVWCoords); 
 	uint64_t indexCount = 0; ///< Количество индексов вершин
 	uint64_t indicesSize = 0; ///< Размер буфера индексов, в байтах
 
@@ -77,9 +86,23 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 	auto memoryVertexBuffer = allocator_->allocate(reqVertexBuffer.memoryRequirements.size,
 		MemoryAllocationPrefered::Device, reqVertexBuffer.memoryRequirements.memoryTypeBits);
 
+	/// Fill the vertex buffer
 	auto mappedVertexMemory = memoryVertexTransitBuffer->map(0, VK_WHOLE_SIZE);
-	memcpy(mappedVertexMemory.get(), vertices.data(), verticesSize);
+	for (size_t dstOffset = 0, vIdx = 0; vIdx < vertices.size(); vIdx++)
+	{
+		auto pushToVBuffer = [&dstOffset, mappedVertexMemory](auto &smth) -> void
+		{
+			void *ptr = (static_cast<char*>(mappedVertexMemory.get()) + dstOffset);
+			auto size = sizeof(smth);
+			dstOffset += size;
+			memcpy(ptr, &smth, size);
+		};
+		pushToVBuffer(vertices[vIdx]);
+		pushToVBuffer(uvws[vIdx]);
+	}
 	mappedVertexMemory.reset();
+
+	// Bind and copy
 
 	vkBindBufferMemory(device_->getDevice(), vertexTransitBuffer, memoryVertexTransitBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), vertexBuffer, memoryVertexBuffer->getMemory(), 0);

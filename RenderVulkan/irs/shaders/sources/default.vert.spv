@@ -1,7 +1,7 @@
 OpCapability Shader
 OpCapability Int64
 OpMemoryModel Logical Simple
-OpEntryPoint Vertex %main "main" %v_inPos %v_instance_index %v_outPos
+OpEntryPoint Vertex %main "main" %v_inPos %v_inUVW %v_instance_index %v_outPos %v_outUVW
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
@@ -15,7 +15,9 @@ OpName %v_push "v_push"
 OpName %v_chunk_range "v_chunk_range"
 
 OpName %v_inPos "input_vertex"
+OpName %v_inUVW "input_uvw"
 OpName %v_outPos "output_vertex"
+OpName %v_outUVW "output_uvw"
 
 ; !!!!!!!!!!! decorations
 
@@ -23,7 +25,10 @@ OpName %v_outPos "output_vertex"
 
 OpDecorate %v_inPos Binding 0
 OpDecorate %v_inPos Location 0
+OpDecorate %v_inUVW Binding 0
+OpDecorate %v_inUVW Location 1
 OpDecorate %v_outPos BuiltIn Position
+OpDecorate %v_outUVW Location 1
 
 ; built in
 
@@ -88,8 +93,6 @@ OpDecorate %chunk_size_const SpecId 0
 
 ; struct types
 
-; TODO: [OOKAMI] Доделать
-;%type_vertex_in_struct = OpTypeStruct %type_vec3_float_32
 %type_matrix_struct = OpTypeStruct %type_vec3_int_64 %type_mat4x4_float_32 %type_mat4x4_float_32 ; struct: view_global_pos view projection
 %type_chunk_range_struct = OpTypeStruct %type_runtime_array_vec3_uint_32
 %type_push_struct = OpTypeStruct %type_vec3_int_64 %type_int_32
@@ -106,6 +109,7 @@ OpDecorate %chunk_size_const SpecId 0
 %p_vec4_float_32_in = OpTypePointer Input %type_vec4_float_32 ; pointer to input float
 %p_vec3_float_32_in = OpTypePointer Input %type_vec3_float_32 ; pointer to input float
 %p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output float
+%p_vec3_float_32_out = OpTypePointer Output %type_vec3_float_32 ; pointer to output float
 
 ; uniform
 %p_matrix_struct_uniform = OpTypePointer UniformConstant %type_matrix_struct
@@ -155,7 +159,9 @@ OpDecorate %chunk_size_const SpecId 0
 
 ; vectors
 %v_inPos = OpVariable %p_vec3_float_32_in Input ; input float
+%v_inUVW = OpVariable %p_vec3_float_32_in Input ; input float
 %v_outPos = OpVariable %p_vec4_float_32_out Output ; output float
+%v_outUVW = OpVariable %p_vec3_float_32_out Output ; output float
 
 ; built in
 
@@ -338,6 +344,11 @@ OpFunctionEnd
 %projected_vertex = OpVectorTimesMatrix %type_vec4_float_32 %viewed_vertex %loaded_matrix_projection
 
 OpStore %v_outPos %projected_vertex
+
+; Отправляем координату UVW в следующий шейдер
+
+%uvw_coords = OpLoad %type_vec3_float_32 %v_inUVW
+OpStore %v_outUVW %uvw_coords
 
 ; !!!! main function block done here
 OpReturn

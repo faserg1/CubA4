@@ -113,7 +113,7 @@ use_base_library(ModVanilla CoreBase)
 use_base_library(ModVanilla RenderBase)
 
 add_custom_command(TARGET ModVanilla PRE_BUILD
-	   COMMAND "${CMAKE_COMMAND}" -E remove_directory ${RESOURCES_OUTPUT_DIRECTORY}
+	   COMMAND "${CMAKE_COMMAND}" -E remove_directory ${RESOURCES_OUTPUT_DIRECTORY}/mod/vanilla
 	)
 
 add_custom_command(TARGET ModVanilla POST_BUILD
