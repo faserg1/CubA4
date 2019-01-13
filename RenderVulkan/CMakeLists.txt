@@ -86,6 +86,8 @@ set(RenderVulkanSourceEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.cpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialBuilder.cpp
+	${RenderVulkanSourceEngineMaterialDir}/Texture.cpp
+	${RenderVulkanSourceEngineMaterialDir}/TextureImporter.cpp
 )
 set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/Material.hpp
@@ -99,6 +101,8 @@ set(RenderVulkanHeaderEngineMaterial
 	${RenderVulkanSourceEngineMaterialDir}/ShaderFactory.hpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialManager.hpp
 	${RenderVulkanSourceEngineMaterialDir}/MaterialBuilder.hpp
+	${RenderVulkanSourceEngineMaterialDir}/Texture.hpp
+	${RenderVulkanSourceEngineMaterialDir}/TextureImporter.hpp
 )
 set(RenderVulkanSourceConfig
 	${RenderVulkanSourceConfigDir}/RenderConfig.cpp
@@ -257,6 +261,9 @@ target_link_libraries(RenderVulkan PRIVATE ${VULKAN_LIBRARY_NAME} SDL2 SDL2main)
 
 target_include_directories(RenderVulkan PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(RenderVulkan PRIVATE Boost::filesystem)
+
+#use_library(RenderVulkan zlib)
+use_library(RenderVulkan pnglib)
 
 use_base_library(RenderVulkan CoreBase)
 use_base_library(RenderVulkan ModBase)

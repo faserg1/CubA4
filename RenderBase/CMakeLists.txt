@@ -36,6 +36,8 @@ set(RenderBaseHeaderEngineMaterial
 	${RenderBaseIncludeEngineMaterialDir}/IShaderFactory.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialManager.hpp
 	${RenderBaseIncludeEngineMaterialDir}/IMaterialBuilder.hpp
+	${RenderBaseIncludeEngineMaterialDir}/ITexture.hpp
+	${RenderBaseIncludeEngineMaterialDir}/ITextureImporter.hpp
 )
 
 set(RenderBaseHeaders 
