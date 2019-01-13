@@ -10,7 +10,7 @@
 #include "./world/RenderChunk.hpp"
 
 #include <cstring>
-#include <cstdint>
+#include <cfloat>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
