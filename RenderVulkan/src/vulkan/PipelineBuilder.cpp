@@ -205,7 +205,7 @@ void PipelineBuilder::prepareRasterization()
 	rasterizationInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizationInfo_.polygonMode = VK_POLYGON_MODE_FILL;
 	rasterizationInfo_.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizationInfo_.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+	rasterizationInfo_.frontFace = VK_FRONT_FACE_CLOCKWISE;
 	rasterizationInfo_.lineWidth = 1.f;
 }
 

@@ -135,7 +135,9 @@ void WorldManager::updateViewMatrix()
 	math::Matrix viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
-	viewMatrix = math::Math::lookAtLH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, { 0, 0, -1 });
+	// https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/
+	math::Vector up { 0, -1, 0};
+	viewMatrix = math::Math::lookAtLH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
 
 	/*math::Math::rotateByZ(viewMatrix, worldData_.viewYaw);
 	math::Math::rotateByY(viewMatrix, worldData_.viewPitch);

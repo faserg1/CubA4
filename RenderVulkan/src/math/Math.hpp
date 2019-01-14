@@ -90,9 +90,9 @@ namespace CubA4
 				{
 					Matrix m;
 
-					auto zaxis = (eye - at).normalize();
+					auto zaxis = (at - eye).normalize();
 					auto xaxis = cross(up, zaxis).normalize();
-					auto yaxis = cross(zaxis, xaxis);
+					auto yaxis = cross(xaxis, zaxis);
 
 					m.data()[0] = xaxis.x;
 					m.data()[1] = yaxis.x;
@@ -109,8 +109,8 @@ namespace CubA4
 					m.data()[10] = zaxis.z;
 					m.data()[11] = 0;
 
-					m.data()[12] = dot(xaxis, eye);
-					m.data()[13] = dot(yaxis, eye);
+					m.data()[12] = -dot(xaxis, eye);
+					m.data()[13] = -dot(yaxis, eye);
 					m.data()[14] = dot(zaxis, eye);
 					m.data()[15] = 1;
 

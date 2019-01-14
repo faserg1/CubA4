@@ -106,7 +106,7 @@ void AppMain::run()
 	auto rm = getRenderManager();
 	auto wm = rm->getWorldManager();
 	wm->setFieldOfView(60);
-	wm->setCameraPosition({-2,0,0}, 0, 0, -10);
+	//wm->setCameraPosition({-2,0,0}, 0, 10, 0);
 }
 
 void AppMain::stop()
@@ -175,8 +175,8 @@ void AppMain::doSomeTestThings()
 	double cl = clock();
 	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
 	double x = sin(cl / CLOCKS_PER_SEC) * 50;
-	double y = cos(cl / CLOCKS_PER_SEC) * 50;
-	wm->setCameraPosition({0, 0, 0}, static_cast<float>(x), static_cast<float>(y), l);
+	double z = cos(cl / CLOCKS_PER_SEC) * 50;
+	wm->setCameraPosition({0, 0, 0}, static_cast<float>(x), l, static_cast<float>(z));
 }
 
 void AppMain::loop()

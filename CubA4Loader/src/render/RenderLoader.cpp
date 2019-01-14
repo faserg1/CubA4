@@ -22,7 +22,7 @@ RenderLoader::RenderLoader(std::string renderPath) :
 
 	std::vector<path> renderCandidates;
 
-	for (renderFolderIterator; renderFolderIterator != end; renderFolderIterator++)
+	for (; renderFolderIterator != end; renderFolderIterator++)
 	{
 		auto path = renderFolderIterator->path();
 		if (is_directory(path))

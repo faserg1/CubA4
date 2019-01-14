@@ -40,11 +40,10 @@ void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
 {
 	// TODO: [OOKAMI] Test chunk range feature. Delete function later
 	auto chunk0 = findChunk({ 0, 0, 0 });
-	//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 3, 3, 3 }));
-	//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 4, 4, 4 }, { 15, 15, 15 }));
+	//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));
 	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 1, 1, 1 }));
-	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 1, 1, 2 }, { 2, 2, 2 }));
-	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 3, 2 }, { 40, 40, 40 }));
+	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 1, 2, 1 }, { 2, 2, 2 }));
+	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 2, 3 }, { 40, 40, 40 }));
 	subscriptionHelper_.apply([](CubA4::mod::world::IWorldSubscriber *sub)
 	{
 		// TODO: [OOKAMI] А пофиг. Мир все равно должен быть перекомпилирован

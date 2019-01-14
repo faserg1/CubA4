@@ -144,6 +144,7 @@ OpDecorate %chunk_size_const SpecId 0
 %const_zero_int64 = OpConstant %type_int_64 0
 %const_zero_float32 = OpConstant %type_float_32 0
 %const_one_float32 = OpConstant %type_float_32 1
+%const_two_float32 = OpConstant %type_float_32 2
 
 ; Размер одного элемента chunk range
 %chunk_range_element_size = OpConstant %type_uint_32 12; uint_32 (32 / 8 = 4) * 3 = 12
@@ -343,7 +344,13 @@ OpFunctionEnd
 %viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %calculated_vertex %loaded_matrix_view
 %projected_vertex = OpVectorTimesMatrix %type_vec4_float_32 %viewed_vertex %loaded_matrix_projection
 
-OpStore %v_outPos %projected_vertex
+%projected_vertex_z = OpCompositeExtract %type_float_32 %projected_vertex 2
+%projected_vertex_w = OpCompositeExtract %type_float_32 %projected_vertex 3
+%temp_z = OpFAdd %type_float_32 %projected_vertex_z %projected_vertex_w
+%projected_vertex_z_new = OpFDiv %type_float_32 %temp_z %const_two_float32
+%total_vertex = OpCompositeInsert %type_vec4_float_32 %projected_vertex_z_new %projected_vertex 2
+
+OpStore %v_outPos %total_vertex
 
 ; Отправляем координату UVW в следующий шейдер
 
