@@ -23,6 +23,7 @@ namespace CubA4
 				class ShaderFactory;
 				class MaterialLayoutSetFactory;
 				class MaterialFactory;
+				class TextureImporter;
 
 				class MaterialManager :
 					public virtual IMaterialManager
@@ -36,6 +37,7 @@ namespace CubA4
 					std::shared_ptr<IShaderFactory> getShaderFactory() const override;
 					std::shared_ptr<IMaterialLayoutSetFactory> getMaterialLayoutSetFactory() const override;
 					std::shared_ptr<IMaterialFactory> getMaterialFactory() const override;
+					std::shared_ptr<ITextureImporter> getTextureImporter() const override;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
@@ -43,6 +45,7 @@ namespace CubA4
 					const std::shared_ptr<ResourceManager> resourceManager_;
 					std::shared_ptr<ShaderFactory> shaderFactory_;
 					std::shared_ptr<MaterialFactory> materialFactory_;
+					std::shared_ptr<TextureImporter> textureImporter_;
 				};
 			}
 		}

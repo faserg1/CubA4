@@ -2,6 +2,7 @@
 #include "./ShaderFactory.hpp"
 #include "./MaterialLayoutSetFactory.hpp"
 #include "./MaterialFactory.hpp"
+#include "./TextureImporter.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
@@ -13,6 +14,7 @@ MaterialManager::MaterialManager(std::shared_ptr<const Device> device,
 {
 	shaderFactory_ = std::make_shared<ShaderFactory>(device);
 	materialFactory_ = std::make_shared<MaterialFactory>();
+	textureImporter_ = std::make_shared<TextureImporter>(device);
 }
 
 MaterialManager::~MaterialManager()
@@ -33,4 +35,9 @@ std::shared_ptr<IMaterialLayoutSetFactory> MaterialManager::getMaterialLayoutSet
 std::shared_ptr<IMaterialFactory> MaterialManager::getMaterialFactory() const
 {
 	return materialFactory_;
+}
+
+std::shared_ptr<ITextureImporter> MaterialManager::getTextureImporter() const
+{
+	return textureImporter_;
 }

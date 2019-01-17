@@ -4,6 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <vector>
+#include <mutex>
 #include "IMemoryPart.hpp"
 #include "IMemoryBlock.hpp"
 
@@ -36,6 +37,7 @@ namespace CubA4
 					const uint32_t blockSize_;
 					const std::shared_ptr<MemoryAllocator> allocator_; ///< Собственный аллокатор для менеджера
 					std::vector<std::shared_ptr<IMemoryBlock>> memoryBlocks_;
+					std::mutex mutex_;
 				private:
 					std::shared_ptr<IMemoryBlock> allocateBlock(uint32_t supportedTypes);
 				};

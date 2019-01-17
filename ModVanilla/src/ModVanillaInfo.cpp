@@ -1,5 +1,6 @@
 #include "ModVanillaInfo.hpp"
 #include "ModVanilla.hpp"
+#include "../include/ModVanillaConst.hpp"
 #include "core/info/Version.hpp"
 #include "core/info/VersionDependency.hpp"
 #include <stdexcept>
@@ -26,7 +27,7 @@ std::wstring ModVanillaInfo::getName() const
 
 std::string ModVanillaInfo::getIdName() const
 {
-	return "vanilla";
+	return ModVanillaId;
 }
 
 const IVersion &ModVanillaInfo::getVersion() const

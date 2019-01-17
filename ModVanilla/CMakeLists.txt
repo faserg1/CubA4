@@ -59,6 +59,7 @@ set(ModVanillaSource
 set(ModVanillaHeader
 	${ModVanillaSourceDir}/ModVanilla.hpp
 	${ModVanillaIncludeDir}/IModVanilla.hpp
+	${ModVanillaIncludeDir}/ModVanillaConst.hpp
 )
 set(ModVanillaSourceCoreInfo
 	${ModVanillaSourceCoreInfoDir}/Version.cpp

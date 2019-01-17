@@ -2,6 +2,9 @@
 #include <ICore.hpp>
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
+#include <resources/IResourcesManager.hpp>
+#include <resources/IResources.hpp>
+#include <resources/IResource.hpp>
 #include <system/IEnvironmentBuilder.hpp>
 #include <IRenderInfo.hpp>
 #include <engine/IRenderManager.hpp>
@@ -11,16 +14,21 @@
 #include <engine/material/IMaterialLayoutSetFactory.hpp>
 #include <engine/material/IMaterialFactory.hpp>
 #include <engine/material/IMaterialBuilder.hpp>
+#include <engine/material/ITextureImporter.hpp>
 #include <engine/model/IModelManager.hpp>
 #include "../../gen/irs.hpp"
 #include <stdexcept>
+
+#include "../../include/ModVanillaConst.hpp"
 
 #include "../manager/ModManager.hpp"
 #include "../manager/ModRenderManager.hpp"
 
 #include "../render/BlockModel.hpp"
+using namespace CubA4::mod;
 using namespace CubA4::mod::startup;
 using namespace CubA4::core::logging;
+using namespace CubA4::core::resources;
 using namespace CubA4::mod::manager;
 
 RenderStartup::RenderStartup()
@@ -53,6 +61,7 @@ void RenderStartup::preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBui
 	auto materialManager = renderManager->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
 	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
+	importTextures(materialManager->getTextureImporter());
 	createMaterials(materialManager->getMaterialFactory());
 	createModels(renderManager->getModelManager());
 }
@@ -69,6 +78,14 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 	defaultLayoutBuilder->setType(CubA4::render::engine::material::MaterialType::Default);
 	auto layouts = layoutFactory->build();
 	renderManager->registerMaterialLayout(layouts[0], "default");
+}
+
+void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter)
+{
+	auto renderManager = manager_->getModRenderManager();
+	auto resources = core_->getResourcesManager()->getResources(ResourcesType::Mod, ModVanillaId);
+	auto textureResource = resources->get("textures/NewTexture.png");
+	auto importedTexture = textureImporter->importFromPng(textureResource);
 }
 
 void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory)

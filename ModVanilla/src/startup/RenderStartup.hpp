@@ -31,6 +31,7 @@ namespace CubA4
 				class IMaterialLayoutSetFactory;
 				class IMaterialLayout;
 				class IMaterialFactory;
+				class ITextureImporter;
 				class IShaderFactory;
 				class IShader;
 			}
@@ -68,6 +69,7 @@ namespace CubA4
 			private:
 				void loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory);
 				void createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory);
+				void importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter);
 				void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
 				void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
 			};

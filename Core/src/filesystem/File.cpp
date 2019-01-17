@@ -43,7 +43,7 @@ size_t File::loadIn(void *data, size_t maxSize, size_t offset) const
 	const auto fSize = size();
 	const auto readToEnd = fSize - offset;
 	const auto toRead = (maxSize > readToEnd ? readToEnd : maxSize);
-	boost::filesystem::ifstream reader(path_);
+	boost::filesystem::ifstream reader(path_, std::ios_base::binary | std::ios_base::in);
 	reader.seekg(offset, std::ios_base::beg);
 	reader.read(static_cast<char*>(data), toRead);
 	return toRead;
@@ -51,7 +51,7 @@ size_t File::loadIn(void *data, size_t maxSize, size_t offset) const
 
 void File::save(void *data, size_t size)
 {
-	boost::filesystem::ofstream writer(path_);
+	boost::filesystem::ofstream writer(path_, std::ios_base::binary | std::ios_base::out);
 	writer.write(static_cast<char*>(data), size);
 	writer.flush();
 }

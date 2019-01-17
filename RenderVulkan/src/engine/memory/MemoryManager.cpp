@@ -40,6 +40,7 @@ std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, ui
 {
 	if (size > blockSize_)
 		return {};
+	std::lock_guard<std::mutex> lockGuard(mutex_);
 	for (auto block : memoryBlocks_)
 	{
 		const uint32_t memoryTypeBits = (1 << block->getMemoryTypeIndex());
