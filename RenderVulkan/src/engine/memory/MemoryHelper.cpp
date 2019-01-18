@@ -40,6 +40,50 @@ std::shared_future<bool> MemoryHelper::copyBufferToBuffer(VkBuffer src, VkBuffer
 	return submitCmdBuffer(copyCmd, bufferCopyDone);
 }
 
+std::shared_future<bool> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
+	VkImageLayout srcLayout, VkImageSubresourceRange subresourceRange)
+{
+	VkCommandBuffer copyCmd;
+	VkFence bufferCopyDone;
+	if (!allocateCmdBuffer(copyCmd, bufferCopyDone))
+	{
+		return {};
+	}
+
+	VkImageMemoryBarrier inMemoryBarrier = {};
+	inMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	inMemoryBarrier.oldLayout = srcLayout;
+	inMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	inMemoryBarrier.image = dst;
+	inMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	inMemoryBarrier.subresourceRange = subresourceRange;
+
+	VkImageMemoryBarrier outMemoryBarrier = {};
+	outMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	outMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	outMemoryBarrier.image = dst;
+	outMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	outMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	outMemoryBarrier.subresourceRange = subresourceRange;
+
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	vkBeginCommandBuffer(copyCmd, &beginInfo);
+	vkCmdPipelineBarrier(copyCmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+		0, nullptr,
+		0, nullptr,
+		1, &inMemoryBarrier);
+	vkCmdCopyBufferToImage(copyCmd, src, dst, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(regions.size()), regions.data());
+	vkCmdPipelineBarrier(copyCmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+		0, nullptr,
+		0, nullptr,
+		1, &outMemoryBarrier);
+	vkEndCommandBuffer(copyCmd);
+
+	return submitCmdBuffer(copyCmd, bufferCopyDone);
+}
+
 std::shared_future<bool> MemoryHelper::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType)
 {
 	VkCommandBuffer updateCmd;

@@ -15,6 +15,13 @@ namespace CubA4
 
 		namespace engine
 		{
+			namespace memory
+			{
+				class MemoryHelper;
+				class MemoryManager;
+				class MemoryAllocator;
+			}
+
 			namespace material
 			{
 				class Texture;
@@ -30,7 +37,10 @@ namespace CubA4
 					std::shared_ptr<ITexture> importFromPng(void *ptr, size_t size) const override;
 				protected:
 				private:
-					std::shared_ptr<const vulkan::Device> device_;
+					const std::shared_ptr<const vulkan::Device> device_;
+					const std::shared_ptr<memory::MemoryAllocator> memoryAllocator_;
+					const std::shared_ptr<memory::MemoryManager> memoryManager_;
+					const std::shared_ptr<memory::MemoryHelper> memoryHelper_;
 				private:
 					std::shared_ptr<ITexture> internalImportFromPng(void *pngStruct) const;
 				};

@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <future>
+#include <vector>
 #include <vulkan/vulkan.h>
 
 namespace CubA4
@@ -32,6 +33,8 @@ namespace CubA4
 					~MemoryHelper();
 
 					std::shared_future<bool> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
+					std::shared_future<bool> copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
+						VkImageLayout srcLayout, VkImageSubresourceRange subresourceRange);
 					std::shared_future<bool> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType = BufferBarrierType::None);
 				protected:
 				private:
