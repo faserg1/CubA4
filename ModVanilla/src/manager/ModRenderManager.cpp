@@ -36,6 +36,14 @@ std::shared_ptr<const CubA4::render::engine::material::IMaterial> ModRenderManag
 	return it->second;
 }
 
+std::shared_ptr<const CubA4::render::engine::material::ITexture> ModRenderManager::getTexture(const std::string &id) const
+{
+	auto it = textureMap_.find(id);
+	if (it == textureMap_.end())
+		return {};
+	return it->second;
+}
+
 void ModRenderManager::registerRenderModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel)
 {
 	if (modelMap_.find(renderModel->getId()) != modelMap_.end())
@@ -55,4 +63,11 @@ void ModRenderManager::registerMaterial(std::shared_ptr<const CubA4::render::eng
 	if (materialMap_.find(id) != materialMap_.end())
 		return;
 	materialMap_.insert(std::make_pair(id, renderMaterial));
+}
+
+void ModRenderManager::registerTexture(std::shared_ptr<const CubA4::render::engine::material::ITexture> renderTexture, const std::string &id)
+{
+	if (textureMap_.find(id) != textureMap_.end())
+		return;
+	textureMap_.insert(std::make_pair(id, renderTexture));
 }

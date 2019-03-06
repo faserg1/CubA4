@@ -2,7 +2,6 @@ cmake_minimum_required (VERSION 3.12)
 link_directories(${VULKAN_SDK_LIB} ${SDL_LIBRARY_DIR})
 
 set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
-set(RenderVulkanSourceMathDir ${RenderVulkanSourceDir}/math)
 set(RenderVulkanSourceConfigDir ${RenderVulkanSourceDir}/config)
 set(RenderVulkanSourceVulkanDir ${RenderVulkanSourceDir}/vulkan)
 set(RenderVulkanSourceVulkanUtilDir ${RenderVulkanSourceVulkanDir}/util)
@@ -31,11 +30,6 @@ set(RenderVulkanHeaderEngineMemory
 	${RenderVulkanSourceEngineMemoryDir}/MemoryPart.hpp
 	${RenderVulkanSourceEngineMemoryDir}/IMemoryPart.hpp
 	${RenderVulkanSourceEngineMemoryDir}/IMemoryBlock.hpp
-)
-set(RenderVulkanHeaderMath
-	${RenderVulkanSourceMathDir}/Matrix.hpp
-	${RenderVulkanSourceMathDir}/Vector.hpp
-	${RenderVulkanSourceMathDir}/Math.hpp
 )
 set(RenderVulkanHeaderEnginePipeline
 	${RenderVulkanSourceEnginePipelineDir}/IRenderEnginePipelineSubscriber.hpp
@@ -202,7 +196,6 @@ set(RenderVulkanHeaders
 	${RenderVulkanHeaderVulkanUtil}
 	${RenderVulkanHeaderEngineWorld}
 	${RenderVulkanHeaderEnginePipeline}
-	${RenderVulkanHeaderMath}
 	${RenderVulkanHeaderEngineMemory}
 	${RenderVulkanHeader}
 )
@@ -239,12 +232,12 @@ source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}world" FILES 
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}world" FILES ${RenderVulkanSourceEngineWorld})
 source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanHeaderEnginePipeline})
 source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}pipeline" FILES ${RenderVulkanSourceEnginePipeline})
+source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanHeaderEngineMemory})
+source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanSourceEngineMemory})
 
 add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
-source_group("${SOURCE_GROUP_HEADER_START}math" FILES ${RenderVulkanHeaderMath})
-source_group("${SOURCE_GROUP_HEADER_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanHeaderEngineMemory})
-source_group("${SOURCE_GROUP_SOURCE_START}engine${SOURCE_GROUP_SEP}memory" FILES ${RenderVulkanSourceEngineMemory})
+
 
 add_library(RenderVulkan SHARED ${RenderVulkanHeaders} ${RenderVulkanSources} ${irs_resources})
 
@@ -256,6 +249,7 @@ find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
 
 target_include_directories(RenderVulkan PRIVATE ${VULKAN_SDK_INCLUDE})
 target_include_directories(RenderVulkan PRIVATE ${SDL_INCLUDE_DIR})
+target_include_directories(RenderVulkan PRIVATE ${GLM_INCLUDE_DIR})
 
 target_link_libraries(RenderVulkan PRIVATE ${VULKAN_LIBRARY_NAME} SDL2 SDL2main)
 

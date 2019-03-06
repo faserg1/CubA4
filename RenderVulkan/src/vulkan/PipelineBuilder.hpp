@@ -33,9 +33,13 @@ namespace CubA4
 
 				void useShader(std::shared_ptr<const engine::material::IShader> shader);
 				void addBuiltInDescriptorSetLayout(sVkDescriptorSetLayout builtInLayout);
+				void addTexture();
+				sVkDescriptorSetLayout getTextureLayout();
 
 				VkGraphicsPipelineCreateInfo build();
 				void fillPipelineInfo(PipelineInfo &pipelineInfo) const;
+
+				
 			protected:
 			private:
 				const std::shared_ptr<const Device> device_;
@@ -67,6 +71,9 @@ namespace CubA4
 				std::vector<sVkDescriptorSetLayout> descriptorSetLayouts_;
 				std::vector<VkPushConstantRange> pushConstantsRanges_;
 				std::vector<VkPipelineShaderStageCreateInfo> stages_;
+
+				uint32_t textureCount;
+				sVkDescriptorSetLayout textureLayout_;
 			private:
 				void prepareStages();
 				void prepareVertexInput();

@@ -61,7 +61,7 @@ std::shared_future<bool> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage d
 	VkImageMemoryBarrier outMemoryBarrier = {};
 	outMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	outMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-	outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
 	outMemoryBarrier.image = dst;
 	outMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 	outMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;

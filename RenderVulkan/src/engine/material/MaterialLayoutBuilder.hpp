@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../../vulkan/PipelineBuilder.hpp"
+#include "../../vulkan/util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
@@ -36,6 +37,8 @@ namespace CubA4
 					~MaterialLayoutBuilder();
 
 					void setType(MaterialType type) override;
+					void addTexture() override;
+					vulkan::sVkDescriptorSetLayout getTextureLayout();
 
 					/** \brief Подготовка MaterialLayout к созданию
 					* \param[out] pipelineCreateInfo 

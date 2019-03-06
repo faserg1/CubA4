@@ -49,7 +49,8 @@ void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
 				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));
 				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 1, 1, 1 }));
 				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 1, 2, 1 }, { 2, 2, 2 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 2, 3 }, { 40, 40, 40 }));
+				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 2, 3 }, { 40, 40, 40 }));
+				break;
 			}
 		}
 	}

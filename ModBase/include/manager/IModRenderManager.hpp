@@ -14,6 +14,7 @@ namespace CubA4
 			{
 				class IMaterialLayout;
 				class IMaterial;
+				class ITexture;
 			}
 
 			namespace model
@@ -33,6 +34,7 @@ namespace CubA4
 				virtual std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getModel(const std::string &id) const = 0;
 				virtual std::shared_ptr<const CubA4::render::engine::material::IMaterialLayout> getMaterialLayout(const std::string &id) const = 0;
 				virtual std::shared_ptr<const CubA4::render::engine::material::IMaterial> getMaterial(const std::string &id) const = 0;
+				virtual std::shared_ptr<const CubA4::render::engine::material::ITexture> getTexture(const std::string &id) const = 0;
 			protected:
 				explicit IModRenderManager() = default;
 				virtual ~IModRenderManager() = default;

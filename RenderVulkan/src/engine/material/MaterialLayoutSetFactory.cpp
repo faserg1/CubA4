@@ -109,7 +109,7 @@ std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::bu
 
 		auto pipeline = std::make_shared<Pipeline>(device, info);
 
-		auto materialLayout = std::make_shared<MaterialLayout>(pipeline);
+		auto materialLayout = std::make_shared<MaterialLayout>(pipeline, builder->getTextureLayout());
 		layouts.push_back(materialLayout);
 
 		pipelinePtr++;

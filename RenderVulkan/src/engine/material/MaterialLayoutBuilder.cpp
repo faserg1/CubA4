@@ -55,6 +55,16 @@ void MaterialLayoutBuilder::setType(MaterialType type)
 	pipelineBuilder_.useShader(fragmentShader);
 }
 
+void MaterialLayoutBuilder::addTexture()
+{
+	pipelineBuilder_.addTexture();
+}
+
+sVkDescriptorSetLayout MaterialLayoutBuilder::getTextureLayout()
+{
+	return pipelineBuilder_.getTextureLayout();
+}
+
 void MaterialLayoutBuilder::prepare(VkGraphicsPipelineCreateInfo &pipelineCreateInfo)
 {
 	pipelineCreateInfo = pipelineBuilder_.build();

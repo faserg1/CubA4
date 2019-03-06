@@ -22,6 +22,8 @@ PipelineBuilder::PipelineBuilder(std::shared_ptr<const Device> device) :
 	colorBlendInfo_ = {};
 	dynamicStateInfo_ = {};
 	viewportStateInfo_ = {};
+
+	textureCount = 0;
 }
 
 PipelineBuilder::~PipelineBuilder()
@@ -42,6 +44,16 @@ void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
 void PipelineBuilder::addBuiltInDescriptorSetLayout(sVkDescriptorSetLayout builtInLayout)
 {
 	descriptorSetLayouts_.push_back(builtInLayout);
+}
+
+void PipelineBuilder::addTexture()
+{
+	textureCount++;
+}
+
+sVkDescriptorSetLayout PipelineBuilder::getTextureLayout()
+{
+	return textureLayout_;
 }
 
 VkGraphicsPipelineCreateInfo PipelineBuilder::build()
@@ -204,8 +216,8 @@ void PipelineBuilder::prepareRasterization()
 {
 	rasterizationInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizationInfo_.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterizationInfo_.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizationInfo_.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	rasterizationInfo_.cullMode = VK_CULL_MODE_NONE;
+	rasterizationInfo_.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizationInfo_.lineWidth = 1.f;
 }
 
@@ -262,7 +274,33 @@ void PipelineBuilder::prepareViewport()
 
 void PipelineBuilder::prepareDescriptorSets()
 {
-	
+	if (!textureCount)
+		return;
+	VkDescriptorSetLayoutBinding textureInfo = {};
+	//Texture info
+	textureInfo.binding = 2;
+	textureInfo.descriptorCount = textureCount;
+	textureInfo.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+	textureInfo.stageFlags = VK_SHADER_STAGE_ALL;
+
+	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};
+	descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	descriptorSetLayoutInfo.bindingCount = 1;
+	descriptorSetLayoutInfo.pBindings = &textureInfo;
+	VkDescriptorSetLayout layout = {};
+	if (vkCreateDescriptorSetLayout(device_->getDevice(), &descriptorSetLayoutInfo, nullptr, &layout) != VK_SUCCESS)
+	{
+		// TODO: [OOKAMI] Exceptions, etc
+		return;
+	}
+	device_->getMarker().setName(layout, "texture layout");
+
+	std::function<void(VkDescriptorSetLayout)> deleter = [dev = device_](VkDescriptorSetLayout layout)
+	{
+		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
+	};
+	textureLayout_ = util::createSharedVulkanObject(layout, deleter);
+	descriptorSetLayouts_.push_back(textureLayout_);
 }
 
 void PipelineBuilder::preparePushConstants()

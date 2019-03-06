@@ -125,8 +125,11 @@ class CMakePatcher:
 
 	def _last_source_group(self):
 		pattern = RE_NC_P + RE_SG_P + RE_END_P
+		pattern_ignore = RE_NC_P + RE_SG_P + "\"resources\"" + RE_END_P
 		rc = re.compile(pattern)
-		result = self._last_appearance(rc)
+		rc_ignore = re.compile(pattern_ignore)
+		print(rc_ignore)
+		result = self._last_appearance(rc, rc_ignore)
 		if not result:
 			return 0
 		return result.end
@@ -248,8 +251,8 @@ class CMakePatcher:
 		self._cmake_text = insert_text(self._cmake_text, text, index)
 		return index + len(text)
 
-	def _last_appearance(self, rc):
-		return last_appearance(self._cmake_text, rc)
+	def _last_appearance(self, rc_search, rc_ignore=None):
+		return last_appearance(self._cmake_text, rc_search, rc_ignore)
 
 	_cmake_text = ""
 	_module_name = ""

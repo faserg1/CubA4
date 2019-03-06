@@ -1,4 +1,5 @@
 OpCapability Shader
+OpCapability ImageQuery
 OpMemoryModel Logical Simple
 OpEntryPoint Fragment %main "main" %v_inCoord %v_out 
 
@@ -6,36 +7,51 @@ OpEntryPoint Fragment %main "main" %v_inCoord %v_out
 OpName %main "main"
 OpName %v_out "v_out"
 OpName %v_inCoord "v_inCoord"
+OpName %v_texture "v_texture"
 
 ; !!!!!!!!!!! decorations
 
 OpDecorate %v_out Location 0
 OpDecorate %v_inCoord Location 1
 
+OpDecorate %v_texture Binding 2
+OpDecorate %v_texture DescriptorSet 2
+
 ; !!!!!!!!!!! types
 %type_void = OpTypeVoid ; void
 %func_void = OpTypeFunction %type_void ; void ()
 
 %type_float_32 = OpTypeFloat 32 ; float
+%type_int_32 = OpTypeInt 32 1 ; int 32 signed
+
+%type_vec2_int_32 = OpTypeVector %type_int_32 2 ; int32 x3
+%type_vec3_int_32 = OpTypeVector %type_int_32 3 ; int32 x3
 %type_vec3_float_32 = OpTypeVector %type_float_32 3 ; float x3
 %type_vec4_float_32 = OpTypeVector %type_float_32 4 ; float x4
 
+; sampled type, dim, depth, arrayed, multisampled, sampled
+%type_texture = OpTypeImage %type_float_32 2D 1 0 0 1 Rgba8
+
 ; !!!!!!!!!!! constants
+
+%const_zero_int = OpConstant %type_int_32 0
+%const_one_int = OpConstant %type_int_32 1
 
 %const_one = OpConstant %type_float_32 1
 %const_zero = OpConstant %type_float_32 0
-
-%constant_pink = OpConstantComposite %type_vec4_float_32 %const_one %const_zero %const_one %const_zero
 
 ; !!!!!!!!!!! pointers
 
 %p_vec3_float_32_out = OpTypePointer Input %type_vec3_float_32 ; pointer to input
 %p_vec4_float_32_out = OpTypePointer Output %type_vec4_float_32 ; pointer to output
 
+%p_image_uniform = OpTypePointer Uniform %type_texture ; pointer to image
+
 ; !!!!!!!!!!! variables
 
 %v_inCoord = OpVariable %p_vec3_float_32_out Input
 %v_out = OpVariable %p_vec4_float_32_out Output
+%v_texture = OpVariable %p_image_uniform Uniform
 
 ; !!!!!!!!!!! program
 
@@ -44,8 +60,21 @@ OpDecorate %v_inCoord Location 1
 ; !!!! main function block going here
 
 %loaded_coord = OpLoad %type_vec3_float_32 %v_inCoord
-%new_color = OpCompositeConstruct %type_vec4_float_32 %loaded_coord %const_one
-OpStore %v_out %new_color
+
+%loaded_image = OpLoad %type_texture %v_texture
+
+%image_size = OpImageQuerySize %type_vec2_int_32 %loaded_image
+%image_size_3 = OpCompositeConstruct %type_vec3_int_32 %image_size %const_one_int
+%image_size_3_float = OpConvertSToF %type_vec3_float_32 %image_size_3
+%image_coord_float = OpFMul %type_vec3_float_32 %loaded_coord %image_size_3_float
+
+%coord_int = OpConvertFToS %type_vec3_int_32 %image_coord_float
+
+%image_texel = OpImageFetch %type_vec4_float_32 %loaded_image %coord_int None
+
+%visual_coord = OpCompositeConstruct %type_vec4_float_32 %loaded_coord %const_zero
+
+OpStore %v_out %visual_coord
 
 ; !!!! main function block done here
 OpReturn

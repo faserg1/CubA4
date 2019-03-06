@@ -1,7 +1,7 @@
 OpCapability Shader
 OpCapability Int64
 OpMemoryModel Logical Simple
-OpEntryPoint Vertex %main "main" %v_inPos %v_inUVW %v_instance_index %v_outPos %v_outUVW
+OpEntryPoint Vertex %main "main" %v_inPos %v_inUVW %v_instance_index %v_outPos %v_outUVW %v_outDebug1 %v_outDebug2 %v_outDebug3
 
 ; !!!!!!!!!!! debug namings
 OpName %main "main"
@@ -18,6 +18,9 @@ OpName %v_inPos "input_vertex"
 OpName %v_inUVW "input_uvw"
 OpName %v_outPos "output_vertex"
 OpName %v_outUVW "output_uvw"
+OpName %v_outDebug1 "v_outDebug1"
+OpName %v_outDebug2 "v_outDebug2"
+OpName %v_outDebug3 "v_outDebug3"
 
 ; !!!!!!!!!!! decorations
 
@@ -29,6 +32,9 @@ OpDecorate %v_inUVW Binding 0
 OpDecorate %v_inUVW Location 1
 OpDecorate %v_outPos BuiltIn Position
 OpDecorate %v_outUVW Location 1
+OpDecorate %v_outDebug1 Location 2
+OpDecorate %v_outDebug2 Location 3
+OpDecorate %v_outDebug3 Location 4
 
 ; built in
 
@@ -145,6 +151,7 @@ OpDecorate %chunk_size_const SpecId 0
 %const_zero_float32 = OpConstant %type_float_32 0
 %const_one_float32 = OpConstant %type_float_32 1
 %const_two_float32 = OpConstant %type_float_32 2
+%const_minus_one_float32 = OpConstant %type_float_32 -1
 
 ; Размер одного элемента chunk range
 %chunk_range_element_size = OpConstant %type_uint_32 12; uint_32 (32 / 8 = 4) * 3 = 12
@@ -163,6 +170,10 @@ OpDecorate %chunk_size_const SpecId 0
 %v_inUVW = OpVariable %p_vec3_float_32_in Input ; input float
 %v_outPos = OpVariable %p_vec4_float_32_out Output ; output float
 %v_outUVW = OpVariable %p_vec3_float_32_out Output ; output float
+
+%v_outDebug1 = OpVariable %p_vec4_float_32_out Output ; output float
+%v_outDebug2 = OpVariable %p_vec4_float_32_out Output ; output float
+%v_outDebug3 = OpVariable %p_vec4_float_32_out Output ; output float
 
 ; built in
 
@@ -341,8 +352,26 @@ OpFunctionEnd
 ; пересобираем полученную разницу в vec4
 %calculated_vertex = OpCompositeConstruct %type_vec4_float_32 %moved_vertex_2 %const_one_float32
 
-%viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %calculated_vertex %loaded_matrix_view
+OpStore %v_outDebug1 %calculated_vertex
+
+; в Vulkan в окнном пространстве y смотрит вниз
+
+%calculated_vertex_y = OpCompositeExtract %type_float_32 %calculated_vertex 1
+%calculated_vertex_y_new = OpFDiv %type_float_32 %calculated_vertex_y %const_minus_one_float32
+;%calculated_vertex_y_new = OpFDiv %type_float_32 %calculated_vertex_y %const_one_float32
+%vulkan_inverted_y_vertex = OpCompositeInsert %type_vec4_float_32 %calculated_vertex_y_new %calculated_vertex 1
+
+; проецируем в окнное пространство
+
+%viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %vulkan_inverted_y_vertex %loaded_matrix_view
+
+OpStore %v_outDebug2 %viewed_vertex
+
 %projected_vertex = OpVectorTimesMatrix %type_vec4_float_32 %viewed_vertex %loaded_matrix_projection
+
+OpStore %v_outDebug3 %projected_vertex
+
+; нормализируем вершину
 
 %projected_vertex_z = OpCompositeExtract %type_float_32 %projected_vertex 2
 %projected_vertex_w = OpCompositeExtract %type_float_32 %projected_vertex 3
@@ -350,11 +379,14 @@ OpFunctionEnd
 %projected_vertex_z_new = OpFDiv %type_float_32 %temp_z %const_two_float32
 %total_vertex = OpCompositeInsert %type_vec4_float_32 %projected_vertex_z_new %projected_vertex 2
 
+; сохраняем вершину
+
 OpStore %v_outPos %total_vertex
 
 ; Отправляем координату UVW в следующий шейдер
 
 %uvw_coords = OpLoad %type_vec3_float_32 %v_inUVW
+
 OpStore %v_outUVW %uvw_coords
 
 ; !!!! main function block done here

@@ -136,8 +136,8 @@ void WorldManager::updateViewMatrix()
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
 	// https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/
-	math::Vector up { 0, -1, 0};
-	viewMatrix = math::Math::lookAtLH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
+	math::Vector up { 0, 1, 0};
+	viewMatrix = math::Math::lookAtRH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
 
 	/*math::Math::rotateByZ(viewMatrix, worldData_.viewYaw);
 	math::Math::rotateByY(viewMatrix, worldData_.viewPitch);
@@ -152,7 +152,7 @@ void WorldManager::updateViewMatrix()
 void WorldManager::updateProjectionMatrix()
 {
 	//TODO: [OOKAMI] Set normal aspect ratio
-	auto projection = math::Math::perspectiveLH(worldData_.projectionFov, worldData_.projectionAspect, 0.01f, 16 * 32);
+	auto projection = math::Math::perspectiveRH(worldData_.projectionFov, worldData_.projectionAspect, 0.01f, 16 * 32);
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
@@ -161,3 +161,16 @@ void WorldManager::updateProjectionMatrix()
 
 	memoryHelper_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }
+
+int testMath()
+{
+	using namespace CubA4::render::math;
+	auto m = Math::lookAtLH({ 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 });
+	auto mr = Math::lookAtRH({ 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 });
+	Vector point{ 1, 1, 0 }, pointr {1, 0, 1};
+	auto viewedPoint = vectorTimesMatrix(point, m);
+	auto viewedPointr = vectorTimesMatrix(pointr, mr);
+	return 0;
+}
+
+int x = testMath();

@@ -76,6 +76,7 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 	auto renderManager = manager_->getModRenderManager();
 	auto defaultLayoutBuilder = layoutFactory->createMaterialLayout();
 	defaultLayoutBuilder->setType(CubA4::render::engine::material::MaterialType::Default);
+	defaultLayoutBuilder->addTexture();
 	auto layouts = layoutFactory->build();
 	renderManager->registerMaterialLayout(layouts[0], "default");
 }
@@ -86,12 +87,15 @@ void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::materi
 	auto resources = core_->getResourcesManager()->getResources(ResourcesType::Mod, ModVanillaId);
 	auto textureResource = resources->get("textures/NewTexture.png");
 	auto importedTexture = textureImporter->importFromPng(textureResource);
+	renderManager->registerTexture(importedTexture, "newTexture");
 }
 
 void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory)
 {
 	auto renderManager = manager_->getModRenderManager();
 	auto defaultMaterialBuilder = materialFactory->createMaterial(renderManager->getMaterialLayout("default"));
+	auto texture = renderManager->getTexture("newTexture");
+	defaultMaterialBuilder->addTexture(texture);
 	auto defaultMaterial = defaultMaterialBuilder->build();
 	renderManager->registerMaterial(defaultMaterial, "default");
 }

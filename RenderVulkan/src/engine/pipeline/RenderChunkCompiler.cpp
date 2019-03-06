@@ -126,8 +126,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		instanceInfos.push_back(totalRangeBuffer);
 		memoryParts.push_back(totalRangeMemoryPart);
 
-		constexpr const uint16_t descriptorSetCount = 2;
-		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get(), chunkRangeDescriptorSet };
+		constexpr const uint16_t descriptorSetCount = 3;
+		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get(), chunkRangeDescriptorSet, renderMaterial->getDescriptorSet()};
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		/////////////////////////////////////////////////
