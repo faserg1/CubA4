@@ -361,6 +361,13 @@ OpStore %v_outDebug1 %calculated_vertex
 ;%calculated_vertex_y_new = OpFDiv %type_float_32 %calculated_vertex_y %const_one_float32
 %vulkan_inverted_y_vertex = OpCompositeInsert %type_vec4_float_32 %calculated_vertex_y_new %calculated_vertex 1
 
+; делаем тоже самое для UVW
+
+%uvw_coords = OpLoad %type_vec3_float_32 %v_inUVW
+%coord_v = OpCompositeExtract %type_float_32 %uvw_coords 1
+%v_inverted = OpFSub %type_float_32 %const_one_float32 %coord_v
+%uvw_coords_v_inverted = OpCompositeInsert %type_vec3_float_32 %v_inverted %uvw_coords 1
+
 ; проецируем в окнное пространство
 
 %viewed_vertex = OpVectorTimesMatrix %type_vec4_float_32 %vulkan_inverted_y_vertex %loaded_matrix_view
@@ -385,9 +392,7 @@ OpStore %v_outPos %total_vertex
 
 ; Отправляем координату UVW в следующий шейдер
 
-%uvw_coords = OpLoad %type_vec3_float_32 %v_inUVW
-
-OpStore %v_outUVW %uvw_coords
+OpStore %v_outUVW %uvw_coords_v_inverted
 
 ; !!!! main function block done here
 OpReturn

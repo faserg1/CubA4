@@ -71,7 +71,8 @@ namespace CubA4
 						float viewYaw;
 
 						float projectionFov;
-						float projectionAspect;
+						float projectionWidth;
+						float projectionHeight;
 					} worldData_;
 				private:
 					void allocateSets();

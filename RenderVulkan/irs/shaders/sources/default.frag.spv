@@ -74,7 +74,7 @@ OpDecorate %v_texture DescriptorSet 2
 
 %visual_coord = OpCompositeConstruct %type_vec4_float_32 %loaded_coord %const_zero
 
-OpStore %v_out %visual_coord
+OpStore %v_out %image_texel
 
 ; !!!! main function block done here
 OpReturn

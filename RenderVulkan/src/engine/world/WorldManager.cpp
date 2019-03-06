@@ -6,7 +6,10 @@
 #include "../memory/MemoryManager.hpp"
 #include "../memory/MemoryHelper.hpp"
 
-#include "../../math/Math.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
@@ -49,8 +52,9 @@ void WorldManager::setCameraRotation(float roll, float pitch, float yaw)
 
 void WorldManager::setFieldOfView(float degrees)
 {
-	worldData_.projectionFov = static_cast<float>(degrees * math::Pi / 360);
-	worldData_.projectionAspect = 1024.f / 720.f;
+	worldData_.projectionFov = static_cast<float>(degrees * glm::pi<float>() / 360);
+	worldData_.projectionWidth = 1024;
+	worldData_.projectionHeight = 720;
 	updateProjectionMatrix();
 }
 
@@ -132,45 +136,27 @@ void WorldManager::writeSets()
 void WorldManager::updateViewMatrix()
 {
 	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos), BufferBarrierType::Uniform);
-	math::Matrix viewMatrix;
+	glm::mat4 viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
-	// https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/
-	math::Vector up { 0, 1, 0};
-	viewMatrix = math::Math::lookAtRH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
-
-	/*math::Math::rotateByZ(viewMatrix, worldData_.viewYaw);
-	math::Math::rotateByY(viewMatrix, worldData_.viewPitch);
-	math::Math::translate(viewMatrix, worldData_.viewX, worldData_.viewY, worldData_.viewZ);*/
+	glm::vec3 up { 0, 1, 0};
+	viewMatrix = glm::lookAtRH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
 
 	float vMatrix[4][4];
-	memcpy(vMatrix, viewMatrix.data(), sizeof(float) * 16);
+	memcpy(vMatrix, glm::value_ptr(viewMatrix), sizeof(float) * 16);
 
-	memoryHelper_->updateBuffer(viewMatrix.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
 }
 
 void WorldManager::updateProjectionMatrix()
 {
 	//TODO: [OOKAMI] Set normal aspect ratio
-	auto projection = math::Math::perspectiveRH(worldData_.projectionFov, worldData_.projectionAspect, 0.01f, 16 * 32);
+	glm::mat4 projection = glm::perspectiveFovRH(worldData_.projectionFov, worldData_.projectionWidth, worldData_.projectionHeight, 0.01f, 16.f * 32.f);
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
 	float projMatrix[4][4];
-	memcpy(projMatrix, projection.data(), sizeof(float) * 16);
+	memcpy(projMatrix, glm::value_ptr(projection), sizeof(float) * 16);
 
-	memoryHelper_->updateBuffer(projection.data(), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }
-
-int testMath()
-{
-	using namespace CubA4::render::math;
-	auto m = Math::lookAtLH({ 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 });
-	auto mr = Math::lookAtRH({ 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 });
-	Vector point{ 1, 1, 0 }, pointr {1, 0, 1};
-	auto viewedPoint = vectorTimesMatrix(point, m);
-	auto viewedPointr = vectorTimesMatrix(pointr, mr);
-	return 0;
-}
-
-int x = testMath();
