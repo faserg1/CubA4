@@ -26,11 +26,11 @@ def last_appearance(text, compiled_re_search, compiled_re_ignore = None):
 	last_pos = 0
 	for match in results:
 		if compiled_re_ignore:
-			to_check = match.string[last_pos:match.endpos]
-			m_ignore = compiled_re_ignore.match(to_check)
-			last_pos = match.endpos
-			print(m_ignore)
-			last_match = match
+			to_check = match.string[last_pos:match.end(0)]
+			last_pos = match.end(0)
+			m_ignore = compiled_re_ignore.search(to_check)
+			if not m_ignore:
+				last_match = match
 		else:
 			last_match = match
 	last_result = last_match

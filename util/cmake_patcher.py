@@ -125,10 +125,9 @@ class CMakePatcher:
 
 	def _last_source_group(self):
 		pattern = RE_NC_P + RE_SG_P + RE_END_P
-		pattern_ignore = RE_NC_P + RE_SG_P + "\"resources\"" + RE_END_P
+		pattern_ignore = RE_NC_P + RE_SG_P + "\\\"resources\\\"" + RE_END_P
 		rc = re.compile(pattern)
 		rc_ignore = re.compile(pattern_ignore)
-		print(rc_ignore)
 		result = self._last_appearance(rc, rc_ignore)
 		if not result:
 			return 0
