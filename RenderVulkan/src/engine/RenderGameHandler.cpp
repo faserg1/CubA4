@@ -18,7 +18,13 @@ RenderGameHandler::~RenderGameHandler()
 void RenderGameHandler::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
 {
 	if (!game) // Game destroing
+	{
+		// TODO: Подумать над RAII, но учитывать, что здесь могут находится ресурсы модов
+		currentWorld_.reset();
+		worldSubscription_.reset();
+		gameSubscription_.reset();
 		return;
+	}
 	gameSubscription_ = game->subscribe(this);
 }
 

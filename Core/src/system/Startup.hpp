@@ -32,7 +32,6 @@ namespace CubA4
 				~Startup();
 
 				void load(system::IAppCallback &appCallback) override;
-				void unload() override;
 
 				void setup() override;
 				void shutdown() override;

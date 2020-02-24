@@ -11,6 +11,14 @@ set(CoreSourceWorldDir ${CoreSourceDir}/world)
 set(CoreSourceSystemDir ${CoreSourceDir}/system)
 set(CoreSourceLoggingDir ${CoreSourceDir}/logging)
 set(CoreSourceConfigDir ${CoreSourceDir}/config)
+set(CoreSource
+	${CoreSourceDir}/CommonFactory.cpp
+	${CoreSourceDir}/Core.cpp
+)
+set(CoreHeader
+	${CoreIncludeDir}/CommonFactory.hpp
+	${CoreSourceDir}/Core.hpp
+)
 set(CoreSourceCache
 	${CoreSourceCacheDir}/CacheManager.cpp
 	${CoreSourceCacheDir}/CacheResource.cpp
@@ -96,7 +104,6 @@ set(CoreHeaderConfig
 )
 
 set(CoreHeaders
-	${CoreIncludeDir}/Core.hpp
 	${CoreHeaderLogging}
 	${CoreHeaderConfig}
 	${CoreHeaderSystem}
@@ -106,12 +113,12 @@ set(CoreHeaders
 	${CoreHeaderFilesystem}
 	${CoreHeaderResources}
 	${CoreHeaderCache}
+	${CoreHeader}
 )
 source_group("${SOURCE_GROUP_HEADER_START}logging" FILES ${CoreHeaderLogging})
 source_group("${SOURCE_GROUP_HEADER_START}config" FILES ${CoreHeaderConfig})
 
 set(CoreSources
-	${CoreSourceDir}/Core.cpp
 	${CoreSourceLogging}
 	${CoreSourceConfig}
 	${CoreSourceSystem}
@@ -120,6 +127,7 @@ set(CoreSources
 	${CoreSourceFilesystem}
 	${CoreSourceResources}
 	${CoreSourceCache}
+	${CoreSource}
 )
 source_group("${SOURCE_GROUP_SOURCE_START}logging" FILES ${CoreSourceLogging})
 source_group("${SOURCE_GROUP_SOURCE_START}config" FILES ${CoreSourceConfig})

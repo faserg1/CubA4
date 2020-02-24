@@ -2,6 +2,7 @@
 #define COREBASE_IAPPCALLBACK_HPP
 
 #include <memory>
+#include <functional>
 
 namespace CubA4
 {
@@ -22,12 +23,18 @@ namespace CubA4
 
 	namespace core
 	{
+		namespace info
+		{
+			class IApplicationInfo;
+		}
+
 		namespace system
 		{
 			class IAppCallback
 			{
 			public:
-				virtual std::shared_ptr<mod::IModLoader> getModLoader() const = 0;
+				virtual std::function<std::shared_ptr<mod::IModLoader>()> getModLoaderFactory() const = 0;
+				virtual std::shared_ptr<const CubA4::core::info::IApplicationInfo> getApplicationInfo() const = 0;
 				virtual std::shared_ptr<render::engine::IRenderManager> getRenderManager() const = 0;
 				virtual const render::IRenderInfo &getRenderInfo() const = 0;
 			protected:

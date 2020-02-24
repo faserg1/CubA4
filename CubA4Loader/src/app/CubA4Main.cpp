@@ -1,5 +1,6 @@
 #include "CubA4Main.hpp"
 #include "AppInfo.hpp"
+#include "AppStartup.hpp"
 
 #include <SDL.h>
 #include <stdexcept>
@@ -10,7 +11,8 @@
 #include "../window/Window.hpp"
 #include <engine/IRenderEngine.hpp>
 
-#include <Core.hpp>
+#include <CommonFactory.hpp>
+#include <ICore.hpp>
 #include <config/ICoreConfig.hpp>
 #include <config/IFilePaths.hpp>
 
@@ -32,13 +34,12 @@ using namespace CubA4::app;
 using namespace CubA4::core::logging;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
-	core_(CubA4::core::Core::create(argc, argv)),
+	core_(CubA4::core::CommonFactory::createCore(argc, argv)),
 	info_(std::make_shared<AppInfo>()), running_(true)
 {
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
 	log_->log(LogLevel::Info, "CubA4 Loader created.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
-	modLoader_ = std::make_shared<CubA4::mod::ModLoader>(core_, info_);
 }
 
 AppMain::~AppMain()
@@ -73,16 +74,26 @@ int AppMain::exec()
 		return 1;
 	}
 	///////////////////////////
+	AppStartup startup(*this, core_, renderLoader_->getCurrentRenderInfo()->getRenderEngine());
+	///////////////////////////
 	log_->log(LogLevel::Info, "CubA4 Loader start.");
-	loop();
+	loop(startup);
 	log_->log(LogLevel::Info, "CubA4 Loader stopped.");
 	///////////////////////////
 	return 0;
 }
 
-std::shared_ptr<CubA4::mod::IModLoader> AppMain::getModLoader() const
+std::function<std::shared_ptr<CubA4::mod::IModLoader>()> CubA4::app::AppMain::getModLoaderFactory() const
 {
-	return modLoader_;
+	return [this]() -> std::shared_ptr<CubA4::mod::IModLoader>
+	{
+		return std::make_shared<CubA4::mod::ModLoader>(core_, info_);
+	};
+}
+
+std::shared_ptr<const CubA4::core::info::IApplicationInfo> CubA4::app::AppMain::getApplicationInfo() const
+{
+	return info_;
 }
 
 std::shared_ptr<CubA4::render::engine::IRenderManager> AppMain::getRenderManager() const
@@ -96,95 +107,29 @@ const CubA4::render::IRenderInfo &AppMain::getRenderInfo() const
 	return *renderLoader_->getCurrentRenderInfo();
 }
 
-void AppMain::run()
-{
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->run();
-	core_->getStartup()->run();
-
-	//TODO: [OOKAMI] Убрать тестовые вещи
-	auto rm = getRenderManager();
-	auto wm = rm->getWorldManager();
-	wm->setFieldOfView(60);
-	//wm->setCameraPosition({-2,0,0}, 0, 10, 0);
-}
-
-void AppMain::stop()
-{
-	core_->getStartup()->stop();
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->stop();
-}
-
 bool AppMain::setup()
 {	
 	// перед созданием окна, нужно спросить у renderInfo флаги для его создания
 	loadRender();
 	if (!createWindow())
 		return false;
-	core_->getStartup()->load(*this);
 	initRender();
-	core_->getStartup()->setup();
-	if (!setupGame())
-		return false;
-	run();
 	return true;
 }
 
 void AppMain::shutdown()
 {
 	log_->flush();
-	stop();
-	shutdownGame();
-	core_->getStartup()->shutdown();
 	destroyRender();
-	core_->getStartup()->unload();
 	unloadRender();
 	SDL_Quit();
 }
 
-bool AppMain::setupGame()
-{
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->setGame(core_->getStartup()->getGame());
-	return true;
-}
-
-void AppMain::shutdownGame()
-{
-	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-	renderEngine->setGame({});
-}
-
-void AppMain::doSomeTestThings()
-{
-	constexpr const float max = 4;
-	static float l = -max;
-	const float speed = 0.01f;
-	static bool up = true;
-	if (up)
-		l += speed;
-	else
-		l -= speed;
-	if (l > max)
-		up = false;
-	else if (l < -max)
-		up = true;
-	auto rm = getRenderManager();
-	auto wm = rm->getWorldManager();
-	double cl = clock();
-	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
-	double x = sin(cl / CLOCKS_PER_SEC) * 10;
-	double z = cos(cl / CLOCKS_PER_SEC) * 10;
-	wm->setCameraPosition({0, 0, 0}, static_cast<float>(x), l, static_cast<float>(z));
-}
-
-void AppMain::loop()
+void AppMain::loop(AppStartup &startup)
 {
 	SDL_Event event;
 	while (running_)
 	{
-		doSomeTestThings();
 		if (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -199,11 +144,10 @@ void AppMain::loop()
 				break;
 			}
 		}
+		startup.nextMainLoopIteration();
 		//std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 }
-
-
 
 void AppMain::loadRender()
 {

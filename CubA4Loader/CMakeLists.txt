@@ -9,11 +9,13 @@ set(CubA4LoaderSourceApp
 	${CubA4LoaderSourceAppDir}/AppInfo.cpp
 	${CubA4LoaderSourceAppDir}/CubA4Main.cpp
 	${CubA4LoaderSourceAppDir}/AppVersion.cpp
+	${CubA4LoaderSourceAppDir}/AppStartup.cpp
 )
 set(CubA4LoaderHeaderApp
 	${CubA4LoaderSourceAppDir}/AppInfo.hpp
 	${CubA4LoaderSourceAppDir}/CubA4Main.hpp
 	${CubA4LoaderSourceAppDir}/AppVersion.hpp
+	${CubA4LoaderSourceAppDir}/AppStartup.hpp
 )
 
 set(CubA4LoaderHeaderRender

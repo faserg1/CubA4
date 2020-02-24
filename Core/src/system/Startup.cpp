@@ -18,20 +18,16 @@ Startup::Startup(std::weak_ptr<const ICore> core) :
 
 Startup::~Startup()
 {
-	
+	unloadMods();
 }
 
 void Startup::load(system::IAppCallback &appCallback)
 {
 	appCallback_ = &appCallback;
-	modLoader_ = appCallback_->getModLoader();
+	auto modLoaderFactory = appCallback.getModLoaderFactory();
+	modLoader_ = modLoaderFactory();
 	modLoader_->find();
 	modLoader_->load();
-}
-
-void Startup::unload()
-{
-	unloadMods();
 }
 
 void Startup::setup()

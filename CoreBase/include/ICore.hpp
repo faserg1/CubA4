@@ -49,13 +49,13 @@ namespace CubA4
 			virtual std::shared_ptr<resources::IResourcesManager> getResourcesManager() const = 0;
 			///Получает менеджер кэша
 			virtual std::shared_ptr<cache::ICacheManager> getCacheManager() const = 0;
+			///Создает сообщение о критической ошибке
+			virtual void criticalException() const = 0;
 
 			//Функции, не помеченные const будут доступны только основному приложению, или там, где ICore не передается по константному указателю.
 			//К примеру, через std::shared_ptr<ICore> будут доступны эти функции
 
-			///Получает класс запуска приложения
-			virtual std::shared_ptr<system::IStartup> getStartup() = 0;
-			virtual void criticalException() const = 0;
+			
 		protected:
 			virtual ~ICore() = default;
 			explicit ICore() = default;

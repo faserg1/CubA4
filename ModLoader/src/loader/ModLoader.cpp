@@ -13,6 +13,7 @@
 #include <info/IVersionDependency.hpp>
 #include <info/IVersion.hpp>
 
+#include <algorithm>
 #include <vector>
 #include <map>
 #include <boost/filesystem/path.hpp>
@@ -101,18 +102,73 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 		//TODO: [OOKAMI] Check prefered deps
 	}
 	log_->log(LogLevel::Info, "Checking for mod dependency.");
+
+	std::vector<std::shared_ptr<const IModInfo>> depsCheckedMods;
+	// Key: depended on, Value: mods depended on Id (key)
+	std::map<std::string, std::vector<std::shared_ptr<const IModInfo>>> mapDeps;
+	// TODO: What about recursive deps?
 	for (auto modInfo : modInfos)
 	{
-		//TODO: [OOKAMI] Check for mod deps
+		auto reqs = modInfo->getRequiredMods();
+		if (reqs.empty())
+		{
+			depsCheckedMods.push_back(modInfo);
+			continue;
+		}
+		for (auto reqMod : reqs)
+		{
+			auto modRequired = std::find_if(modInfos.begin(), modInfos.end(), [currentModInfo = modInfo, reqMod, this](std::shared_ptr<const IModInfo> modInfo) -> bool
+			{
+				if (modInfo->getIdName() != reqMod)
+					return false;
+				auto &verDep = currentModInfo->getModDependency(reqMod);
+				if (verDep.required().major() > modInfo->getVersion().major() ||
+					verDep.required().minor() > modInfo->getVersion().minor() ||
+					verDep.required().patch() > modInfo->getVersion().patch())
+				{
+					log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required mod %2% version is: %3%, current: %4%.")
+						% currentModInfo->getIdName() % modInfo->getIdName() % verDep.required().to_string() % modInfo->getVersion().to_string()));
+					return false;
+				}
+				return true;
+			});
+			// Required mod not found
+			if (modRequired == modInfos.end())
+			{
+				std::vector<std::string> brokenModIdList{ modInfo->getIdName() };
+				while (!brokenModIdList.empty())
+				{
+					auto brokenModIdListCopy = brokenModIdList;
+					for (auto brokenModId : brokenModIdListCopy)
+					{
+						auto brokenModsIter = mapDeps.find(brokenModId);
+						if (brokenModsIter == mapDeps.end())
+							continue;
+						auto brokenMods = brokenModsIter->second;
+						std::transform(brokenMods.begin(), brokenMods.end(), back_inserter(brokenModIdList), [](std::shared_ptr<const IModInfo> modInfo) -> std::string
+						{
+							return modInfo->getIdName();
+						});
+						for (auto mod : brokenMods)
+							std::remove(depsCheckedMods.begin(), depsCheckedMods.end(), mod);
+					}
+				}
+				continue;
+			}
+			depsCheckedMods.push_back(modInfo);
+			if (mapDeps.find(reqMod) == mapDeps.end())
+				mapDeps.insert(std::make_pair(reqMod, std::vector<std::shared_ptr<const IModInfo>> {}));
+			mapDeps.find(reqMod)->second.push_back(modInfo);
+		}
+	}
+	for (auto modInfo : depsCheckedMods)
+	{
 		auto mod = modInfo->createMod();
+
 		if (mod)
-		{
 			mods.push_back(mod);
-		}
 		else
-		{
 			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfo->getIdName()));
-		}
 	}
 	setupModByChain(builderFactory, mods);
 }

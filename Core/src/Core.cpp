@@ -1,4 +1,4 @@
-#include "../include/Core.hpp"
+#include "Core.hpp"
 #include "config/CoreConfig.hpp"
 #include "config/FilePaths.hpp"
 #include "logging/Logger.hpp"
@@ -26,13 +26,6 @@ Core::~Core()
 
 }
 
-std::shared_ptr<ICore> Core::create(int argc, const char *const argv[])
-{
-	auto core = std::shared_ptr<Core>(new Core(argc, argv), [](Core *ptr) {delete ptr; });
-	core->core_ = core;
-	return core;
-}
-
 const std::shared_ptr<const config::IFilePaths> Core::getPaths() const
 {
 	return paths_;
@@ -56,13 +49,6 @@ std::shared_ptr<resources::IResourcesManager> Core::getResourcesManager() const
 std::shared_ptr<cache::ICacheManager> Core::getCacheManager() const
 {
 	return cacheManager_;
-}
-
-std::shared_ptr<system::IStartup> Core::getStartup()
-{
-	if (!startup_)
-		startup_ = std::make_shared<system::Startup>(core_);
-	return startup_;
 }
 
 void Core::criticalException() const

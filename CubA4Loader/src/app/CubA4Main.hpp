@@ -1,6 +1,7 @@
 #ifndef CUBA4LOADER_CUBA4MAIN_HPP
 #define CUBA4LOADER_CUBA4MAIN_HPP
 
+#include <functional>
 #include <memory>
 #include <system/IAppCallback.hpp>
 
@@ -38,7 +39,9 @@ namespace CubA4
 
 	namespace app
 	{
-		class AppMain :
+		class AppStartup;
+
+		class AppMain final :
 			public virtual CubA4::core::system::IAppCallback
 		{
 		public:
@@ -47,7 +50,8 @@ namespace CubA4
 
 			int exec();
 
-			std::shared_ptr<mod::IModLoader> getModLoader() const override;
+			std::function<std::shared_ptr<mod::IModLoader>()> getModLoaderFactory() const override;
+			std::shared_ptr<const CubA4::core::info::IApplicationInfo> getApplicationInfo() const override;
 			std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
 			const CubA4::render::IRenderInfo &getRenderInfo() const override;
 		private:
@@ -60,15 +64,7 @@ namespace CubA4
 			bool setup();
 			void shutdown();
 
-			bool setupGame();
-			void shutdownGame();
-
-			void run();
-			void stop();
-
-			void loop();
-
-			void doSomeTestThings();
+			void loop(AppStartup &startup);
 		private:
 			bool running_;
 			std::shared_ptr<CubA4::core::ICore> core_;
@@ -77,8 +73,6 @@ namespace CubA4
 			std::shared_ptr<CubA4::window::Window> window_;
 
 			std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
-
-			std::shared_ptr<CubA4::mod::ModLoader> modLoader_;
 		};
 	}
 }
