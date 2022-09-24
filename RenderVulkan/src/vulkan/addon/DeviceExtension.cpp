@@ -1,6 +1,7 @@
 #include "./DeviceExtension.hpp"
 #include "../PhysicalDevice.hpp"
 #include <vulkan/vulkan.h>
+#include <stdexcept>
 using namespace CubA4::render::vulkan::addon;
 using namespace CubA4::render::vulkan;
 

@@ -16,11 +16,10 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <boost/dll.hpp>
 
-#include <boost/format.hpp>
+#include <fmt/format.h>
 
 using namespace CubA4::mod;
 using namespace CubA4::core;
@@ -44,7 +43,7 @@ ModLoader::~ModLoader()
 void ModLoader::find()
 {
 	auto modsPath = core_.lock()->getPaths()->modsPath();
-	using namespace boost::filesystem;
+	using namespace std::filesystem;
 	auto modsFolder = path(modsPath);
 	recursive_directory_iterator modsFolderIterator(modsFolder), end;
 
@@ -56,13 +55,13 @@ void ModLoader::find()
 		if (path.extension() != boost::dll::shared_library::suffix())
 			continue;
 		candidates_.push_back(path.generic_string());
-		log_->log(LogLevel::Info, str(boost::format("Find mod candidate: %1%.") % path.generic_string()));
+		log_->log(LogLevel::Info, fmt::format("Find mod candidate: {}.", path.generic_string()));
 	}
 }
 
 void ModLoader::load()
 {
-	using namespace boost::filesystem;
+	using namespace std::filesystem;
 	for (auto candidate : candidates_)
 	{
 		auto library = std::make_shared<ModLibrary>(path(candidate));
@@ -70,10 +69,10 @@ void ModLoader::load()
 		{
 			modLibs_.push_back(library);
 			auto modInfo = library->getModInfo();
-			log_->log(LogLevel::Info, str(boost::format("Loaded mod: %1%.") % modInfo->getIdName()));
+			log_->log(LogLevel::Info, fmt::format("Loaded mod: {}.", modInfo->getIdName()));
 		}
 		else
-			log_->log(LogLevel::Warning, str(boost::format("Invalid mod library: %1%.") % candidate));
+			log_->log(LogLevel::Warning, fmt::format("Invalid mod library: {}.", candidate));
 	}
 }
 
@@ -88,14 +87,14 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 		auto &appDep = modInfo->getAppDependency();
 		if (appDep.required().major() != appInfo_->version().major())
 		{
-			log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required app version is: %2%, current: %3%. Major version is not equal.")
-				% modInfo->getIdName() % appDep.required().to_string() % appInfo_->version().to_string()));
+			log_->log(LogLevel::Warning, fmt::format("Skipping mod {}: Required app version is: {}, current: {}. Major version is not equal.",
+				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
 			continue;
 		}
 		if (appDep.required().minor() > appInfo_->version().minor())
 		{
-			log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required app version is: %2%, current: %3%. Minor version is lower than required.")
-				% modInfo->getIdName() % appDep.required().to_string() % appInfo_->version().to_string()));
+			log_->log(LogLevel::Warning, fmt::format("Skipping mod {}: Required app version is: {}, current: {}. Minor version is lower than required.",
+				modInfo->getIdName(), appDep.required().to_string(), appInfo_->version().to_string()));
 			continue;
 		}
 		modInfos.push_back(modInfo);
@@ -126,8 +125,8 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 					verDep.required().minor() > modInfo->getVersion().minor() ||
 					verDep.required().patch() > modInfo->getVersion().patch())
 				{
-					log_->log(LogLevel::Warning, str(boost::format("Skipping mod %1%: Required mod %2% version is: %3%, current: %4%.")
-						% currentModInfo->getIdName() % modInfo->getIdName() % verDep.required().to_string() % modInfo->getVersion().to_string()));
+					log_->log(LogLevel::Warning, fmt::format("Skipping mod {}: Required mod {} version is: {}, current: {}.",
+						currentModInfo->getIdName(), modInfo->getIdName(), verDep.required().to_string(), modInfo->getVersion().to_string()));
 					return false;
 				}
 				return true;
@@ -150,7 +149,9 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 							return modInfo->getIdName();
 						});
 						for (auto mod : brokenMods)
+						{
 							std::remove(depsCheckedMods.begin(), depsCheckedMods.end(), mod);
+						}
 					}
 				}
 				continue;
@@ -168,7 +169,7 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 		if (mod)
 			mods.push_back(mod);
 		else
-			log_->log(LogLevel::Info, str(boost::format("The %1% is meta mod. Skipping next steps for this mod") % modInfo->getIdName()));
+			log_->log(LogLevel::Info, fmt::format("The %1% is meta mod. Skipping next steps for this mod", modInfo->getIdName()));
 	}
 	setupModByChain(builderFactory, mods);
 }

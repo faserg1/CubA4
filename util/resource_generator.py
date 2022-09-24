@@ -82,15 +82,19 @@ class ResourceGenerator:
 		self._write(filename, total)
 
 	def _generate_irs_data_hpp(self, files):
-		total = "constexpr unsigned char data[] = {\n\t"
-		for file in files:
-			total += "//\n\t"
-			total += "// " + file + "\n\t"
-			total += "//\n\t"
-			rc = ResourceCompiler(os.path.join(self._rf.get_root(), file))
-			filedata = rc.compile() + ("," if file != files[-1] else "")
-			total += format_for(filedata, 70, "\n\t")
-		total = total[:-1] + "};"
+		total = ""
+		if len(files):
+			total += "constexpr unsigned char data[] = {\n\t"
+			for file in files:
+				total += "//\n\t"
+				total += "// " + file + "\n\t"
+				total += "//\n\t"
+				rc = ResourceCompiler(os.path.join(self._rf.get_root(), file))
+				filedata = rc.compile() + ("," if file != files[-1] else "")
+				total += format_for(filedata, 70, "\n\t")
+			total = total[:-1] + "};"
+		else:
+			total += "constexpr unsigned char *data = nullptr;"
 		filename = os.path.join(self._gen_path, "irs-data.hpp")
 		self._write(filename, total)
 

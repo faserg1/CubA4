@@ -41,10 +41,6 @@ set(NetworkHeaderTransmit
 	${NetworkIncludeTransmitDir}/Receiver.hpp
 )
 
-link_directories(
-#third party
-	${Boost_LIBRARY_DIRS})
-
 set(NetworkHeaders
 	${NetworkIncludeDir}/NetworkLibrary.hpp
 	${NetworkHeaderIo}
@@ -74,14 +70,11 @@ use_base_library(Network CoreBase)
 #self include directories
 target_include_directories(Network PUBLIC ${NetworkIncludeDir})
 
-#thrid-party
-target_include_directories(Network PRIVATE ${Boost_INCLUDE_DIRS})
-
 #set defines for library export
 target_compile_definitions(Network PRIVATE NETWORK_LIBRARY)
 
 #thridparty link libraries
-target_link_libraries(Network PRIVATE Boost::system)
+target_link_libraries(Network PRIVATE Boost::boost)
 
 #system libraries
 use_thread_library(Network)

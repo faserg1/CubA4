@@ -1,12 +1,12 @@
 cmake_minimum_required (VERSION 3.12)
 project (CubA4 C CXX)
 
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #prepare config
-include (Arch.cmake)
-include (Util.cmake)
+include (cmake/Arch.cmake)
+include (cmake/Util.cmake)
 
 set(CUBA4_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/built/${TARGET_ARCH})
 

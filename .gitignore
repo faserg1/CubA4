@@ -1,8 +1,12 @@
-build/*
-env/*
-Win32/*
-bin/*
-built/*
+build
+env
+Win32
+bin
+built
 */gen/*
 
 __pycache__
+
+#IDE
+
+.vscode

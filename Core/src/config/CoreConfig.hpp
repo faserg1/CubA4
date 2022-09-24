@@ -3,7 +3,7 @@
 
 #include <config/ICoreConfig.hpp>
 #include <memory>
-#include <boost/property_tree/ptree.hpp>
+#include "./data/CoreData.hpp"
 
 namespace CubA4
 {
@@ -28,7 +28,7 @@ namespace CubA4
 				void reload() override;
 			private:
 				std::string native_config_path_;
-				std::shared_ptr<boost::property_tree::ptree> configTree_;
+				std::shared_ptr<CoreData> configTree_;
 				void flushConfig();
 			};
 		}

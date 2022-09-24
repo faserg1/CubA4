@@ -2,7 +2,7 @@
 #define RENDERVULKAN_RENDERCONFIG_HPP
 
 #include <config/IRenderConfig.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <nlohmann/json_fwd.hpp>
 
 namespace CubA4
 {
@@ -30,7 +30,7 @@ namespace CubA4
 			protected:
 			private:
 				std::string native_config_path_;
-				std::shared_ptr<boost::property_tree::ptree> configTree_;
+				std::shared_ptr<nlohmann::json> configTree_;
 				void flushConfig();
 			};
 		}

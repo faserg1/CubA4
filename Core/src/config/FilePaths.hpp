@@ -2,7 +2,7 @@
 #define CORE_FILEPATHS_HPP
 
 #include <config/IFilePaths.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace CubA4
 {
@@ -25,7 +25,7 @@ namespace CubA4
 				std::string resourcesPath() const override;
 			protected:
 			private:
-				boost::filesystem::path initialPath_;
+				std::filesystem::path initialPath_;
 			};
 		}
 	}

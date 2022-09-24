@@ -4,17 +4,22 @@ import copy
 import os
 import subprocess
 
+from util.cppfile import CppFile
+
 class GeneratorBase:
-	def __init__(self, full_name, module_name):
+	def __init__(self, full_name: str, module_name):
 		self._cwd = os.getcwd()
-		self._full_name = full_name
+		self._full_name = self._parse_name(full_name)
 		self._module_name = module_name
 		self._dry_run = False
 		self._virtual_dtr = False
 		self._ctr_default_realization = False
 		self._dtr_default_realization = False
+		self._container_name = "class"
 		self._ctr_access = "public"
 		self._dtr_access = "public"
+		self._has_ctr = True
+		self._has_dtr = True
 		self._header_folder = "include"
 		self._source_folder = "src"
 		self._header_ext = ".hpp"
@@ -38,11 +43,20 @@ class GeneratorBase:
 	def set_default_destructor(self, is_empty):
 		self._dtr_default_realization = is_empty
 
+	def set_container_name(self, name):
+		self._container_name = name
+
 	def set_access_constructor(self, access):
 		self._ctr_access = access
 
 	def set_access_destructor(self, access):
 		self._dtr_access = access
+
+	def set_has_ctr(self, has):
+		self._has_ctr = has
+	
+	def set_has_dtr(self, has):
+		self._has_dtr = has
 
 	def set_header_folder(self, folder):
 		self._header_folder = folder
@@ -63,13 +77,8 @@ class GeneratorBase:
 
 	#Generations
 
-	def _generate_guard(self, file):
-		name = self._get_name()
-		upper_file_name = self._module_name.upper() + "_" + name.upper() + "_HPP"
-		header_guard_starts = "#ifndef " + upper_file_name + "\n"
-		header_guard_define = "#define " + upper_file_name + "\n"
-		header_guard_ends = "#endif // " + upper_file_name + "\n"
-		file.add_lines(header_guard_starts + header_guard_define, header_guard_ends, False, True)
+	def _generate_guard(self, file: CppFile):
+		file.add_lines("#pragma once", None, False, True)
 
 	def _generate_namespaces(self, file):
 		namespaces = self._get_namespaces()
@@ -78,10 +87,10 @@ class GeneratorBase:
 			namespace_close = "}"
 			file.add_lines(namespace_open, namespace_close)
 
-	def _generate_class_proto(self, file):
+	def _generate_class_proto(self, file: CppFile):
 		name = self._get_name()
 
-		class_define = "class " + name + "\n{\n"
+		class_define = self._container_name + " " + name + "\n{\n"
 		class_public = "public:\n"
 		class_protected = "protected:\n"
 		class_private = "private:\n"
@@ -92,31 +101,35 @@ class GeneratorBase:
 		class_ctr = "\t" + "explicit " + name + "()" + cdtr_gen(self._ctr_default_realization) + "\n"
 		class_dtr = "\t" + ("virtual " if self._virtual_dtr else "") + "~" + name + "()" + cdtr_gen(self._dtr_default_realization) + "\n"
 
-		class_open = class_define + class_public
-		if self._ctr_access == "public":
-			class_open += class_ctr
-		if self._dtr_access == "public":
-			class_open += class_dtr
+		class_open = class_define
 
-		class_open += class_protected
+		if (self._has_ctr or self._has_dtr):
+			if self._ctr_access == "public" or self._dtr_access == "public":
+				class_open += class_public
+				if self._ctr_access == "public":
+					class_open += class_ctr
+				if self._dtr_access == "public":
+					class_open += class_dtr
 
-		if self._ctr_access == "protected":
-			class_open += class_ctr
-		if self._dtr_access == "protected":
-			class_open += class_dtr
-
-		class_open += class_private
-
-		if self._ctr_access == "private":
-			class_open += class_ctr
-		if self._dtr_access == "private":
-			class_open += class_dtr
+			if self._ctr_access == "protected" or self._dtr_access == "protected":
+				class_open += class_protected
+				if self._ctr_access == "protected":
+					class_open += class_ctr
+				if self._dtr_access == "protected":
+					class_open += class_dtr
+			
+			if self._ctr_access == "private" or self._dtr_access == "private":
+				class_open += class_private
+				if self._ctr_access == "private":
+					class_open += class_ctr
+				if self._dtr_access == "private":
+					class_open += class_dtr
 
 		class_close = class_ends
 
 		file.add_lines(class_open, class_close)
 
-	def _generate_cpp(self, file):
+	def _generate_cpp(self, file: CppFile, includes: "list[str]" = []):
 		name = self._get_name()
 		#Get relatve file path to header
 		relative_folder_header = self._get_relative_namespace_folder(self._header_folder)
@@ -124,30 +137,36 @@ class GeneratorBase:
 		include_folder = os.path.relpath(relative_folder_header, relative_folder_source)
 		include_header = os.path.join(include_folder, name + self._header_ext)
 		#always unix style
-		include_header = include_header.replace("\\", "/")
+		include_header = "\"{}\"".format(include_header.replace("\\", "/"))
 		#Generate
-		include_line = "#include \"" + include_header + "\"\n"
+		all_includes = [include_header] + includes
+		include_lines = ""
+		for include_file in all_includes:
+			include_line = "#include " + include_file + "\n"
+			include_lines += include_line
 		using_namespace_line = "using namespace " + ("::".join(self._get_namespaces())) + ";\n"
-		head_open = include_line + using_namespace_line
+		head_open = include_lines + using_namespace_line
 		file.add_lines(head_open, "", False, True)
 		source_open = ""
-		if not self._ctr_default_realization:
-			ctr_open = name + "::" + name + "()\n{\n\t\n}"
-			file.add_lines(ctr_open, "", False, True)
-		if not self._dtr_default_realization:
-			dtr_open = name + "::~" + name + "()\n{\n\t\n}"
-			file.add_lines(dtr_open, "", False, True)
+		if self._has_ctr:
+			if not self._ctr_default_realization:
+				ctr_open = name + "::" + name + "()\n{\n\t\n}"
+				file.add_lines(ctr_open, "", False, True)
+		if self._has_dtr:
+			if not self._dtr_default_realization:
+				dtr_open = name + "::~" + name + "()\n{\n\t\n}"
+				file.add_lines(dtr_open, "", False, True)
 
 	#Getters
 
 	def _get_namespaces(self):
-		return copy.deepcopy(self._full_name[:-1])
+		return filter(lambda name: not name.startswith("#"), self._full_name[:-1])
 
 	def _get_name(self):
 		return self._full_name[-1]
 
 	def _get_relative_namespace_folder(self, folder):
-		namespaces = self._get_namespaces()
+		namespaces = copy.deepcopy(self._full_name[:-1])
 		#project namespace
 		if namespaces[0] == "CubA4":
 			namespaces = namespaces[1:]
@@ -157,7 +176,8 @@ class GeneratorBase:
 			if namespaces[0] == module or module.startswith(namespaces[0]):
 				namespaces = namespaces[1:]
 		#total
-		return os.path.join(folder, *namespaces)
+		filtered = [name.replace("#", "") for name in namespaces]
+		return os.path.join(folder, *filtered)
 
 	def _get_put_folder(self, folder):
 		relative_folder = self._get_relative_namespace_folder(folder)
@@ -194,15 +214,21 @@ class GeneratorBase:
 	def _add_to_git(self, file_path):
 		subprocess.call(["git", "add", file_path])
 
+	def _parse_name(self, name):
+		return name.split(".")
+
 	#Members
 
-	_full_name = ""
+	_full_name: "list[str]" = []
 	_module_name = ""
 	_cwd = ""
 	_dry_run = False
 	_virtual_dtr = False
 	_ctr_default_realization = False
 	_dtr_default_realization = False
+	_container_name = "class"
+	_has_ctr = True
+	_has_dtr = True
 	_ctr_access = "public"
 	_dtr_access = "public"
 	_header_folder = "include"

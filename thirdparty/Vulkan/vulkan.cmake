@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 2.8)
-
 if (MSVC)
 	set (VULKAN_LIBRARY_NAME vulkan-1)
 	set (VULKAN_SDK_INCLUDE $ENV{VULKAN_SDK}/Include)
@@ -13,3 +11,5 @@ elseif (UNIX)
 	set (VULKAN_SDK_INCLUDE $ENV{VULKAN_SDK}/x86_64/include)
 	set (VULKAN_SDK_LIB $ENV{VULKAN_SDK}/x86_64/lib)
 endif ()
+
+find_library(vulkan-1 PATHS ${VULKAN_SDK_LIB} NO_DEFAULT_PATH)

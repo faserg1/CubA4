@@ -8,7 +8,8 @@ import copy
 from .cmd_line import CmdLineParser
 from .generator_class import GeneratorClass
 from .generator_interface import GeneratorInterface
-from .cmake_patcher import CMakePatcher
+from .generator_struct import GeneratorStruct
+#from .cmake_patcher import CMakePatcher
 from .lineutil import *
 
 def generate_common(generator, params):
@@ -28,6 +29,8 @@ def generate_common(generator, params):
 		generator.set_access_destructor("private")
 	if "--module-namespace" in params:
 		generator.set_module_namespace(True)
+	if "--json" in params:
+		generator.set_need_json(True)
 	for param in params:
 		header_folder = check_exists_and_get(param, "--header-folder:")
 		if header_folder:
@@ -51,18 +54,24 @@ def generate_class(full_name, module, params):
 		generator.set_default_destructor(True)
 	generator.generate()
 	generator.save()
-	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
-	patcher_options(patcher, params)
-	patcher.patch()
+	#patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	#patcher_options(patcher, params)
+	#patcher.patch()
 
 def generate_interface(full_name, module, params):
 	generator = GeneratorInterface(full_name, module)
 	generate_common(generator, params)
 	generator.generate()
 	generator.save()
-	patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
-	patcher_options(patcher, params)
-	patcher.patch()
+	#patcher = CMakePatcher(module, generator.header_saved_to(), generator.source_saved_to())
+	#patcher_options(patcher, params)
+	#patcher.patch()
 
-parser = CmdLineParser(generate_class, generate_interface)
+def generate_struct(full_name, module, params):
+	generator = GeneratorStruct(full_name, module)
+	generate_common(generator, params)
+	generator.generate()
+	generator.save()
+
+parser = CmdLineParser(generate_class, generate_interface, generate_struct)
 parser.parse()

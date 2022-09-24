@@ -1,6 +1,7 @@
 #include "./RenderConfig.hpp"
-#include <boost/filesystem.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include <filesystem>
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <stdexcept>
 using namespace CubA4::render::config;
 
@@ -13,21 +14,21 @@ constexpr const char *renderLoggingLevel = "render.log.level";
 
 RenderConfig::RenderConfig(std::string configsPath)
 {
-	auto configPathsDirectory = boost::filesystem::path(configsPath);
+	auto configPathsDirectory = std::filesystem::path(configsPath);
 	auto configPath = configPathsDirectory / "renderVulkan.json";
 
-	if (!boost::filesystem::exists(configPathsDirectory))
+	if (!std::filesystem::exists(configPathsDirectory))
 	{
-		boost::filesystem::create_directory(configPathsDirectory);
+		std::filesystem::create_directory(configPathsDirectory);
 	}
-	else if (!boost::filesystem::is_directory(configPathsDirectory))
+	else if (!std::filesystem::is_directory(configPathsDirectory))
 	{
 		throw std::runtime_error("`config` is not a directory!");
 	}
 
 	native_config_path_ = configPath.string();
-	configTree_ = std::make_shared<boost::property_tree::ptree>();
-	if (boost::filesystem::exists(configPath))
+	configTree_ = std::make_shared<nlohmann::json>();
+	if (std::filesystem::exists(configPath))
 		reload();
 }
 
@@ -38,46 +39,51 @@ RenderConfig::~RenderConfig()
 
 std::tuple<unsigned, unsigned> RenderConfig::getRenderResolution(std::tuple<unsigned, unsigned> defaultResolution) const
 {
-	unsigned width = configTree_->get<unsigned>(renderResolutionWidthKey, std::get<0>(defaultResolution));
-	unsigned height = configTree_->get<unsigned>(renderResolutionHeightKey, std::get<1>(defaultResolution));
+
+	unsigned width = configTree_->at(renderResolutionWidthKey).get<unsigned>();
+	unsigned height = configTree_->at(renderResolutionHeightKey).get<unsigned>();
 	return std::make_tuple(width, height);
 }
 
 void RenderConfig::setRenderResolution(std::tuple<unsigned, unsigned> res)
 {
-	configTree_->put(renderResolutionWidthKey, std::get<0>(res));
-	configTree_->put(renderResolutionHeightKey, std::get<1>(res));
+	/*configTree_->put(renderResolutionWidthKey, std::get<0>(res));
+	configTree_->put(renderResolutionHeightKey, std::get<1>(res));*/
 	flushConfig();
 }
 
 std::string RenderConfig::getPresentMethod(std::string methodByDefault) const
 {
-	return configTree_->get<std::string>(renderPresentMethodKey, methodByDefault);
+	//return configTree_->get<std::string>(renderPresentMethodKey, methodByDefault);
+	return {};
 }
 
 void RenderConfig::setPresentMethod(std::string method)
 {
-	configTree_->put(renderPresentMethodKey, method);
+	//configTree_->put(renderPresentMethodKey, method);
 	flushConfig();
 }
 
 int RenderConfig::getLoggingLevel(int lvl) const
 {
-	return configTree_->get<int>(renderLoggingLevel, lvl);
+	//return configTree_->get<int>(renderLoggingLevel, lvl);
+	return {};
 }
 
 void RenderConfig::setLoggingLevel(int lvl)
 {
-	configTree_->put(renderLoggingLevel, lvl);
+	//configTree_->put(renderLoggingLevel, lvl);
 	flushConfig();
 }
 
 void RenderConfig::reload()
 {
-	boost::property_tree::json_parser::read_json(native_config_path_, *configTree_);
+	std::ifstream file(native_config_path_);
+	*configTree_ = nlohmann::json::parse(file);
 }
 
 void RenderConfig::flushConfig()
 {
-	boost::property_tree::json_parser::write_json(native_config_path_, *configTree_);
+	std::ofstream file(native_config_path_);
+	file << configTree_->dump(1, '\t');
 }

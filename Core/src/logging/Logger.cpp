@@ -1,8 +1,8 @@
 #include "Logger.hpp"
 #include <logging/ILoggerTagged.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+#include <loguru/loguru.hpp>
 
-#include "LoggerStreams.hpp"
 
 #include <stdexcept>
 #include <chrono>
@@ -41,6 +41,20 @@ namespace CubA4
 					const LogSourceSystem system_;
 					const std::string tag_;
 				};
+
+				constexpr loguru::Verbosity toLoguruVerbosity(LogLevel level)
+				{
+					switch (level)
+					{
+						case LogLevel::Warning:
+							return loguru::Verbosity_WARNING;
+						case LogLevel::Error:
+							return loguru::Verbosity_ERROR;
+						case LogLevel::Critical:
+							return loguru::Verbosity_FATAL;
+					}
+					return loguru::Verbosity_INFO;
+				}
 			}
 		}
 	}
@@ -49,7 +63,8 @@ namespace CubA4
 Logger::Logger(std::string logsPath) :
 	logsPath_(logsPath)
 {
-	openLogStream();
+	const auto logName = getNextLogName();
+	loguru::add_file(logName.c_str(), loguru::FileMode::Truncate, loguru::Verbosity_MAX);
 }
 
 std::shared_ptr<ILogger> Logger::create(std::string logsPath)
@@ -62,20 +77,25 @@ std::shared_ptr<ILogger> Logger::create(std::string logsPath)
 
 Logger::~Logger()
 {
-	stream_->flush();
+	flush();
 }
 
-void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message)
+void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message, const char *filename, int line)
 {
-	std::string logMsg = "[" + getLevelString(level) + ":" + getTagString(system) + ":" + tag + "]{" + getTimeString("%x-%X:%%k") + "} " + message + "\n";
-	stream_->write(logMsg);
+	loguru::log(toLoguruVerbosity(level), filename, line, "[{}:{}] {}", getTagString(system), tag, message);
 	if (level == LogLevel::Error || level == LogLevel::Critical)
 		flush();
 }
 
+void Logger::log(LogSourceSystem system, const std::string &tag, LogLevel level, const std::string &message)
+{
+	log(system, tag, level, message, "unknow file", -1);
+}
+
+
 void Logger::flush()
 {
-	stream_->flush();
+	loguru::flush();
 }
 
 std::shared_ptr<ILoggerTagged> Logger::createTaggedLog(LogSourceSystem system, const std::string &tag)
@@ -144,17 +164,9 @@ std::string CubA4::core::logging::Logger::getTimeString(const char *format)
 
 std::string Logger::getNextLogName()
 {
-	boost::filesystem::path path(logsPath_);
-	if (!boost::filesystem::exists(path))
-		boost::filesystem::create_directories(path);
+	std::filesystem::path path(logsPath_);
+	if (!std::filesystem::exists(path))
+		std::filesystem::create_directories(path);
 	return (path / getTimeString("log%F_%H.%M.%S.txt")).string();
-}
-
-void Logger::openLogStream()
-{
-	stream_ = std::make_shared<LoggerStreams>([this]() -> std::string
-	{
-		return std::move(getNextLogName());
-	});
 }
 

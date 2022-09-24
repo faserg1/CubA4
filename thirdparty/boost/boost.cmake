@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 2.8)
-
 set(Boost_USE_STATIC_LIBS   ON)
 set(Boost_USE_MULTITHREADED ON)
 
@@ -10,6 +8,6 @@ else()
 	
 endif ()
 
-find_package(Boost 1.67 REQUIRED
- COMPONENTS system filesystem ${boost_stacktrace_name}
- )
+find_package(Boost 1.78.0 REQUIRED
+	COMPONENTS ${boost_stacktrace_name} filesystem
+)

@@ -28,6 +28,9 @@ namespace CubA4
 				void log(LogSourceSystem system, const std::string &tag,
 					LogLevel level, const std::string &message) override;
 
+				void log(LogSourceSystem system, const std::string &tag,
+					LogLevel level, const std::string &message, const char *filename, int line) override;
+
 				void flush() override;
 
 				std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) override;
@@ -40,8 +43,6 @@ namespace CubA4
 				virtual std::string getTimeString(const char *format);
 			private:
 				std::string getNextLogName();
-				void openLogStream();
-				std::shared_ptr<LoggerStreams> stream_;
 				const std::string logsPath_;
 				std::weak_ptr<ILogger> this_;
 			};

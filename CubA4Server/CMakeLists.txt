@@ -15,8 +15,8 @@ add_executable(CubA4Server ${CubA4ServerSources})
 use_library(CubA4Server ModLoader)
 use_library(CubA4Server Network)
 
-#thrid-party include directories
-target_include_directories(CubA4Server PRIVATE ${Boost_INCLUDE_DIRS})
+#thridparty link libraries
+target_link_libraries(CubA4Server PRIVATE Boost::boost)
 
 #system libraries
 use_thread_library(CubA4Server)

@@ -1,0 +1,41 @@
+{
+  "name": "cuba4",
+  "version-string": "0.0.4",
+  "dependencies": [
+    {
+      "name": "curl",
+      "features": ["openssl"]
+    },
+    "bext-sml",
+    "boost-asio",
+    "boost-bimap",
+    "boost-stacktrace",
+    "boost-dll",
+    "cpr",
+    "fmt",
+    "glm",
+    {
+      "name": "loguru",
+      "features": [
+          "fmt"
+      ],
+      "platform": "!windows"
+    },
+    {
+      "name": "loguru",
+      "platform": "windows"
+    },
+    "nlohmann-json",
+    "openssl",
+    "vulkan",
+    "spirv-tools",
+    {
+      "name": "sdl2",
+      "features": [
+        "vulkan"
+      ]
+    },
+    "libpng"
+  ]
+}
+

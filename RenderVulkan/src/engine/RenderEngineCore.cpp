@@ -6,6 +6,7 @@
 #include <logging/ILogger.hpp>
 
 #include <vulkan/vulkan.h>
+#include <algorithm>
 
 #include "../vulkan/Instance.hpp"
 #include "../vulkan/InstanceBuilder.hpp"

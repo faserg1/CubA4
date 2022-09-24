@@ -9,8 +9,8 @@ class CppFile:
 		self._indent_count = 0
 
 	def add_lines(self, lines_open, lines_close, add_indent = True, add_lines = False):
-		ar_lines_open = [line.replace("\n", "").replace("\r", "") for line in lines_open.splitlines()]
-		ar_lines_close = [line.replace("\n", "").replace("\r", "") for line in lines_close.splitlines()]
+		ar_lines_open = [line.replace("\n", "").replace("\r", "") for line in lines_open.splitlines()] if lines_open else []
+		ar_lines_close = [line.replace("\n", "").replace("\r", "") for line in lines_close.splitlines()] if lines_close else []
 		#open
 		for line in ar_lines_open:
 			self._lines.insert(self._current_line, "\t" * self._indent_count + line + "\n")

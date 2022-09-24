@@ -1,7 +1,7 @@
 #ifndef MODLOADER_MOD_LIBRARY_HPP
 #define MODLOADER_MOD_LIBRARY_HPP
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/dll.hpp>
 #include <memory>
 
@@ -14,7 +14,7 @@ namespace CubA4
 		class ModLibrary
 		{
 		public:
-			ModLibrary(boost::filesystem::path path);
+			ModLibrary(std::filesystem::path path);
 			bool isValidLibrary() const;
 			std::shared_ptr<const CubA4::mod::IModInfo> getModInfo() const;
 			void destroy();

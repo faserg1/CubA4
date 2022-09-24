@@ -50,12 +50,7 @@ source_group("${SOURCE_GROUP_SOURCE_START}app" FILES ${CubA4LoaderSourceApp})
 source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${CubA4LoaderHeaderWindow})
 source_group("${SOURCE_GROUP_SOURCE_START}window" FILES ${CubA4LoaderSourceWindow})
 
-link_directories(
-#third party
-	${SDL_LIBRARY_DIR}
-	${VULKAN_SDK_LIB}
-	${STEAM_AUDIO_LIBRARY_DIR}
-	${Boost_LIBRARY_DIRS})
+link_directories(${STEAM_AUDIO_LIBRARY_DIR})
 
 add_executable(CubA4Loader ${CubA4LoaderHeaders} ${CubA4LoaderSources})
 
@@ -68,28 +63,16 @@ use_library(CubA4Loader Core)
 use_library(CubA4Loader ModLoader)
 use_library(CubA4Loader Network)
 
-#find thrid-party libraries
-find_library(SDL2 PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
-find_library(SDL2main PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
-find_library(SDL2test PATHS ${SDL_LIBRARY_DIR} NO_DEFAULT_PATH)
-
-find_library(phonon PATHS ${STEAM_AUDIO_LIBRARY_DIR} NO_DEFAULT_PATH)
-
 #thrid-party include directories
-target_include_directories(CubA4Loader PRIVATE ${Boost_INCLUDE_DIRS})
-target_include_directories(CubA4Loader PRIVATE ${SDL_INCLUDE_DIR})
 target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 
 #thridparty link libraries
-target_link_libraries(CubA4Loader PRIVATE SDL2 SDL2main phonon Boost::filesystem)
-message(${SDL2})
-message(${SDL2main})
-message(${SDL2test})
+target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main phonon)
+
 #system libraries
 use_system_loader_library(CubA4Loader)
 
 if (WIN32)
-	set (SDL2_DLL "${SDL_LIBRARY_DIR}/SDL2.dll")
 	set (STEAM_AUDIO_DLL "${STEAM_AUDIO_BINARY_DIR}/phonon.dll")
 	
 	set_target_properties(
@@ -97,17 +80,13 @@ if (WIN32)
 		VS_DEBUGGER_WORKING_DIRECTORY "${CUBA4_ROOT_DIR}")
 	
 	add_custom_command(TARGET CubA4Loader POST_BUILD
-	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_DLL} ${COPY_DLL_OUTPUT_DIR}
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${STEAM_AUDIO_DLL} ${COPY_DLL_OUTPUT_DIR}
 	)
 elseif(UNIX)
-	set (SDL2_SO "${SDL_LIBRARY_DIR}/libSDL2.so")
 	set (STEAM_AUDIO_SO "${STEAM_AUDIO_LIBRARY_DIR}/libphonon.so")
 	
 	add_custom_command(TARGET CubA4Loader POST_BUILD
-	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${SDL2_SO} ${COPY_SO_OUTPUT_DIR}
 	   COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${STEAM_AUDIO_SO} ${COPY_SO_OUTPUT_DIR}
-	   #COMMAND "${CMAKE_COMMAND}" -E create_symlink ${COPY_SO_OUTPUT_DIR}/{SDL2_SO} ${COPY_SO_OUTPUT_DIR}/${SDL2}
 	)
 endif (WIN32)
 

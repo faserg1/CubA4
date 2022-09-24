@@ -1,10 +1,11 @@
-cmake_minimum_required (VERSION 2.8)
+find_package(Threads REQUIRED)
 
 include (${CMAKE_CURRENT_LIST_DIR}/boost/boost.cmake)
+include (${CMAKE_CURRENT_LIST_DIR}/fmt/fmt.cmake)
+include (${CMAKE_CURRENT_LIST_DIR}/logguru/logguru.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/SDL/sdl.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/steamaudio_api/steamaudio_api.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/Vulkan/vulkan.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/glm/glm.cmake)
-
-add_subdirectory (${CMAKE_CURRENT_LIST_DIR}/zlib)
-add_subdirectory (${CMAKE_CURRENT_LIST_DIR}/libpng)
+include (${CMAKE_CURRENT_LIST_DIR}/libpng/libpng.cmake)
+include (${CMAKE_CURRENT_LIST_DIR}/json/json.cmake)

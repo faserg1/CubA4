@@ -4,7 +4,7 @@ using namespace CubA4::core::config;
 
 FilePaths::FilePaths(int argc, const char *const argv[])
 {
-	using namespace boost::filesystem;
+	using namespace std::filesystem;
 	initialPath_ = current_path();
 }
 

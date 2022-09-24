@@ -4,15 +4,14 @@ import sys
 import os
 
 class CmdLineParser:
-	def __init__(self, gen_class_func, gen_interface_func):
-		self._cls_func = gen_class_func
-		self._ifc_func = gen_interface_func
+	def __init__(self, gen_class_func, gen_interface_func, gen_struct_func):
+		self._type_map = {"class": gen_class_func, "interface": gen_interface_func, "struct": gen_struct_func}
 
 	def help(self):
 		print("Usage:")
-		print("gen.py class|interface <name> <module> [params]")
+		print("gen.py class|interface|struct <name> <module> [params]")
 		print("Where:")
-		print("<name> — Class or interface name with namespaces, separeted with dot (`.`).")
+		print("<name> — Class or interface name with namespaces, separeted with dot (`.`).\nIf name starts with '#', namespace will be ignored, but folder created.")
 		print("<module> — Module, where to place class or interface.")
 		print("Parameters:")
 		print("--dry-run — Not add files at really, but do work.")
@@ -24,6 +23,7 @@ class CmdLineParser:
 		print("--header-folder:<folder> — Set folder for .hpp files.")
 		print("--source-folder:<folder> — Set folder for .cpp files.")
 		print("--module-namespace — Will not ignore module namespace")
+		print("--json — Will add json to struct")
 
 	def parse(self):
 		if len(sys.argv) == 2:
@@ -32,7 +32,7 @@ class CmdLineParser:
 				self.help()
 			elif arg == "--author":
 				print("Ookami")
-			self.help()
+			#self.help()
 			return
 		if len(sys.argv) < 4:
 			print("Invalid usage!")
@@ -45,18 +45,16 @@ class CmdLineParser:
 				self.help()
 				return
 		type = sys.argv[1]
-		full_name = self._parse_name(sys.argv[2])
+		full_name = sys.argv[2]
 		module = sys.argv[3]
 		params = sys.argv[4:]
 		if not self._check(type, full_name, module):
 			return
-		if type == "class":
-			self._parse_cls(full_name, module, params)
-		elif type == "interface":
-			self._parse_ifc(full_name, module, params)
+		parse_func = self._type_map[type]
+		parse_func(full_name, module, params)
 
 	def _check(self, type, full_name, module):
-		if type != "class" and type != "interface":
+		if type not in self._type_map:
 			print("Invalid type <" + type + ">!")
 			return False
 		path_module = os.path.join(os.getcwd(), module)
@@ -65,15 +63,4 @@ class CmdLineParser:
 			return False
 		return True
 
-
-	def _parse_name(self, name):
-		return name.split(".")
-
-	def _parse_cls(self, full_name, module, params):
-		self._cls_func(full_name, module, params)
-
-	def _parse_ifc(self, full_name, module, params):
-		self._ifc_func(full_name, module, params)
-
-	_cls_func = None
-	_ifc_func = None
+	_type_map = {}
