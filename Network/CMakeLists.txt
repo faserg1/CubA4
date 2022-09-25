@@ -1,69 +1,22 @@
 cmake_minimum_required (VERSION 3.12)
-set(NetworkSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
-set(NetworkSourceIoDir ${NetworkSourceDir}/io)
-set(NetworkSourceDataDir ${NetworkSourceDir}/data)
-set(NetworkSourceTransmitDir ${NetworkSourceDir}/transmit)
+
 set(NetworkIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
-set(NetworkIncludeIoDir ${NetworkIncludeDir}/io)
-set(NetworkIncludeDataDir ${NetworkIncludeDir}/data)
-set(NetworkIncludeTransmitDir ${NetworkIncludeDir}/transmit)
+set(NetworkSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 
-set(NetworkSourceIo
-	${NetworkSourceIoDir}/Connection.cpp
-	${NetworkSourceIoDir}/ConnectionUDP.cpp
-	${NetworkSourceIoDir}/ConnectionTCP.cpp
-	${NetworkSourceIoDir}/ListenerTCP.cpp
-	${NetworkSourceIoDir}/Listener.cpp
-	${NetworkSourceIoDir}/Factory.cpp
-)
-set(NetworkHeaderIo
-	${NetworkIncludeIoDir}/Connection.hpp
-	${NetworkIncludeIoDir}/ConnectionUDP.hpp
-	${NetworkIncludeIoDir}/ConnectionTCP.hpp
-	${NetworkIncludeIoDir}/ListenerTCP.hpp
-	${NetworkIncludeIoDir}/Listener.hpp
-	${NetworkIncludeIoDir}/Factory.hpp
-)
-set(NetworkSourceData
-	${NetworkSourceDataDir}/Packet.cpp
-)
-set(NetworkHeaderData
-	${NetworkIncludeDataDir}/Packet.hpp
-)
-set(NetworkSourceTransmit
-	${NetworkSourceTransmitDir}/Dispatcher.cpp
-	${NetworkSourceTransmitDir}/Sender.cpp
-	${NetworkSourceTransmitDir}/Receiver.cpp
-)
-set(NetworkHeaderTransmit
-	${NetworkIncludeTransmitDir}/Dispatcher.hpp
-	${NetworkIncludeTransmitDir}/Sender.hpp
-	${NetworkIncludeTransmitDir}/Receiver.hpp
+file(GLOB_RECURSE NetworkSources
+    "${NetworkIncludeDir}/**/*.hpp"
+    "${NetworkIncludeDir}/*.hpp"
+    "${NetworkSourceDir}/**/*.hpp"
+    "${NetworkSourceDir}/**/*.cpp"
+    "${NetworkSourceDir}/*.hpp"
+    "${NetworkSourceDir}/*.cpp"
 )
 
-set(NetworkHeaders
-	${NetworkIncludeDir}/NetworkLibrary.hpp
-	${NetworkHeaderIo}
-	${NetworkHeaderData}
-	${NetworkHeaderTransmit}
-)
+source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${NetworkSources})
 
-set(NetworkSources
-	${NetworkSourceDir}/common.cpp
-	${NetworkSourceIo}
-	${NetworkSourceData}
-	${NetworkSourceTransmit}
-)
-
-source_group("${SOURCE_GROUP_HEADER_START}io" FILES ${NetworkHeaderIo})
-source_group("${SOURCE_GROUP_SOURCE_START}io" FILES ${NetworkSourceIo})
-source_group("${SOURCE_GROUP_HEADER_START}data" FILES ${NetworkHeaderData})
-source_group("${SOURCE_GROUP_SOURCE_START}data" FILES ${NetworkSourceData})
-source_group("${SOURCE_GROUP_HEADER_START}transmit" FILES ${NetworkHeaderTransmit})
-source_group("${SOURCE_GROUP_SOURCE_START}transmit" FILES ${NetworkSourceTransmit})
 
 #library
-add_library(Network SHARED ${NetworkHeaders} ${NetworkSources})
+add_library(Network SHARED ${NetworkSources})
 
 use_base_library(Network CoreBase)
 

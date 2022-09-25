@@ -1,9 +1,11 @@
 cmake_minimum_required (VERSION 3.12)
 
 set(ModBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
-file(GLOB ModBaseHeaders
+file(GLOB_RECURSE ModBaseHeaders
     "${ModBaseIncludeDir}/**/*.hpp"
     "${ModBaseIncludeDir}/**/*.cpp"
+    "${ModBaseIncludeDir}/*.hpp"
+    "${ModBaseIncludeDir}/*.cpp"
 )
 source_group(TREE ${ModBaseIncludeDir} FILES ${ModBaseHeaders})
 

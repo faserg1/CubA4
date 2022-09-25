@@ -6,8 +6,11 @@ set (ModLoaderSourcesPath ${CMAKE_CURRENT_LIST_DIR}/src)
 
 file(GLOB_RECURSE ModLoaderSources
     "${ModLoaderHeadersPath}/**/*.hpp"
+    "${ModLoaderHeadersPath}/*.hpp"
     "${ModLoaderSourcesPath}/**/*.hpp"
     "${ModLoaderSourcesPath}/**/*.cpp"
+    "${ModLoaderSourcesPath}/*.hpp"
+    "${ModLoaderSourcesPath}/*.cpp"
 )
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${ModLoaderSources})

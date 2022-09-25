@@ -1,6 +1,8 @@
 #include "RenderLoader.hpp"
+#include <system/IRuntime.hpp>
 #include <boost/dll.hpp>
 #include <map>
+#include <filesystem>
 #include <stdexcept>
 
 using namespace CubA4::render;
@@ -11,14 +13,20 @@ struct RenderLoader::Private
 	boost::dll::shared_library currentLibrary;
 };
 
-RenderLoader::RenderLoader(std::string renderPath) :
+RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<core::system::IRuntime> runtime) :
 	importSymbolName_("getRenderInfo"),
-	currentRenderInfo_(nullptr)
+	currentRenderInfo_(nullptr),
+	runtime_(runtime)
 {
 	data_ = std::make_shared<RenderLoader::Private>();
-	using namespace boost::filesystem;
-	path rednerFolder = path(renderPath);
-	recursive_directory_iterator renderFolderIterator(rednerFolder), end;
+	using namespace std::filesystem;
+	path renderFolder(renderPath);
+	if (!exists(renderFolder)) {
+		throw std::runtime_error("Can't find folder " + renderPath);
+		return;
+	}
+	
+	recursive_directory_iterator renderFolderIterator(renderFolder), end;
 
 	std::vector<path> renderCandidates;
 
@@ -34,7 +42,24 @@ RenderLoader::RenderLoader(std::string renderPath) :
 
 	for (auto candidate : renderCandidates)
 	{
-		boost::dll::shared_library library(candidate);
+		boost::dll::shared_library library;
+		boost::dll::fs::error_code ec;
+		/*try {*/
+		const auto name = candidate.filename().generic_string();
+		if (name[0] != 'R')
+		{
+			continue;
+		}
+		runtime_->addModuleSearchPath(candidate.parent_path().generic_string());
+		library.load(candidate.generic_wstring(), ec);
+		if (ec)
+		{
+			throw std::runtime_error("Damn it!");
+		}
+		/*} catch (std::exception &ex) {
+			
+			throw;
+		}*/
 		if (!library.is_loaded())
 		{
 			//todo: вывести ошибку

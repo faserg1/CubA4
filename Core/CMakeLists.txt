@@ -4,9 +4,12 @@ set(CoreIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(CoreSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 
 file(GLOB_RECURSE CoreSources
+    "${CoreIncludeDir}/*.hpp"
     "${CoreIncludeDir}/**/*.hpp"
     "${CoreSourceDir}/**/*.hpp"
     "${CoreSourceDir}/**/*.cpp"
+    "${CoreSourceDir}/*.hpp"
+    "${CoreSourceDir}/*.cpp"
 )
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${CoreSources})

@@ -31,6 +31,7 @@ namespace CubA4
 			std::shared_ptr<logging::ILogger> getLogger() const override;
 			std::shared_ptr<resources::IResourcesManager> getResourcesManager() const override;
 			std::shared_ptr<cache::ICacheManager> getCacheManager() const override;
+			std::shared_ptr<system::IRuntime> getRuntime() override;
 
 			void criticalException() const override;
 		protected:
@@ -40,6 +41,7 @@ namespace CubA4
 			std::shared_ptr<logging::ILogger> logger_;
 			std::shared_ptr<resources::IResourcesManager> resourceManager_;
 			std::shared_ptr<cache::ICacheManager> cacheManager_;
+			std::shared_ptr<system::IRuntime> runtime_;
 
 			std::shared_ptr<system::IStartup> startup_;
 		};

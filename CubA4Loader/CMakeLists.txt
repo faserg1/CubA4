@@ -1,58 +1,22 @@
 cmake_minimum_required (VERSION 3.12)
 set(CubA4LoaderSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
-set(CubA4LoaderSourceAppDir ${CubA4LoaderSourceDir}/app)
-set(CubA4LoaderSourceRenderDir ${CubA4LoaderSourceDir}/render)
-set(CubA4LoaderSourceWindowDir ${CubA4LoaderSourceDir}/window)
 
-
-set(CubA4LoaderSourceApp
-	${CubA4LoaderSourceAppDir}/AppInfo.cpp
-	${CubA4LoaderSourceAppDir}/CubA4Main.cpp
-	${CubA4LoaderSourceAppDir}/AppVersion.cpp
-	${CubA4LoaderSourceAppDir}/AppStartup.cpp
-)
-set(CubA4LoaderHeaderApp
-	${CubA4LoaderSourceAppDir}/AppInfo.hpp
-	${CubA4LoaderSourceAppDir}/CubA4Main.hpp
-	${CubA4LoaderSourceAppDir}/AppVersion.hpp
-	${CubA4LoaderSourceAppDir}/AppStartup.hpp
+file(GLOB_RECURSE CubA4LoaderSources
+    "${CubA4LoaderSourceDir}/**/*.hpp"
+    "${CubA4LoaderSourceDir}/**/*.cpp"
+    "${CubA4LoaderSourceDir}/*.hpp"
+    "${CubA4LoaderSourceDir}/*.cpp"
 )
 
-set(CubA4LoaderHeaderRender
-	${CubA4LoaderSourceRenderDir}/RenderLoader.hpp
-)
-set(CubA4LoaderSourceRender
-	${CubA4LoaderSourceRenderDir}/RenderLoader.cpp
-)
-set(CubA4LoaderHeaderWindow
-	${CubA4LoaderSourceWindowDir}/Window.hpp
-)
-set(CubA4LoaderSourceWindow
-	${CubA4LoaderSourceWindowDir}/Window.cpp
-)
-set(CubA4LoaderHeaders
-	${CubA4LoaderSourceDir}/main.cpp
-	${CubA4LoaderHeaderRender}
-	${CubA4LoaderHeaderWindow}
-	${CubA4LoaderHeaderApp}
-)
-set(CubA4LoaderSources 
-	${CubA4LoaderSourceDir}/main.cpp
-	${CubA4LoaderSourceRender}
-	${CubA4LoaderSourceWindow}
-	${CubA4LoaderSourceApp}
-)
-
-source_group("${SOURCE_GROUP_HEADER_START}render" FILES ${CubA4LoaderHeaderRender})
-source_group("${SOURCE_GROUP_SOURCE_START}render" FILES ${CubA4LoaderSourceRender})
-source_group("${SOURCE_GROUP_HEADER_START}app" FILES ${CubA4LoaderHeaderApp})
-source_group("${SOURCE_GROUP_SOURCE_START}app" FILES ${CubA4LoaderSourceApp})
-source_group("${SOURCE_GROUP_HEADER_START}window" FILES ${CubA4LoaderHeaderWindow})
-source_group("${SOURCE_GROUP_SOURCE_START}window" FILES ${CubA4LoaderSourceWindow})
+source_group(TREE ${CubA4LoaderSourceDir} FILES ${CubA4LoaderSources})
 
 link_directories(${STEAM_AUDIO_LIBRARY_DIR})
 
-add_executable(CubA4Loader ${CubA4LoaderHeaders} ${CubA4LoaderSources})
+if (WIN32)
+	set(OPTIONS WIN32)
+endif ()
+
+add_executable(CubA4Loader ${OPTIONS} ${CubA4LoaderSources})
 
 #libs
 use_base_library(CubA4Loader CoreBase)
@@ -67,7 +31,7 @@ use_library(CubA4Loader Network)
 target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 
 #thridparty link libraries
-target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main phonon)
+target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main)
 
 #system libraries
 use_system_loader_library(CubA4Loader)

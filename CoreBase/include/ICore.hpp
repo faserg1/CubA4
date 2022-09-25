@@ -10,6 +10,7 @@ namespace CubA4
 		namespace system
 		{
 			class IStartup;
+			class IRuntime;
 		}
 
 		namespace config
@@ -55,7 +56,7 @@ namespace CubA4
 			//Функции, не помеченные const будут доступны только основному приложению, или там, где ICore не передается по константному указателю.
 			//К примеру, через std::shared_ptr<ICore> будут доступны эти функции
 
-			
+			virtual std::shared_ptr<system::IRuntime> getRuntime() = 0;
 		protected:
 			virtual ~ICore() = default;
 			explicit ICore() = default;

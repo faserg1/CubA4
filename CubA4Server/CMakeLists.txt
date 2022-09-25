@@ -5,9 +5,16 @@ link_directories(
 	${Boost_LIBRARY_DIRS})
 
 
-set(SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src) 
+set(CubA4ServerSourceDir ${CMAKE_CURRENT_LIST_DIR}/src) 
 
-set(CubA4ServerSources ${SOURCE_DIR}/main.cpp)
+file(GLOB_RECURSE CubA4ServerSources
+    "${CubA4ServerSourceDir}/**/*.hpp"
+    "${CubA4ServerSourceDir}/**/*.cpp"
+    "${CubA4ServerSourceDir}/*.hpp"
+    "${CubA4ServerSourceDir}/*.cpp"
+)
+
+source_group(TREE ${CubA4ServerSourceDir} FILES ${CubA4ServerSources})
 
 add_executable(CubA4Server ${CubA4ServerSources})
 

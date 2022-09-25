@@ -5,6 +5,8 @@ set(RenderVulkanSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 file(GLOB_RECURSE RenderVulkanSources
     "${RenderVulkanSourceDir}/**/*.hpp"
     "${RenderVulkanSourceDir}/**/*.cpp"
+    "${RenderVulkanSourceDir}/*.hpp"
+    "${RenderVulkanSourceDir}/*.cpp"
 )
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${RenderVulkanSources})

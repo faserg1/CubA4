@@ -39,7 +39,7 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 {
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
 	log_->log(LogLevel::Info, "CubA4 Loader created.");
-	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath());
+	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath(), core_->getRuntime());
 }
 
 AppMain::~AppMain()

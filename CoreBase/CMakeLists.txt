@@ -2,8 +2,9 @@ cmake_minimum_required (VERSION 3.12)
 
 set(CoreBaseIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 
-file(GLOB CoreBaseHeaders
+file(GLOB_RECURSE CoreBaseHeaders
     "${CoreBaseIncludeDir}/**/*.hpp"
+    "${CoreBaseIncludeDir}/*.hpp"
 )
 
 source_group(TREE ${CoreBaseIncludeDir} FILES ${CoreBaseHeaders})

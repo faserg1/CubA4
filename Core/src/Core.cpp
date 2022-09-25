@@ -5,6 +5,7 @@
 #include "system/Startup.hpp"
 #include "resources/ResourcesManager.hpp"
 #include "cache/CacheManager.hpp"
+#include "system/Runtime.hpp"
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
 #include <sstream>
@@ -15,6 +16,7 @@ using namespace CubA4::core::system;
 Core::Core(int argc, const char *const argv[]) :
 	paths_(std::make_shared<config::FilePaths>(argc, argv))
 {
+	runtime_ = std::make_shared<system::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
 	resourceManager_ = std::make_shared<resources::ResourcesManager>(paths_->resourcesPath());
@@ -49,6 +51,11 @@ std::shared_ptr<resources::IResourcesManager> Core::getResourcesManager() const
 std::shared_ptr<cache::ICacheManager> Core::getCacheManager() const
 {
 	return cacheManager_;
+}
+
+std::shared_ptr<system::IRuntime> Core::getRuntime()
+{
+	return runtime_;
 }
 
 void Core::criticalException() const
