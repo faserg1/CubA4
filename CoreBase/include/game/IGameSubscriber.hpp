@@ -1,5 +1,4 @@
-#ifndef COREBASE_IGAMESUBSCRIBER_HPP
-#define COREBASE_IGAMESUBSCRIBER_HPP
+#pragma once
 
 #include <memory>
 
@@ -31,5 +30,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // COREBASE_IGAMESUBSCRIBER_HPP

@@ -1,5 +1,4 @@
-#ifndef CORE_CORECONFIG_HPP
-#define CORE_CORECONFIG_HPP
+#pragma once
 
 #include <config/ICoreConfig.hpp>
 #include <memory>
@@ -36,4 +35,3 @@ namespace CubA4
 	}
 }
 
-#endif // CORE_CORECONFIG_HPP

@@ -1,5 +1,4 @@
-#ifndef CORE_CORE_HPP
-#define CORE_CORE_HPP
+#pragma once
 
 #include <memory>
 #include <ICore.hpp>
@@ -29,8 +28,7 @@ namespace CubA4
 			const std::shared_ptr<const config::IFilePaths> getPaths() const override;
 			std::shared_ptr<config::ICoreConfig> getConfig() const override;
 			std::shared_ptr<logging::ILogger> getLogger() const override;
-			std::shared_ptr<resources::IResourcesManager> getResourcesManager() const override;
-			std::shared_ptr<cache::ICacheManager> getCacheManager() const override;
+			std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const override;
 			std::shared_ptr<system::IRuntime> getRuntime() override;
 
 			void criticalException() const override;
@@ -40,12 +38,9 @@ namespace CubA4
 			std::shared_ptr<config::CoreConfig> config_;
 			std::shared_ptr<logging::ILogger> logger_;
 			std::shared_ptr<resources::IResourcesManager> resourceManager_;
-			std::shared_ptr<cache::ICacheManager> cacheManager_;
 			std::shared_ptr<system::IRuntime> runtime_;
 
 			std::shared_ptr<system::IStartup> startup_;
 		};
 	}
 }
-
-#endif // CORE_CORE_HPP

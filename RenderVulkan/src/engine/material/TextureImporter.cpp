@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <string.h>
 #include <stdexcept>
-#include <filesystem/IAbstractResource.hpp>
+#include <resources/IResource.hpp>
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/Memory.hpp"
 #include "../memory/MemoryAllocator.hpp"
@@ -13,7 +13,7 @@
 #include "../memory/MemoryPart.hpp"
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::engine::memory;
-using namespace CubA4::core::filesystem;
+using namespace CubA4::core::resources;
 using namespace CubA4::render::vulkan;
 
 constexpr const unsigned PngSignatureLenght = 8;
@@ -32,10 +32,10 @@ TextureImporter::~TextureImporter()
 	
 }
 
-std::shared_ptr<ITexture> TextureImporter::importFromPng(std::shared_ptr<const IAbstractResource> resource) const
+std::shared_ptr<ITexture> TextureImporter::importFromPng(std::shared_ptr<const IResource> resource) const
 {
 	png_byte sig[PngSignatureLenght];
-	auto readed = resource->loadIn(sig, PngSignatureLenght, 0);
+	auto readed = resource->copyIn(sig, PngSignatureLenght, 0);
 	if (readed != PngSignatureLenght || !png_check_sig(sig, PngSignatureLenght))
 	{
 		// TODO: [OOKAMI] Exception
@@ -63,13 +63,13 @@ std::shared_ptr<ITexture> TextureImporter::importFromPng(std::shared_ptr<const I
 
 	struct resourceData
 	{
-		std::shared_ptr<const IAbstractResource> resource;
+		std::shared_ptr<const IResource> resource;
 		size_t offset;
 	} res{resource, 0};
 	png_set_read_fn(png_ptr, &res, [](png_structp png_ptr, png_bytep outBytes, png_size_t byteCountToRead) -> void
 	{
 		auto resData = reinterpret_cast<resourceData*>(png_get_io_ptr(png_ptr));
-		auto readed = resData->resource->loadIn(outBytes, byteCountToRead, resData->offset);
+		auto readed = resData->resource->copyIn(outBytes, byteCountToRead, resData->offset);
 		if (readed != byteCountToRead)
 		{
 			// TODO: png_error()

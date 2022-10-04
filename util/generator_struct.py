@@ -55,7 +55,8 @@ class GeneratorStruct(GeneratorBase):
 
 	def save(self):
 		self._save_header(self._file_hpp)
-		self._save_source(self._file_cpp)
+		if self._need_json:
+			self._save_source(self._file_cpp)
 
 	_file_hpp = None
 	_file_cpp = None

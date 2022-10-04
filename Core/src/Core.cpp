@@ -4,7 +4,7 @@
 #include "logging/Logger.hpp"
 #include "system/Startup.hpp"
 #include "resources/ResourcesManager.hpp"
-#include "cache/CacheManager.hpp"
+#include "resources/FilesystemResourceProvider.hpp"
 #include "system/Runtime.hpp"
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
@@ -19,8 +19,10 @@ Core::Core(int argc, const char *const argv[]) :
 	runtime_ = std::make_shared<system::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
-	resourceManager_ = std::make_shared<resources::ResourcesManager>(paths_->resourcesPath());
-	cacheManager_= std::make_shared<cache::CacheManager>(paths_->cachePath());
+	resourceManager_ = std::make_shared<resources::ResourcesManager>();
+
+	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
+	resourceManager_->mount(CubA4::core::resources::ResourcesType::Mod, "data", fsProvider, "data");
 }
 
 Core::~Core()
@@ -43,14 +45,9 @@ std::shared_ptr<logging::ILogger> Core::getLogger() const
 	return logger_;
 }
 
-std::shared_ptr<resources::IResourcesManager> Core::getResourcesManager() const
+std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() const
 {
-	return resourceManager_;
-}
-
-std::shared_ptr<cache::ICacheManager> Core::getCacheManager() const
-{
-	return cacheManager_;
+	return std::const_pointer_cast<const resources::IResourcesManager>(resourceManager_);
 }
 
 std::shared_ptr<system::IRuntime> Core::getRuntime()

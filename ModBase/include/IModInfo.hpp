@@ -1,5 +1,4 @@
-#ifndef MODBASE_IMODINFO_HPP
-#define MODBASE_IMODINFO_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -40,5 +39,3 @@ namespace CubA4
 		};
 	}
 }
-
-#endif // MODBASE_IMODINFO_HPP

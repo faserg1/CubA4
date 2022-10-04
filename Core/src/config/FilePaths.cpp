@@ -40,5 +40,5 @@ std::string FilePaths::cachePath() const
 
 std::string FilePaths::resourcesPath() const
 {
-	return (initialPath_ / "resources").string();
+	return (initialPath_ / "data").string();
 }

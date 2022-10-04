@@ -1,6 +1,6 @@
-#ifndef COREBASE_IMODELDEFINITION_HPP
-#define COREBASE_IMODELDEFINITION_HPP
+#pragma once
 
+#include <model/PrimitiveTypes.hpp>
 #include <vector>
 #include <string>
 
@@ -10,21 +10,6 @@ namespace CubA4
 	{
 		namespace model
 		{
-			/// Вершина
-			struct Vertex
-			{
-				float x;
-				float y;
-				float z;
-			};
-
-			struct UVWCoords
-			{
-				float u;
-				float v;
-				float w;
-			};
-
 			class IModelDefinition
 			{
 			public:
@@ -39,5 +24,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // COREBASE_IMODELDEFINITION_HPP

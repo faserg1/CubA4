@@ -1,5 +1,4 @@
-#ifndef COREBASE_IGAME_HPP
-#define COREBASE_IGAME_HPP
+#pragma once
 
 #include <memory>
 
@@ -32,4 +31,3 @@ namespace CubA4
 	}
 }
 
-#endif // COREBASE_IGAME_HPP

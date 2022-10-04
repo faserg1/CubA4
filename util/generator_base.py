@@ -5,6 +5,7 @@ import os
 import subprocess
 
 from util.cppfile import CppFile
+from util.defaults import Defaults
 
 class GeneratorBase:
 	def __init__(self, full_name: str, module_name):
@@ -20,8 +21,8 @@ class GeneratorBase:
 		self._dtr_access = "public"
 		self._has_ctr = True
 		self._has_dtr = True
-		self._header_folder = "include"
-		self._source_folder = "src"
+		self._header_folder = Defaults.get_header_folder(module_name)
+		self._source_folder = Defaults.get_src_folder(module_name)
 		self._header_ext = ".hpp"
 		self._source_ext = ".cpp"
 		self._module_namespace = False

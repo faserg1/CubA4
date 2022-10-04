@@ -1,9 +1,9 @@
-#ifndef CORE_RESOURCESMANAGER_HPP
-#define CORE_RESOURCESMANAGER_HPP
+#pragma once
 
 #include <memory>
-#include <boost/filesystem.hpp>
 #include <resources/IResourcesManager.hpp>
+#include <vector>
+#include <tl/generator.hpp>
 
 namespace CubA4
 {
@@ -14,17 +14,29 @@ namespace CubA4
 			class ResourcesManager :
 				public virtual IResourcesManager
 			{
+				struct MountData
+				{
+					Path path;
+					Path cut;
+					ResourcesType type;
+					std::shared_ptr<IResourceProvider> provider;
+				};
 			public:
-				explicit ResourcesManager(boost::filesystem::path path);
+				explicit ResourcesManager();
 				~ResourcesManager();
 				
-				std::shared_ptr<IResources> getResources(ResourcesType type, std::string moduleId) override;
+				void mount(ResourcesType type, Path path, std::shared_ptr<IResourceProvider> provider, Path cut = {}) override;
+
+				bool exists(Path path) const override;
+				std::shared_ptr<const IResource> find(Path path) const override;
+				std::shared_ptr<IResource> edit(Path path) const override;
 			protected:
+				tl::generator<const MountData &> findProvider(Path path, bool write = false) const;
+				Path getCuttedPath(const MountData &data, Path &path) const;
+				bool isStartsWith(const Path &full, const Path &beg) const;
 			private:
-				const boost::filesystem::path path_;
+				std::vector<MountData> providers_;
 			};
 		}
 	}
 }
-
-#endif // CORE_RESOURCESMANAGER_HPP

@@ -1,5 +1,4 @@
-#ifndef MODBASE_POSITION_HPP
-#define MODBASE_POSITION_HPP
+#pragma once
 
 #include <type_traits>
 #include <cstdint>
@@ -58,5 +57,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // MODBASE_POSITION_HPP

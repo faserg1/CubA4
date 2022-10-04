@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.12)
 
-set(ModVanillaResourcesDir ${CMAKE_CURRENT_LIST_DIR}/resources)
+set(ModVanillaResourcesDir ${CMAKE_CURRENT_LIST_DIR}/data)
 set(ModVanillaIncludeDir ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ModVanillaSourceDir ${CMAKE_CURRENT_LIST_DIR}/src)
 

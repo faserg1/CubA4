@@ -1,5 +1,4 @@
-#ifndef COREBASE_IRENDERMODELDEFINITION_HPP
-#define COREBASE_IRENDERMODELDEFINITION_HPP
+#pragma once
 
 #include "IModelDefinition.hpp"
 #include <vector>
@@ -27,5 +26,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // COREBASE_IRENDERMODELDEFINITION_HPP

@@ -1,9 +1,11 @@
-#ifndef COREBASE_IRESOURCESMANAGER_HPP
-#define COREBASE_IRESOURCESMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <string>
-#include "ResourcesType.hpp"
+#include <filesystem>
+#include <resources/IResource.hpp>
+#include <resources/IResourceProvider.hpp>
+#include <resources/ResourcesType.hpp>
 
 namespace CubA4
 {
@@ -11,12 +13,13 @@ namespace CubA4
 	{
 		namespace resources
 		{
-			class IResources;
+			class IResource;
+			class IResourceProvider;
 			
-			class IResourcesManager
+			class IResourcesManager : public IResourceProvider
 			{
 			public:
-				virtual std::shared_ptr<IResources> getResources(ResourcesType type, std::string moduleId) = 0;
+				virtual void mount(ResourcesType type, Path path, std::shared_ptr<IResourceProvider> provider, Path cut = {}) = 0;
 			protected:
 				explicit IResourcesManager() = default;
 				virtual ~IResourcesManager() = default;
@@ -26,4 +29,3 @@ namespace CubA4
 	}
 }
 
-#endif // COREBASE_IRESOURCESMANAGER_HPP

@@ -29,6 +29,7 @@ use_base_library(Core ModBase)
 target_include_directories(Core PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(Core PRIVATE Boost::boost Boost::filesystem ${boost_stacktrace_lib})
 target_link_libraries(Core PRIVATE logguru_win_lib)
+target_link_libraries(Core PRIVATE tl::generator)
 
 if (UNIX)
     target_link_libraries(Core PRIVATE loguru)

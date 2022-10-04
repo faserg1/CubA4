@@ -35,7 +35,9 @@
         "vulkan"
       ]
     },
-    "libpng"
+    "libpng",
+    "taskflow",
+    "tl-generator"
   ]
 }
 

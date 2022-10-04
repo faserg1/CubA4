@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vulkan/vulkan.h>
+#include <resources/IResource.hpp>
 #include "../vulkan/util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
@@ -10,11 +11,6 @@ namespace CubA4
 	namespace core
 	{
 		class ICore;
-
-		namespace cache
-		{
-			class ICache;
-		}
 	}
 
 	namespace render
@@ -36,7 +32,7 @@ namespace CubA4
 				vulkan::sVkDescriptorSetLayout getChunkLayout() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;
 
-				std::shared_ptr<core::cache::ICache> getCache() const;
+				std::shared_ptr<core::resources::IResource> getCache(core::resources::Path path) const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;

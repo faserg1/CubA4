@@ -1,0 +1,1 @@
+find_package(tl-generator CONFIG REQUIRED)

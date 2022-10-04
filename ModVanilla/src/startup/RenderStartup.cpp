@@ -3,7 +3,6 @@
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 #include <resources/IResourcesManager.hpp>
-#include <resources/IResources.hpp>
 #include <resources/IResource.hpp>
 #include <system/IEnvironmentBuilder.hpp>
 #include <IRenderInfo.hpp>
@@ -84,9 +83,8 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter)
 {
 	auto renderManager = manager_->getModRenderManager();
-	auto resources = core_->getResourcesManager()->getResources(ResourcesType::Mod, ModVanillaId);
-	auto textureResource = resources->get("textures/NewTexture.png");
-	auto importedTexture = textureImporter->importFromPng(textureResource);
+	const auto resource = core_->getResourcesManager()->find("data/vanilla/assets/textures/NewTexture.png");
+	auto importedTexture = textureImporter->importFromPng(resource);
 	renderManager->registerTexture(importedTexture, "newTexture");
 }
 

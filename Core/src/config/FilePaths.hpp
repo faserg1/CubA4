@@ -1,5 +1,4 @@
-#ifndef CORE_FILEPATHS_HPP
-#define CORE_FILEPATHS_HPP
+#pragma once
 
 #include <config/IFilePaths.hpp>
 #include <filesystem>
@@ -31,4 +30,3 @@ namespace CubA4
 	}
 }
 
-#endif // CORE_FILEPATHS_HPP

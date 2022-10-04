@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_TEXTUREIMPORTER_HPP
-#define RENDERVULKAN_TEXTUREIMPORTER_HPP
+#pragma once
 
 #include <memory>
 #include <engine/material/ITextureImporter.hpp>
@@ -33,7 +32,7 @@ namespace CubA4
 					explicit TextureImporter(std::shared_ptr<const vulkan::Device> device);
 					~TextureImporter();
 
-					std::shared_ptr<ITexture> importFromPng(std::shared_ptr<const CubA4::core::filesystem::IAbstractResource> resource) const override;
+					std::shared_ptr<ITexture> importFromPng(std::shared_ptr<const CubA4::core::resources::IResource> resource) const override;
 					std::shared_ptr<ITexture> importFromPng(void *ptr, size_t size) const override;
 				protected:
 				private:
@@ -49,4 +48,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERVULKAN_TEXTUREIMPORTER_HPP

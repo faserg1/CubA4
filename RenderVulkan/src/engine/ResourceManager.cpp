@@ -3,7 +3,7 @@
 #include "../VulkanInfoConst.hpp"
 #include <vector>
 #include <ICore.hpp>
-#include <cache/ICacheManager.hpp>
+#include <resources/IResourcesManager.hpp>
 using namespace CubA4::core;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
@@ -35,10 +35,10 @@ sVkDescriptorPool ResourceManager::getBuiltInPool() const
 	return builtInPool_;
 }
 
-std::shared_ptr<cache::ICache> ResourceManager::getCache() const
+std::shared_ptr<CubA4::core::resources::IResource> ResourceManager::getCache(core::resources::Path path) const
 {
-	auto cacheManager = core_->getCacheManager();
-	return cacheManager->getResources(cache::CacheType::Render, RenderEngineId);
+	using namespace core::resources;
+	return core_->getResourcesManager()->edit(Path("cache") / Path("render") / Path("vulkan") / path);
 }
 
 void ResourceManager::createBuildInDescriptorSetLayouts()

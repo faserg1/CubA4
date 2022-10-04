@@ -1,5 +1,4 @@
-#ifndef RENDERBASE_ITEXTUREIMPORTER_HPP
-#define RENDERBASE_ITEXTUREIMPORTER_HPP
+#pragma once
 
 #include <memory>
 
@@ -7,9 +6,9 @@ namespace CubA4
 {
 	namespace core
 	{
-		namespace filesystem
+		namespace resources
 		{
-			class IAbstractResource;
+			class IResource;
 		}
 	}
 
@@ -24,7 +23,7 @@ namespace CubA4
 				class ITextureImporter
 				{
 				public:
-					virtual std::shared_ptr<ITexture> importFromPng(std::shared_ptr<const CubA4::core::filesystem::IAbstractResource> resource) const = 0;
+					virtual std::shared_ptr<ITexture> importFromPng(std::shared_ptr<const CubA4::core::resources::IResource> resource) const = 0;
 					virtual std::shared_ptr<ITexture> importFromPng(void *ptr, size_t size) const = 0;
 				protected:
 					explicit ITextureImporter() = default;
@@ -36,4 +35,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERBASE_ITEXTUREIMPORTER_HPP

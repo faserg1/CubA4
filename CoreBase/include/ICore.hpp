@@ -1,5 +1,4 @@
-#ifndef COREBASE_ICORE_HPP
-#define COREBASE_ICORE_HPP
+#pragma once
 
 #include <memory>
 
@@ -47,9 +46,7 @@ namespace CubA4
 			///Получает логгер
 			virtual std::shared_ptr<logging::ILogger> getLogger() const = 0;
 			///Получает менеджер ресурсов
-			virtual std::shared_ptr<resources::IResourcesManager> getResourcesManager() const = 0;
-			///Получает менеджер кэша
-			virtual std::shared_ptr<cache::ICacheManager> getCacheManager() const = 0;
+			virtual std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const = 0;
 			///Создает сообщение о критической ошибке
 			virtual void criticalException() const = 0;
 
@@ -63,5 +60,3 @@ namespace CubA4
 		};
 	}
 }
-
-#endif // COREBASE_ICORE_HPP

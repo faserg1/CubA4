@@ -1,5 +1,4 @@
-#ifndef COREBASE_RESOURCESTYPE_HPP
-#define COREBASE_RESOURCESTYPE_HPP
+#pragma once
 
 namespace CubA4
 {
@@ -10,10 +9,10 @@ namespace CubA4
 			enum class ResourcesType
 			{
 				Mod, ///< Ресурсы модификаций
-				Addon ///< Ресурсы дополнений (текстур паки?)
+				Addon, ///< Ресурсы дополнений (текстур паки?)
+				Cache, 
 			};
 		}
 	}
 }
 
-#endif // COREBASE_RESOURCESTYPE_HPP
