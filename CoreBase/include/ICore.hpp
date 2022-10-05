@@ -23,6 +23,11 @@ namespace CubA4
 			class ILogger;
 		}
 		
+		namespace model
+		{
+			class IModelReader;
+		}
+
 		namespace resources
 		{
 			class IResourcesManager;
@@ -46,6 +51,7 @@ namespace CubA4
 			///Получает логгер
 			virtual std::shared_ptr<logging::ILogger> getLogger() const = 0;
 			///Получает менеджер ресурсов
+			virtual std::shared_ptr<model::IModelReader> getModelReader() const = 0;
 			virtual std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const = 0;
 			///Создает сообщение о критической ошибке
 			virtual void criticalException() const = 0;

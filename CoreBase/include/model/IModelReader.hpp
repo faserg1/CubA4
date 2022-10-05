@@ -18,7 +18,8 @@ namespace CubA4
 			{
 			public:
 				virtual ~IModelReader() = default;
-				virtual mod::model::RenderModelData readRenderModel(std::shared_ptr<resources::IResource> resource) = 0;
+				virtual mod::model::RenderModelData readRenderModel(std::shared_ptr<const resources::IResource> resource) const = 0;
+				virtual void writeRenderModel(std::shared_ptr<resources::IResource> resource, const mod::model::RenderModelData &model) = 0;
 			protected:
 				explicit IModelReader() = default;
 			};

@@ -3,6 +3,7 @@
 #include "config/FilePaths.hpp"
 #include "logging/Logger.hpp"
 #include "system/Startup.hpp"
+#include "model/ModelReader.hpp"
 #include "resources/ResourcesManager.hpp"
 #include "resources/FilesystemResourceProvider.hpp"
 #include "system/Runtime.hpp"
@@ -19,10 +20,13 @@ Core::Core(int argc, const char *const argv[]) :
 	runtime_ = std::make_shared<system::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
+	modelReader_ = std::make_shared<model::ModelReader>();
 	resourceManager_ = std::make_shared<resources::ResourcesManager>();
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
+	auto cacheProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->cachePath());
 	resourceManager_->mount(CubA4::core::resources::ResourcesType::Mod, "data", fsProvider, "data");
+	resourceManager_->mount(CubA4::core::resources::ResourcesType::Cache, "cache", cacheProvider, "cache");
 }
 
 Core::~Core()
@@ -43,6 +47,11 @@ std::shared_ptr<config::ICoreConfig> Core::getConfig() const
 std::shared_ptr<logging::ILogger> Core::getLogger() const
 {
 	return logger_;
+}
+
+std::shared_ptr<model::IModelReader> Core::getModelReader() const
+{
+	return modelReader_;
 }
 
 std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() const

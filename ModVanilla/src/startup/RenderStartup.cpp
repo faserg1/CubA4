@@ -15,6 +15,7 @@
 #include <engine/material/IMaterialBuilder.hpp>
 #include <engine/material/ITextureImporter.hpp>
 #include <engine/model/IModelManager.hpp>
+#include <model/IModelReader.hpp>
 #include "../../gen/irs.hpp"
 #include <stdexcept>
 
