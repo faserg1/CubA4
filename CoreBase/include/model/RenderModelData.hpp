@@ -8,7 +8,7 @@
 
 namespace CubA4
 {
-	namespace mod
+	namespace core
 	{
 		namespace model
 		{
@@ -19,16 +19,16 @@ namespace CubA4
 					float x, y, z;
 					float u, v, w;
 				};
-				struct Material
+				struct Face
 				{
-					std::string materialId;
-					std::vector<uint16_t> faces;
+					std::vector<uint16_t> indexes;
 				};
 				std::vector<VertexUVW> vertices;
-				std::vector<Material> faces;
+				std::vector<Face> faces;
+				std::map<std::string, std::vector<uint16_t>> materials;
 
-				std::map<world::BlockSide, std::vector<uint16_t>> hide;
-				std::map<world::BlockSide, std::vector<uint16_t>> hidden;
+				std::vector<core::world::BlockSide> nonOpaque;
+				std::map<core::world::BlockSide, std::vector<uint16_t>> hidden;
 			};
 		}
 	}

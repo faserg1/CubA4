@@ -1,5 +1,4 @@
-#ifndef CORE_CHUNKPOSHASH_HPP
-#define CORE_CHUNKPOSHASH_HPP
+#pragma once
 
 #include <world/IChunk.hpp>
 #include <type_traits>
@@ -13,9 +12,9 @@ namespace CubA4
 			template <class TKey>
 			class ChunkPosHashT
 			{
-				static_assert(std::is_same<TKey, CubA4::mod::world::ChunkPos>::value, "TKey must be ChunkPos");
+				static_assert(std::is_same<TKey, CubA4::core::world::ChunkPos>::value, "TKey must be ChunkPos");
 			public:
-				size_t operator()(const CubA4::mod::world::ChunkPos &chunkPos) const
+				size_t operator()(const CubA4::core::world::ChunkPos &chunkPos) const
 				{
 					constexpr auto axisHashSize = (sizeof(size_t) * 8) /4;
 					size_t xKey = chunkPos.x % axisHashSize;
@@ -25,9 +24,8 @@ namespace CubA4
 				}
 			};
 
-			using ChunkPosHash = ChunkPosHashT<CubA4::mod::world::ChunkPos>;
+			using ChunkPosHash = ChunkPosHashT<CubA4::core::world::ChunkPos>;
 		}
 	}
 }
 
-#endif // CORE_CHUNKPOSHASH_HPP

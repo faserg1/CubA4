@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_WORLDMANAGER_HPP
-#define RENDERVULKAN_WORLDMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <engine/world/IWorldManager.hpp>
@@ -36,7 +35,7 @@ namespace CubA4
 					explicit WorldManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<ResourceManager> resourceManager);
 					~WorldManager();
 
-					void setCameraPosition(CubA4::mod::world::ChunkPos globalPos, float x, float y, float z) override;
+					void setCameraPosition(CubA4::core::world::ChunkPos globalPos, float x, float y, float z) override;
 					/**
 					\param roll Вращение вокруг оси x
 					\param pitch Вращение вокруг оси y
@@ -61,7 +60,7 @@ namespace CubA4
 
 					struct
 					{
-						CubA4::mod::world::ChunkPos viewGlobalPos;
+						CubA4::core::world::ChunkPos viewGlobalPos;
 						float viewX;
 						float viewY;
 						float viewZ;
@@ -87,4 +86,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERVULKAN_WORLDMANAGER_HPP

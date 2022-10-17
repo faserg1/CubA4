@@ -1,18 +1,10 @@
-#ifndef RENDERBASE_IMODELMANAGER_HPP
-#define RENDERBASE_IMODELMANAGER_HPP
+#pragma once
 
 #include <memory>
+#include <model/IRenderModelDefinition.hpp>
 
 namespace CubA4
 {
-	namespace core
-	{
-		namespace model
-		{
-			class IRenderModelDefinition;
-		}
-	}
-
 	namespace render
 	{
 		namespace engine
@@ -24,7 +16,7 @@ namespace CubA4
 				class IModelManager
 				{
 				public:
-					virtual std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModel) = 0;
+					virtual std::shared_ptr<const IRenderModel> registerModel(const CubA4::mod::model::IRenderModelDefinition &renderModel) = 0;
 				protected:
 					explicit IModelManager() = default;
 					virtual ~IModelManager() = default;
@@ -35,4 +27,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERBASE_IMODELMANAGER_HPP

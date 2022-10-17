@@ -17,6 +17,7 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${ModLoaderSources})
 
 #library
 add_library(ModLoader SHARED ${ModLoaderSources})
+target_compile_features(ModLoader PRIVATE ${TARGET_CXX_STD})
 
 #self include directories
 target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath})

@@ -170,25 +170,22 @@
         }
     ],
 	"faces": [{
-            "faces": [0, 3, 2, 1],
-            "id": "default"
+            "indexes": [0, 3, 2, 1]
         }, {
-            "faces": [4, 5, 6, 7],
-            "id": "default"
+            "indexes": [4, 5, 6, 7]
         }, {
-            "faces": [8, 10, 11, 9],
-            "id": "default"
+            "indexes": [8, 10, 11, 9]
         }, {
-            "faces": [12, 13, 15, 14],
-            "id": "default"
+            "indexes": [12, 13, 15, 14]
         }, {
-            "faces": [16, 17, 19, 18],
-            "id": "default"
+            "indexes": [16, 17, 19, 18]
         }, {
-            "faces": [20, 21, 23, 22],
-            "id": "default"
+            "indexes": [20, 21, 23, 22]
         }
     ],
+    "materials": {
+        "default": [0, 1, 2, 3, 4, 5]
+    },
     "hidden": [],
-    "hide": []
+    "non_opaque": [1, 2, 3, 4, 5, 6]
 }

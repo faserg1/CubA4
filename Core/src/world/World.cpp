@@ -8,6 +8,7 @@
 #include "ChunkRangeBuilder.hpp"
 
 using namespace CubA4::world;
+using namespace CubA4::core::world;
 using namespace CubA4::mod::world;
 
 World::World(std::shared_ptr<const IWorldDefinition> definition) :
@@ -76,7 +77,7 @@ std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> World::getChunks()
 	return std::move(result);
 }
 
-std::shared_ptr<CubA4::world::Chunk> World::findChunk(const CubA4::mod::world::ChunkPos &chunkPos)
+std::shared_ptr<CubA4::world::Chunk> World::findChunk(const ChunkPos &chunkPos)
 {
 	auto it = loadedChunks_.find(chunkPos);
 	if (it == loadedChunks_.end())

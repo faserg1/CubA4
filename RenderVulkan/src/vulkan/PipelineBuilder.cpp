@@ -129,7 +129,7 @@ void PipelineBuilder::prepareStages()
 	vertexShaderSpecEntries_.push_back(chunkSizeEntry);
 
 	vertexShaderSpecData_.resize(chunkSizeEntry.size);
-	int32_t chunkSizeConst = CubA4::mod::world::ChunkSize;
+	int32_t chunkSizeConst = CubA4::core::world::ChunkSize;
 	memcpy(vertexShaderSpecData_.data(), &chunkSizeConst, chunkSizeEntry.size);
 
 	vertexShaderSpec_.mapEntryCount = static_cast<uint32_t>(vertexShaderSpecEntries_.size());
@@ -305,7 +305,7 @@ void PipelineBuilder::prepareDescriptorSets()
 
 void PipelineBuilder::preparePushConstants()
 {
-	constexpr const auto chunkPositionSize = sizeof(CubA4::mod::world::ChunkPos);
+	constexpr const auto chunkPositionSize = sizeof(CubA4::core::world::ChunkPos);
 	constexpr const auto chunkBlockRangesCountSize = sizeof(uint32_t);
 
 	VkPushConstantRange totalStageAllRange = {};

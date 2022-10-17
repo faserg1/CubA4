@@ -6,7 +6,8 @@
 
 #include <vector>
 #include <memory>
-#include "Position.hpp"
+#include <world/Position.hpp>
+#include <world/IChunkRange.hpp>
 
 namespace CubA4
 {
@@ -27,7 +28,7 @@ namespace CubA4
 				/**
 				\brief Получение позиции чанка
 				*/
-				virtual const ChunkPos &getChunkPos() const = 0;
+				virtual const core::world::ChunkPos &getChunkPos() const = 0;
 				/** \brief Получает используемые блоки в чанке
 				 */
 				virtual std::vector<std::shared_ptr<const object::IBlock>> getUsedBlocks() const = 0;

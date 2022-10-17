@@ -1,11 +1,10 @@
-#ifndef MODBASE_ICHUNKRANGE_HPP
-#define MODBASE_ICHUNKRANGE_HPP
+#pragma once
 
 #include <memory>
 #include <array>
-#include "Position.hpp"
-#include <array>
 #include <cstdint>
+
+#include <world/Position.hpp>
 
 namespace CubA4
 {
@@ -30,7 +29,7 @@ namespace CubA4
 				 * \return Возвращает координаты диапазона чанка
 				 * \see BoundsSize
 				*/
-				virtual const std::array<BlockInChunkPos, BoundsSize> &getBounds() const = 0;
+				virtual const std::array<core::world::BlockInChunkPos, BoundsSize> &getBounds() const = 0;
 				/// Возвращает количество заполняемых блоков в диапазоне
 				virtual uint32_t getBlockCount() const = 0;
 			protected:
@@ -41,4 +40,3 @@ namespace CubA4
 	}
 }
 
-#endif // MODBASE_ICHUNKRANGE_HPP

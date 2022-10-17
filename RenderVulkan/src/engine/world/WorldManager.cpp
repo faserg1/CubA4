@@ -33,7 +33,7 @@ WorldManager::~WorldManager()
 {
 }
 
-void WorldManager::setCameraPosition(CubA4::mod::world::ChunkPos globalPos, float x, float y, float z)
+void WorldManager::setCameraPosition(CubA4::core::world::ChunkPos globalPos, float x, float y, float z)
 {
 	worldData_.viewGlobalPos = globalPos;
 	worldData_.viewX = x;
@@ -95,7 +95,7 @@ void WorldManager::allocateBuffers()
 	VkBufferCreateInfo worldBufferInfo = {};
 	worldBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	worldBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-	worldBufferInfo.size = memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize + matrixSize; // view global pos + view matrix + projection matrix
+	worldBufferInfo.size = memoryManager_->calcAlign(sizeof(CubA4::core::world::ChunkPos), 16) + matrixSize + matrixSize; // view global pos + view matrix + projection matrix
 
 	if (vkCreateBuffer(device_->getDevice(), &worldBufferInfo, nullptr, &worldBuffer) != VK_SUCCESS)
 	{
@@ -135,7 +135,7 @@ void WorldManager::writeSets()
 
 void WorldManager::updateViewMatrix()
 {
-	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::mod::world::ChunkPos), BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::core::world::ChunkPos), BufferBarrierType::Uniform);
 	glm::mat4 viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
@@ -145,7 +145,7 @@ void WorldManager::updateViewMatrix()
 	float vMatrix[4][4];
 	memcpy(vMatrix, glm::value_ptr(viewMatrix), sizeof(float) * 16);
 
-	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::core::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
 }
 
 void WorldManager::updateProjectionMatrix()
@@ -158,5 +158,5 @@ void WorldManager::updateProjectionMatrix()
 	float projMatrix[4][4];
 	memcpy(projMatrix, glm::value_ptr(projection), sizeof(float) * 16);
 
-	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::mod::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::core::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
 }

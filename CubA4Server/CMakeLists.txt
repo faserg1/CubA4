@@ -17,6 +17,7 @@ file(GLOB_RECURSE CubA4ServerSources
 source_group(TREE ${CubA4ServerSourceDir} FILES ${CubA4ServerSources})
 
 add_executable(CubA4Server ${CubA4ServerSources})
+target_compile_features(CubA4Server PRIVATE ${TARGET_CXX_STD})
 
 #libs
 use_library(CubA4Server ModLoader)

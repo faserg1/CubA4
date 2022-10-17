@@ -1,8 +1,7 @@
-#ifndef MODBASE_IWORLDGENERATOR_HPP
-#define MODBASE_IWORLDGENERATOR_HPP
+#pragma once
 
 #include <memory>
-#include "IChunk.hpp"
+#include <world/IChunk.hpp>
 
 namespace CubA4
 {
@@ -15,7 +14,7 @@ namespace CubA4
 			class IWorldGenerator
 			{
 			public:
-				virtual void generateChunk(std::shared_ptr<IWorld> world, const ChunkPos &chunkPos) = 0;
+				virtual void generateChunk(std::shared_ptr<IWorld> world, const core::world::ChunkPos &chunkPos) = 0;
 			protected:
 				explicit IWorldGenerator() = default;
 				virtual ~IWorldGenerator() = default;
@@ -25,4 +24,3 @@ namespace CubA4
 	}
 }
 
-#endif // MODBASE_IWORLDGENERATOR_HPP

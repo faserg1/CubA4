@@ -1,5 +1,4 @@
-#ifndef CORE_WORLD_HPP
-#define CORE_WORLD_HPP
+#pragma once
 
 #include <world/IWorld.hpp>
 #include <world/IChunk.hpp>
@@ -34,11 +33,9 @@ namespace CubA4
 		private:
 			const std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition_;
 			mutable CubA4::core::util::SubscriptionHelper<CubA4::mod::world::IWorldSubscriber> subscriptionHelper_;
-			std::unordered_map<const CubA4::mod::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::core::util::ChunkPosHash> loadedChunks_;
+			std::unordered_map<const CubA4::core::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::core::util::ChunkPosHash> loadedChunks_;
 		private:
-			std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::mod::world::ChunkPos &chunkPos);
+			std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::core::world::ChunkPos &chunkPos);
 		};
 	}
 }
-
-#endif // CORE_WORLD_HPP

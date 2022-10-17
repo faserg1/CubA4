@@ -17,6 +17,7 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${NetworkSources})
 
 #library
 add_library(Network SHARED ${NetworkSources})
+target_compile_features(Network PRIVATE ${TARGET_CXX_STD})
 
 use_base_library(Network CoreBase)
 

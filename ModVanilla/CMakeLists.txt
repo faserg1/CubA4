@@ -19,6 +19,7 @@ add_irs(${CMAKE_CURRENT_LIST_DIR} irs_resources)
 source_group("resources" FILES ${irs_resources})
 
 add_library(ModVanilla SHARED ${ModVanillaSources} ${irs_resources})
+target_compile_features(ModVanilla PRIVATE ${TARGET_CXX_STD})
 
 use_base_library(ModVanilla ModBase)
 use_base_library(ModVanilla CoreBase)

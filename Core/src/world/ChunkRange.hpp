@@ -16,16 +16,16 @@ namespace CubA4
 		{
 		public:
 			explicit ChunkRange(std::shared_ptr<const CubA4::mod::object::IBlock> block,
-				const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &bounds);
+				const std::array<CubA4::core::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &bounds);
 			~ChunkRange();
 			
 			std::shared_ptr<const CubA4::mod::object::IBlock> getBlock() const override;
-			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &getBounds() const override;
+			const std::array<CubA4::core::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> &getBounds() const override;
 			uint32_t getBlockCount() const override;
 		protected:
 		private:
 			const std::shared_ptr<const CubA4::mod::object::IBlock> block_;
-			const std::array<CubA4::mod::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> bounds_;
+			const std::array<CubA4::core::world::BlockInChunkPos, CubA4::mod::world::BoundsSize> bounds_;
 		};
 	}
 }

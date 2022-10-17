@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_MODELMANAGER_HPP
-#define RENDERVULKAN_MODELMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <engine/model/IModelManager.hpp>
@@ -30,7 +29,7 @@ namespace CubA4
 					explicit ModelManager(std::shared_ptr<const vulkan::Device> device);
 					~ModelManager();
 
-					std::shared_ptr<const IRenderModel> registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef) override;
+					std::shared_ptr<const IRenderModel> registerModel(const CubA4::mod::model::IRenderModelDefinition &renderModelDef) override;
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
@@ -41,5 +40,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_MODELMANAGER_HPP

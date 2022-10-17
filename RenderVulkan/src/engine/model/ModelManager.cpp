@@ -4,7 +4,6 @@
 #include "../memory/MemoryHelper.hpp"
 #include "../../vulkan/Memory.hpp"
 #include "../../vulkan/Device.hpp"
-#include <model/IRenderModelDefinition.hpp>
 #include <vulkan/vulkan.h>
 #include <cstring>
 using namespace CubA4::render::engine::memory;
@@ -22,7 +21,7 @@ ModelManager::~ModelManager()
 	
 }
 
-std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::core::model::IRenderModelDefinition &renderModelDef)
+std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::mod::model::IRenderModelDefinition &renderModelDef)
 {
 	auto vertices = renderModelDef.getVertices();
 	auto uvws = renderModelDef.getUVWCoords();
@@ -113,11 +112,9 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 
 	//-------------- Index
 
-	for (size_t faceIndex = 0; faceIndex < faces.size(); faceIndex++)
+	for (const auto &face : faces)
 	{
-		auto verticesCount = faces[faceIndex];
-		faceIndex += verticesCount;
-		indexCount += (verticesCount - 2) * 3; // triangle fan
+		indexCount += (face.indexes.size() - 2) * 3; // triangle fan
 	}
 
 	indicesSize = indexCount * sizeof(uint16_t);
@@ -165,16 +162,9 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 		memcpy(idxPtr, triangleIndices, sizeof(triangleIndices));
 		idxPtr += 3;
 	};
-	for (size_t faceIndex = 0, verticesCount = 0, vertexIndex = 0;
-		faceIndex < faces.size();
-		faceIndex++, verticesCount--, vertexIndex++)
+	for (auto &face : faces)
 	{
-		if (verticesCount == 0)
-		{
-			verticesCount = faces[faceIndex] + 1; //add + 1 for next iteration
-			vertexIndex = -1; //for next iteration
-		}
-		else
+		for (size_t vertexIndex = 0; vertexIndex < face.indexes.size(); vertexIndex++)
 		{
 			//save first triangle
 			if (vertexIndex == 3)
@@ -184,16 +174,17 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::cor
 			//record first triangle
 			if (vertexIndex < 3)
 			{
-				triangleIndices[vertexIndex] = static_cast<uint16_t>(faces[faceIndex]);
+				triangleIndices[vertexIndex] = static_cast<uint16_t>(face.indexes[vertexIndex]);
 			}
 			else //record next triangles
 			{
 				triangleIndices[1] = triangleIndices[2];
-				triangleIndices[2] = static_cast<uint16_t>(faces[faceIndex]);
+				triangleIndices[2] = static_cast<uint16_t>(face.indexes[vertexIndex]);
 				saveTriangle();
 			}
 		}
 	}
+	
 	mappedIndexMemory.reset();
 
 	vkBindBufferMemory(device_->getDevice(), indexTransitBuffer, memoryIndexTransitBuffer->getMemory(), 0);

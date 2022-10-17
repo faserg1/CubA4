@@ -3,7 +3,7 @@
 #include "config/FilePaths.hpp"
 #include "logging/Logger.hpp"
 #include "system/Startup.hpp"
-#include "model/ModelReader.hpp"
+#include "model/ModelFactory.hpp"
 #include "resources/ResourcesManager.hpp"
 #include "resources/FilesystemResourceProvider.hpp"
 #include "system/Runtime.hpp"
@@ -20,7 +20,7 @@ Core::Core(int argc, const char *const argv[]) :
 	runtime_ = std::make_shared<system::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
-	modelReader_ = std::make_shared<model::ModelReader>();
+	modelFactory_ = std::make_shared<model::ModelFactory>();
 	resourceManager_ = std::make_shared<resources::ResourcesManager>();
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
@@ -49,9 +49,9 @@ std::shared_ptr<logging::ILogger> Core::getLogger() const
 	return logger_;
 }
 
-std::shared_ptr<model::IModelReader> Core::getModelReader() const
+std::shared_ptr<model::IModelFactory> Core::getModelFactory() const
 {
-	return modelReader_;
+	return modelFactory_;
 }
 
 std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() const

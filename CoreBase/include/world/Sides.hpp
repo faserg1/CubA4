@@ -2,7 +2,7 @@
 
 namespace CubA4
 {
-	namespace mod
+	namespace core
 	{
 		namespace world
 		{
@@ -18,7 +18,7 @@ namespace CubA4
 			};
 
 			/**
-			 * @brief стороны блока
+			 * @brief Стороны блока
 			 * 
 			 */
 			enum class BlockSide

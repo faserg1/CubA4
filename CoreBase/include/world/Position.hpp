@@ -5,7 +5,7 @@
 
 namespace CubA4
 {
-	namespace mod
+	namespace core
 	{
 		namespace world
 		{

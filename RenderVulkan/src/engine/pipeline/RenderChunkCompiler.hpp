@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_RENDERCHUNKCOMPILER_HPP
-#define RENDERVULKAN_RENDERCHUNKCOMPILER_HPP
+#pragma once
 
 #include <memory>
 #include <vulkan/vulkan.h>
@@ -72,5 +71,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_RENDERCHUNKCOMPILER_HPP

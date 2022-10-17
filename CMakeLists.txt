@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.12)
 project (CubA4 C CXX)
 
-set (CMAKE_CXX_STANDARD 20)
+set(TARGET_CXX_STD cxx_std_23)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #prepare config

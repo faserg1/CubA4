@@ -3,10 +3,11 @@
 #include <object/IBlock.hpp>
 #include <algorithm>
 using namespace CubA4::world;
+using namespace CubA4::core::world;
 using namespace CubA4::mod::world;
 using namespace CubA4::mod::object;
 
-Chunk::Chunk(const CubA4::mod::world::ChunkPos &chunkPos) :
+Chunk::Chunk(const ChunkPos &chunkPos) :
 	chunkPos_(chunkPos), globalLock_(false)
 {
 	
@@ -17,7 +18,7 @@ Chunk::~Chunk()
 	
 }
 
-const CubA4::mod::world::ChunkPos &Chunk::getChunkPos() const
+const ChunkPos &Chunk::getChunkPos() const
 {
 	return chunkPos_;
 }

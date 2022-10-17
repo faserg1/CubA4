@@ -18,6 +18,7 @@ source_group("resources" FILES ${irs_resources})
 
 
 add_library(RenderVulkan SHARED  ${RenderVulkanSources} ${irs_resources})
+target_compile_features(RenderVulkan PRIVATE ${TARGET_CXX_STD})
 
 #third-party library
 

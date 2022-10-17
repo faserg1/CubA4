@@ -1,5 +1,6 @@
 #include "./RenderChunk.hpp"
 using namespace CubA4::render::engine::world;
+using namespace CubA4::core::world;
 using namespace CubA4::mod::world;
 
 RenderChunk::RenderChunk(const ChunkPos &pos, std::vector<VkCommandBuffer> cmdBuffers, std::function<void()> deleter) :
@@ -13,7 +14,7 @@ RenderChunk::~RenderChunk()
 	deleter_();
 }
 
-const CubA4::mod::world::ChunkPos &RenderChunk::getChunkPos() const
+const ChunkPos &RenderChunk::getChunkPos() const
 {
 	return pos_;
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <cstdint>
+
 namespace CubA4::core::model
 {
 	/// Вершина
@@ -15,5 +18,10 @@ namespace CubA4::core::model
 		float u;
 		float v;
 		float w;
+	};
+
+	struct Face
+	{
+		std::vector<uint16_t> indexes;
 	};
 }

@@ -2,6 +2,7 @@
 #include "./ChunkRange.hpp"
 #include <algorithm>
 using namespace CubA4::world;
+using namespace CubA4::core::world;
 using namespace CubA4::mod::world;
 
 ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(const scIChunkRanges ranges)

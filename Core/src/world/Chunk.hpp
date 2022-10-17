@@ -1,5 +1,4 @@
-#ifndef CORE_CHUNK_HPP
-#define CORE_CHUNK_HPP
+#pragma once
 
 #include <world/IChunk.hpp>
 #include <memory>
@@ -17,9 +16,9 @@ namespace CubA4
 			public virtual CubA4::mod::world::IChunk
 		{
 		public:
-			explicit Chunk(const CubA4::mod::world::ChunkPos &chunkPos);
+			explicit Chunk(const CubA4::core::world::ChunkPos &chunkPos);
 			~Chunk();
-			const CubA4::mod::world::ChunkPos &getChunkPos() const override;
+			const CubA4::core::world::ChunkPos &getChunkPos() const override;
 			std::vector<std::shared_ptr<const CubA4::mod::object::IBlock>> getUsedBlocks() const override;
 			std::vector<std::shared_ptr<const CubA4::mod::world::IChunkRange>> getChunkRanges(const std::shared_ptr<const CubA4::mod::object::IBlock> usedBlock) const override;
 
@@ -27,7 +26,7 @@ namespace CubA4
 		protected:
 		private:
 			mutable std::atomic_bool globalLock_;
-			const CubA4::mod::world::ChunkPos chunkPos_;
+			const CubA4::core::world::ChunkPos chunkPos_;
 			std::vector<std::shared_ptr<ChunkRange>> chunkRanges_;
 		private:
 			class Locker
@@ -42,4 +41,3 @@ namespace CubA4
 	}
 }
 
-#endif // CORE_CHUNK_HPP

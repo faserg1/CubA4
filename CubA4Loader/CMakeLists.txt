@@ -17,6 +17,7 @@ if (WIN32)
 endif ()
 
 add_executable(CubA4Loader ${OPTIONS} ${CubA4LoaderSources})
+target_compile_features(CubA4Loader PRIVATE ${TARGET_CXX_STD})
 
 #libs
 use_base_library(CubA4Loader CoreBase)

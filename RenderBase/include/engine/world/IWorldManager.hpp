@@ -1,5 +1,4 @@
-#ifndef RENDERBASE_IWORLDMANAGER_HPP
-#define RENDERBASE_IWORLDMANAGER_HPP
+#pragma once
 
 #include <cstdint>
 #include <world/IChunk.hpp>
@@ -15,7 +14,7 @@ namespace CubA4
 				class IWorldManager
 				{
 				public:
-					virtual void setCameraPosition(CubA4::mod::world::ChunkPos globalPos, float x, float y, float z) = 0;
+					virtual void setCameraPosition(CubA4::core::world::ChunkPos globalPos, float x, float y, float z) = 0;
 					/**
 					\param roll Вращение вокруг оси x
 					\param pitch Вращение вокруг оси y
@@ -33,4 +32,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERBASE_IWORLDMANAGER_HPP

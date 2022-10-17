@@ -28,7 +28,7 @@ namespace CubA4
 			const std::shared_ptr<const config::IFilePaths> getPaths() const override;
 			std::shared_ptr<config::ICoreConfig> getConfig() const override;
 			std::shared_ptr<logging::ILogger> getLogger() const override;
-			std::shared_ptr<model::IModelReader> getModelReader() const override;
+			std::shared_ptr<model::IModelFactory> getModelFactory() const override;
 			std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const override;
 			std::shared_ptr<system::IRuntime> getRuntime() override;
 
@@ -38,7 +38,7 @@ namespace CubA4
 			const std::shared_ptr<const config::IFilePaths> paths_;
 			std::shared_ptr<config::CoreConfig> config_;
 			std::shared_ptr<logging::ILogger> logger_;
-			std::shared_ptr<model::IModelReader> modelReader_;
+			std::shared_ptr<model::IModelFactory> modelFactory_;
 			std::shared_ptr<resources::IResourcesManager> resourceManager_;
 			std::shared_ptr<system::IRuntime> runtime_;
 

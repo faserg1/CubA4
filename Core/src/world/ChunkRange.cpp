@@ -3,6 +3,7 @@
 #include <cmath>
 using namespace CubA4::world;
 using namespace CubA4::mod::object;
+using namespace CubA4::core::world;
 using namespace CubA4::mod::world;
 
 ChunkRange::ChunkRange(std::shared_ptr<const IBlock> block,

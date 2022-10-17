@@ -15,6 +15,7 @@ file(GLOB_RECURSE CoreSources
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${CoreSources})
 
 add_library(Core SHARED ${CoreSources})
+target_compile_features(Core PRIVATE ${TARGET_CXX_STD})
 
 target_compile_definitions(Core PRIVATE
     LOGURU_USE_FMTLIB=1

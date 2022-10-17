@@ -37,7 +37,7 @@ namespace CubA4
 			using scIChunkRange = std::shared_ptr<CubA4::mod::world::IChunkRange>;
 			using sChunkRanges = std::vector<sChunkRange>;
 			using scIChunkRanges = std::vector<scIChunkRange>;
-			using BIC = CubA4::mod::world::BlockInChunkPos;
+			using BIC = CubA4::core::world::BlockInChunkPos;
 			
 
 			ChunkRangeBuilder() = delete;

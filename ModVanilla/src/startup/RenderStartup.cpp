@@ -24,7 +24,6 @@
 #include "../manager/ModManager.hpp"
 #include "../manager/ModRenderManager.hpp"
 
-#include "../render/BlockModel.hpp"
 using namespace CubA4::mod;
 using namespace CubA4::mod::startup;
 using namespace CubA4::core::logging;
@@ -102,7 +101,10 @@ void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::mater
 void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager)
 {
 	auto renderManager = manager_->getModRenderManager();
-	auto blockModelDef = render::BlockModel();
-	auto blockModel = modelManager->registerModel(blockModelDef);
+	auto modelFactory = core_->getModelFactory();
+	auto resources = core_->getResourcesManager();
+	auto resource = resources->find("data/vanilla/assets/models/test.json");
+	auto blockModelDef = modelFactory->createSimpleRenderModelDefinition("block", resource);
+	auto blockModel = modelManager->registerModel(*blockModelDef);
 	renderManager->registerRenderModel(blockModel);
 }
