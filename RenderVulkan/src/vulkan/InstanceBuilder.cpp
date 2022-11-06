@@ -10,7 +10,7 @@
 #include "util/ErrorHelper.hpp"
 #include "Instance.hpp"
 using namespace CubA4::render::vulkan;
-using namespace CubA4::core::info;
+using namespace CubA4::info;
 
 namespace CubA4
 {

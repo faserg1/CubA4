@@ -1,6 +1,6 @@
 #include "./ResourcesManager.hpp"
 #include <algorithm>
-using namespace CubA4::core::resources;
+using namespace CubA4::resources;
 
 ResourcesManager::ResourcesManager()
 {

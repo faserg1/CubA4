@@ -15,7 +15,7 @@ RenderGameHandler::~RenderGameHandler()
 	
 }
 
-void RenderGameHandler::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
+void RenderGameHandler::setGame(std::shared_ptr<const CubA4::game::IGame> game)
 {
 	if (!game) // Game destroing
 	{
@@ -28,7 +28,7 @@ void RenderGameHandler::setGame(std::shared_ptr<const CubA4::core::game::IGame> 
 	gameSubscription_ = game->subscribe(this);
 }
 
-void RenderGameHandler::worldChanged(std::shared_ptr<const CubA4::mod::world::IWorld> newWorld)
+void RenderGameHandler::worldChanged(std::shared_ptr<const CubA4::world::IWorld> newWorld)
 {
 	currentWorld_ = newWorld;
 	worldSubscription_ = currentWorld_->subscribe(this);

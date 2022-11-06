@@ -1,5 +1,5 @@
 #include "IdentityMap.hpp"
-using namespace CubA4::core::system;
+using namespace CubA4::system;
 
 IdentityMap::IdentityMap() :
 	counter_(0)

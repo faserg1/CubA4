@@ -1,80 +1,51 @@
-#ifndef MODVANILLA_RENDERSTARTUP_HPP
-#define MODVANILLA_RENDERSTARTUP_HPP
+#pragma once
 
 #include <memory>
 #include <string>
 #include <map>
 
-namespace CubA4
+#include <ICore.hpp>
+#include <manager/ModManager.hpp>
+#include <system/IEnvironmentBuilder.hpp>
+#include <logging/ILogger.hpp>
+#include <logging/ILoggerTagged.hpp>
+
+namespace CubA4::render::engine::material
 {
-	namespace core
-	{
-		class ICore;
-
-		namespace logging
-		{
-			class ILoggerTagged;
-		}
-
-		namespace system
-		{
-			class IEnvironmentBuilder;
-		}
-	}
-
-	namespace render
-	{
-		namespace engine
-		{
-			namespace material
-			{
-				class IMaterialLayoutSetFactory;
-				class IMaterialLayout;
-				class IMaterialFactory;
-				class ITextureImporter;
-				class IShaderFactory;
-				class IShader;
-			}
-
-			namespace model
-			{
-				class IModelManager;
-			}
-		}
-	}
-
-	namespace mod
-	{
-		namespace manager
-		{
-			class ModManager;
-		}
-
-		namespace startup
-		{
-			class RenderStartup
-			{
-			public:
-				explicit RenderStartup();
-				~RenderStartup();
-
-				void load(std::shared_ptr<const core::ICore> core, std::shared_ptr<manager::ModManager> manager);
-				void preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
-			protected:
-			private:
-				std::shared_ptr<const CubA4::core::ICore> core_;
-				std::shared_ptr<manager::ModManager> manager_;
-				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
-				std::map<std::string, std::shared_ptr<const CubA4::render::engine::material::IShader>> shaders_;
-			private:
-				void loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory);
-				void createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory);
-				void importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter);
-				void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
-				void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
-			};
-		}
-	}
+	class IMaterialLayoutSetFactory;
+	class IMaterialLayout;
+	class IMaterialFactory;
+	class ITextureImporter;
+	class IShaderFactory;
+	class IShader;
 }
 
-#endif // MODVANILLA_RENDERSTARTUP_HPP
+namespace CubA4::render::engine::model
+{
+	class IModelManager;
+}
+
+namespace CubA4::startup
+{
+	class RenderStartup
+	{
+	public:
+		explicit RenderStartup();
+		~RenderStartup();
+
+		void load(std::shared_ptr<const ICore> core, std::shared_ptr<manager::ModManager> manager);
+		void preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder);
+	protected:
+	private:
+		std::shared_ptr<const CubA4::ICore> core_;
+		std::shared_ptr<manager::ModManager> manager_;
+		std::shared_ptr<CubA4::logging::ILoggerTagged> log_;
+		std::map<std::string, std::shared_ptr<const CubA4::render::engine::material::IShader>> shaders_;
+	private:
+		void loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory);
+		void createMaterialLayouts(std::shared_ptr<CubA4::render::engine::material::IMaterialLayoutSetFactory> layoutFactory);
+		void importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter);
+		void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
+		void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
+	};
+}

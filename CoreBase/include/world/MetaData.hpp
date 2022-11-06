@@ -1,14 +1,8 @@
 #pragma once
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace core
+	struct MetaData
 	{
-		namespace world
-		{
-			struct MetaData
-			{
-			};
-		}
-	}
+	};
 }

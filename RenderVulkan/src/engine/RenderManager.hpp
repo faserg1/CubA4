@@ -1,69 +1,41 @@
-#ifndef RENDERVULKAN_RENDERMANAGER_HPP
-#define RENDERVULKAN_RENDERMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <engine/IRenderManager.hpp>
+#include <ICore.hpp>
+#include <vulkan/Device.hpp>
+#include <engine/Render.hpp>
+#include <engine/ResourceManager.hpp>
+#include <engine/model/ModelManager.hpp>
+#include <engine/material/MaterialManager.hpp>
+#include <engine/world/WorldManager.hpp>
 
-namespace CubA4
+namespace CubA4::render::engine
 {
-	namespace core
+
+
+	class RenderManager :
+		public virtual IRenderManager
 	{
-		class ICore;
-	}
+	public:
+		explicit RenderManager(std::shared_ptr<const vulkan::Device> device,
+			std::shared_ptr<const ICore> core,
+			std::shared_ptr<const Render> render);
+		~RenderManager();
 
-	namespace render
-	{
-		namespace vulkan
-		{
-			class Device;
-		}
+		std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
+		std::shared_ptr<model::IModelManager> getModelManager() const override;
+		std::shared_ptr<world::IWorldManager> getWorldManager() const override;
 
-		namespace engine
-		{
-			class Render;
-			class ResourceManager;
-
-			namespace material
-			{
-				class MaterialManager;
-			}
-
-			namespace model
-			{
-				class ModelManager;
-			}
-
-			namespace world
-			{
-				class WorldManager;
-			}
-
-			class RenderManager :
-				public virtual IRenderManager
-			{
-			public:
-				explicit RenderManager(std::shared_ptr<const vulkan::Device> device,
-					std::shared_ptr<const core::ICore> core,
-					std::shared_ptr<const Render> render);
-				~RenderManager();
-
-				std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
-				std::shared_ptr<model::IModelManager> getModelManager() const override;
-				std::shared_ptr<world::IWorldManager> getWorldManager() const override;
-
-				std::shared_ptr<ResourceManager> getResourceManager() const;
-			protected:
-			private:
-				const std::shared_ptr<const vulkan::Device> device_;
-				const std::shared_ptr<const core::ICore> core_;
-				const std::shared_ptr<const Render> render_;
-				std::shared_ptr<ResourceManager> resourceManager_;
-				std::shared_ptr<material::MaterialManager> materialManager_;
-				std::shared_ptr<model::ModelManager> modelManager_;
-				std::shared_ptr<world::WorldManager> worldManager_;
-			};
-		}
-	}
+		std::shared_ptr<ResourceManager> getResourceManager() const;
+	protected:
+	private:
+		const std::shared_ptr<const vulkan::Device> device_;
+		const std::shared_ptr<const ICore> core_;
+		const std::shared_ptr<const Render> render_;
+		std::shared_ptr<ResourceManager> resourceManager_;
+		std::shared_ptr<material::MaterialManager> materialManager_;
+		std::shared_ptr<model::ModelManager> modelManager_;
+		std::shared_ptr<world::WorldManager> worldManager_;
+	};
 }
-
-#endif // RENDERVULKAN_RENDERMANAGER_HPP

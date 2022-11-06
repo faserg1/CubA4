@@ -1,28 +1,17 @@
-#ifndef RENDERBASE_IRENDERMODEL_HPP
-#define RENDERBASE_IRENDERMODEL_HPP
+#pragma once
 
 #include <string>
 
-namespace CubA4
+namespace CubA4::render::engine::model
 {
-	namespace render
+	class IRenderModel
 	{
-		namespace engine
-		{
-			namespace model
-			{
-				class IRenderModel
-				{
-				public:
-					virtual std::string getId() const = 0;
-				protected:
-					explicit IRenderModel() = default;
-					virtual ~IRenderModel() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual const std::string &getId() const = 0;
+	protected:
+		explicit IRenderModel() = default;
+		virtual ~IRenderModel() = default;
+	private:
+	};
 }
 
-#endif // RENDERBASE_IRENDERMODEL_HPP

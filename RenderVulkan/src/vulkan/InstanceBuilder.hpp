@@ -1,20 +1,12 @@
-#ifndef RENDERVULKAN_INSTANCEBUILDER_HPP
-#define RENDERVULKAN_INSTANCEBUILDER_HPP
+#pragma once
 
 #include <memory>
 #include <string>
 #include <vector>
+#include <info/IApplicationInfo.hpp>
 
 namespace CubA4
 {
-	namespace core
-	{
-		namespace info
-		{
-			class IApplicationInfo;
-		}
-	}
-
 	namespace render
 	{
 		namespace vulkan
@@ -31,7 +23,7 @@ namespace CubA4
 			class InstanceBuilder
 			{
 			public:
-				explicit InstanceBuilder(std::shared_ptr<const core::info::IApplicationInfo> info);
+				explicit InstanceBuilder(std::shared_ptr<const info::IApplicationInfo> info);
 				~InstanceBuilder();
 
 				void addLayer(addon::InstanceLayer &layer);
@@ -43,12 +35,10 @@ namespace CubA4
 				void fillAppInfo();
 
 				std::shared_ptr<InstanceBuilderData> data_;
-				std::shared_ptr<const core::info::IApplicationInfo> info_;
+				std::shared_ptr<const info::IApplicationInfo> info_;
 				std::vector<std::string> extensions_;
 				std::vector<std::string> layers_;
 			};
 		}
 	}
 }
-
-#endif // RENDERVULKAN_INSTANCEBUILDER_HPP

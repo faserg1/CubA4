@@ -2,20 +2,14 @@
 
 #include <system/IRuntime.hpp>
 
-namespace CubA4
+namespace CubA4::system
 {
-	namespace core
+	class Runtime : public virtual IRuntime
 	{
-		namespace system
-		{
-			class Runtime : public virtual IRuntime
-			{
-			public:
-				explicit Runtime();
-				~Runtime();
+	public:
+		explicit Runtime();
+		~Runtime();
 
-				void addModuleSearchPath(const std::string &path);
-			};
-		}
-	}
+		void addModuleSearchPath(const std::string &path);
+	};
 }

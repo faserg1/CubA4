@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <engine/model/IModelManager.hpp>
+#include "./RenderModel.hpp"
 
 namespace CubA4
 {
@@ -25,12 +26,17 @@ namespace CubA4
 				class ModelManager :
 					public virtual IModelManager
 				{
+					using Vertex = CubA4::model::Vertex;
+					using UVWCoords = CubA4::model::UVWCoords;
+					using Face = CubA4::model::Face;
 				public:
 					explicit ModelManager(std::shared_ptr<const vulkan::Device> device);
 					~ModelManager();
 
-					std::shared_ptr<const IRenderModel> registerModel(const CubA4::mod::model::IRenderModelDefinition &renderModelDef) override;
+					std::shared_ptr<const IRenderModel> registerModel(const CubA4::model::IRenderModelDefinition &renderModelDef) override;
+					std::shared_ptr<const RenderModel> createModel(const CubA4::model::IRenderModelDefinition &renderModelDef);
 				protected:
+					std::shared_ptr<const RenderModel> createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const std::vector<Face> &faces);
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<memory::MemoryAllocator> allocator_;

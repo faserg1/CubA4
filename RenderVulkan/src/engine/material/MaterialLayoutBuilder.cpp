@@ -16,8 +16,10 @@ MaterialLayoutBuilder::MaterialLayoutBuilder(std::shared_ptr<const Device> devic
 	device_(device), render_(render), resourceManager_(resourceManager), pipelineBuilder_(device),
 	shaderFactory_(std::make_unique<ShaderFactory>(device))
 {
-	pipelineBuilder_.addBuiltInDescriptorSetLayout(resourceManager->getWorldLayout());
-	pipelineBuilder_.addBuiltInDescriptorSetLayout(resourceManager->getChunkLayout());
+	for (auto layout : resourceManager->getBuiltInLayouts())
+	{
+		pipelineBuilder_.addBuiltInDescriptorSetLayout(layout);
+	}
 }
 
 MaterialLayoutBuilder::~MaterialLayoutBuilder()
@@ -34,9 +36,9 @@ void MaterialLayoutBuilder::setType(MaterialType type)
 
 	switch (type)
 	{
-	case CubA4::render::engine::material::MaterialType::Default:
-		vertexShaderData = irs::findFile("shaders/compiled/default.vert.spv", vertexShaderSize);
-		fragmentShaderData = irs::findFile("shaders/compiled/default.frag.spv", fragmentShaderSize);
+	case CubA4::render::engine::material::MaterialType::Block:
+		vertexShaderData = irs::findFile("shaders/block.vert.spv", vertexShaderSize);
+		fragmentShaderData = irs::findFile("shaders/block.frag.spv", fragmentShaderSize);
 		break;
 	default:
 		break;

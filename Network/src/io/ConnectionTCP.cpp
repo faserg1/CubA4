@@ -1,12 +1,11 @@
 #include "../../include/io/ConnectionTCP.hpp"
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/read.hpp>
-#include <logging/ILogger.hpp>
 using namespace CubA4::network::io;
 
 ConnectionTCP::ConnectionTCP(std::shared_ptr<boost::asio::io_context> service,
 	std::shared_ptr<boost::asio::ip::tcp::socket> socket,
-	std::shared_ptr<CubA4::core::logging::ILogger> logger) :
+	std::shared_ptr<CubA4::logging::ILogger> logger) :
 	service_(service), socket_(socket), logger_(logger)
 {
 	run_ = true;
@@ -72,7 +71,7 @@ void ConnectionTCP::readOne()
 		{
 			boost::system::system_error error(errorCode);
 			std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
-			logger_->log(CubA4::core::logging::LogSourceSystem::Network, "CONNECTIONTCP", CubA4::core::logging::LogLevel::Error, msg);
+			logger_->log(CubA4::logging::LogSourceSystem::Network, "CONNECTIONTCP", CubA4::logging::LogLevel::Error, msg);
 		}
 	};
 	boost::asio::async_read(*socket_, *readBuffer, boost::asio::transfer_all(), handler);

@@ -4,47 +4,34 @@
 #include <string>
 #include <memory>
 
-namespace CubA4
+namespace CubA4::logging
 {
-	namespace core
+	class Logger :
+		public virtual ILogger
 	{
-		namespace config
-		{
-			class IFilePaths;
-		}
+	public:
+		static std::shared_ptr <ILogger> create(std::string logsPath);
+		~Logger();
 
-		namespace logging
-		{
-			class LoggerStreams;
+		void log(LogSourceSystem system, const std::string &tag,
+			LogLevel level, const std::string &message) override;
 
-			class Logger :
-				public virtual ILogger
-			{
-			public:
-				static std::shared_ptr <ILogger> create(std::string logsPath);
-				~Logger();
+		void log(LogSourceSystem system, const std::string &tag,
+			LogLevel level, const std::string &message, const char *filename, int line) override;
 
-				void log(LogSourceSystem system, const std::string &tag,
-					LogLevel level, const std::string &message) override;
+		void flush() override;
 
-				void log(LogSourceSystem system, const std::string &tag,
-					LogLevel level, const std::string &message, const char *filename, int line) override;
+		std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) override;
+	protected:
+		explicit Logger(std::string logsPath);
+		Logger(const Logger &) = delete;
 
-				void flush() override;
-
-				std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) override;
-			protected:
-				explicit Logger(std::string logsPath);
-				Logger(const Logger &) = delete;
-
-				virtual std::string getTagString(LogSourceSystem system);
-				virtual std::string getLevelString(LogLevel level);
-				virtual std::string getTimeString(const char *format);
-			private:
-				std::string getNextLogName();
-				const std::string logsPath_;
-				std::weak_ptr<ILogger> this_;
-			};
-		}
-	}
+		virtual std::string getTagString(LogSourceSystem system);
+		virtual std::string getLevelString(LogLevel level);
+		virtual std::string getTimeString(const char *format);
+	private:
+		std::string getNextLogName();
+		const std::string logsPath_;
+		std::weak_ptr<ILogger> this_;
+	};
 }

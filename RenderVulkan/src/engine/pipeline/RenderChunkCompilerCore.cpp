@@ -2,15 +2,20 @@
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/DebugMarker.hpp"
 #include <world/IChunk.hpp>
+#include <object/IBlock.hpp>
 #include "../memory/MemoryManager.hpp"
+#include "../model/ModelCompiler.hpp"
 #include <algorithm>
+#include <execution>
 #include <string>
 #include <cmath>
+#include <unordered_map>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
+using namespace CubA4::model;
 
 constexpr const unsigned short commandPoolsCount = 64;
 
@@ -91,4 +96,72 @@ void RenderChunkCompilerCore::initDescriptorPools()
 		};
 		descriptorPools_.push_back(util::createSharedVulkanObject(pool, deleter));
 	}
+}
+
+RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std::shared_ptr<const CubA4::world::IChunk> chunk)
+{
+	RenderModels models;
+	auto hiddenSides = compileHiddenSides(chunk);
+	std::unordered_map<std::string, std::vector<BlockPtr>> materialsToDefMap;
+	for (auto block : chunk->getUsedBlocks())
+	{
+		auto modelDef = block->getRenderModelDefinition();
+		auto usedMaterials = modelDef->getUsedMaterials();
+		for (const auto &material : usedMaterials)
+		{
+			if (auto it = materialsToDefMap.find(material); it != materialsToDefMap.end())
+			{
+				it->second.push_back(block);
+			}
+			else
+			{
+				materialsToDefMap.insert(std::make_pair(material, std::vector{block}));
+			}
+		}
+	}
+	for (const auto &pair : materialsToDefMap)
+	{
+		auto compiledModel = compileModelByMaterial(chunk, pair.first, pair.second, hiddenSides);
+		models.insert(std::make_pair(pair.first, compiledModel));
+	}
+	return std::move(models);
+}
+
+RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides)
+{
+	model::ModelCompiler compiler;
+	for (auto block : blocks)
+	{
+		auto ranges = chunk->getChunkRanges(block);
+		for (auto range : ranges)
+		{
+			for (auto blockPos : *range)
+			{
+				// TODO: Fill with data
+				CubA4::world::BlockData data;
+				auto index = blockPos.y * world::ChunkSize * world::ChunkSize + blockPos.y * world::ChunkSize + blockPos.x;
+				auto model = block->getRenderModelDefinition();
+				auto faces = model->getFaces(material, hiddenSides[index], data);
+				compiler.addFaces(model, faces, blockPos);
+			}
+		}
+	}
+	return compiler.compile(material, nullptr);
+}
+
+RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const
+{
+	RenderChunkCompilerCore::HiddenSides hiddenSides;
+	for (auto range : chunk->getChunkRanges())
+	{
+		auto block = range->getBlock();
+		for (auto blockPos : *range)
+		{
+			// TODO: Fill with data
+			CubA4::world::BlockData data;
+			auto index = blockPos.y * world::ChunkSize * world::ChunkSize + blockPos.y * world::ChunkSize + blockPos.x;
+			hiddenSides[index] |= block->getRenderModelDefinition()->getNonOpaqueSide(data);
+		}
+	}
+	return std::move(hiddenSides);
 }

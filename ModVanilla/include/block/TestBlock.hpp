@@ -1,34 +1,23 @@
-#ifndef MODVANILLA_TESTBLOCK_HPP
-#define MODVANILLA_TESTBLOCK_HPP
+#pragma once
 
 #include <object/IBlock.hpp>
 
-namespace CubA4
+namespace CubA4::block
 {
-	namespace mod
+	class TestBlock :
+		public virtual CubA4::object::IBlock
 	{
-		namespace block
-		{
-			class TestBlock :
-				public virtual CubA4::mod::object::IBlock
-			{
-			public:
-				explicit TestBlock(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel,
-					std::shared_ptr<const CubA4::render::engine::material::IMaterial> renderMaterial);
-				~TestBlock();
+	public:
+		explicit TestBlock(std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef);
+		~TestBlock();
 
-				std::string getId() const override;
-				std::wstring getName() const override;
+		std::string getId() const override;
+		std::wstring getName() const override;
 
-				std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getRenderModel() const override;
-				std::shared_ptr<const CubA4::render::engine::material::IMaterial> getRenderMaterial() const override;
-			protected:
-			private:
-				const std::shared_ptr<const CubA4::render::engine::model::IRenderModel> renderModel_;
-				const std::shared_ptr<const CubA4::render::engine::material::IMaterial> renderMaterial_;
-			};
-		}
-	}
+		std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> getRenderModelDefinition() const override;
+	protected:
+	private:
+		const std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef_;
+	};
 }
 
-#endif // MODVANILLA_TESTBLOCK_HPP

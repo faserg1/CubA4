@@ -11,8 +11,8 @@
 #include <boost/stacktrace.hpp>
 #include <sstream>
 
-using namespace CubA4::core;
-using namespace CubA4::core::system;
+using namespace CubA4;
+using namespace CubA4::system;
 
 Core::Core(int argc, const char *const argv[]) :
 	paths_(std::make_shared<config::FilePaths>(argc, argv))
@@ -25,8 +25,8 @@ Core::Core(int argc, const char *const argv[]) :
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
 	auto cacheProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->cachePath());
-	resourceManager_->mount(CubA4::core::resources::ResourcesType::Mod, "data", fsProvider, "data");
-	resourceManager_->mount(CubA4::core::resources::ResourcesType::Cache, "cache", cacheProvider, "cache");
+	resourceManager_->mount(CubA4::resources::ResourcesType::Mod, "data", fsProvider, "data");
+	resourceManager_->mount(CubA4::resources::ResourcesType::Cache, "cache", cacheProvider, "cache");
 }
 
 Core::~Core()
@@ -69,7 +69,7 @@ void Core::criticalException() const
 	logger_->flush();
 	auto print = [this](const std::string &msg)
 	{
-		logger_->log(CubA4::core::logging::LogSourceSystem::Core, "TERMINATE", CubA4::core::logging::LogLevel::Critical, msg);
+		logger_->log(CubA4::logging::LogSourceSystem::Core, "TERMINATE", CubA4::logging::LogLevel::Critical, msg);
 	};
 	auto st = boost::stacktrace::stacktrace();
 	auto frames = st.as_vector();

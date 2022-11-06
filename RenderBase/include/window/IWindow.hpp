@@ -1,5 +1,4 @@
-#ifndef RENDERBASE_IWINDOW_HPP
-#define RENDERBASE_IWINDOW_HPP
+#pragma once
 
 struct SDL_Window;
 
@@ -20,4 +19,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERBASE_IWINDOW_HPP

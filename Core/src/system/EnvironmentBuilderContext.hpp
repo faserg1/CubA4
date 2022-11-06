@@ -1,31 +1,18 @@
-#ifndef CORE_ENVIRONMENTBUILDERCONTEXT_HPP
-#define CORE_ENVIRONMENTBUILDERCONTEXT_HPP
+#pragma once
 
 #include <memory>
+#include <IModInfo.hpp>
 
-namespace CubA4
+namespace CubA4::system
 {
-	namespace mod
+	class EnvironmentBuilderContext
 	{
-		class IModInfo;
-	}
-
-	namespace core
-	{
-		namespace system
-		{
-			class EnvironmentBuilderContext
-			{
-				friend class EnvironmentBuilder;
-			public:
-				explicit EnvironmentBuilderContext(const CubA4::mod::IModInfo &modInfo);
-				~EnvironmentBuilderContext();
-			protected:
-			private:
-				const CubA4::mod::IModInfo &modInfo_;
-			};
-		}
-	}
+		friend class EnvironmentBuilder;
+	public:
+		explicit EnvironmentBuilderContext(const CubA4::mod::IModInfo &modInfo);
+		~EnvironmentBuilderContext();
+	protected:
+	private:
+		const CubA4::mod::IModInfo &modInfo_;
+	};
 }
-
-#endif // CORE_ENVIRONMENTBUILDERCONTEXT_HPP

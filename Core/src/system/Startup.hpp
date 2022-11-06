@@ -1,59 +1,37 @@
-#ifndef CORE_STARTUP_HPP
-#define CORE_STARTUP_HPP
+#pragma once
 
 #include <memory>
 #include <system/IStartup.hpp>
+#include <game/Game.hpp>
 
-namespace CubA4
+namespace CubA4::system
 {
-	namespace mod
+	class Startup :
+		public virtual IStartup
 	{
-		class IModLoader;
-	}
+	public:
+		explicit Startup(std::weak_ptr<const ICore> core);
+		~Startup();
 
-	namespace core
-	{
-		class ICore;
+		void load(system::IAppCallback &appCallback) override;
 
-		namespace game
-		{
-			class Game;
-		}
+		void setup() override;
+		void shutdown() override;
 
-		namespace system
-		{
-			class IAppCallback;
+		void run() override;
+		void stop() override;
 
-			class Startup :
-				public virtual IStartup
-			{
-			public:
-				explicit Startup(std::weak_ptr<const ICore> core);
-				~Startup();
+		std::shared_ptr<CubA4::game::IGame> getGame() const override;
+	protected:
+		void initMods();
+		void unloadMods();
 
-				void load(system::IAppCallback &appCallback) override;
-
-				void setup() override;
-				void shutdown() override;
-
-				void run() override;
-				void stop() override;
-
-				std::shared_ptr<CubA4::core::game::IGame> getGame() const override;
-			protected:
-				void initMods();
-				void unloadMods();
-
-				void initGame();
-				void destroyGame();
-			private:
-				const std::weak_ptr<const ICore> core_;
-				system::IAppCallback *appCallback_;
-				std::shared_ptr<mod::IModLoader> modLoader_;
-				std::shared_ptr<CubA4::core::game::Game> game_;
-			};
-		}
-	}
+		void initGame();
+		void destroyGame();
+	private:
+		const std::weak_ptr<const ICore> core_;
+		system::IAppCallback *appCallback_;
+		std::shared_ptr<mod::IModLoader> modLoader_;
+		std::shared_ptr<CubA4::game::Game> game_;
+	};
 }
-
-#endif // CORE_STARTUP_HPP

@@ -1,55 +1,39 @@
-#ifndef CORE_ENVIRONMENTBUILDERDATA_HPP
-#define CORE_ENVIRONMENTBUILDERDATA_HPP
+#pragma once
 
 #include <memory>
 #include <map>
-#include "IdentityMap.hpp"
+#include <system/IdentityMap.hpp>
+#include <object/IObject.hpp>
 
-namespace CubA4
+namespace CubA4::render
 {
-	namespace mod
-	{
-		namespace object
-		{
-			class IObject;
-		}
-	}
-
-	namespace render
-	{
-		class IRenderInfo;
-
-		namespace engine
-		{
-			class IRenderManager;
-		}
-	}
-
-	namespace core
-	{
-		namespace system
-		{
-			class EnvironmentBuilderData
-			{
-			public:
-				explicit EnvironmentBuilderData(
-					std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager,
-					const CubA4::render::IRenderInfo &renderInfo);
-				~EnvironmentBuilderData();
-
-				const CubA4::render::IRenderInfo &getRenderInfo() const;
-				std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
-				IdentityMap &getIdentityMap();
-				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IObject>> &getObjects();
-			protected:
-			private:
-				const CubA4::render::IRenderInfo &renderInfo_;
-				const std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
-				IdentityMap identityMap_;
-				std::map<int64_t, const std::shared_ptr<const CubA4::mod::object::IObject>> objects_;
-			};
-		}
-	}
+	class IRenderInfo;
 }
 
-#endif // CORE_ENVIRONMENTBUILDERDATA_HPP
+namespace CubA4::render::engine
+{
+	class IRenderManager;
+}
+
+namespace CubA4::system
+{
+	class EnvironmentBuilderData
+	{
+	public:
+		explicit EnvironmentBuilderData(
+			std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager,
+			const CubA4::render::IRenderInfo &renderInfo);
+		~EnvironmentBuilderData();
+
+		const CubA4::render::IRenderInfo &getRenderInfo() const;
+		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
+		IdentityMap &getIdentityMap();
+		std::map<int64_t, const std::shared_ptr<const CubA4::object::IObject>> &getObjects();
+	protected:
+	private:
+		const CubA4::render::IRenderInfo &renderInfo_;
+		const std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
+		IdentityMap identityMap_;
+		std::map<int64_t, const std::shared_ptr<const CubA4::object::IObject>> objects_;
+	};
+}

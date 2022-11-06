@@ -5,7 +5,7 @@
 #include <fstream>
 #include <stdexcept>
 
-using namespace CubA4::core::config;
+using namespace CubA4::config;
 
 constexpr const char *mainFeatiresModIdKey = "core.mods.main_features_mod_id";
 constexpr const char *worldChunkSizeKey = "core.world.chunk_size";

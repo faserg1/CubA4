@@ -31,10 +31,10 @@
 #include <cmath>
 
 using namespace CubA4::app;
-using namespace CubA4::core::logging;
+using namespace CubA4::logging;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
-	core_(CubA4::core::CommonFactory::createCore(argc, argv)),
+	core_(CubA4::CommonFactory::createCore(argc, argv)),
 	info_(std::make_shared<AppInfo>()), running_(true)
 {
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
@@ -91,7 +91,7 @@ std::function<std::shared_ptr<CubA4::mod::IModLoader>()> CubA4::app::AppMain::ge
 	};
 }
 
-std::shared_ptr<const CubA4::core::info::IApplicationInfo> CubA4::app::AppMain::getApplicationInfo() const
+std::shared_ptr<const CubA4::info::IApplicationInfo> CubA4::app::AppMain::getApplicationInfo() const
 {
 	return info_;
 }
@@ -201,7 +201,7 @@ bool AppMain::createWindow()
 	}
 	catch (std::exception &ex)
 	{
-		using namespace CubA4::core::logging;
+		using namespace CubA4::logging;
 		core_->getLogger()->log(LogSourceSystem::App, "MAIN", LogLevel::Critical, ex.what());
 		return false;
 	}

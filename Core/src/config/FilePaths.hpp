@@ -3,30 +3,23 @@
 #include <config/IFilePaths.hpp>
 #include <filesystem>
 
-namespace CubA4
+namespace CubA4::config
 {
-	namespace core
+	class FilePaths :
+		public IFilePaths
 	{
-		namespace config
-		{
-			class FilePaths :
-				public IFilePaths
-			{
-			public:
-				explicit FilePaths(int argc, const char *const argv[]);
-				~FilePaths();
+	public:
+		explicit FilePaths(int argc, const char *const argv[]);
+		~FilePaths();
 
-				std::string configPath() const override;
-				std::string modsPath() const override;
-				std::string renderPath() const override;
-				std::string logsPath() const override;
-				std::string cachePath() const override;
-				std::string resourcesPath() const override;
-			protected:
-			private:
-				std::filesystem::path initialPath_;
-			};
-		}
-	}
+		std::string configPath() const override;
+		std::string modsPath() const override;
+		std::string renderPath() const override;
+		std::string logsPath() const override;
+		std::string cachePath() const override;
+		std::string resourcesPath() const override;
+	protected:
+	private:
+		std::filesystem::path initialPath_;
+	};
 }
-

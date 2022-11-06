@@ -1,22 +1,22 @@
-#ifndef RENDERVULKAN_RENDERCHUNKCOMPILERCORE_HPP
-#define RENDERVULKAN_RENDERCHUNKCOMPILERCORE_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
+#include <map>
 
-#include "../../vulkan/CommandPool.hpp"
-#include "../../vulkan/util/VulkanHandlerContainer.hpp"
+#include <world/IChunk.hpp>
+#include <model/IBlockRenderModelDefinition.hpp>
+#include <engine/model/RenderModel.hpp>
+
+#include <vulkan/Device.hpp>
+#include <vulkan/Memory.hpp>
+#include <vulkan/CommandPool.hpp>
+#include <vulkan/util/VulkanHandlerContainer.hpp>
 
 namespace CubA4
 {
 	namespace render
 	{
-		namespace vulkan
-		{
-			class Device;
-			class Memory;
-		}
-
 		namespace engine
 		{
 			namespace memory
@@ -29,7 +29,11 @@ namespace CubA4
 			{
 				class RenderChunkCompilerCore
 				{
-					
+					using BlockPtr = std::shared_ptr<const CubA4::object::IBlock>;
+					using ModelDefPtr = std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition>;
+					using HiddenSides = std::array<CubA4::world::BlockSides, CubA4::world::ChunkSize*CubA4::world::ChunkSize*CubA4::world::ChunkSize>;
+					using RenderModelPtr = std::shared_ptr<const CubA4::render::engine::model::RenderModel>;
+					using RenderModels = std::map<std::string, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 				public:
 				protected:
 					explicit RenderChunkCompilerCore(std::shared_ptr<const vulkan::Device> device);
@@ -37,6 +41,9 @@ namespace CubA4
 
 					std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> lockCommandPool();
 					vulkan::sVkDescriptorPool getDescriptorPool(const std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> &lock);
+					RenderModels compileBlocks(std::shared_ptr<const CubA4::world::IChunk> chunk);
+					RenderModelPtr compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides);
+					HiddenSides compileHiddenSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const;
 				protected:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<memory::MemoryManager> memManager_;
@@ -52,4 +59,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERVULKAN_RENDERCHUNKCOMPILERCORE_HPP

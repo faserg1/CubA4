@@ -1,10 +1,10 @@
 #include "ModVanillaInfo.hpp"
 #include "ModVanilla.hpp"
 #include "../include/ModVanillaConst.hpp"
-#include "core/info/Version.hpp"
-#include "core/info/VersionDependency.hpp"
+#include <info/Version.hpp>
+#include <info/VersionDependency.hpp>
 #include <stdexcept>
-using namespace CubA4::core::info;
+using namespace CubA4::info;
 using namespace CubA4::mod;
 
 static const auto modVersion = Version(0, 0, 1);

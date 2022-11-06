@@ -3,7 +3,7 @@
 #include <vector>
 #include <cstdint>
 
-namespace CubA4::core::model
+namespace CubA4::model
 {
 	/// Вершина
 	struct Vertex

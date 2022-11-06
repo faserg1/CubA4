@@ -18,6 +18,8 @@ endif ()
 
 add_executable(CubA4Loader ${OPTIONS} ${CubA4LoaderSources})
 target_compile_features(CubA4Loader PRIVATE ${TARGET_CXX_STD})
+target_include_directories(CubA4Loader PRIVATE src)
+
 
 #libs
 use_base_library(CubA4Loader CoreBase)
@@ -30,7 +32,6 @@ use_library(CubA4Loader Network)
 
 #thrid-party include directories
 target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
-
 #thridparty link libraries
 target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main)
 

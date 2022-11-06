@@ -13,7 +13,7 @@
 #include "../memory/MemoryPart.hpp"
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::engine::memory;
-using namespace CubA4::core::resources;
+using namespace CubA4::resources;
 using namespace CubA4::render::vulkan;
 
 constexpr const unsigned PngSignatureLenght = 8;

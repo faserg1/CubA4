@@ -1,21 +1,15 @@
-#ifndef COREBASE_ICOREEXCEPTION_HPP
-#define COREBASE_ICOREEXCEPTION_HPP
+#pragma once
 
-namespace core
+namespace CubA4::exceptions
 {
-	namespace exceptions
+	class ICoreException
 	{
-	
-		class ICoreException
-		{
-		public:
-			
-		protected:
-			virtual ~ICoreException() {}
-			explicit ICoreException() {}
-		private:
-		};
-	}
+	public:
+		
+	protected:
+		virtual ~ICoreException() {}
+		explicit ICoreException() {}
+	private:
+	};
 }
 
-#endif // COREBASE_ICOREEXCEPTION_HPP

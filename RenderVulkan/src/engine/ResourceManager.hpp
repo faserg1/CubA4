@@ -1,18 +1,13 @@
-#ifndef RENDERVULKAN_RESOURCEMANAGER_HPP
-#define RENDERVULKAN_RESOURCEMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <resources/IResource.hpp>
+#include <ICore.hpp>
 #include "../vulkan/util/VulkanHandlerContainer.hpp"
 
 namespace CubA4
 {
-	namespace core
-	{
-		class ICore;
-	}
-
 	namespace render
 	{
 		namespace vulkan
@@ -25,20 +20,19 @@ namespace CubA4
 			class ResourceManager
 			{
 			public:
-				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const core::ICore> core);
+				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const ICore> core);
 				~ResourceManager();
 
 				vulkan::sVkDescriptorSetLayout getWorldLayout() const;
-				vulkan::sVkDescriptorSetLayout getChunkLayout() const;
+				std::vector<vulkan::sVkDescriptorSetLayout> getBuiltInLayouts() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;
 
-				std::shared_ptr<core::resources::IResource> getCache(core::resources::Path path) const;
+				std::shared_ptr<resources::IResource> getCache(resources::Path path) const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
-				std::shared_ptr<const core::ICore> core_;
+				std::shared_ptr<const ICore> core_;
 				vulkan::sVkDescriptorSetLayout worldLayout_;
-				vulkan::sVkDescriptorSetLayout chunkLayout_;
 				vulkan::sVkDescriptorPool builtInPool_;
 			private:
 				void createBuildInDescriptorSetLayouts();
@@ -49,5 +43,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_RESOURCEMANAGER_HPP

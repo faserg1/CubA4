@@ -1,22 +1,13 @@
-#ifndef MODBASE_IMODITEMMANAGER_HPP
-#define MODBASE_IMODITEMMANAGER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::manager
 {
-	namespace mod
+	class IModItemManager
 	{
-		namespace manager
-		{
-			class IModItemManager
-			{
-			public:
-				virtual ~IModItemManager() = default;
-			protected:
-				explicit IModItemManager() = default;
-			private:
-			};
-		}
-	}
+	public:
+		virtual ~IModItemManager() = default;
+	protected:
+		explicit IModItemManager() = default;
+	private:
+	};
 }
-
-#endif // MODBASE_IMODITEMMANAGER_HPP

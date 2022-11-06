@@ -6,7 +6,7 @@
 #include <logging/ILoggerTagged.hpp>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
-using namespace CubA4::core::logging;
+using namespace CubA4::logging;
 using namespace CubA4::render::config;
 
 #define getVkFuncInstancePtr(instance, funcName) (PFN_##funcName)(vkGetInstanceProcAddr(instance, #funcName))

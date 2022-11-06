@@ -3,7 +3,7 @@
 #include <IModInfo.hpp>
 #include <object/IObject.hpp>
 #include <world/IWorldDefinition.hpp>
-using namespace CubA4::core::system;
+using namespace CubA4::system;
 
 EnvironmentBuilder::EnvironmentBuilder(EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
 	data_(data), context_(context)
@@ -26,7 +26,7 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilder::getRe
 	return data_.getRenderManager();
 }
 
-bool EnvironmentBuilder::registerObject(std::shared_ptr<const CubA4::mod::object::IObject> object)
+bool EnvironmentBuilder::registerObject(std::shared_ptr<const CubA4::object::IObject> object)
 {
 	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), object->getId());
 	if (genId < 0)
@@ -35,7 +35,7 @@ bool EnvironmentBuilder::registerObject(std::shared_ptr<const CubA4::mod::object
 	return true;
 }
 
-std::shared_ptr<const CubA4::mod::world::IWorld> EnvironmentBuilder::createWorld(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> worldDef)
+std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef)
 {
 	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), worldDef->getId());
 	if (genId < 0)

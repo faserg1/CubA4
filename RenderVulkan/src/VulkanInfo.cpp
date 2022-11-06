@@ -15,7 +15,7 @@ VulkanInfo::~VulkanInfo()
 
 }
 
-void VulkanInfo::init(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<const CubA4::core::ICore> core)
+void VulkanInfo::init(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core)
 {
 	info_ = info;
 	core_ = core;

@@ -4,21 +4,15 @@
 #include <vector>
 #include <string>
 
-namespace CubA4
+namespace CubA4::model
 {
-	namespace mod
+	class IModelDefinition
 	{
-		namespace model
-		{
-			class IModelDefinition
-			{
-			public:
-				virtual const std::string &getId() const = 0;
-			protected:
-				explicit IModelDefinition() = default;
-				virtual ~IModelDefinition() = default;
-			private:
-			};
-		}
-	}
+	public:
+		virtual const std::string &getId() const = 0;
+	protected:
+		explicit IModelDefinition() = default;
+		virtual ~IModelDefinition() = default;
+	private:
+	};
 }

@@ -3,7 +3,6 @@
 #include "material/MaterialManager.hpp"
 #include "model/ModelManager.hpp"
 #include "world/WorldManager.hpp"
-using namespace CubA4::core;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::model;
 using namespace CubA4::render::engine::material;

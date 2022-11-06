@@ -1,6 +1,6 @@
 #include "./FilesystemResourceProvider.hpp"
 #include "./FilesystemResource.hpp"
-using namespace CubA4::core::resources;
+using namespace CubA4::resources;
 
 FilesystemResourceProvider::FilesystemResourceProvider(Path realPath) :
 	basePath_(realPath)

@@ -3,21 +3,15 @@
 #include <model/IModelReader.hpp>
 
 
-namespace CubA4
+namespace CubA4::model
 {
-	namespace core
+	class ModelReader : public virtual IModelReader
 	{
-		namespace model
-		{
-			class ModelReader : public virtual IModelReader
-			{
-			public:
-				explicit ModelReader();
-				~ModelReader();
+	public:
+		explicit ModelReader();
+		~ModelReader();
 
-				CubA4::core::model::RenderModelData readRenderModel(std::shared_ptr<const resources::IResource> resource) const override;
-				void writeRenderModel(std::shared_ptr<resources::IResource> resource, const core::model::RenderModelData &model) override;
-			};
-		}
-	}
+		RenderModelData readRenderModel(std::shared_ptr<const resources::IResource> resource) const override;
+		void writeRenderModel(std::shared_ptr<resources::IResource> resource, const RenderModelData &model) override;
+	};
 }

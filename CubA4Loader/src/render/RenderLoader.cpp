@@ -13,7 +13,7 @@ struct RenderLoader::Private
 	boost::dll::shared_library currentLibrary;
 };
 
-RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<core::system::IRuntime> runtime) :
+RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<system::IRuntime> runtime) :
 	importSymbolName_("getRenderInfo"),
 	currentRenderInfo_(nullptr),
 	runtime_(runtime)

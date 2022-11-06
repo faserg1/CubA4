@@ -6,30 +6,24 @@
 #include <vector>
 #include <cstdint>
 
-namespace CubA4
+namespace CubA4::model
 {
-	namespace core
+	struct RenderModelData
 	{
-		namespace model
+		struct VertexUVW
 		{
-			struct RenderModelData
-			{
-				struct VertexUVW
-				{
-					float x, y, z;
-					float u, v, w;
-				};
-				struct Face
-				{
-					std::vector<uint16_t> indexes;
-				};
-				std::vector<VertexUVW> vertices;
-				std::vector<Face> faces;
-				std::map<std::string, std::vector<uint16_t>> materials;
+			float x, y, z;
+			float u, v, w;
+		};
+		struct Face
+		{
+			std::vector<uint16_t> indexes;
+		};
+		std::vector<VertexUVW> vertices;
+		std::vector<Face> faces;
+		std::map<std::string, std::vector<uint16_t>> materials;
 
-				std::vector<core::world::BlockSide> nonOpaque;
-				std::map<core::world::BlockSide, std::vector<uint16_t>> hidden;
-			};
-		}
-	}
+		world::BlockSides nonOpaque;
+		std::map<world::BlockSide, std::vector<uint16_t>> hidden;
+	};
 }

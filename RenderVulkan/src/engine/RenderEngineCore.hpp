@@ -1,29 +1,14 @@
-#ifndef RENDERVULKAN_RENDERENGINECORE_HPP
-#define RENDERVULKAN_RENDERENGINECORE_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
+#include <info/IApplicationInfo.hpp>
+#include <logging/ILogger.hpp>
+#include <ICore.hpp>
+#include <window/IWindow.hpp>
 
 namespace CubA4
 {
-	namespace window
-	{
-		class IWindow;
-	}
-
-	namespace core
-	{
-		class ICore;
-		namespace logging
-		{
-			class ILogger;
-		}
-		namespace info
-		{
-			class IApplicationInfo;
-		}
-	}
-
 	namespace render
 	{
 		namespace config
@@ -54,7 +39,7 @@ namespace CubA4
 			{
 			public:
 			protected:
-				explicit RenderEngineCore(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<const CubA4::core::ICore> core);
+				explicit RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core);
 				explicit RenderEngineCore(const RenderEngineCore &) = delete;
 				~RenderEngineCore();
 
@@ -69,9 +54,9 @@ namespace CubA4
 
 				void waitDeviceIdle() const;
 			protected:
-				const std::shared_ptr<const CubA4::core::info::IApplicationInfo> info_;
-				const std::shared_ptr<const CubA4::core::ICore> core_;
-				const std::shared_ptr<CubA4::core::logging::ILogger> logger_;
+				const std::shared_ptr<const CubA4::info::IApplicationInfo> info_;
+				const std::shared_ptr<const CubA4::ICore> core_;
+				const std::shared_ptr<CubA4::logging::ILogger> logger_;
 			private:
 				std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
 
@@ -103,4 +88,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERVULKAN_RENDERENGINECORE_HPP

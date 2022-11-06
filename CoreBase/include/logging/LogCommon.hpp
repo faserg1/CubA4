@@ -1,34 +1,22 @@
-#ifndef COREBASE_LOGCOMMON_HPP
-#define COREBASE_LOGCOMMON_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::logging
 {
-	namespace core
+	enum class LogSourceSystem : char
 	{
-		namespace logging
-		{
-			enum class LogSourceSystem : char
-			{
-				Core,
-				Network,
-				Render,
-				Mod,
-				App,
-			};
+		Core,
+		Network,
+		Render,
+		Mod,
+		App,
+	};
 
-			enum class LogLevel : char
-			{
-				Debug,
-				Info,
-				Warning,
-				Error,
-				Critical
-			};
-
-			class ILoggerTagged;
-			class ILogger;
-		}
-	}
+	enum class LogLevel : char
+	{
+		Debug,
+		Info,
+		Warning,
+		Error,
+		Critical
+	};
 }
-
-#endif // COREBASE_LOGCOMMON_HPP

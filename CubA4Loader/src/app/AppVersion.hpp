@@ -8,7 +8,7 @@ namespace CubA4
 	namespace app
 	{
 		class AppVersion :
-			public virtual CubA4::core::info::IVersion
+			public virtual CubA4::info::IVersion
 		{
 		public:
 			explicit AppVersion();

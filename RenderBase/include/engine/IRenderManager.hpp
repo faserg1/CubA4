@@ -1,5 +1,4 @@
-#ifndef RENDERBASE_IRENDERMANAGER_HPP
-#define RENDERBASE_IRENDERMANAGER_HPP
+#pragma once
 
 #include <memory>
 
@@ -39,5 +38,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERBASE_IRENDERMANAGER_HPP

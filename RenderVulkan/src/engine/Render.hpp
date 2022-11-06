@@ -83,7 +83,7 @@ namespace CubA4
 				std::shared_ptr<const vulkan::RenderPass> renderPass_;
 				std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> chunks_;
 				std::atomic_bool chunksLocked_;
-				std::unique_ptr<CubA4::core::util::ISubscription> chunkUpdateSubscription_;
+				std::unique_ptr<CubA4::util::ISubscription> chunkUpdateSubscription_;
 			};
 		}
 	}

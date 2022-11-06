@@ -2,8 +2,6 @@
 #include "./ChunkRange.hpp"
 #include <algorithm>
 using namespace CubA4::world;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
 
 ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(const scIChunkRanges ranges)
 {
@@ -17,7 +15,7 @@ ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(const scIC
 	return rebuildedRanges;
 }
 
-ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::mod::object::IBlock> block, const BIC &start, const BIC &end)
+ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end)
 {
 	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }));
 }
@@ -157,7 +155,7 @@ std::array<BlockInChunkPos, 8> ChunkRangeBuilder::points(const BlockInChunkPos &
 
 void ChunkRangeBuilder::test()
 {
-	std::array<BIC, CubA4::mod::world::BoundsSize> minMax1 =
+	std::array<BIC, CubA4::world::BoundsSize> minMax1 =
 	{
 		BIC {4, 4, 4},
 		BIC {0, 0, 0}

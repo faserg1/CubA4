@@ -26,14 +26,14 @@
 #include "../vulkan/Swapchain.hpp"
 #include "../vulkan/SwapchainBuilder.hpp"
 
-using namespace CubA4::core::logging;
+using namespace CubA4::logging;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
 
 constexpr const char *loggerTag = "ENGINE_CORE";
 
-RenderEngineCore::RenderEngineCore(std::shared_ptr<const CubA4::core::info::IApplicationInfo> info, std::shared_ptr<const CubA4::core::ICore> core) :
+RenderEngineCore::RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core) :
 	info_(info), core_(core), logger_(core->getLogger())
 {
 	config_ = std::make_shared<config::RenderConfig>(core->getPaths()->configPath());

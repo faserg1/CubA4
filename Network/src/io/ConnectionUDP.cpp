@@ -4,7 +4,7 @@ using namespace CubA4::network::io;
 ConnectionUDP::ConnectionUDP(std::shared_ptr<boost::asio::io_context> service,
 	std::shared_ptr<boost::asio::ip::udp::socket> socket,
 	boost::asio::ip::udp::endpoint endpoint,
-	std::shared_ptr<CubA4::core::logging::ILogger> logger) :
+	std::shared_ptr<CubA4::logging::ILogger> logger) :
 	service_(service), socket_(socket), endpoint_(endpoint), logger_(logger)
 {
 	

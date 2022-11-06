@@ -8,13 +8,13 @@ namespace CubA4
 	namespace app
 	{
 		class AppInfo :
-			public virtual CubA4::core::info::IApplicationInfo
+			public virtual CubA4::info::IApplicationInfo
 		{
 		public:
 			explicit AppInfo();
 			~AppInfo();
 			
-			const CubA4::core::info::IVersion &version() const override;
+			const CubA4::info::IVersion &version() const override;
 			const std::string &name() const override;
 			const std::wstring &locName() const override;
 		protected:

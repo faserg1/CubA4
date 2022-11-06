@@ -1,35 +1,24 @@
-#ifndef RENDERBASE_IMATERIALLAYOUTBUILDER_HPP
-#define RENDERBASE_IMATERIALLAYOUTBUILDER_HPP
+#pragma once
 
 #include <memory>
 
-namespace CubA4
+namespace CubA4::render::engine::material
 {
-	namespace render
+	enum class MaterialType
 	{
-		namespace engine
-		{
-			namespace material
-			{
-				enum class MaterialType
-				{
-					Default, ///< Тип материала по умолчанию
-				};
+		Default, ///< Тип материала по умолчанию
+		Block,
+	};
 
-				///Строитель описания материала
-				class IMaterialLayoutBuilder
-				{
-				public:
-					virtual void setType(MaterialType type) = 0;
-					virtual void addTexture() = 0;
-				protected:
-					explicit IMaterialLayoutBuilder() = default;
-					virtual ~IMaterialLayoutBuilder() = default;
-				private:
-				};
-			}
-		}
-	}
+	///Строитель описания материала
+	class IMaterialLayoutBuilder
+	{
+	public:
+		virtual void setType(MaterialType type) = 0;
+		virtual void addTexture() = 0;
+	protected:
+		explicit IMaterialLayoutBuilder() = default;
+		virtual ~IMaterialLayoutBuilder() = default;
+	private:
+	};
 }
-
-#endif // RENDERBASE_IMATERIALLAYOUTBUILDER_HPP

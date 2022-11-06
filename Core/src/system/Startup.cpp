@@ -3,12 +3,11 @@
 #include "EnvironmentBuilder.hpp"
 #include "EnvironmentContext.hpp"
 #include "Environment.hpp"
-#include "../game/Game.hpp"
+#include <game/Game.hpp>
 #include <system/IAppCallback.hpp>
 #include <mod/IModLoader.hpp>
 #include <stdexcept>
-using namespace CubA4::core::system;
-using namespace CubA4::core;
+using namespace CubA4::system;
 
 Startup::Startup(std::weak_ptr<const ICore> core) :
 	core_(core), appCallback_(nullptr)
@@ -55,7 +54,7 @@ void Startup::stop()
 	destroyGame();
 }
 
-std::shared_ptr<CubA4::core::game::IGame> Startup::getGame() const
+std::shared_ptr<CubA4::game::IGame> Startup::getGame() const
 {
 	return game_;
 }
@@ -63,7 +62,7 @@ std::shared_ptr<CubA4::core::game::IGame> Startup::getGame() const
 void Startup::initMods()
 {
 	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo());
-	modLoader_->setup([&envBuilderData](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>
+	modLoader_->setup([&envBuilderData](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::system::IEnvironmentBuilder>
 	{
 		auto envBuilderContext = EnvironmentBuilderContext(modInfo);
 		return std::make_shared<EnvironmentBuilder>(envBuilderData, envBuilderContext);
@@ -83,7 +82,7 @@ void Startup::unloadMods()
 
 void Startup::initGame()
 {
-	game_ = std::make_shared<CubA4::core::game::Game>();
+	game_ = std::make_shared<CubA4::game::Game>();
 }
 
 void Startup::destroyGame()

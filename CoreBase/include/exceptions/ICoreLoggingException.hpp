@@ -1,32 +1,25 @@
-#ifndef COREBASE_ICORELOGGINGEXCEPTION_HPP
-#define COREBASE_ICORELOGGINGEXCEPTION_HPP
+#pragma once
+
+#include <exceptions/ICoreException.hpp>
 
 
-#include "ICoreException.hpp"
-
-
-namespace core
+namespace CubA4::exceptions
 {
-	namespace exceptions
+	enum class LoggingExceptionsSourceType : char
 	{
-		enum class LoggingExceptionsSourceType : char
-		{
-			WrittingStreamError, ///< Ошибка при записи потока
-			OpeningStreamError ///< Ошибка при открытии потока
-		};
+		WrittingStreamError, ///< Ошибка при записи потока
+		OpeningStreamError ///< Ошибка при открытии потока
+	};
 
 
-		class ICoreLoggingException :
-			public virtual ICoreException
-		{
-		public:
-			virtual LoggingExceptionsSourceType source() = 0;
-		protected:
-			virtual ~ICoreLoggingException() {}
-			explicit ICoreLoggingException() {}
-		private:
-		};
-	}
+	class ICoreLoggingException :
+		public virtual ICoreException
+	{
+	public:
+		virtual LoggingExceptionsSourceType source() = 0;
+	protected:
+		virtual ~ICoreLoggingException() {}
+		explicit ICoreLoggingException() {}
+	private:
+	};
 }
-
-#endif // COREBASE_ICORELOGGINGEXCEPTION_HPP

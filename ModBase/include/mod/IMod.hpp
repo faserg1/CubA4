@@ -1,62 +1,44 @@
-#ifndef MODBASE_IMOD_HPP
-#define MODBASE_IMOD_HPP
+#pragma once
 
 #include <memory>
+#include <ICore.hpp>
+#include <system/IEnvironmentBuilder.hpp>
+#include <manager/IModManager.hpp>
 
-namespace CubA4
+namespace CubA4::mod
 {
-	namespace core
+	enum class ModState : char
 	{
-		class ICore;
+		NotLoaded, ///< Найден, не загружен
+		Preloaded, ///< Известна информация о моде, а также получен интерфейс мода
+		Preinitializted, ///< Мод загрузил минимально необходимые ресурсы
+		Linked, ///< Мод получил необходимые ему интрфейсы других модов.
+		Inited, ///< Мод инициализирован, но не сконфигурирован
+		Configurated, ///< Мод сконфигурирован
+		Done, ///< Мод проверил своё состояние и готов к использованию
+		Preunloaded, ///< Мод подготовлен к выгрузке, освободил все свои ресурсы
+	};
 
-		namespace system
-		{
-			class IEnvironmentBuilder;
-		}
-	}
-	
-	namespace mod
+	class IModLinker;
+	class IModInfo;
+
+	class IMod
 	{
-		namespace manager
-		{
-			class IModManager;
-		}
+	public:
+		virtual ~IMod() = default;
 
-		enum class ModState : char
-		{
-			NotLoaded, ///< Найден, не загружен
-			Preloaded, ///< Известна информация о моде, а также получен интерфейс мода
-			Preinitializted, ///< Мод загрузил минимально необходимые ресурсы
-			Linked, ///< Мод получил необходимые ему интрфейсы других модов.
-			Inited, ///< Мод инициализирован, но не сконфигурирован
-			Configurated, ///< Мод сконфигурирован
-			Done, ///< Мод проверил своё состояние и готов к использованию
-			Preunloaded, ///< Мод подготовлен к выгрузке, освободил все свои ресурсы
-		};
+		virtual void load(std::shared_ptr<const ICore> core) = 0;
+		virtual void preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
+		virtual void link(std::shared_ptr<const IModLinker> linker) = 0;
+		virtual void init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
+		virtual void configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
+		virtual void done(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
 
-		class IModLinker;
-		class IModInfo;
+		virtual void preunload() = 0;
 
-		class IMod
-		{
-		public:
-			virtual ~IMod() = default;
-
-			virtual void load(std::shared_ptr<const core::ICore> core) = 0;
-			virtual void preinit(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) = 0;
-			virtual void link(std::shared_ptr<const IModLinker> linker) = 0;
-			virtual void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) = 0;
-			virtual void configure(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) = 0;
-			virtual void done(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder) = 0;
-
-			virtual void preunload() = 0;
-
-			virtual const IModInfo &getInfo() const = 0;
-			virtual std::weak_ptr<const manager::IModManager> getManager() const = 0;
-		protected:
-			explicit IMod() = default;
-		};
-	}
+		virtual const IModInfo &getInfo() const = 0;
+		virtual std::weak_ptr<const CubA4::manager::IModManager> getManager() const = 0;
+	protected:
+		explicit IMod() = default;
+	};
 }
-
-#endif // MODBASE_IMOD_HPP

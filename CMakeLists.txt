@@ -4,6 +4,8 @@ project (CubA4 C CXX)
 set(TARGET_CXX_STD cxx_std_23)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CUBA4_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 #prepare config
 include (cmake/Arch.cmake)
 include (cmake/Util.cmake)

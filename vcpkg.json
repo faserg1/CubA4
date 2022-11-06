@@ -38,7 +38,8 @@
     },
     "libpng",
     "taskflow",
-    "tl-generator"
+    "tl-generator",
+    "range-v3"
   ]
 }
 

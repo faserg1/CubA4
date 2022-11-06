@@ -32,3 +32,14 @@ function(use_system_loader_library target)
 		target_link_libraries(${target} PRIVATE dl)
 	endif()
 endfunction(use_system_loader_library)
+
+add_custom_target(ASSETS_GENERATION)
+
+find_package (Python COMPONENTS Interpreter)
+
+add_custom_target(IRS_GENERATION
+	COMMAND Python::Interpreter cir.py
+	WORKING_DIRECTORY ${CUBA4_PROJECT_DIR}
+)
+
+add_dependencies(IRS_GENERATION ASSETS_GENERATION)

@@ -5,7 +5,7 @@ using namespace CubA4::network::io;
 
 ListenerTCP::ListenerTCP(std::shared_ptr<boost::asio::io_context> service,
 	std::shared_ptr<boost::asio::ip::tcp::acceptor> accepter,
-	std::shared_ptr<CubA4::core::logging::ILogger> logger) :
+	std::shared_ptr<CubA4::logging::ILogger> logger) :
 	service_(service), accepter_(accepter), logger_(logger)
 {
 	run_ = true;
@@ -37,7 +37,7 @@ void ListenerTCP::acceptLoop()
 		catch (boost::system::system_error &error)
 		{
 			std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
-			logger_->log(CubA4::core::logging::LogSourceSystem::Network, "LISTENERTCP", CubA4::core::logging::LogLevel::Error, msg);
+			logger_->log(CubA4::logging::LogSourceSystem::Network, "LISTENERTCP", CubA4::logging::LogLevel::Error, msg);
 			continue;
 		}
 		auto clientConnection = std::make_shared<ConnectionTCP>(clientService, socket, logger_);

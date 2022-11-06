@@ -1,33 +1,17 @@
-#ifndef RENDERVULKAN_IRENDERENGINEPIPELINESUBSCRIBER_HPP
-#define RENDERVULKAN_IRENDERENGINEPIPELINESUBSCRIBER_HPP
+#pragma once
 
 #include <memory>
+#include <engine/world/RenderChunk.hpp>
 
-namespace CubA4
+namespace CubA4:: render::engine::pipeline
 {
-	namespace render
+	class IRenderEnginePipelineSubscriber
 	{
-		namespace engine
-		{
-			namespace world
-			{
-				class RenderChunk;
-			}
-
-			namespace pipeline
-			{
-				class IRenderEnginePipelineSubscriber
-				{
-				public:
-					virtual void chunkCompiled(std::shared_ptr<const CubA4::render::engine::world::RenderChunk> renderChunk) = 0;
-				protected:
-					explicit IRenderEnginePipelineSubscriber() = default;
-					virtual ~IRenderEnginePipelineSubscriber() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual void chunkCompiled(std::shared_ptr<const CubA4::render::engine::world::RenderChunk> renderChunk) = 0;
+	protected:
+		explicit IRenderEnginePipelineSubscriber() = default;
+		virtual ~IRenderEnginePipelineSubscriber() = default;
+	private:
+	};
 }
-
-#endif // RENDERVULKAN_IRENDERENGINEPIPELINESUBSCRIBER_HPP

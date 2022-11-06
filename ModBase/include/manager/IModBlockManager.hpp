@@ -1,22 +1,13 @@
-#ifndef MODBASE_IMODBLOCKMANAGER_HPP
-#define MODBASE_IMODBLOCKMANAGER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::manager
 {
-	namespace mod
+	class IModBlockManager
 	{
-		namespace manager
-		{
-			class IModBlockManager
-			{
-			public:
-				virtual ~IModBlockManager() = default;
-			protected:
-				explicit IModBlockManager() = default;
-			private:
-			};
-		}
-	}
+	public:
+		virtual ~IModBlockManager() = default;
+	protected:
+		explicit IModBlockManager() = default;
+	private:
+	};
 }
-
-#endif // MODBASE_IMODBLOCKMANAGER_HPP

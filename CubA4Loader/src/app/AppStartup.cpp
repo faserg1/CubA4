@@ -13,10 +13,10 @@
 
 using namespace CubA4::app;
 
-AppStartup::AppStartup(CubA4::core::system::IAppCallback &appCallback, std::weak_ptr<CubA4::core::ICore> core,
+AppStartup::AppStartup(CubA4::system::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core,
 	std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine) :
 	appCallback_(appCallback), core_(core), renderEngine_(renderEngine),
-	startup_(CubA4::core::CommonFactory::createStartup(core))
+	startup_(CubA4::CommonFactory::createStartup(core))
 {
 	startup_->load(appCallback_);
 	setup();

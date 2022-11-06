@@ -22,11 +22,10 @@
 #include <fmt/format.h>
 
 using namespace CubA4::mod;
-using namespace CubA4::core;
-using namespace CubA4::core::config;
-using namespace CubA4::core::logging;
+using namespace CubA4::config;
+using namespace CubA4::logging;
 
-ModLoader::ModLoader(std::weak_ptr<const ICore> core, std::shared_ptr<const CubA4::core::info::IApplicationInfo> appInfo) :
+ModLoader::ModLoader(std::weak_ptr<const ICore> core, std::shared_ptr<const CubA4::info::IApplicationInfo> appInfo) :
 	core_(core), appInfo_(appInfo)
 {
 	if (auto lockedCore = core_.lock())
@@ -176,7 +175,7 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 
 void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::vector<std::shared_ptr<IMod>> mods)
 {
-	std::map<std::string, std::shared_ptr<CubA4::core::system::IEnvironmentBuilder>> builders;
+	std::map<std::string, std::shared_ptr<CubA4::system::IEnvironmentBuilder>> builders;
 	auto core = core_.lock();
 	log_->log(LogLevel::Info, "Loading mods.");
 	for (auto mod : mods)

@@ -1,30 +1,20 @@
-#ifndef MODBASE_IMODMANAGER_HPP
-#define MODBASE_IMODMANAGER_HPP
+#pragma once
 
 #include <memory>
+#include <manager/IModBlockManager.hpp>
+#include <manager/IModRenderManager.hpp>
+#include <manager/IModItemManager.hpp>
 
-namespace CubA4
+namespace CubA4::manager
 {
-	namespace mod
+	/* Интерфейс, позволяющий получить доступ к ресурсам мода */
+	class IModManager
 	{
-		namespace manager
-		{
-			class IModRenderManager;
-			class IModBlockManager;
-			class IModItemManager;
-
-			/* Интерфейс, позволяющий получить доступ к ресурсам мода */
-			class IModManager
-			{
-			public:
-				virtual std::weak_ptr<const IModRenderManager> getModRenderManager() const = 0;
-			protected:
-				explicit IModManager() = default;
-				virtual ~IModManager() = default;
-			private:
-			};
-		}
-	}
+	public:
+		
+	protected:
+		explicit IModManager() = default;
+		virtual ~IModManager() = default;
+	private:
+	};
 }
-
-#endif // MODBASE_IMODMANAGER_HPP

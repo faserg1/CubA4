@@ -1,41 +1,37 @@
 #pragma once
 
 #include <world/IWorld.hpp>
-#include <world/IChunk.hpp>
+#include <world/Chunk.hpp>
 #include <vector>
 #include <unordered_map>
-#include "../util/ChunkPosHash.hpp"
+#include <util/ChunkPosHash.hpp>
 #include <util/SubscriptionHelper.hpp>
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace world
+	class World :
+		public virtual CubA4::world::IWorld
 	{
-		class Chunk;
+	public:
+		explicit World(std::shared_ptr<const CubA4::world::IWorldDefinition> definition);
+		~World();
 
-		class World :
-			public virtual CubA4::mod::world::IWorld
-		{
-		public:
-			explicit World(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition);
-			~World();
+		std::string getId() const override;
+		std::wstring getName() const override;
 
-			std::string getId() const override;
-			std::wstring getName() const override;
+		std::unique_ptr<CubA4::util::ISubscription> subscribe(CubA4::world::IWorldSubscriber *subscriber) const override;
 
-			std::unique_ptr<CubA4::core::util::ISubscription> subscribe(CubA4::mod::world::IWorldSubscriber *subscriber) const override;
+		void test(std::shared_ptr<const CubA4::object::IBlock> block) override;
 
-			void test(std::shared_ptr<const CubA4::mod::object::IBlock> block) override;
-
-			std::shared_ptr<const CubA4::mod::world::IWorldDefinition> getWorldDefinition() const override;
-			std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> getChunks() const override;
-		protected:
-		private:
-			const std::shared_ptr<const CubA4::mod::world::IWorldDefinition> definition_;
-			mutable CubA4::core::util::SubscriptionHelper<CubA4::mod::world::IWorldSubscriber> subscriptionHelper_;
-			std::unordered_map<const CubA4::core::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::core::util::ChunkPosHash> loadedChunks_;
-		private:
-			std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::core::world::ChunkPos &chunkPos);
-		};
-	}
+		std::shared_ptr<const CubA4::world::IWorldDefinition> getWorldDefinition() const override;
+		std::vector<std::shared_ptr<const CubA4::world::IChunk>> getChunks() const override;
+	protected:
+	private:
+		const std::shared_ptr<const CubA4::world::IWorldDefinition> definition_;
+		mutable CubA4::util::SubscriptionHelper<CubA4::world::IWorldSubscriber> subscriptionHelper_;
+		std::unordered_map<const CubA4::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::util::ChunkPosHash> loadedChunks_;
+	private:
+		std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::world::ChunkPos &chunkPos);
+	};
 }
+

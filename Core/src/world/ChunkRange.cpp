@@ -1,14 +1,12 @@
 #include "./ChunkRange.hpp"
 #include <string.h>
 #include <cmath>
+using namespace CubA4::object;
 using namespace CubA4::world;
-using namespace CubA4::mod::object;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
 
 ChunkRange::ChunkRange(std::shared_ptr<const IBlock> block,
-	const std::array<BlockInChunkPos, BoundsSize> &bounds) :
-	block_(block), bounds_(bounds)
+	const std::array<BlockInChunkPos, BoundsSize> &bounds, CubA4::world::Layer layer) :
+	block_(block), bounds_(bounds), layer_(layer)
 {
 }
 
@@ -40,4 +38,19 @@ uint32_t ChunkRange::getBlockCount() const
 		diff(bounds_[0].x, bounds_[1].x) *
 		diff(bounds_[0].y, bounds_[1].y) * 
 		diff(bounds_[0].z, bounds_[1].z);
+}
+
+CubA4::world::Layer ChunkRange::getLayer() const
+{
+	return layer_;
+}
+
+ChunkRange::Iterator ChunkRange::begin() const
+{
+	return Iterator(this, bounds_[0]);
+}
+
+ChunkRange::Iterator ChunkRange::end() const
+{
+	return Iterator(this, bounds_[1], true);
 }

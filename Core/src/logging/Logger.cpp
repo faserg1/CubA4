@@ -9,53 +9,47 @@
 #include <iomanip>
 #include <cstdio>
 #include <cmath>
-using namespace CubA4::core::logging;
+using namespace CubA4::logging;
 
-namespace CubA4
+namespace CubA4::logging
 {
-	namespace core
+	namespace
 	{
-		namespace logging
+		class LoggerTagged :
+			public virtual ILoggerTagged
 		{
-			namespace
+		public:
+			LoggerTagged(std::shared_ptr<ILogger> logger, LogSourceSystem system, const std::string &tag) :
+				logger_(logger), system_(system), tag_(tag)
 			{
-				class LoggerTagged :
-					public virtual ILoggerTagged
-				{
-				public:
-					LoggerTagged(std::shared_ptr<ILogger> logger, LogSourceSystem system, const std::string &tag) :
-						logger_(logger), system_(system), tag_(tag)
-					{
 
-					}
-					void log(LogLevel level, const std::string &message) override
-					{
-						logger_->log(system_, tag_, level, message);
-					}
-					void flush() override
-					{
-						logger_->flush();
-					}
-				private:
-					const std::shared_ptr<ILogger> logger_;
-					const LogSourceSystem system_;
-					const std::string tag_;
-				};
-
-				constexpr loguru::Verbosity toLoguruVerbosity(LogLevel level)
-				{
-					switch (level)
-					{
-						case LogLevel::Warning:
-							return loguru::Verbosity_WARNING;
-						case LogLevel::Error:
-							return loguru::Verbosity_ERROR;
-						case LogLevel::Critical:
-							return loguru::Verbosity_FATAL;
-					}
-					return loguru::Verbosity_INFO;
-				}
 			}
+			void log(LogLevel level, const std::string &message) override
+			{
+				logger_->log(system_, tag_, level, message);
+			}
+			void flush() override
+			{
+				logger_->flush();
+			}
+		private:
+			const std::shared_ptr<ILogger> logger_;
+			const LogSourceSystem system_;
+			const std::string tag_;
+		};
+
+		constexpr loguru::Verbosity toLoguruVerbosity(LogLevel level)
+		{
+			switch (level)
+			{
+				case LogLevel::Warning:
+					return loguru::Verbosity_WARNING;
+				case LogLevel::Error:
+					return loguru::Verbosity_ERROR;
+				case LogLevel::Critical:
+					return loguru::Verbosity_FATAL;
+			}
+			return loguru::Verbosity_INFO;
 		}
 	}
 }
@@ -109,39 +103,39 @@ std::string Logger::getTagString(LogSourceSystem system)
 {
 	switch (system)
 	{
-	case CubA4::core::logging::LogSourceSystem::Core:
+	case CubA4::logging::LogSourceSystem::Core:
 		return "CORE";
-	case CubA4::core::logging::LogSourceSystem::Network:
+	case CubA4::logging::LogSourceSystem::Network:
 		return "NETWOWK";
-	case CubA4::core::logging::LogSourceSystem::Render:
+	case CubA4::logging::LogSourceSystem::Render:
 		return "RENDER";
-	case CubA4::core::logging::LogSourceSystem::Mod:
+	case CubA4::logging::LogSourceSystem::Mod:
 		return "MOD";
-	case CubA4::core::logging::LogSourceSystem::App:
+	case CubA4::logging::LogSourceSystem::App:
 		return "APP";
 	}
 	throw std::runtime_error("Unknown log tag:" + std::to_string(static_cast<int>(system)));
 }
 
-std::string CubA4::core::logging::Logger::getLevelString(LogLevel level)
+std::string CubA4::logging::Logger::getLevelString(LogLevel level)
 {
 	switch (level)
 	{
-	case CubA4::core::logging::LogLevel::Debug:
+	case CubA4::logging::LogLevel::Debug:
 		return "DBG";
-	case CubA4::core::logging::LogLevel::Info:
+	case CubA4::logging::LogLevel::Info:
 		return "INF";
-	case CubA4::core::logging::LogLevel::Warning:
+	case CubA4::logging::LogLevel::Warning:
 		return "WRN";
-	case CubA4::core::logging::LogLevel::Error:
+	case CubA4::logging::LogLevel::Error:
 		return "ERR";
-	case CubA4::core::logging::LogLevel::Critical:
+	case CubA4::logging::LogLevel::Critical:
 		return "CRT";
 	}
 	throw std::runtime_error("Unknown log level:" + std::to_string(static_cast<int>(level)));
 }
 
-std::string CubA4::core::logging::Logger::getTimeString(const char *format)
+std::string CubA4::logging::Logger::getTimeString(const char *format)
 {
 	auto nowSystem = std::chrono::system_clock::now();
 	std::time_t time = std::chrono::system_clock::to_time_t(nowSystem);

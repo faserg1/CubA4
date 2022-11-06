@@ -7,7 +7,7 @@
 
 using namespace CubA4::network::io;
 
-Factory::Factory(std::shared_ptr<CubA4::core::logging::ILogger> logger) :
+Factory::Factory(std::shared_ptr<CubA4::logging::ILogger> logger) :
 	logger_(logger)
 {
 	
@@ -44,7 +44,7 @@ Factory::fsConnection Factory::connect(ConnectionProtocol protocol, std::string 
 			catch (boost::system::system_error &error)
 			{
 				std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
-				logger_->log(CubA4::core::logging::LogSourceSystem::Network, "FACTORY", CubA4::core::logging::LogLevel::Error, msg);
+				logger_->log(CubA4::logging::LogSourceSystem::Network, "FACTORY", CubA4::logging::LogLevel::Error, msg);
 			}
 			return std::make_shared<ConnectionTCP>(service, socket, logger_);
 		}
@@ -62,7 +62,7 @@ Factory::fsConnection Factory::connect(ConnectionProtocol protocol, std::string 
 			catch (boost::system::system_error &error)
 			{
 				std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
-				logger_->log(CubA4::core::logging::LogSourceSystem::Network, "FACTORY", CubA4::core::logging::LogLevel::Error, msg);
+				logger_->log(CubA4::logging::LogSourceSystem::Network, "FACTORY", CubA4::logging::LogLevel::Error, msg);
 			}
 			return std::make_shared<ConnectionUDP>(service, socket, ep, logger_);
 		}
@@ -92,7 +92,7 @@ Factory::fsListener Factory::listen(ConnectionProtocol protocol, unsigned short 
 			catch (boost::system::system_error &error)
 			{
 				std::string msg = "Code: " + std::to_string(error.code().value()) + ", Msg: " + error.what();
-				logger_->log(CubA4::core::logging::LogSourceSystem::Network, "FACTORY", CubA4::core::logging::LogLevel::Error, msg);
+				logger_->log(CubA4::logging::LogSourceSystem::Network, "FACTORY", CubA4::logging::LogLevel::Error, msg);
 			}
 			return std::make_shared<ListenerTCP>(service, acc, logger_);
 		}

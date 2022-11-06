@@ -1,25 +1,15 @@
-#ifndef MODBASE_IENTITY_HPP
-#define MODBASE_IENTITY_HPP
+#pragma once
 
-#include "IObject.hpp"
+#include <object/IObject.hpp>
 
-namespace CubA4
+namespace CubA4::object
 {
-	namespace mod
+	class IEntity :
+		public virtual IObject
 	{
-		namespace object
-		{
-			class IEntity :
-				public virtual IObject
-			{
-			public:
-				virtual ~IEntity() = default;
-			protected:
-				explicit IEntity() = default;
-			};
-		}
-	}
+	public:
+		virtual ~IEntity() = default;
+	protected:
+		explicit IEntity() = default;
+	};
 }
-
-
-#endif // MODBASE_IENTITY_HPP

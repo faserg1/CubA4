@@ -15,7 +15,7 @@ RenderEnginePipeline::~RenderEnginePipeline()
 	handlerThread_.join();
 }
 
-void RenderEnginePipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> chunks)
+void RenderEnginePipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks)
 {
 	for (auto chunk : chunks)
 	{
@@ -24,7 +24,7 @@ void RenderEnginePipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::m
 	}
 }
 
-std::unique_ptr<CubA4::core::util::ISubscription> RenderEnginePipeline::subscribe(IRenderEnginePipelineSubscriber *subscriber)
+std::unique_ptr<CubA4::util::ISubscription> RenderEnginePipeline::subscribe(IRenderEnginePipelineSubscriber *subscriber)
 {
 	return std::move(subHelper_.add(subscriber));
 }

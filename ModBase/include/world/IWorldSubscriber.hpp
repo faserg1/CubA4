@@ -1,22 +1,13 @@
-#ifndef MODBASE_IWORLDSUBSCRIBER_HPP
-#define MODBASE_IWORLDSUBSCRIBER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace mod
+	class IWorldSubscriber
 	{
-		namespace world
-		{
-			class IWorldSubscriber
-			{
-			public:
-				
-			protected:
-				explicit IWorldSubscriber() = default;
-				virtual ~IWorldSubscriber() = default;
-			};
-		}
-	}
+	public:
+		
+	protected:
+		explicit IWorldSubscriber() = default;
+		virtual ~IWorldSubscriber() = default;
+	};
 }
-
-#endif // MODBASE_IWORLDSUBSCRIBER_HPP

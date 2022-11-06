@@ -1,28 +1,19 @@
-#ifndef MODBASE_IOBJECT_HPP
-#define MODBASE_IOBJECT_HPP
+#pragma once
 
 #include <string>
 #include <cstdint>
 
-namespace CubA4
+namespace CubA4::object
 {
-	namespace mod
+	class IObject
 	{
-		namespace object
-		{
-			class IObject
-			{
-			public:
-				virtual ~IObject() = default;
+	public:
+		virtual ~IObject() = default;
 
-				//Получает уникальный идентификатор объекта
-				virtual std::string getId() const = 0;
-				virtual std::wstring getName() const = 0;
-			protected:
-				explicit IObject() = default;
-			};
-		}
-	}
+		//Получает уникальный идентификатор объекта
+		virtual std::string getId() const = 0;
+		virtual std::wstring getName() const = 0;
+	protected:
+		explicit IObject() = default;
+	};
 }
-
-#endif // MODBASE_IOBJECT_HPP

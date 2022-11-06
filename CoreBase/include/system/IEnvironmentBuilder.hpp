@@ -1,54 +1,36 @@
-#ifndef COREBASE_IENVIRONMENTBUILDER_HPP
-#define COREBASE_IENVIRONMENTBUILDER_HPP
+#pragma once
 
 #include <memory>
 #include <string>
 
-namespace CubA4
+#include <object/IObject.hpp>
+#include <world/IWorld.hpp>
+#include <world/IWorldDefinition.hpp>
+
+namespace CubA4::render
 {
-	namespace mod
-	{
-		namespace object
-		{
-			class IObject;
-		}
-
-		namespace world
-		{
-			class IWorld;
-			class IWorldDefinition;
-		}
-	}
-
-	namespace render
-	{
-		class IRenderInfo;
-		namespace engine
-		{
-			class IRenderManager;
-		}
-	}
-
-	namespace core
-	{
-		namespace system
-		{
-			class IEnvironmentBuilder
-			{
-			public:
-				virtual const CubA4::render::IRenderInfo &getRenderInfo() const = 0;
-				virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
-
-				virtual bool registerObject(std::shared_ptr<const CubA4::mod::object::IObject> object) = 0;
-
-				virtual std::shared_ptr<const CubA4::mod::world::IWorld> createWorld(std::shared_ptr<const CubA4::mod::world::IWorldDefinition> worldDef) = 0;
-			protected:
-				explicit IEnvironmentBuilder() = default;
-				virtual ~IEnvironmentBuilder() = default;
-			private:
-			};
-		}
-	}
+	class IRenderInfo;
 }
 
-#endif // COREBASE_IENVIRONMENTBUILDER_HPP
+namespace CubA4::render::engine
+{
+	class IRenderManager;
+}
+
+namespace CubA4::system
+{
+	class IEnvironmentBuilder
+	{
+	public:
+		virtual const CubA4::render::IRenderInfo &getRenderInfo() const = 0;
+		virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
+
+		virtual bool registerObject(std::shared_ptr<const CubA4::object::IObject> object) = 0;
+
+		virtual std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) = 0;
+	protected:
+		explicit IEnvironmentBuilder() = default;
+		virtual ~IEnvironmentBuilder() = default;
+	private:
+	};
+}

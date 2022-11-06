@@ -21,12 +21,21 @@ ModelManager::~ModelManager()
 	
 }
 
-std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::mod::model::IRenderModelDefinition &renderModelDef)
+std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
+{
+	return createModel(renderModelDef);
+}
+
+std::shared_ptr<const RenderModel> ModelManager::createModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
 {
 	auto vertices = renderModelDef.getVertices();
 	auto uvws = renderModelDef.getUVWCoords();
 	auto faces = renderModelDef.getFaceIndices();
+	return createModel(renderModelDef.getId(), vertices, uvws, faces);
+}
 
+std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const std::vector<Face> &faces)
+{
 	if (vertices.size() != uvws.size())
 	{
 		//TODO: [OOKAMI] Exception — count must be same
@@ -37,8 +46,8 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::mod
 	VkBuffer indexBuffer, indexTransitBuffer;
 
 	uint64_t verticesSize = ///< Размер буфера вершин, в байтах
-		vertices.size() * sizeof(CubA4::core::model::Vertex) +
-		uvws.size() * sizeof(CubA4::core::model::UVWCoords); 
+		vertices.size() * sizeof(CubA4::model::Vertex) +
+		uvws.size() * sizeof(CubA4::model::UVWCoords); 
 	uint64_t indexCount = 0; ///< Количество индексов вершин
 	uint64_t indicesSize = 0; ///< Размер буфера индексов, в байтах
 
@@ -199,7 +208,7 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::mod
 	rmData.indexBufferMemory = memoryIndexBuffer;
 	rmData.vertexBuffer = vertexBuffer;
 	rmData.indexBuffer = indexBuffer;
-	rmData.id = renderModelDef.getId();
+	rmData.id = id;
 	rmData.vertexCount = static_cast<uint32_t>(vertices.size());
 	rmData.indexCount = static_cast<uint32_t>(indexCount);
 

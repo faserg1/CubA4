@@ -1,6 +1,6 @@
 #include "./FilesystemResource.hpp"
 #include <fstream>
-using namespace CubA4::core::resources;
+using namespace CubA4::resources;
 
 FilesystemResource::FilesystemResource(std::filesystem::path fullPath) :
 	fullPath_(fullPath)

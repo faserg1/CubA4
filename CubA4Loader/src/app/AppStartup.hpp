@@ -1,60 +1,40 @@
-#ifndef CUBA4LOADER_APPSTARTUP_HPP
-#define CUBA4LOADER_APPSTARTUP_HPP
+#pragma once
 
 #include <memory>
+#include <system/IAppCallback.hpp>
+#include <system/IStartup.hpp>
+#include <ICore.hpp>
+#include <engine/IRenderEngine.hpp>
 
-namespace CubA4
+namespace CubA4::app
 {
-	namespace core
+	class AppStartup final
 	{
-		class ICore;
+	public:
+		explicit AppStartup(CubA4::system::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core, 
+			std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine);
+		~AppStartup();
+		AppStartup(const AppStartup&) = delete;
+		AppStartup(AppStartup &&) = delete;
 
-		namespace system
-		{
-			class IAppCallback;
-			class IStartup;
-		}
-	}
+		void nextMainLoopIteration();
+	protected:
+	private:
+		bool setup();
+		void shutdown();
 
-	namespace render
-	{
-		namespace engine
-		{
-			class IRenderEngine;
-		}
-	}
+		bool setupGame();
+		void shutdownGame();
 
-	namespace app
-	{
-		class AppStartup final
-		{
-		public:
-			explicit AppStartup(CubA4::core::system::IAppCallback &appCallback, std::weak_ptr<CubA4::core::ICore> core, 
-				std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine);
-			~AppStartup();
-			AppStartup(const AppStartup&) = delete;
-			AppStartup(AppStartup &&) = delete;
+		void run();
+		void stop();
 
-			void nextMainLoopIteration();
-		protected:
-		private:
-			bool setup();
-			void shutdown();
-
-			bool setupGame();
-			void shutdownGame();
-
-			void run();
-			void stop();
-
-			void doSomeTestThings();
-		private:
-			CubA4::core::system::IAppCallback &appCallback_;
-			std::weak_ptr<CubA4::core::ICore> core_;
-			std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine_;
-			std::shared_ptr<CubA4::core::system::IStartup> startup_;
-		};
-	}
+		void doSomeTestThings();
+	private:
+		CubA4::system::IAppCallback &appCallback_;
+		std::weak_ptr<CubA4::ICore> core_;
+		std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine_;
+		std::shared_ptr<CubA4::system::IStartup> startup_;
+	};
 }
 
-#endif // CUBA4LOADER_APPSTARTUP_HPP

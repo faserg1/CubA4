@@ -2,16 +2,10 @@
 
 #include <world/MetaData.hpp>
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace core
+	struct ObjectData
 	{
-		namespace world
-		{
-			struct ObjectData
-			{
-				MetaData meta;
-			};
-		}
-	}
+		MetaData meta;
+	};
 }

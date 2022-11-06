@@ -1,35 +1,28 @@
-#ifndef COREBASE_ICORECONFIGEXCEPTION_HPP
-#define COREBASE_ICORECONFIGEXCEPTION_HPP
+#pragma once
 
-
-#include "ICoreException.hpp"
+#include <exceptions/ICoreException.hpp>
 #include <string> 
 
-namespace core
+namespace CubA4::exceptions
 {
-	namespace exceptions
+	enum class ConfigExceptionsSourceType : char
 	{
-		enum class ConfigExceptionsSourceType : char
-		{
-			ReadConfigurationFile, ///< Неудавшиеся чтение файла конфигурации
-			CreatureConfigurationFile, ///< Неудавшиеся создание файла конфигурации
-			PreserveConfigurationFile, ///< Неудавшиеся сохрание файла конфигурации
-			FailedReadConfig, ///< Неудавшиеся прочтение самого конфига
-			FailedSaveConfig ///< Неудавшиеся сохранение самого конфига
-		};
+		ReadConfigurationFile, ///< Неудавшиеся чтение файла конфигурации
+		CreatureConfigurationFile, ///< Неудавшиеся создание файла конфигурации
+		PreserveConfigurationFile, ///< Неудавшиеся сохрание файла конфигурации
+		FailedReadConfig, ///< Неудавшиеся прочтение самого конфига
+		FailedSaveConfig ///< Неудавшиеся сохранение самого конфига
+	};
 
 
-		class ICoreConfigException :
-			public virtual ICoreException
-		{
-		public:
-			virtual ConfigExceptionsSourceType source() = 0;
-		protected:
-			virtual ~ICoreConfigException() {}
-			explicit ICoreConfigException() {}
-		private:
-		};
-	}
+	class ICoreConfigException :
+		public virtual ICoreException
+	{
+	public:
+		virtual ConfigExceptionsSourceType source() = 0;
+	protected:
+		virtual ~ICoreConfigException() {}
+		explicit ICoreConfigException() {}
+	private:
+	};
 }
-
-#endif // COREBASE_ICORECONFIGEXCEPTION_HPP

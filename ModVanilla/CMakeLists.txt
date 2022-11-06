@@ -20,6 +20,7 @@ source_group("resources" FILES ${irs_resources})
 
 add_library(ModVanilla SHARED ${ModVanillaSources} ${irs_resources})
 target_compile_features(ModVanilla PRIVATE ${TARGET_CXX_STD})
+target_include_directories(ModVanilla PRIVATE include src)
 
 use_base_library(ModVanilla ModBase)
 use_base_library(ModVanilla CoreBase)

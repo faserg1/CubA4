@@ -1,32 +1,18 @@
-#ifndef MODVANILLA_MODMANAGER_HPP
-#define MODVANILLA_MODMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <manager/IModManager.hpp>
 
-namespace CubA4
+namespace CubA4::manager
 {
-	namespace mod
+	class ModManager :
+		public virtual IModManager
 	{
-		namespace manager
-		{
-			class ModRenderManager;
-
-			class ModManager :
-				public virtual IModManager
-			{
-			public:
-				explicit ModManager();
-				~ModManager();
-
-				std::weak_ptr<const IModRenderManager> getModRenderManager() const override;
-				std::shared_ptr<ModRenderManager> getModRenderManager();
-			protected:
-			private:
-				const std::shared_ptr<ModRenderManager> renderManager_;
-			};
-		}
-	}
+	public:
+		explicit ModManager();
+		~ModManager();
+	protected:
+	private:
+	};
 }
 
-#endif // MODVANILLA_MODMANAGER_HPP

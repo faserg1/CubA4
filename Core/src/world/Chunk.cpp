@@ -2,10 +2,9 @@
 #include "ChunkRange.hpp"
 #include <object/IBlock.hpp>
 #include <algorithm>
+#include <execution>
 using namespace CubA4::world;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
-using namespace CubA4::mod::object;
+using namespace CubA4::object;
 
 Chunk::Chunk(const ChunkPos &chunkPos) :
 	chunkPos_(chunkPos), globalLock_(false)
@@ -44,6 +43,17 @@ std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
 	return std::move(usedBlocks);
 }
 
+std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges() const
+{
+	std::vector<std::shared_ptr<const IChunkRange>> rangesCopy;
+	{
+		Locker locker(globalLock_);
+		rangesCopy.resize(chunkRanges_.size());
+		std::copy(chunkRanges_.begin(), chunkRanges_.end(), rangesCopy.begin());
+	}
+	return std::move(rangesCopy);
+}
+
 std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges(const std::shared_ptr<const IBlock> usedBlock) const
 {
 	decltype(chunkRanges_) rangesCopy;
@@ -61,11 +71,61 @@ std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges(const std:
 	return std::move(rangesUsed);
 }
 
+std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos) const
+{
+	std::vector<BlockAt> blocks;
+	decltype(chunkRanges_) rangesCopy;
+	{
+		Locker locker(globalLock_);
+		rangesCopy = chunkRanges_;
+	}
+	for (auto range : rangesCopy)
+	{
+		const auto &bounds = range->getBounds();
+		if (isInBounds(bounds[0], bounds[1], pos))
+			blocks.push_back(BlockAt {
+				.block = range->getBlock(),
+				.pos = pos,
+				.layer = range->getLayer()
+			});
+	}
+	return std::move(blocks);
+}
+
+CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const
+{
+	std::vector<BlockAt> blocks;
+	decltype(chunkRanges_) rangesCopy;
+	{
+		Locker locker(globalLock_);
+		rangesCopy = chunkRanges_;
+	}
+	for (auto range : rangesCopy)
+	{
+		if (range->getLayer() != layer)
+			continue;
+		const auto &bounds = range->getBounds();
+		if (isInBounds(bounds[0], bounds[1], pos))
+		{
+			return BlockAt {
+				.block = range->getBlock(),
+				.pos = pos,
+				.layer = range->getLayer()
+			};
+		}
+			
+	}
+	return {};
+}
+
+
 void Chunk::addChunkRange(std::shared_ptr<ChunkRange> chunkRange)
 {
 	Locker locker(globalLock_);
 	chunkRanges_.push_back(chunkRange);
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 Chunk::Locker::Locker(std::atomic_bool &lock) :
 	lock_(lock)

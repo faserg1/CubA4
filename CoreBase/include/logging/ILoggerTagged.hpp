@@ -1,27 +1,18 @@
-#ifndef COREBASE_ILOGGERTAGGED_HPP
-#define COREBASE_ILOGGERTAGGED_HPP
+#pragma once
 
 #include <string>
-#include "LogCommon.hpp"
+#include <logging/LogCommon.hpp>
 
-namespace CubA4
+namespace CubA4::logging
 {
-	namespace core
+	class ILoggerTagged
 	{
-		namespace logging
-		{
-			class ILoggerTagged
-			{
-			public:
-				virtual ~ILoggerTagged() = default;
+	public:
+		virtual ~ILoggerTagged() = default;
 
-				virtual void log(LogLevel level, const std::string &message) = 0;
-				virtual void flush() = 0;
-			protected:
-				explicit ILoggerTagged() = default;
-			};
-		}
-	}
+		virtual void log(LogLevel level, const std::string &message) = 0;
+		virtual void flush() = 0;
+	protected:
+		explicit ILoggerTagged() = default;
+	};
 }
-
-#endif // COREBASE_ILOGGERTAGGED_HPP

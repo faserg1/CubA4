@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <ctime>
-using namespace CubA4::core::logging;
+using namespace CubA4::logging;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::addon;
@@ -21,8 +21,8 @@ using namespace CubA4::render::vulkan::addon;
 constexpr const char *loggerTag = "ENGINE";
 
 VulkanRenderEngine::VulkanRenderEngine(
-	std::shared_ptr<const CubA4::core::info::IApplicationInfo> info,
-	std::shared_ptr<const CubA4::core::ICore> core) :
+	std::shared_ptr<const CubA4::info::IApplicationInfo> info,
+	std::shared_ptr<const CubA4::ICore> core) :
 	RenderEngineCore(info, core),
 	running_(false)
 {
@@ -58,7 +58,7 @@ std::shared_ptr<IRenderManager> VulkanRenderEngine::getRenderManager() const
 	return renderManager_;
 }
 
-void VulkanRenderEngine::setGame(std::shared_ptr<const CubA4::core::game::IGame> game)
+void VulkanRenderEngine::setGame(std::shared_ptr<const CubA4::game::IGame> game)
 {
 	renderGameHandler_->setGame(game);
 }

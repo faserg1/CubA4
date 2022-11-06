@@ -2,15 +2,9 @@
 
 #include <world/ObjectData.hpp>
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace core
+	struct BlockData : ObjectData
 	{
-		namespace world
-		{
-			struct BlockData : ObjectData
-			{
-			};
-		}
-	}
+	};
 }

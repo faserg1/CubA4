@@ -1,37 +1,18 @@
-#ifndef RENDERVULKAN_IRENDERENGINEPIPELINEUPDATER_HPP
-#define RENDERVULKAN_IRENDERENGINEPIPELINEUPDATER_HPP
+#pragma once
 
 #include <vector>
 #include <memory>
+#include <world/IChunk.hpp>
 
-namespace CubA4
+namespace CubA4::render::engine::pipeline
 {
-	namespace mod
+	class IRenderEnginePipelineUpdater
 	{
-		namespace world
-		{
-			class IChunk;
-		}
-	}
-
-	namespace render
-	{
-		namespace engine
-		{
-			namespace pipeline
-			{
-				class IRenderEnginePipelineUpdater
-				{
-				public:
-					virtual void pushChunks(std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> chunks) = 0;
-				protected:
-					explicit IRenderEnginePipelineUpdater() = default;
-					virtual ~IRenderEnginePipelineUpdater() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual void pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks) = 0;
+	protected:
+		explicit IRenderEnginePipelineUpdater() = default;
+		virtual ~IRenderEnginePipelineUpdater() = default;
+	private:
+	};
 }
-
-#endif // RENDERVULKAN_IRENDERENGINEPIPELINEUPDATER_HPP

@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_RENDERENGINEPIPELINE_HPP
-#define RENDERVULKAN_RENDERENGINEPIPELINE_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -35,16 +34,16 @@ namespace CubA4
 					explicit RenderEnginePipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler);
 					~RenderEnginePipeline();
 
-					void pushChunks(std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> chunks) override;
+					void pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks) override;
 
-					std::unique_ptr<CubA4::core::util::ISubscription> subscribe(IRenderEnginePipelineSubscriber *subscriber);
+					std::unique_ptr<CubA4::util::ISubscription> subscribe(IRenderEnginePipelineSubscriber *subscriber);
 				protected:
 				private:
 					void handlerLoop();
 				private:
 					const std::shared_ptr<RenderChunkCompiler> chunkCompiler_;
 					std::queue<std::future<sRenderChunk>> chunkQueue_;
-					CubA4::core::util::SubscriptionHelper<IRenderEnginePipelineSubscriber> subHelper_;
+					CubA4::util::SubscriptionHelper<IRenderEnginePipelineSubscriber> subHelper_;
 					std::thread handlerThread_;
 					std::atomic_bool run_;
 				};
@@ -52,5 +51,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_RENDERENGINEPIPELINE_HPP

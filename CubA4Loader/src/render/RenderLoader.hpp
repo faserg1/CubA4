@@ -1,5 +1,4 @@
-#ifndef CUBA4LOADER_RENDER_LOADER_HPP
-#define CUBA4LOADER_RENDER_LOADER_HPP
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -7,7 +6,7 @@
 
 namespace CubA4
 {
-	namespace core::system
+	namespace system
 	{
 		class IRuntime;
 	}
@@ -18,7 +17,7 @@ namespace CubA4
 		{
 			struct Private;
 		public:
-			RenderLoader(std::string renderPath, std::shared_ptr<core::system::IRuntime> runtime);
+			RenderLoader(std::string renderPath, std::shared_ptr<system::IRuntime> runtime);
 			~RenderLoader();
 
 			std::vector<IRenderInfo *> getRenderInfoCollection();
@@ -28,9 +27,7 @@ namespace CubA4
 			const char *const importSymbolName_;
 			std::shared_ptr<Private> data_;
 			IRenderInfo *currentRenderInfo_;
-			const std::shared_ptr<core::system::IRuntime> runtime_;
+			const std::shared_ptr<system::IRuntime> runtime_;
 		};
 	}
 }
-
-#endif // CUBA4LOADER_RENDER_LOADER_HPP

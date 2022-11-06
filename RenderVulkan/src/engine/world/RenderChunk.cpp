@@ -1,10 +1,10 @@
 #include "./RenderChunk.hpp"
 using namespace CubA4::render::engine::world;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
+using namespace CubA4::world;
+using namespace CubA4::world;
 
-RenderChunk::RenderChunk(const ChunkPos &pos, std::vector<VkCommandBuffer> cmdBuffers, std::function<void()> deleter) :
-	pos_(pos), cmdBuffers_(std::move(cmdBuffers)), deleter_(deleter)
+RenderChunk::RenderChunk(Data data, std::function<void()> deleter) :
+	data_(data), deleter_(deleter)
 {
 	
 }
@@ -16,10 +16,10 @@ RenderChunk::~RenderChunk()
 
 const ChunkPos &RenderChunk::getChunkPos() const
 {
-	return pos_;
+	return data_.pos;
 }
 
 void RenderChunk::executeFrom(VkCommandBuffer primaryCmdBuffer) const
 {
-	vkCmdExecuteCommands(primaryCmdBuffer, static_cast<uint32_t>(cmdBuffers_.size()), cmdBuffers_.data());
+	vkCmdExecuteCommands(primaryCmdBuffer, static_cast<uint32_t>(data_.cmdBuffers.size()), data_.cmdBuffers.data());
 }

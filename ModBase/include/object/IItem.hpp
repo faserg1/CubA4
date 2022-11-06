@@ -1,24 +1,15 @@
-#ifndef MODBASE_IITEM_HPP
-#define MODBASE_IITEM_HPP
+#pragma once
 
-#include "IEntity.hpp"
+#include <object/IEntity.hpp>
 
-namespace CubA4
+namespace CubA4::object
 {
-	namespace mod
+	class IItem :
+		public virtual IEntity
 	{
-		namespace object
-		{
-			class IItem :
-				public virtual IEntity
-			{
-			public:
-				virtual ~IItem() = default;
-			protected:
-				explicit IItem() = default;
-			};
-		}
-	}
+	public:
+		virtual ~IItem() = default;
+	protected:
+		explicit IItem() = default;
+	};
 }
-
-#endif // MODBASE_IITEM_HPP

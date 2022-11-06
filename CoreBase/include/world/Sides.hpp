@@ -1,35 +1,34 @@
 #pragma once
 
-namespace CubA4
-{
-	namespace core
-	{
-		namespace world
-		{
-			/**
-			 * @brief Стороны света
-			 */
-			enum class Side
-			{
-				North = 0,
-				South = 1,
-				East = 2,
-				West = 3
-			};
+#include <util/Enums.hpp>
+#include <cstdint>
 
-			/**
-			 * @brief Стороны блока
-			 * 
-			 */
-			enum class BlockSide
-			{
-				Top = 1,
-				Bottom = 2,
-				Front = 3,
-				Back = 4,
-				Left = 5,
-				Right = 6
-			};
-		}
-	}
+namespace CubA4::world
+{
+	/**
+	 * @brief Стороны света
+	 */
+	enum class Side
+	{
+		North = 0,
+		South = 1,
+		East = 2,
+		West = 3
+	};
+
+	/**
+	 * @brief Стороны блока
+	 * 
+	 */
+	enum class BlockSide : uint8_t
+	{
+		Top = 0x1,
+		Bottom = 0x2,
+		Front = 0x4,
+		Back = 0x8,
+		Left = 0x10,
+		Right = 0x20
+	};
+
+	CUBA4_ENUM_FLAGS_OPERATORS(BlockSide, BlockSides, uint8_t)
 }

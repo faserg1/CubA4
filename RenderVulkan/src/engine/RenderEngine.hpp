@@ -28,14 +28,14 @@ namespace CubA4
 				public RenderEngineCore
 			{
 			public:
-				explicit VulkanRenderEngine(std::shared_ptr<const core::info::IApplicationInfo> info, std::shared_ptr<const core::ICore> core);
+				explicit VulkanRenderEngine(std::shared_ptr<const info::IApplicationInfo> info, std::shared_ptr<const ICore> core);
 				explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
 				~VulkanRenderEngine();
 
 				void init(std::shared_ptr<const window::IWindow> window) override;
 				void destroy() override;
 
-				void setGame(std::shared_ptr<const CubA4::core::game::IGame> game) override;
+				void setGame(std::shared_ptr<const CubA4::game::IGame> game) override;
 
 				void run() override;
 				void stop() override;

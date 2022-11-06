@@ -1,19 +1,11 @@
-#ifndef RENDERVULKAN_DEBUGEXTENSION_HPP
-#define RENDERVULKAN_DEBUGEXTENSION_HPP
+#pragma once
 
 #include "InstanceExtension.hpp"
+#include <logging/ILogger.hpp>
 #include <memory>
 
 namespace CubA4
 {
-	namespace core
-	{
-		namespace logging
-		{
-			class ILogger;
-			class ILoggerTagged;
-		}
-	}
 	namespace render
 	{
 		namespace config
@@ -31,7 +23,7 @@ namespace CubA4
 					public InstanceExtension
 				{
 				public:
-					explicit DebugExtension(std::shared_ptr<core::logging::ILogger> logger, std::shared_ptr<config::IRenderConfig> cfg);
+					explicit DebugExtension(std::shared_ptr<logging::ILogger> logger, std::shared_ptr<config::IRenderConfig> cfg);
 					~DebugExtension();
 
 					std::vector<std::string> names() const override;
@@ -45,7 +37,7 @@ namespace CubA4
 					void createDebugReport(std::shared_ptr<const Instance> instance);
 					void destroyDebugReport(std::shared_ptr<const Instance> instance);
 				private:
-					const std::shared_ptr<core::logging::ILoggerTagged> loggerTagged_;;
+					const std::shared_ptr<logging::ILoggerTagged> loggerTagged_;;
 					const std::shared_ptr<DebugExtensionData> data_;
 					int logLevel_;
 				private:
@@ -55,5 +47,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_DEBUGEXTENSION_HPP

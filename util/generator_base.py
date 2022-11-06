@@ -83,10 +83,10 @@ class GeneratorBase:
 
 	def _generate_namespaces(self, file):
 		namespaces = self._get_namespaces()
-		for namespace in namespaces:
-			namespace_open = "namespace " + namespace + "\n{"
-			namespace_close = "}"
-			file.add_lines(namespace_open, namespace_close)
+
+		namespace_open = "namespace " + "::".join(namespaces) + "\n{"
+		namespace_close = "}"
+		file.add_lines(namespace_open, namespace_close)
 
 	def _generate_class_proto(self, file: CppFile):
 		name = self._get_name()

@@ -6,21 +6,15 @@
 #include "./RenderData.hpp"
 #include "./WorldData.hpp"
 
-namespace CubA4
+namespace CubA4::config
 {
-	namespace core
+	struct CoreData
 	{
-		namespace config
-		{
-			struct CoreData
-			{
-				WorldData world;
-				ModsData mods;
-				RenderData render;
-			};
-			
-			void from_json(const nlohmann::json& j, CoreData& v);
-			void to_json(nlohmann::json& j, const CoreData& v);
-		}
-	}
+		WorldData world;
+		ModsData mods;
+		RenderData render;
+	};
+	
+	void from_json(const nlohmann::json& j, CoreData& v);
+	void to_json(nlohmann::json& j, const CoreData& v);
 }

@@ -1,45 +1,26 @@
-#ifndef COREBASE_ISTARTUP_HPP
-#define COREBASE_ISTARTUP_HPP
+#pragma once
 
 #include <memory>
+#include <system/IAppCallback.hpp>
+#include <game/IGame.hpp>
 
-namespace CubA4
+namespace CubA4::system
 {
-	namespace mod
+	class IStartup
 	{
-		class IModLoader;
-	}
+	public:
+		virtual void load(IAppCallback &appCallback) = 0;
 
-	namespace core
-	{
-		namespace game
-		{
-			class IGame;
-		}
+		virtual void setup() = 0;
+		virtual void shutdown() = 0;
 
-		namespace system
-		{
-			class IAppCallback;
+		virtual void run() = 0;
+		virtual void stop() = 0;
 
-			class IStartup
-			{
-			public:
-				virtual void load(IAppCallback &appCallback) = 0;
-
-				virtual void setup() = 0;
-				virtual void shutdown() = 0;
-
-				virtual void run() = 0;
-				virtual void stop() = 0;
-
-				virtual std::shared_ptr<CubA4::core::game::IGame> getGame() const = 0;
-			protected:
-				explicit IStartup() = default;
-				virtual ~IStartup() = default;
-			private:
-			};
-		}
-	}
+		virtual std::shared_ptr<CubA4::game::IGame> getGame() const = 0;
+	protected:
+		explicit IStartup() = default;
+		virtual ~IStartup() = default;
+	private:
+	};
 }
-
-#endif // COREBASE_ISTARTUP_HPP

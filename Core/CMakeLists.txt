@@ -22,6 +22,7 @@ target_compile_definitions(Core PRIVATE
 )
 
 target_include_directories(Core INTERFACE include)
+target_include_directories(Core PRIVATE src)
 
 use_base_library(Core CoreBase)
 use_base_library(Core ModBase)

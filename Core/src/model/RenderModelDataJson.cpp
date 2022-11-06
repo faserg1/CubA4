@@ -1,8 +1,8 @@
 #include "./RenderModelDataJson.hpp"
 #include <nlohmann/json.hpp>
-using namespace CubA4::core::model;
+using namespace CubA4::model;
 
-namespace CubA4::core::model
+namespace CubA4::model
 {
 	void to_json(nlohmann::json& j, const RenderModelData::VertexUVW& v);
 	void from_json(const nlohmann::json& j, RenderModelData::VertexUVW& v);
@@ -10,7 +10,7 @@ namespace CubA4::core::model
 	void from_json(const nlohmann::json& j, RenderModelData::Face& v);
 }
 
-void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData::VertexUVW& v)
+void CubA4::model::to_json(nlohmann::json& j, const RenderModelData::VertexUVW& v)
 {
 	j = nlohmann::json
 	{
@@ -23,7 +23,7 @@ void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData::Verte
 	};
 }
 
-void CubA4::core::model::from_json(const nlohmann::json& j, RenderModelData::VertexUVW& v)
+void CubA4::model::from_json(const nlohmann::json& j, RenderModelData::VertexUVW& v)
 {
 	j.at("x").get_to(v.x);
 	j.at("y").get_to(v.y);
@@ -33,7 +33,7 @@ void CubA4::core::model::from_json(const nlohmann::json& j, RenderModelData::Ver
 	j.at("w").get_to(v.w);
 }
 
-void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData::Face& v)
+void CubA4::model::to_json(nlohmann::json& j, const RenderModelData::Face& v)
 {
 	j = nlohmann::json
 	{
@@ -41,13 +41,13 @@ void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData::Face&
 	};
 }
 
-void CubA4::core::model::from_json(const nlohmann::json& j, RenderModelData::Face& v)
+void CubA4::model::from_json(const nlohmann::json& j, RenderModelData::Face& v)
 {
 	j.at("indexes").get_to(v.indexes);
 }
 
 
-void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData& v)
+void CubA4::model::to_json(nlohmann::json& j, const RenderModelData& v)
 {
 	j = nlohmann::json
 	{
@@ -59,7 +59,7 @@ void CubA4::core::model::to_json(nlohmann::json& j, const RenderModelData& v)
 	};
 }
 
-void CubA4::core::model::from_json(const nlohmann::json& j, RenderModelData& v)
+void CubA4::model::from_json(const nlohmann::json& j, RenderModelData& v)
 {
 	j.at("vertices").get_to(v.vertices);
 	j.at("faces").get_to(v.faces);

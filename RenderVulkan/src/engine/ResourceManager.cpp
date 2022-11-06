@@ -4,7 +4,6 @@
 #include <vector>
 #include <ICore.hpp>
 #include <resources/IResourcesManager.hpp>
-using namespace CubA4::core;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
@@ -25,9 +24,9 @@ sVkDescriptorSetLayout ResourceManager::getWorldLayout() const
 	return worldLayout_;
 }
 
-sVkDescriptorSetLayout ResourceManager::getChunkLayout() const
+std::vector<sVkDescriptorSetLayout> ResourceManager::getBuiltInLayouts() const
 {
-	return chunkLayout_;
+	return {worldLayout_};
 }
 
 sVkDescriptorPool ResourceManager::getBuiltInPool() const
@@ -35,28 +34,21 @@ sVkDescriptorPool ResourceManager::getBuiltInPool() const
 	return builtInPool_;
 }
 
-std::shared_ptr<CubA4::core::resources::IResource> ResourceManager::getCache(core::resources::Path path) const
+std::shared_ptr<CubA4::resources::IResource> ResourceManager::getCache(resources::Path path) const
 {
-	using namespace core::resources;
+	using namespace resources;
 	return core_->getResourcesManager()->edit(Path("cache") / Path("render") / Path("vulkan") / path);
 }
 
 void ResourceManager::createBuildInDescriptorSetLayouts()
 {
-	VkDescriptorSetLayoutBinding worldInfo = {}, chunkInfo = {};
+	VkDescriptorSetLayoutBinding worldInfo = {};
 	//Matrix info
 	worldInfo.binding = 0;
 	worldInfo.descriptorCount = 1;
 	worldInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	worldInfo.stageFlags = VK_SHADER_STAGE_ALL;
-	//Chunk range info
-	chunkInfo.binding = 1;
-	chunkInfo.descriptorCount = 1;
-	chunkInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	chunkInfo.stageFlags = VK_SHADER_STAGE_ALL;
-
 	worldLayout_ = createSetFromBindings(&worldInfo, 1, "World info layout set");
-	chunkLayout_ = createSetFromBindings(&chunkInfo, 1, "Chunk info layout set");
 }
 
 void ResourceManager::createBuiltInDescriptorPool()

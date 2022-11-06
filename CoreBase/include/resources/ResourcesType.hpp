@@ -1,18 +1,11 @@
 #pragma once
 
-namespace CubA4
+namespace CubA4::resources
 {
-	namespace core
+	enum class ResourcesType
 	{
-		namespace resources
-		{
-			enum class ResourcesType
-			{
-				Mod, ///< Ресурсы модификаций
-				Addon, ///< Ресурсы дополнений (текстур паки?)
-				Cache, 
-			};
-		}
-	}
+		Mod, ///< Ресурсы модификаций
+		Addon, ///< Ресурсы дополнений (текстур паки?)
+		Cache, 
+	};
 }
-

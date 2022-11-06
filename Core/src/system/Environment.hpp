@@ -1,32 +1,23 @@
-#ifndef CORE_ENVIRONMENT_HPP
-#define CORE_ENVIRONMENT_HPP
+#pragma once
 
 #include <system/IEnvironment.hpp>
-#include "EnvironmentContext.hpp"
+#include <system/EnvironmentContext.hpp>
 
-namespace CubA4
+namespace CubA4::system
 {
-	namespace core
+	class Environment :
+		public virtual IEnvironment
 	{
-		namespace system
-		{
-			class Environment :
-				public virtual IEnvironment
-			{
-			public:
-				explicit Environment(EnvironmentContext &&context);
-				~Environment();
+	public:
+		explicit Environment(EnvironmentContext &&context);
+		~Environment();
 
-				int64_t getId(const std::shared_ptr<const CubA4::mod::object::IObject> object) const;
-				std::string getIdName(const std::shared_ptr<const CubA4::mod::object::IObject> object) const override;
-				std::shared_ptr<const CubA4::mod::object::IObject> getObject(int64_t id) const override;
-				std::shared_ptr<const CubA4::mod::object::IObject> getObject(const std::string &id) const override;
-			protected:
-			private:
-				const EnvironmentContext context_;
-			};
-		}
-	}
+		int64_t getId(const std::shared_ptr<const CubA4::object::IObject> object) const;
+		std::string getIdName(const std::shared_ptr<const CubA4::object::IObject> object) const override;
+		std::shared_ptr<const CubA4::object::IObject> getObject(int64_t id) const override;
+		std::shared_ptr<const CubA4::object::IObject> getObject(const std::string &id) const override;
+	protected:
+	private:
+		const EnvironmentContext context_;
+	};
 }
-
-#endif // CORE_ENVIRONMENT_HPP

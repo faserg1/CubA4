@@ -14,7 +14,7 @@ namespace CubA4
 				class IWorldManager
 				{
 				public:
-					virtual void setCameraPosition(CubA4::core::world::ChunkPos globalPos, float x, float y, float z) = 0;
+					virtual void setCameraPosition(CubA4::world::ChunkPos globalPos, float x, float y, float z) = 0;
 					/**
 					\param roll Вращение вокруг оси x
 					\param pitch Вращение вокруг оси y

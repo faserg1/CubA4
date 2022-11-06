@@ -1,5 +1,4 @@
 #include "./RenderModel.hpp"
-#include "../../vulkan/Device.hpp"
 using namespace CubA4::render::engine::model;
 using namespace CubA4::render::vulkan;
 
@@ -15,7 +14,7 @@ RenderModel::~RenderModel()
 	vkDestroyBuffer(device_->getDevice(), data_.indexBuffer, nullptr);
 }
 
-std::string RenderModel::getId() const
+const std::string &RenderModel::getId() const
 {
 	return data_.id;
 }

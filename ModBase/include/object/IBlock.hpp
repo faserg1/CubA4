@@ -1,44 +1,19 @@
-#ifndef MODBASE_IBLOCK_HPP
-#define MODBASE_IBLOCK_HPP
+#pragma once
 
-#include "IObject.hpp"
+#include <object/IObject.hpp>
+#include <model/IBlockRenderModelDefinition.hpp>
 #include <cstdint>
 #include <memory>
 
-namespace CubA4
+namespace CubA4::object
 {
-	namespace render
+	class IBlock :
+		public virtual IObject
 	{
-		namespace engine
-		{
-			namespace material
-			{
-				class IMaterial;
-			}
-
-			namespace model
-			{
-				class IRenderModel;
-			}
-		}
-	}
-
-	namespace mod
-	{
-		namespace object
-		{
-			class IBlock :
-				public virtual IObject
-			{
-			public:
-				virtual std::shared_ptr<const CubA4::render::engine::material::IMaterial> getRenderMaterial() const = 0;
-				virtual std::shared_ptr<const CubA4::render::engine::model::IRenderModel> getRenderModel() const = 0;
-			protected:
-				explicit IBlock() = default;
-				virtual ~IBlock() = default;
-			};
-		}
-	}
+	public:
+		virtual std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> getRenderModelDefinition() const = 0;
+	protected:
+		explicit IBlock() = default;
+		virtual ~IBlock() = default;
+	};
 }
-
-#endif // MODBASE_IBLOCK_HPP

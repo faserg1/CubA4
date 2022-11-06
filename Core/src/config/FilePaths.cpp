@@ -1,6 +1,6 @@
 #include "FilePaths.hpp"
 
-using namespace CubA4::core::config;
+using namespace CubA4::config;
 
 FilePaths::FilePaths(int argc, const char *const argv[])
 {

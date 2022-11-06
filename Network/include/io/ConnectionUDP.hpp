@@ -1,44 +1,28 @@
-#ifndef NETWORK_CONNECTIONUDP_HPP
-#define NETWORK_CONNECTIONUDP_HPP
+#pragma once
 
 #include "Connection.hpp"
 #include <boost/asio/ip/udp.hpp>
+#include <logging/ILogger.hpp>
 
-namespace CubA4
+namespace CubA4::network::io
 {
-	namespace core
+	class ConnectionUDP :
+		public Connection
 	{
-		namespace logging
-		{
-			class ILogger;
-		}
-	}
+	public:
+		explicit ConnectionUDP(std::shared_ptr<boost::asio::io_context> service,
+			std::shared_ptr<boost::asio::ip::udp::socket> socket,
+			boost::asio::ip::udp::endpoint endpoint,
+			std::shared_ptr<CubA4::logging::ILogger> logger);
+		~ConnectionUDP();
 
-	namespace network
-	{
-		namespace io
-		{
-			class ConnectionUDP :
-				public Connection
-			{
-			public:
-				explicit ConnectionUDP(std::shared_ptr<boost::asio::io_context> service,
-					std::shared_ptr<boost::asio::ip::udp::socket> socket,
-					boost::asio::ip::udp::endpoint endpoint,
-					std::shared_ptr<CubA4::core::logging::ILogger> logger);
-				~ConnectionUDP();
-
-				ConnectionProtocol protocol() override;
-				std::shared_future<void> send(const std::string &data) override;
-			protected:
-			private:
-				std::shared_ptr<boost::asio::io_context> service_;
-				std::shared_ptr<boost::asio::ip::udp::socket> socket_;
-				boost::asio::ip::udp::endpoint endpoint_;
-				std::shared_ptr<CubA4::core::logging::ILogger> logger_;
-			};
-		}
-	}
+		ConnectionProtocol protocol() override;
+		std::shared_future<void> send(const std::string &data) override;
+	protected:
+	private:
+		std::shared_ptr<boost::asio::io_context> service_;
+		std::shared_ptr<boost::asio::ip::udp::socket> socket_;
+		boost::asio::ip::udp::endpoint endpoint_;
+		std::shared_ptr<CubA4::logging::ILogger> logger_;
+	};
 }
-
-#endif // NETWORK_CONNECTIONUDP_HPP

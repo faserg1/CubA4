@@ -1,21 +1,12 @@
 #pragma once
 
-namespace CubA4
+namespace CubA4::game::controller
 {
-	namespace core
+	class IBindings
 	{
-		namespace game
-		{
-			namespace controller
-			{
-				class IBindings
-				{
-				public:
-					virtual ~IBindings() = default;
-				protected:
-					explicit IBindings() = default;
-				};
-			}
-		}
-	}
+	public:
+		virtual ~IBindings() = default;
+	protected:
+		explicit IBindings() = default;
+	};
 }

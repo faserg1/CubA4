@@ -18,7 +18,7 @@ AppInfo::~AppInfo()
 	
 }
 
-const CubA4::core::info::IVersion &AppInfo::version() const
+const CubA4::info::IVersion &AppInfo::version() const
 {
 	return appVersion;
 }

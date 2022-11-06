@@ -1,33 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <util/ISubscription.hpp>
 
-namespace CubA4
+namespace CubA4::game
 {
-	namespace core
-	{
-		namespace util
-		{
-			class ISubscription;
-		}
-	}
+	class IGameSubscriber;
 
-	namespace core
+	class IGame
 	{
-		namespace game
-		{
-			class IGameSubscriber;
-
-			class IGame
-			{
-			public:
-				virtual std::unique_ptr<CubA4::core::util::ISubscription> subscribe(IGameSubscriber *subscriber) const = 0;
-			protected:
-				explicit IGame() = default;
-				virtual ~IGame() = default;
-			private:
-			};
-		}
-	}
+	public:
+		virtual std::unique_ptr<CubA4::util::ISubscription> subscribe(IGameSubscriber *subscriber) const = 0;
+	protected:
+		explicit IGame() = default;
+		virtual ~IGame() = default;
+	private:
+	};
 }
-

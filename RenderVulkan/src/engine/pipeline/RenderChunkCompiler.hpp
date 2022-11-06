@@ -55,14 +55,14 @@ namespace CubA4
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
 
-					std::future<std::shared_ptr<const world::RenderChunk>> compileChunk(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
+					std::future<std::shared_ptr<const world::RenderChunk>> compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk);
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::RenderPass> renderPass_;
 					const std::shared_ptr<ResourceManager> resourceManager_;
 					const std::shared_ptr<const world::WorldManager> worldManager_;
 				private:
-					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::mod::world::IChunk> chunk);
+					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::world::IChunk> chunk);
 					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>>
 						createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const;
 					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, VkDescriptorType type, uint32_t binding) const;

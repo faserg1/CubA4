@@ -1,21 +1,12 @@
 #pragma once
 
-namespace CubA4
+namespace CubA4::game::controller
 {
-	namespace core
+	class IController
 	{
-		namespace game
-		{
-			namespace controller
-			{
-				class IController
-				{
-				public:
-					virtual ~IController() = default;
-				protected:
-					explicit IController() = default;
-				};
-			}
-		}
-	}
+	public:
+		virtual ~IController() = default;
+	protected:
+		explicit IController() = default;
+	};
 }

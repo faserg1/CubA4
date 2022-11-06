@@ -1,32 +1,24 @@
-#ifndef COREBASE_ILOGGER_HPP
-#define COREBASE_ILOGGER_HPP
+#pragma once
 
 #include <string>
 #include <memory>
-#include "LogCommon.hpp"
+#include <logging/LogCommon.hpp>
+#include <logging/ILoggerTagged.hpp>
 
-namespace CubA4
+namespace CubA4::logging
 {
-	namespace core
+	class ILogger
 	{
-		namespace logging
-		{
-			class ILogger
-			{
-			public:
-				virtual void log(LogSourceSystem system, const std::string &tag,
-					LogLevel level, const std::string &message) = 0;
-				virtual void log(LogSourceSystem system, const std::string &tag,
-					LogLevel level, const std::string &message, const char *filename, int line) = 0;
-				virtual void flush() = 0;
+	public:
+		virtual void log(LogSourceSystem system, const std::string &tag,
+			LogLevel level, const std::string &message) = 0;
+		virtual void log(LogSourceSystem system, const std::string &tag,
+			LogLevel level, const std::string &message, const char *filename, int line) = 0;
+		virtual void flush() = 0;
 
-				virtual std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) = 0;
-			protected:
-				virtual ~ILogger() = default;
-				explicit ILogger() = default;
-			};
-		}
-	}
+		virtual std::shared_ptr<ILoggerTagged> createTaggedLog(LogSourceSystem system, const std::string &tag) = 0;
+	protected:
+		virtual ~ILogger() = default;
+		explicit ILogger() = default;
+	};
 }
-
-#endif // COREBASE_ILOGGER_HPP

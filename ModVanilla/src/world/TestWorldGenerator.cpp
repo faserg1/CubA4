@@ -1,7 +1,5 @@
 #include "./TestWorldGenerator.hpp"
 using namespace CubA4::world;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
 
 TestWorldGenerator::TestWorldGenerator()
 {

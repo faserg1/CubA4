@@ -1,8 +1,8 @@
 #include "./SimpleRenderModelDefinition.hpp"
 #include <algorithm>
 #include <ranges>
-using namespace CubA4::core::model;
-using namespace CubA4::core::world;
+using namespace CubA4::model;
+using namespace CubA4::world;
 
 SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, const model::RenderModelData &data) : id_(id)
 {
@@ -59,15 +59,16 @@ const std::vector<UVWCoords> &SimpleRenderModelDefinition::getUVWCoords() const
 	return uvws_;
 }
 
-std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::string &materialId, std::vector<BlockSide> hiddenSides, const BlockData& data) const
+std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::string &materialId, BlockSides hiddenSides, const BlockData& data) const
 {
+	constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
 	// assume, that if we have 6 sides and all them are hidden, we have nothing to render
-	if (hiddenSides.size() == 6)
+	if (hiddenSides & allSides)
 		return {};
 	return {};
 }
 
-std::vector<BlockSide> SimpleRenderModelDefinition::getNonOpaqueSide(const std::string &materialId, const BlockData& data) const
+BlockSides SimpleRenderModelDefinition::getNonOpaqueSide(const BlockData& data) const
 {
 	return nonOpaque;
 }

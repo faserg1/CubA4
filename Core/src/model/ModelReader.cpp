@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <resources/IResource.hpp>
 #include <nlohmann/json.hpp>
-using namespace CubA4::core::model;
+using namespace CubA4::model;
 
 ModelReader::ModelReader()
 {

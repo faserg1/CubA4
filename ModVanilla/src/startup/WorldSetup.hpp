@@ -1,63 +1,29 @@
-#ifndef MODVANILLA_WORLDSETUP_HPP
-#define MODVANILLA_WORLDSETUP_HPP
+#pragma once
 
 #include <memory>
+#include <ICore.hpp>
+#include <system/IEnvironmentBuilder.hpp>
+#include <logging/ILogger.hpp>
+#include <object/IBlock.hpp>
+#include <manager/ModManager.hpp>
 
-namespace CubA4
+namespace CubA4::startup
 {
-	namespace core
+	class WorldSetup
 	{
-		class ICore;
+	public:
+		explicit WorldSetup();
+		~WorldSetup();
 
-		namespace logging
-		{
-			class ILoggerTagged;
-		}
+		void load(std::shared_ptr<const ICore> core, std::shared_ptr<manager::ModManager> manager);
+		void init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder);
+		void done();
+	protected:
+	private:
+		std::shared_ptr<const ICore> core_;
+		std::shared_ptr<manager::ModManager> manager_;
+		std::shared_ptr<CubA4::logging::ILoggerTagged> log_;
 
-		namespace system
-		{
-			class IEnvironmentBuilder;
-		}
-	}
-
-	namespace mod
-	{
-		namespace object
-		{
-			class IBlock;
-		}
-
-		namespace world
-		{
-			class IWorld;
-		}
-
-		namespace manager
-		{
-			class ModManager;
-		}
-
-		namespace startup
-		{
-			class WorldSetup
-			{
-			public:
-				explicit WorldSetup();
-				~WorldSetup();
-
-				void load(std::shared_ptr<const core::ICore> core, std::shared_ptr<manager::ModManager> manager);
-				void init(std::shared_ptr<CubA4::core::system::IEnvironmentBuilder> builder);
-				void done();
-			protected:
-			private:
-				std::shared_ptr<manager::ModManager> manager_;
-				std::shared_ptr<CubA4::core::logging::ILoggerTagged> log_;
-
-				std::shared_ptr<const CubA4::mod::object::IBlock> testBlock_;
-				std::shared_ptr<const CubA4::mod::world::IWorld> testWorld_;
-			};
-		}
-	}
+		std::shared_ptr<const CubA4::object::IBlock> testBlock_;
+	};
 }
-
-#endif // MODVANILLA_WORLDSETUP_HPP

@@ -7,7 +7,7 @@
 
 
 
-using namespace CubA4::core::system;
+using namespace CubA4::system;
 
 Runtime::Runtime()
 {

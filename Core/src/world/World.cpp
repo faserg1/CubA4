@@ -8,8 +8,8 @@
 #include "ChunkRangeBuilder.hpp"
 
 using namespace CubA4::world;
-using namespace CubA4::core::world;
-using namespace CubA4::mod::world;
+using namespace CubA4::world;
+using namespace CubA4::world;
 
 World::World(std::shared_ptr<const IWorldDefinition> definition) :
 	definition_(definition)
@@ -32,12 +32,12 @@ std::wstring World::getName() const
 	return definition_->getName();
 }
 
-std::unique_ptr<CubA4::core::util::ISubscription> World::subscribe(IWorldSubscriber *subscriber) const
+std::unique_ptr<CubA4::util::ISubscription> World::subscribe(IWorldSubscriber *subscriber) const
 {
 	return std::move(subscriptionHelper_.add(subscriber));
 }
 
-void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
+void World::test(std::shared_ptr<const CubA4::object::IBlock> block)
 {
 	// TODO: [OOKAMI] Test chunk range feature. Delete function later
 	for (auto x = 0; x < 2; x++)
@@ -56,7 +56,7 @@ void World::test(std::shared_ptr<const CubA4::mod::object::IBlock> block)
 		}
 	}
 	
-	subscriptionHelper_.apply([](CubA4::mod::world::IWorldSubscriber *sub)
+	subscriptionHelper_.apply([](CubA4::world::IWorldSubscriber *sub)
 	{
 		// TODO: [OOKAMI] А пофиг. Мир все равно должен быть перекомпилирован
 	});
@@ -67,10 +67,10 @@ std::shared_ptr<const IWorldDefinition> World::getWorldDefinition() const
 	return definition_;
 }
 
-std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> World::getChunks() const
+std::vector<std::shared_ptr<const CubA4::world::IChunk>> World::getChunks() const
 {
-	std::vector<std::shared_ptr<const CubA4::mod::world::IChunk>> result(loadedChunks_.size());
-	std::transform(loadedChunks_.begin(), loadedChunks_.end(), result.begin(), [](auto pair) -> std::shared_ptr<const CubA4::mod::world::IChunk>
+	std::vector<std::shared_ptr<const CubA4::world::IChunk>> result(loadedChunks_.size());
+	std::transform(loadedChunks_.begin(), loadedChunks_.end(), result.begin(), [](auto pair) -> std::shared_ptr<const CubA4::world::IChunk>
 	{
 		return pair.second;
 	});
