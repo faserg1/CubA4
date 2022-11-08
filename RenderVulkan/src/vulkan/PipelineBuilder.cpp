@@ -306,11 +306,10 @@ void PipelineBuilder::prepareDescriptorSets()
 void PipelineBuilder::preparePushConstants()
 {
 	constexpr const auto chunkPositionSize = sizeof(CubA4::world::ChunkPos);
-	constexpr const auto chunkBlockRangesCountSize = sizeof(uint32_t);
 
 	VkPushConstantRange totalStageAllRange = {};
 	totalStageAllRange.offset = 0;
-	totalStageAllRange.size = chunkPositionSize + chunkBlockRangesCountSize;
+	totalStageAllRange.size = chunkPositionSize;
 	totalStageAllRange.stageFlags = VK_SHADER_STAGE_ALL;
 
 	pushConstantsRanges_.push_back(totalStageAllRange);

@@ -35,6 +35,11 @@ std::shared_ptr<IModelManager> RenderManager::getModelManager() const
 	return modelManager_;
 }
 
+std::shared_ptr<ModelManager> RenderManager::getModelManager()
+{
+	return modelManager_;
+}
+
 std::shared_ptr<IWorldManager> RenderManager::getWorldManager() const
 {
 	return worldManager_;

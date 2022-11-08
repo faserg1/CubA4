@@ -9,12 +9,12 @@ using namespace CubA4::render::vulkan;
 MaterialBuilder::MaterialBuilder(std::shared_ptr<const Device> device, std::shared_ptr<const IMaterialLayout> layout, sVkDescriptorPool pool) :
 	device_(device), layout_(layout), pool_(pool)
 {
-	
+	createSampler();
 }
 
 MaterialBuilder::~MaterialBuilder()
 {
-	
+	vkDestroySampler(device_->getDevice(), sampler_, nullptr);
 }
 
 void MaterialBuilder::addTexture(std::shared_ptr<const ITexture> texture)
@@ -51,10 +51,24 @@ std::shared_ptr<const IMaterial> MaterialBuilder::build()
 		auto texture = std::dynamic_pointer_cast<const Texture>(textures_[i]);
 		imgInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imgInfo.imageView = texture->getTextureView();
-		imgInfo.sampler = VK_NULL_HANDLE;
+		imgInfo.sampler = sampler_;
 	}
 
 	writeSet.pImageInfo = imageInfos.data();
 	vkUpdateDescriptorSets(device_->getDevice(), 1, &writeSet, 0, nullptr);
 	return std::make_shared<Material>(layout, textures_, set);
+}
+
+void MaterialBuilder::createSampler()
+{
+	VkSamplerCreateInfo info {
+		.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+		.magFilter = VK_FILTER_NEAREST,
+		.minFilter = VK_FILTER_NEAREST,
+		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
+		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+	};
+	vkCreateSampler(device_->getDevice(), &info, nullptr, &sampler_);
 }

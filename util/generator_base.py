@@ -155,7 +155,9 @@ class GeneratorBase:
 	#Getters
 
 	def _get_namespaces(self):
-		return filter(lambda name: not name.startswith("#"), self._full_name[:-1])
+		filtered = filter(lambda name: not name.startswith("#"), self._full_name[:-1])
+		cleaned = [name.replace("*", "") for name in filtered]
+		return cleaned
 
 	def _get_name(self):
 		return self._full_name[-1]
@@ -187,8 +189,9 @@ class GeneratorBase:
 			if namespaces[0] == module or module.startswith(namespaces[0]):
 				namespaces = namespaces[1:]
 		#total
-		filtered = [name.replace("#", "") for name in namespaces]
-		return os.path.join(folder, *filtered)
+		filtered = filter(lambda name: not name.startswith("*"), namespaces)
+		cleaned = [name.replace("#", "") for name in filtered]
+		return os.path.join(folder, *cleaned)
 
 	def _get_put_folder(self, folder):
 		relative_folder = self._get_relative_namespace_folder(folder)

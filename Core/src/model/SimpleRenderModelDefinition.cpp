@@ -1,6 +1,9 @@
 #include "./SimpleRenderModelDefinition.hpp"
 #include <algorithm>
 #include <ranges>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/action/sort.hpp>
+#include <range/v3/view/set_algorithm.hpp>
 using namespace CubA4::model;
 using namespace CubA4::world;
 
@@ -27,6 +30,8 @@ SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, 
 		};
 	});
 	nonOpaque_ = data.nonOpaque;
+	hiddenFaces_ = data.hidden | ranges::to<std::unordered_map>;
+	materialToFaces_ = data.materials | ranges::to<std::unordered_map>;
 }
 
 SimpleRenderModelDefinition::~SimpleRenderModelDefinition()
@@ -71,9 +76,22 @@ std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::str
 {
 	constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
 	// assume, that if we have 6 sides and all them are hidden, we have nothing to render
-	if (hiddenSides & allSides)
+	if (hiddenSides == allSides)
 		return {};
-	return {};
+	auto allFacesIt = materialToFaces_.find(materialId);
+	if (allFacesIt == materialToFaces_.end())
+		return {};
+	auto totalFaces = allFacesIt->second;
+	// move to init?
+	ranges::sort(totalFaces);
+	for (const auto &pair : hiddenFaces_)
+	{
+		if (hiddenSides & pair.first)
+		{
+			totalFaces = ranges::views::set_difference(totalFaces, pair.second) | ranges::to<std::vector>;
+		}
+	}
+	return totalFaces;
 }
 
 BlockSides SimpleRenderModelDefinition::getNonOpaqueSide(const BlockData& data) const

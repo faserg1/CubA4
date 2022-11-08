@@ -10,10 +10,15 @@ class ModVanillaDefaults:
 	def get_header_folder(cls):
 		return "src"
 
+class RenderVulkanDefaults:
+	@classmethod
+	def get_header_folder(cls):
+		return "src"
 
 class Defaults:
 	_modules = {"Core": CoreDefaults}
 	_modules = {"ModVanilla": ModVanillaDefaults}
+	_modules = {"RenderVulkan": RenderVulkanDefaults}
 
 	@classmethod
 	def get_header_folder(cls, module: str):

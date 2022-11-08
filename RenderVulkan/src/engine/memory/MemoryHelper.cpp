@@ -1,28 +1,31 @@
 #include "./MemoryHelper.hpp"
 #include "../../vulkan/Device.hpp"
+#include <thread>
+#include <cmath>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
 MemoryHelper::MemoryHelper(std::shared_ptr<const Device> device) :
-	device_(device), transitPool_(nullptr), transitBuffer_(nullptr), transitFence_(nullptr)
+	device_(device)
 {
-	VkCommandPoolCreateInfo poolInfo = {};
-	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-	vkCreateCommandPool(device->getDevice(), &poolInfo, nullptr, &transitPool_);
+	concurency_.resize(std::max(std::thread::hardware_concurrency(), 2u));
+	for (auto &concurencyData : concurency_)
+	{
+		concurencyData.cmdPool = std::make_shared<CommandPool>(device_, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+		concurencyData.fence = std::make_shared<Fence>(device_, 0);
+	}
 }
 
 MemoryHelper::~MemoryHelper()
 {
-	vkDestroyFence(device_->getDevice(), transitFence_, nullptr);
-	vkDestroyCommandPool(device_->getDevice(), transitPool_, nullptr);
 }
 
 std::shared_future<bool> MemoryHelper::copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size)
 {
 	VkCommandBuffer copyCmd;
 	VkFence bufferCopyDone;
-	if (!allocateCmdBuffer(copyCmd, bufferCopyDone))
+	ConcurencyData *data;
+	if (!allocateCmdBuffer(copyCmd, bufferCopyDone, data))
 	{
 		return {};
 	}
@@ -37,7 +40,7 @@ std::shared_future<bool> MemoryHelper::copyBufferToBuffer(VkBuffer src, VkBuffer
 	vkCmdCopyBuffer(copyCmd, src, dst, 1, &region);
 	vkEndCommandBuffer(copyCmd);
 
-	return submitCmdBuffer(copyCmd, bufferCopyDone);
+	return submitCmdBuffer(copyCmd, bufferCopyDone, *data);
 }
 
 std::shared_future<bool> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
@@ -45,7 +48,8 @@ std::shared_future<bool> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage d
 {
 	VkCommandBuffer copyCmd;
 	VkFence bufferCopyDone;
-	if (!allocateCmdBuffer(copyCmd, bufferCopyDone))
+	ConcurencyData *data;
+	if (!allocateCmdBuffer(copyCmd, bufferCopyDone, data))
 	{
 		return {};
 	}
@@ -81,14 +85,15 @@ std::shared_future<bool> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage d
 		1, &outMemoryBarrier);
 	vkEndCommandBuffer(copyCmd);
 
-	return submitCmdBuffer(copyCmd, bufferCopyDone);
+	return submitCmdBuffer(copyCmd, bufferCopyDone, *data);
 }
 
 std::shared_future<bool> MemoryHelper::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType)
 {
 	VkCommandBuffer updateCmd;
 	VkFence bufferUpdateDone;
-	if (!allocateCmdBuffer(updateCmd, bufferUpdateDone))
+	ConcurencyData *cdata;
+	if (!allocateCmdBuffer(updateCmd, bufferUpdateDone, cdata))
 	{
 		return {};
 	}
@@ -130,41 +135,48 @@ std::shared_future<bool> MemoryHelper::updateBuffer(void *data, VkBuffer dst, Vk
 
 	vkEndCommandBuffer(updateCmd);
 
-	return submitCmdBuffer(updateCmd, bufferUpdateDone);
+	return submitCmdBuffer(updateCmd, bufferUpdateDone, *cdata);
 }
 
-bool MemoryHelper::allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence)
+bool MemoryHelper::allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence, ConcurencyData *&data)
 {
-	if (transitBuffer_ && transitFence_)
+	data = nullptr;
+	while (!data)
 	{
-		cmdBuffer = transitBuffer_;
-		fence = transitFence_;
+		for (auto &concurencyData : concurency_)
+		{
+			if (concurencyData.lock)
+				continue;
+			auto lock = concurencyData.cmdPool->tryLock();
+			concurencyData.lock.swap(lock);
+			data = &concurencyData;
+			break;
+		}
+	}
+	fence = data->fence->getFence();
+	if (data->transitBuffer)
+	{
+		cmdBuffer = data->transitBuffer;
 		return true;
 	}
 
-	VkFenceCreateInfo fenceInfo = {};
-	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	if (vkCreateFence(device_->getDevice(), &fenceInfo, nullptr, &fence) != VK_SUCCESS)
-		return false;
-
 	VkCommandBufferAllocateInfo allocateInfo = {};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocateInfo.commandPool = transitPool_;
+	allocateInfo.commandPool = data->cmdPool->getPool();
 	allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocateInfo.commandBufferCount = 1;
 	if (vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, &cmdBuffer) != VK_SUCCESS)
 	{
-		vkDestroyFence(device_->getDevice(), fence, nullptr);
+		data->lock.reset();
 		return false;
 	}
 
-	transitBuffer_ = cmdBuffer;
-	transitFence_ = fence;
-
+	data->transitBuffer = cmdBuffer;
+	
 	return true;
 }
 
-std::shared_future<bool> MemoryHelper::submitCmdBuffer(VkCommandBuffer cmdBuffer, VkFence fence)
+std::shared_future<bool> MemoryHelper::submitCmdBuffer(VkCommandBuffer cmdBuffer, VkFence fence, ConcurencyData &data)
 {
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -173,9 +185,10 @@ std::shared_future<bool> MemoryHelper::submitCmdBuffer(VkCommandBuffer cmdBuffer
 	auto q = device_->getQueue(QueueType::Transmit);
 	vkQueueSubmit(q->get(), 1, &submitInfo, fence);
 
-	return std::async(std::launch::async, [=]() -> bool
+	return std::async(std::launch::async, [=, &data]() -> bool
 	{
 		bool result = false;
+		auto lock = std::move(data.lock);
 		if (vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, VK_WHOLE_SIZE) == VK_SUCCESS)
 			result = true;
 		vkResetFences(device_->getDevice(), 1, &fence);

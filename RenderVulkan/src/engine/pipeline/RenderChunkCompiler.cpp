@@ -14,6 +14,7 @@
 #include "../world/WorldManager.hpp"
 #include "../memory/MemoryManager.hpp"
 #include "../memory/MemoryHelper.hpp"
+#include <engine/RenderManager.hpp>
 #include <algorithm>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/map.hpp>
@@ -25,9 +26,9 @@ using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
 RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
-	std::shared_ptr<ResourceManager> resourceManager, std::shared_ptr<const IWorldManager> worldManager) :
-	RenderChunkCompilerCore(device), renderPass_(renderPass), 
-	resourceManager_(resourceManager), worldManager_(std::dynamic_pointer_cast<const WorldManager>(worldManager))
+	std::shared_ptr<RenderManager> renderManager) :
+	RenderChunkCompilerCore(device, renderManager->getModelManager()), renderPass_(renderPass), 
+	resourceManager_(renderManager->getResourceManager()), worldManager_(std::dynamic_pointer_cast<const WorldManager>(renderManager->getWorldManager()))
 {
 }
 
@@ -45,6 +46,8 @@ std::future<std::shared_ptr<const RenderChunk>> RenderChunkCompiler::compileChun
 std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std::shared_ptr<const CubA4::world::IChunk> chunk)
 {
 	auto compiledBlockData = compileBlocks(chunk);
+	if (compiledBlockData.empty())
+		return {};
 	auto materials = compiledBlockData | ranges::views::keys | ranges::to<std::vector>;
 	auto renderModels = compiledBlockData | ranges::views::values | ranges::to<std::vector>;
 	auto poolWrapper = lockCommandPool();
@@ -75,8 +78,6 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 	
 	std::vector<VkBuffer> instanceInfos;
 	std::vector<std::shared_ptr<const IMemoryPart>> memoryParts;
-
-	VkDescriptorSet chunkRangeDescriptorSet = VK_NULL_HANDLE;
 
 	for (std::size_t idx = 0; idx < compiledBlockData.size(); idx++)
 	{
@@ -123,10 +124,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		vkEndCommandBuffer(cmdBuffer);
 	}
 
-	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, chunkRangeDescriptorSet, buffers, instanceInfos, memoryParts]()
+	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, buffers, instanceInfos, memoryParts]()
 	{
-		vkFreeDescriptorSets(dev->getDevice(), dPool->get(), 1, &chunkRangeDescriptorSet);
-
 		for (auto instanceInfo : instanceInfos)
 			vkDestroyBuffer(dev->getDevice(), instanceInfo, nullptr);
 

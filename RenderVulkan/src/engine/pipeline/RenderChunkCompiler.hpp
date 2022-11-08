@@ -30,6 +30,7 @@ namespace CubA4
 		namespace engine
 		{
 			class ResourceManager;
+			class RenderManager;
 			
 			namespace memory
 			{
@@ -51,7 +52,7 @@ namespace CubA4
 				{
 				public:
 					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::RenderPass> renderPass,
-						 std::shared_ptr<ResourceManager> resourceManager, std::shared_ptr<const world::IWorldManager> worldManager);
+						 std::shared_ptr<RenderManager> renderManager);
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
 

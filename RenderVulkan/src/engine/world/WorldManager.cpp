@@ -144,8 +144,8 @@ void WorldManager::updateViewMatrix()
 
 	float vMatrix[4][4];
 	memcpy(vMatrix, glm::value_ptr(viewMatrix), sizeof(float) * 16);
-
-	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16), matrixSize, BufferBarrierType::Uniform);
+	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
+	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform);
 }
 
 void WorldManager::updateProjectionMatrix()
@@ -157,6 +157,6 @@ void WorldManager::updateProjectionMatrix()
 
 	float projMatrix[4][4];
 	memcpy(projMatrix, glm::value_ptr(projection), sizeof(float) * 16);
-
-	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize, matrixSize, BufferBarrierType::Uniform);
+	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize;
+	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform);
 }

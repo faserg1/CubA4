@@ -28,22 +28,24 @@ constexpr FLAGS_NAME operator&(FLAGS_NAME e1, ENUM_NAME e2)\
     return e1 & static_cast<ENUM_BASE>(e2);\
 }\
 \
-constexpr FLAGS_NAME operator|=(ENUM_NAME e1, ENUM_NAME e2)\
+constexpr FLAGS_NAME operator|=(ENUM_NAME &e1, ENUM_NAME e2)\
 {\
-    return static_cast<ENUM_BASE>(e1) | static_cast<ENUM_BASE>(e2);\
+    e1 = static_cast<ENUM_NAME>(static_cast<ENUM_BASE>(e1) | static_cast<ENUM_BASE>(e2));\
+    return static_cast<ENUM_BASE>(e1);\
 }\
 \
-constexpr FLAGS_NAME operator|=(FLAGS_NAME e1, ENUM_NAME e2)\
+constexpr FLAGS_NAME operator|=(FLAGS_NAME &e1, ENUM_NAME e2)\
 {\
-    return e1 | static_cast<ENUM_BASE>(e2);\
+    return e1 = e1 | static_cast<ENUM_BASE>(e2);\
 }\
 \
-constexpr FLAGS_NAME operator&=(ENUM_NAME e1, ENUM_NAME e2)\
+constexpr FLAGS_NAME operator&=(ENUM_NAME &e1, ENUM_NAME e2)\
 {\
-    return static_cast<ENUM_BASE>(e1) & static_cast<ENUM_BASE>(e2);\
+    e1 = static_cast<ENUM_NAME>(static_cast<ENUM_BASE>(e1) & static_cast<ENUM_BASE>(e2));\
+    return static_cast<ENUM_BASE>(e1);\
 }\
 \
-constexpr FLAGS_NAME operator&=(FLAGS_NAME e1, ENUM_NAME e2)\
+constexpr FLAGS_NAME operator&=(FLAGS_NAME &e1, ENUM_NAME e2)\
 {\
-    return e1 & static_cast<ENUM_BASE>(e2);\
+    return e1 = e1 & static_cast<ENUM_BASE>(e2);\
 }

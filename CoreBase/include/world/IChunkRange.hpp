@@ -41,7 +41,10 @@ namespace CubA4::world
 		
 	public:
 		Iterator(const IChunkRange *range, world::BlockInChunkPos pos, bool end = false) : range_(range), current_(pos), isEnd_(end) {}
-		bool operator==(const Iterator &other) const = default;
+		bool operator==(const Iterator &other) const
+		{
+			return range_ == other.range_ && (isEnd_ == other.isEnd_ || current_ == other.current_);
+		}
 		bool operator!=(const Iterator &other) const = default;
 		Iterator &operator--()
 		{

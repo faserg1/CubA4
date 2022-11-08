@@ -69,10 +69,12 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	if (vkCreateBuffer(device_->getDevice(), &vertexTransitBufferInfo, nullptr, &vertexTransitBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
+		return {};
 	}
 	if (vkCreateBuffer(device_->getDevice(), &vertexBufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
+		return {};
 	}
 
 	device_->getMarker().setName(vertexTransitBuffer, "vertex transit buffer");
@@ -102,8 +104,8 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 		{
 			void *ptr = (static_cast<char*>(mappedVertexMemory.get()) + dstOffset);
 			auto size = sizeof(smth);
-			dstOffset += size;
 			memcpy(ptr, &smth, size);
+			dstOffset += size;
 		};
 		pushToVBuffer(vertices[vIdx]);
 		pushToVBuffer(uvws[vIdx]);
@@ -136,10 +138,12 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	if (vkCreateBuffer(device_->getDevice(), &indexTransitBufferInfo, nullptr, &indexTransitBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
+		return {};
 	}
 	if (vkCreateBuffer(device_->getDevice(), &indexBufferInfo, nullptr, &indexBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
+		return {};
 	}
 
 	device_->getMarker().setName(indexTransitBuffer, "index transit buffer");

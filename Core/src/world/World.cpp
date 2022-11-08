@@ -40,11 +40,11 @@ std::unique_ptr<CubA4::util::ISubscription> World::subscribe(IWorldSubscriber *s
 void World::test(std::shared_ptr<const CubA4::object::IBlock> block)
 {
 	// TODO: [OOKAMI] Test chunk range feature. Delete function later
-	for (auto x = 0; x < 2; x++)
+	for (auto x = 0; x < 1; x++)
 	{
-		for (auto y = 0; y < 2; y++)
+		for (auto y = 0; y < 1; y++)
 		{
-			for (auto z = 0; z < 2; z++)
+			for (auto z = 0; z < 1; z++)
 			{
 				auto chunk0 = findChunk({ x, y, z });
 				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));

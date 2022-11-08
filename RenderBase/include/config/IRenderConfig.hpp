@@ -1,35 +1,26 @@
-#ifndef RENDERBASE_IRENDERCONFIG_HPP
-#define RENDERBASE_IRENDERCONFIG_HPP
+#pragma once
 
 #include <tuple>
 #include <string>
 
-namespace CubA4
+namespace CubA4::render::config
 {
-	namespace render
+	class IRenderConfig
 	{
-		namespace config
-		{
-			class IRenderConfig
-			{
-			public:
-				virtual std::tuple<unsigned, unsigned> getRenderResolution(std::tuple<unsigned, unsigned> = {0, 0}) const = 0;
-				virtual void setRenderResolution(std::tuple<unsigned, unsigned> res) = 0;
+	public:
+		virtual std::tuple<unsigned, unsigned> getRenderResolution() const = 0;
+		virtual void setRenderResolution(std::tuple<unsigned, unsigned> res) = 0;
 
-				virtual std::string getPresentMethod(std::string = {}) const = 0;
-				virtual void setPresentMethod(std::string method) = 0;
+		virtual std::string getPresentMethod() const = 0;
+		virtual void setPresentMethod(std::string method) = 0;
 
-				virtual int getLoggingLevel(int lvl = 0) const = 0;
-				virtual void setLoggingLevel(int lvl) = 0;
+		virtual int getLoggingLevel() const = 0;
+		virtual void setLoggingLevel(int lvl) = 0;
 
-				virtual void reload() = 0;
-			protected:
-				explicit IRenderConfig() = default;
-				virtual ~IRenderConfig() = default;
-			private:
-			};
-		}
-	}
+		virtual void reload() = 0;
+	protected:
+		explicit IRenderConfig() = default;
+		virtual ~IRenderConfig() = default;
+	private:
+	};
 }
-
-#endif // RENDERBASE_IRENDERCONFIG_HPP

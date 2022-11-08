@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_MATERIALBUILDER_HPP
-#define RENDERVULKAN_MATERIALBUILDER_HPP
+#pragma once
 
 #include <memory>
 #include <engine/material/IMaterialBuilder.hpp>
@@ -33,15 +32,16 @@ namespace CubA4
 					std::shared_ptr<const IMaterial> build() override;
 					void addTexture(std::shared_ptr<const ITexture> texture) override;
 				protected:
+					void createSampler();
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<const IMaterialLayout> layout_;
 					const vulkan::sVkDescriptorPool pool_;
 					std::vector<std::shared_ptr<const ITexture>> textures_;
+					VkSampler sampler_;
 				};
 			}
 		}
 	}
 }
 
-#endif // RENDERVULKAN_MATERIALBUILDER_HPP

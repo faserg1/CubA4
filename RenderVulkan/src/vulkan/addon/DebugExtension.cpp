@@ -38,7 +38,7 @@ namespace CubA4
 DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger, std::shared_ptr<IRenderConfig> cfg) :
 	loggerTagged_(logger->createTaggedLog(LogSourceSystem::Render, "VULKAN")), data_(std::make_shared<DebugExtensionData>())
 {
-	logLevel_ = cfg->getLoggingLevel(3);
+	logLevel_ = cfg->getLoggingLevel();
 	if (logLevel_ < 0 || logLevel_ > 4)
 		logLevel_ = 3;
 	cfg->setLoggingLevel(logLevel_);

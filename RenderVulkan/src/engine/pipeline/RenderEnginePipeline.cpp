@@ -17,6 +17,8 @@ RenderEnginePipeline::~RenderEnginePipeline()
 
 void RenderEnginePipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks)
 {
+	if (!chunkQueue_.empty())
+		return;
 	for (auto chunk : chunks)
 	{
 		auto futureRenderChunk = chunkCompiler_->compileChunk(chunk);
@@ -47,6 +49,8 @@ void RenderEnginePipeline::handlerLoop()
 			continue;
 		auto fRenderChunk = std::move(chunkQueue_.front());
 		chunkQueue_.pop();
+		if (!fRenderChunk.valid())
+			continue;
 		auto sRenderChunk = fRenderChunk.get();
 		subHelper_.apply([sRenderChunk](auto *sub)
 		{

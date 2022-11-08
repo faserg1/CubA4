@@ -27,7 +27,7 @@ RenderConfig::RenderConfig(std::string configsPath)
 	}
 
 	native_config_path_ = configPath.string();
-	configTree_ = std::make_shared<nlohmann::json>();
+	configTree_ = std::make_shared<RenderData>();
 	if (std::filesystem::exists(configPath))
 		reload();
 }
@@ -37,42 +37,39 @@ RenderConfig::~RenderConfig()
 	
 }
 
-std::tuple<unsigned, unsigned> RenderConfig::getRenderResolution(std::tuple<unsigned, unsigned> defaultResolution) const
+std::tuple<unsigned, unsigned> RenderConfig::getRenderResolution() const
 {
-
-	unsigned width = configTree_->at(renderResolutionWidthKey).get<unsigned>();
-	unsigned height = configTree_->at(renderResolutionHeightKey).get<unsigned>();
+	unsigned width = configTree_->presentation.width;
+	unsigned height = configTree_->presentation.height;
 	return std::make_tuple(width, height);
 }
 
 void RenderConfig::setRenderResolution(std::tuple<unsigned, unsigned> res)
 {
-	/*configTree_->put(renderResolutionWidthKey, std::get<0>(res));
-	configTree_->put(renderResolutionHeightKey, std::get<1>(res));*/
+	configTree_->presentation.width = std::get<0>(res);
+	configTree_->presentation.height = std::get<1>(res);
 	flushConfig();
 }
 
-std::string RenderConfig::getPresentMethod(std::string methodByDefault) const
+std::string RenderConfig::getPresentMethod() const
 {
-	//return configTree_->get<std::string>(renderPresentMethodKey, methodByDefault);
-	return {};
+	return configTree_->presentation.method;
 }
 
 void RenderConfig::setPresentMethod(std::string method)
 {
-	//configTree_->put(renderPresentMethodKey, method);
+	configTree_->presentation.method = method;
 	flushConfig();
 }
 
-int RenderConfig::getLoggingLevel(int lvl) const
+int RenderConfig::getLoggingLevel() const
 {
-	//return configTree_->get<int>(renderLoggingLevel, lvl);
-	return {};
+	return configTree_->misc.logLevel;
 }
 
 void RenderConfig::setLoggingLevel(int lvl)
 {
-	//configTree_->put(renderLoggingLevel, lvl);
+	configTree_->misc.logLevel = lvl;
 	flushConfig();
 }
 
@@ -85,5 +82,6 @@ void RenderConfig::reload()
 void RenderConfig::flushConfig()
 {
 	std::ofstream file(native_config_path_);
-	file << configTree_->dump(1, '\t');
+	nlohmann::json j = *configTree_;
+	file << j.dump(1, '\t');
 }

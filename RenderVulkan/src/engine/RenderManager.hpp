@@ -25,6 +25,7 @@ namespace CubA4::render::engine
 
 		std::shared_ptr<material::IMaterialManager> getMaterialManager() const override;
 		std::shared_ptr<model::IModelManager> getModelManager() const override;
+		std::shared_ptr<model::ModelManager> getModelManager();
 		std::shared_ptr<world::IWorldManager> getWorldManager() const override;
 
 		std::shared_ptr<ResourceManager> getResourceManager() const;

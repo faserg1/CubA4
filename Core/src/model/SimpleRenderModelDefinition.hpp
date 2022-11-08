@@ -28,6 +28,7 @@ namespace CubA4::model
 		std::vector<Vertex> vertices_;
 		std::vector<UVWCoords> uvws_;
 		world::BlockSides nonOpaque_;
+		std::unordered_map<world::BlockSide, std::vector<uint16_t>> hiddenFaces_;
 		RMaterialsMap materialsMap_;
 	};
 }

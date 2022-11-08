@@ -88,7 +88,7 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build()
 	if (!choosedFormat)
 		choosedFormat = formats[0].format;
 
-	auto presentMethod = config_->getPresentMethod("fifo");
+	auto presentMethod = config_->getPresentMethod();
 	
 
 	if (presentMethod == "fifo")

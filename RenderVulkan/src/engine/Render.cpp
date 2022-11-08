@@ -114,6 +114,8 @@ void Render::record(uint32_t imgIndex)
 
 	for (auto chunk : chunks)
 	{
+		if (!chunk)
+			continue;
 		chunk->executeFrom(cmdBuffer);
 	}
 	////////////////////////////////////////////////////////////

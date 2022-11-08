@@ -16,11 +16,12 @@ using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::model;
+using namespace CubA4::world;
 
 constexpr const unsigned short commandPoolsCount = 64;
 
-RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> device) :
-	device_(device), memManager_(std::make_shared<MemoryManager>(device))
+RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> device, std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager) :
+	device_(device), memManager_(std::make_shared<MemoryManager>(device)), modelManager_(modelManager)
 {
 	initCommandPools();
 	initDescriptorPools();
@@ -134,6 +135,8 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 	for (const auto &pair : materialsToDefMap)
 	{
 		auto compiledModel = compileModelByMaterial(chunk, pair.second.materialId, pair.second.blocks, hiddenSides);
+		if (!compiledModel)
+			continue;
 		auto material = std::dynamic_pointer_cast<const CubA4::render::engine::material::Material>(pair.first);
 		models.insert(std::make_pair(material, compiledModel));
 	}
@@ -151,30 +154,82 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 			for (auto blockPos : *range)
 			{
 				// TODO: Fill with data
-				CubA4::world::BlockData data;
-				auto index = blockPos.y * world::ChunkSize * world::ChunkSize + blockPos.y * world::ChunkSize + blockPos.x;
+				BlockData data;
+				auto index = indexByPos(blockPos);
 				auto model = block->getRenderModelDefinition();
 				auto faces = model->getFaces(material, hiddenSides[index], data);
 				compiler.addFaces(model, faces, blockPos);
 			}
 		}
 	}
-	return compiler.compile(material, nullptr);
+	return compiler.compile(material, modelManager_);
 }
 
-RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const
+RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides(std::shared_ptr<const IChunk> chunk) const
 {
 	RenderChunkCompilerCore::HiddenSides hiddenSides;
+	hiddenSides.fill(0);
 	for (auto range : chunk->getChunkRanges())
 	{
 		auto block = range->getBlock();
 		for (auto blockPos : *range)
 		{
 			// TODO: Fill with data
-			CubA4::world::BlockData data;
-			auto index = blockPos.y * world::ChunkSize * world::ChunkSize + blockPos.y * world::ChunkSize + blockPos.x;
-			hiddenSides[index] |= block->getRenderModelDefinition()->getNonOpaqueSide(data);
+			BlockData data;
+			auto nonOpaque = block->getRenderModelDefinition()->getNonOpaqueSide(data);
+			hideFrom(hiddenSides, blockPos, nonOpaque);
 		}
 	}
 	return std::move(hiddenSides);
+}
+
+void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos pos, BlockSides nonOpaque) const
+{
+	if (pos.x > 0 && nonOpaque & BlockSide::Left)
+	{
+		auto posLeft = pos;
+		posLeft.x--;
+		auto index = indexByPos(posLeft);
+		hiddenSides[index] |= BlockSide::Right;
+	}
+	if (pos.x < ChunkSize && nonOpaque & BlockSide::Right)
+	{
+		auto posRight = pos;
+		posRight.x++;
+		auto index = indexByPos(posRight);
+		hiddenSides[index] |= BlockSide::Left;
+	}
+	if (pos.y > 0 && nonOpaque & BlockSide::Bottom)
+	{
+		auto posBottom = pos;
+		posBottom.y--;
+		auto index = indexByPos(posBottom);
+		hiddenSides[index] |= BlockSide::Top;
+	}
+	if (pos.y < ChunkSize && nonOpaque & BlockSide::Top)
+	{
+		auto posTop = pos;
+		posTop.y++;
+		auto index = indexByPos(posTop);
+		hiddenSides[index] |= BlockSide::Bottom;
+	}
+	if (pos.z > 0 && nonOpaque & BlockSide::Front)
+	{
+		auto posBack = pos;
+		posBack.z--;
+		auto index = indexByPos(posBack);
+		hiddenSides[index] |= BlockSide::Back;
+	}
+	if (pos.z < ChunkSize && nonOpaque & BlockSide::Back)
+	{
+		auto posFront = pos;
+		posFront.z++;
+		auto index = indexByPos(posFront);
+		hiddenSides[index] |= BlockSide::Front;
+	}
+}
+
+size_t RenderChunkCompilerCore::indexByPos(const BlockInChunkPos &pos)
+{
+	return (pos.z * ChunkSize * ChunkSize) + (pos.y * ChunkSize) + pos.x;
 }

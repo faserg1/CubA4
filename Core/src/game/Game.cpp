@@ -42,11 +42,11 @@ void Game::loop()
 {
 	// TODO: [OOKMAI] Убрать к чертовой бабушке и написать по нормальному
 	// Temporary
-	/*auto world = env_->getObjectT<CubA4::world::IWorld>("#vanilla@testWorld");
+	auto world = env_->getObjectT<CubA4::world::IWorld>("#vanilla@testWorld");
 	subscriptionHelper_.apply([world](CubA4::game::IGameSubscriber *subscriber)
 	{
 		subscriber->worldChanged(world);
-	});*/
+	});
 	while (runGameLoop_)
 	{
 		std::this_thread::yield();

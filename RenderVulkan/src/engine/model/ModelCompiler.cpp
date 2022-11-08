@@ -24,12 +24,12 @@ void ModelCompiler::addFaces(Model model, Faces faces, CubA4::world::BlockInChun
 		{
 			newFace.indexes[newVertexIdx++] = data_.vertices.size();
 			auto vertex = vertices[idx];
-			auto uvw = vertices[idx];
+			auto uvw = uvws[idx];
 			vertex.x += pos.x;
 			vertex.y += pos.y;
 			vertex.z += pos.z;
 			data_.vertices.push_back(vertex);
-			data_.vertices.push_back(uvw);
+			data_.uvws.push_back(uvw);
 		}
 		data_.faces.push_back(newFace);
 	}
@@ -38,5 +38,7 @@ void ModelCompiler::addFaces(Model model, Faces faces, CubA4::world::BlockInChun
 std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id, std::shared_ptr<ModelManager> modelManager)
 {
 	data_.id = id;
+	if (data_.vertices.empty() || data_.faces.empty())
+		return {};
 	return modelManager->createModel(data_);
 }
