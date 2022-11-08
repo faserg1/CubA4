@@ -45,6 +45,7 @@ std::future<std::shared_ptr<const RenderChunk>> RenderChunkCompiler::compileChun
 std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std::shared_ptr<const CubA4::world::IChunk> chunk)
 {
 	auto compiledBlockData = compileBlocks(chunk);
+	auto materials = compiledBlockData | ranges::views::keys | ranges::to<std::vector>;
 	auto renderModels = compiledBlockData | ranges::views::values | ranges::to<std::vector>;
 	auto poolWrapper = lockCommandPool();
 	auto descriptorPool = getDescriptorPool(poolWrapper);
@@ -79,10 +80,10 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 
 	for (std::size_t idx = 0; idx < compiledBlockData.size(); idx++)
 	{
+		auto renderMaterial = materials[idx];
 		auto renderModel = renderModels[idx];
 		auto cmdBuffer = buffers[idx];
-
-		std::shared_ptr<const material::Material> renderMaterial;
+		
 		auto renderMaterialLayout = renderMaterial->getLayout();
 		auto pipeline = renderMaterialLayout->getPipeline();
 

@@ -102,27 +102,40 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 {
 	RenderModels models;
 	auto hiddenSides = compileHiddenSides(chunk);
-	std::unordered_map<std::string, std::vector<BlockPtr>> materialsToDefMap;
+	struct Def
+	{
+		std::vector<BlockPtr> blocks;
+		std::string materialId;
+	};
+	using Key = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
+	std::unordered_map<Key, Def> materialsToDefMap;
 	for (auto block : chunk->getUsedBlocks())
 	{
 		auto modelDef = block->getRenderModelDefinition();
 		auto usedMaterials = modelDef->getUsedMaterials();
-		for (const auto &material : usedMaterials)
+		for (const auto &materialId : usedMaterials)
 		{
+			auto material = modelDef->getMaterial(materialId);
 			if (auto it = materialsToDefMap.find(material); it != materialsToDefMap.end())
 			{
-				it->second.push_back(block);
+				it->second.blocks.push_back(block);
 			}
 			else
 			{
-				materialsToDefMap.insert(std::make_pair(material, std::vector{block}));
+				auto blocks = std::vector{block};
+				auto def = Def {
+					.blocks = blocks,
+					.materialId = materialId
+				};
+				materialsToDefMap.insert(std::make_pair(material, def));
 			}
 		}
 	}
 	for (const auto &pair : materialsToDefMap)
 	{
-		auto compiledModel = compileModelByMaterial(chunk, pair.first, pair.second, hiddenSides);
-		models.insert(std::make_pair(pair.first, compiledModel));
+		auto compiledModel = compileModelByMaterial(chunk, pair.second.materialId, pair.second.blocks, hiddenSides);
+		auto material = std::dynamic_pointer_cast<const CubA4::render::engine::material::Material>(pair.first);
+		models.insert(std::make_pair(material, compiledModel));
 	}
 	return std::move(models);
 }

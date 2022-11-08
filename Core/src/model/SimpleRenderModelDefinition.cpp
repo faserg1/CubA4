@@ -4,7 +4,8 @@
 using namespace CubA4::model;
 using namespace CubA4::world;
 
-SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, const model::RenderModelData &data) : id_(id)
+SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, const model::RenderModelData &data, RMaterialsMap materialsMap) :
+	id_(id), materialsMap_(materialsMap)
 {
 	vertices_.resize(data.vertices.size());
 	uvws_.resize(data.vertices.size());
@@ -25,7 +26,7 @@ SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, 
 			.indexes = face.indexes
 		};
 	});
-	nonOpaque = data.nonOpaque;
+	nonOpaque_ = data.nonOpaque;
 }
 
 SimpleRenderModelDefinition::~SimpleRenderModelDefinition()
@@ -59,6 +60,13 @@ const std::vector<UVWCoords> &SimpleRenderModelDefinition::getUVWCoords() const
 	return uvws_;
 }
 
+SimpleRenderModelDefinition::RMaterial SimpleRenderModelDefinition::getMaterial(const std::string &materialId) const
+{
+	if (auto result = materialsMap_.find(materialId); result != materialsMap_.end())
+		return result->second;
+	return {};
+}
+
 std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::string &materialId, BlockSides hiddenSides, const BlockData& data) const
 {
 	constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
@@ -70,5 +78,5 @@ std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::str
 
 BlockSides SimpleRenderModelDefinition::getNonOpaqueSide(const BlockData& data) const
 {
-	return nonOpaque;
+	return nonOpaque_;
 }

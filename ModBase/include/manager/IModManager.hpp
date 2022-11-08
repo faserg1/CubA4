@@ -11,7 +11,7 @@ namespace CubA4::manager
 	class IModManager
 	{
 	public:
-		
+		virtual std::shared_ptr<const IModBlockManager> getBlockManager() const = 0;
 	protected:
 		explicit IModManager() = default;
 		virtual ~IModManager() = default;

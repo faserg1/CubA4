@@ -132,13 +132,7 @@ class GeneratorBase:
 
 	def _generate_cpp(self, file: CppFile, includes: "list[str]" = []):
 		name = self._get_name()
-		#Get relatve file path to header
-		relative_folder_header = self._get_relative_namespace_folder(self._header_folder)
-		relative_folder_source = self._get_relative_namespace_folder(self._source_folder)
-		include_folder = os.path.relpath(relative_folder_header, relative_folder_source)
-		include_header = os.path.join(include_folder, name + self._header_ext)
-		#always unix style
-		include_header = "\"{}\"".format(include_header.replace("\\", "/"))
+		include_header = self._get_global_header()
 		#Generate
 		all_includes = [include_header] + includes
 		include_lines = ""
@@ -165,6 +159,22 @@ class GeneratorBase:
 
 	def _get_name(self):
 		return self._full_name[-1]
+
+	def _get_relative_header(self):
+		name = self._get_name()
+		relative_folder_header = self._get_relative_namespace_folder(self._header_folder)
+		relative_folder_source = self._get_relative_namespace_folder(self._source_folder)
+		include_folder = os.path.relpath(relative_folder_header, relative_folder_source)
+		include_header = os.path.join(include_folder, name + self._header_ext)
+		#always unix style
+		return "\"{}\"".format(include_header.replace("\\", "/"))
+
+	def _get_global_header(self):
+		name = self._get_name()
+		relative_folder_header = self._get_relative_namespace_folder("")
+		include_header = os.path.join(relative_folder_header, name + self._header_ext)
+		#always unix style
+		return "<{}>".format(include_header.replace("\\", "/"))
 
 	def _get_relative_namespace_folder(self, folder):
 		namespaces = copy.deepcopy(self._full_name[:-1])

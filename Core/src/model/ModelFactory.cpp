@@ -1,6 +1,8 @@
 #include "./ModelFactory.hpp"
 #include "./ModelReader.hpp"
 #include "./SimpleRenderModelDefinition.hpp"
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/filter.hpp>
 using namespace CubA4::model;
 using namespace CubA4::model;
 
@@ -14,8 +16,10 @@ ModelFactory::~ModelFactory()
 	
 }
 
-std::shared_ptr<IBlockRenderModelDefinition> ModelFactory::createSimpleBlockRenderModelDefinition(const std::string &id, std::shared_ptr<const resources::IResource> model) const
+std::shared_ptr<IBlockRenderModelDefinition> ModelFactory::createSimpleBlockRenderModelDefinition(const std::string &id, std::shared_ptr<const resources::IResource> model, RMaterialsMap map) const
 {
 	auto modelData = reader_->readRenderModel(model);
-	return std::make_shared<SimpleRenderModelDefinition>(id, modelData);
+	auto pred = [&](const std::pair<std::string, IBlockRenderModelDefinition::RMaterial> &pair) { return modelData.materials.find(pair.first) != modelData.materials.end(); };
+	auto usedMap = map | ranges::views::filter(pred) | ranges::to<std::unordered_map>;
+	return std::make_shared<SimpleRenderModelDefinition>(id, modelData, usedMap);
 }

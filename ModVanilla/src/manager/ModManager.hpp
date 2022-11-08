@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <manager/IModManager.hpp>
+#include <manager/ModBlockManager.hpp>
 
 namespace CubA4::manager
 {
@@ -11,8 +12,12 @@ namespace CubA4::manager
 	public:
 		explicit ModManager();
 		~ModManager();
+
+		std::shared_ptr<const IModBlockManager> getBlockManager() const override;
+		std::shared_ptr<ModBlockManager> getBlockManager();
 	protected:
 	private:
+		std::shared_ptr<ModBlockManager> blockManager_;
 	};
 }
 

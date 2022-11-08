@@ -5,8 +5,15 @@ class CoreDefaults:
 	def get_header_folder(cls):
 		return "src"
 
+class ModVanillaDefaults:
+	@classmethod
+	def get_header_folder(cls):
+		return "src"
+
+
 class Defaults:
 	_modules = {"Core": CoreDefaults}
+	_modules = {"ModVanilla": ModVanillaDefaults}
 
 	@classmethod
 	def get_header_folder(cls, module: str):

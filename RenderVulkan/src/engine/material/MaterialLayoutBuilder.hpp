@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_MATERIALLAYOUTBUILDER_HPP
-#define RENDERVULKAN_MATERIALLAYOUTBUILDER_HPP
+#pragma once
 
 #include <engine/material/IMaterialLayoutBuilder.hpp>
 #include <vulkan/vulkan.h>
@@ -58,4 +57,3 @@ namespace CubA4
 	}
 }
 
-#endif // RENDERVULKAN_MATERIALLAYOUTBUILDER_HPP

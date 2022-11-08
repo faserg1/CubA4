@@ -19,6 +19,7 @@ void ModVanilla::load(std::shared_ptr<const ICore> core)
 	core_ = core;
 	manager_ = std::make_shared<manager::ModManager>();
 	renderStartup_.load(core, manager_);
+	blockSetup_.load(core, manager_);
 	worldSetup_.load(core, manager_);
 }
 
@@ -33,7 +34,8 @@ void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
 }
 
 void ModVanilla::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
-{	
+{
+	blockSetup_.init(builder);
 	worldSetup_.init(builder);
 }
 

@@ -9,11 +9,14 @@
 #include <system/IEnvironmentBuilder.hpp>
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
+#include <model/IBlockRenderModelDefinition.hpp>
 
 namespace CubA4::render::engine::material
 {
 	class IMaterialLayoutSetFactory;
 	class IMaterialLayout;
+	class IMaterial;
+	class ITexture;
 	class IMaterialFactory;
 	class ITextureImporter;
 	class IShaderFactory;
@@ -29,6 +32,9 @@ namespace CubA4::startup
 {
 	class RenderStartup
 	{
+		using Texture = std::shared_ptr<const CubA4::render::engine::material::ITexture>;
+		using Material = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
+		using MaterialLayout = std::shared_ptr<const CubA4::render::engine::material::IMaterialLayout>;
 	public:
 		explicit RenderStartup();
 		~RenderStartup();
@@ -47,5 +53,9 @@ namespace CubA4::startup
 		void importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter);
 		void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
 		void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
+	private:
+		std::map<std::string, Texture> textures_;
+		std::map<std::string, Material> materials_;
+		std::map<std::string, MaterialLayout> materialLayouts_;
 	};
 }

@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include "../include/IModVanilla.hpp"
-#include "startup/RenderStartup.hpp"
-#include "startup/WorldSetup.hpp"
+#include <IModVanilla.hpp>
+#include <startup/RenderStartup.hpp>
+#include <startup/BlockSetup.hpp>
+#include <startup/WorldSetup.hpp>
 #include <manager/IModManager.hpp>
 
 namespace CubA4
@@ -33,6 +34,7 @@ namespace CubA4
 			const IModInfo &modInfo_;
 			std::shared_ptr<const ICore> core_;
 			startup::RenderStartup renderStartup_;
+			startup::BlockSetup blockSetup_;
 			startup::WorldSetup worldSetup_;
 			std::shared_ptr<CubA4::manager::ModManager> manager_;
 		};

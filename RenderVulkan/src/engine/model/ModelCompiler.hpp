@@ -30,6 +30,7 @@ namespace CubA4::render::engine::model
 			const std::vector<CubA4::model::Face> &getFaceIndices() const override { return faces; }
 			const std::vector<CubA4::model::Vertex> &getVertices() const override { return vertices; }
 			const std::vector<CubA4::model::UVWCoords> &getUVWCoords() const override { return uvws; }
+			RMaterial getMaterial(const std::string &materialId) const override { return {}; }
 		} data_;
 		
 	};

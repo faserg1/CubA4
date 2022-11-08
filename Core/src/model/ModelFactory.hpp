@@ -11,7 +11,8 @@ namespace CubA4:: model
 		explicit ModelFactory();
 		~ModelFactory();
 
-		std::shared_ptr<IBlockRenderModelDefinition> createSimpleBlockRenderModelDefinition(const std::string &id, std::shared_ptr<const resources::IResource> model) const override;
+		std::shared_ptr<IBlockRenderModelDefinition> createSimpleBlockRenderModelDefinition(
+			const std::string &id, std::shared_ptr<const resources::IResource> model, RMaterialsMap map) const override;
 	private:
 		std::shared_ptr<IModelReader> reader_;
 	};

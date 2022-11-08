@@ -9,7 +9,8 @@ namespace CubA4::model
 	class SimpleRenderModelDefinition : public virtual IBlockRenderModelDefinition
 	{
 	public:
-		explicit SimpleRenderModelDefinition(const std::string &id, const RenderModelData &data);
+		using RMaterialsMap = std::unordered_map<std::string, RMaterial>;
+		explicit SimpleRenderModelDefinition(const std::string &id, const RenderModelData &data, RMaterialsMap materialsMap);
 		~SimpleRenderModelDefinition();
 
 		const std::string &getId() const override;
@@ -17,6 +18,7 @@ namespace CubA4::model
 		const std::vector<Face> &getFaceIndices() const override;
 		const std::vector<Vertex> &getVertices() const override;
 		const std::vector<UVWCoords> &getUVWCoords() const override;
+		RMaterial getMaterial(const std::string &materialId) const override;
 		std::vector<unsigned short> getFaces(const std::string &materialId, world::BlockSides hiddenSides, const world::BlockData& data) const override;
 		world::BlockSides getNonOpaqueSide(const world::BlockData& data) const override;
 	private:
@@ -25,6 +27,7 @@ namespace CubA4::model
 		std::unordered_map<std::string, std::vector<uint16_t>> materialToFaces_;
 		std::vector<Vertex> vertices_;
 		std::vector<UVWCoords> uvws_;
-		world::BlockSides nonOpaque;
+		world::BlockSides nonOpaque_;
+		RMaterialsMap materialsMap_;
 	};
 }

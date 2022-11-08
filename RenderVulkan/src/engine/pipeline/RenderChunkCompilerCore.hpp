@@ -7,6 +7,7 @@
 #include <world/IChunk.hpp>
 #include <model/IBlockRenderModelDefinition.hpp>
 #include <engine/model/RenderModel.hpp>
+#include <engine/material/Material.hpp>
 
 #include <vulkan/Device.hpp>
 #include <vulkan/Memory.hpp>
@@ -30,10 +31,11 @@ namespace CubA4
 				class RenderChunkCompilerCore
 				{
 					using BlockPtr = std::shared_ptr<const CubA4::object::IBlock>;
+					using MaterialPtr = std::shared_ptr<const CubA4::render::engine::material::Material>;
 					using ModelDefPtr = std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition>;
 					using HiddenSides = std::array<CubA4::world::BlockSides, CubA4::world::ChunkSize*CubA4::world::ChunkSize*CubA4::world::ChunkSize>;
 					using RenderModelPtr = std::shared_ptr<const CubA4::render::engine::model::RenderModel>;
-					using RenderModels = std::map<std::string, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
+					using RenderModels = std::map<MaterialPtr, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 				public:
 				protected:
 					explicit RenderChunkCompilerCore(std::shared_ptr<const vulkan::Device> device);
