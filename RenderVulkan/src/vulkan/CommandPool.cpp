@@ -34,6 +34,16 @@ VkCommandPool CommandPool::getPool() const
 	return pool_;
 }
 
+bool CommandPool::allocate(uint32_t count, VkCommandBuffer *data, VkCommandBufferLevel level)
+{
+	VkCommandBufferAllocateInfo allocateInfo = {};
+	allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocateInfo.commandPool = pool_;
+	allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocateInfo.commandBufferCount = 1;
+	return vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, data) == VK_SUCCESS;
+}
+
 VkCommandPoolCreateFlags CommandPool::getFlags() const
 {
 	return flags_;

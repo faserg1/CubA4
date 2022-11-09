@@ -27,8 +27,11 @@ namespace CubA4
 					PFN_vkCreateDebugUtilsMessengerEXT createDebugUtils;
 					PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugUtils;
 
-					PFN_vkCreateDebugReportCallbackEXT createDebugReportCallback;
-					PFN_vkDestroyDebugReportCallbackEXT destroyDebugReportCallback;
+					PFN_vkSetDebugUtilsObjectNameEXT setName;
+					PFN_vkSetDebugUtilsObjectTagEXT setTag;
+					PFN_vkCmdBeginDebugUtilsLabelEXT cmdBegin;
+					PFN_vkCmdEndDebugUtilsLabelEXT cmdEnd;
+					PFN_vkCmdInsertDebugUtilsLabelEXT cmdInsert;
 				};
 			}
 		}
@@ -60,7 +63,6 @@ void DebugExtension::init(std::shared_ptr<const Instance> instance)
 		return;
 	fillFunctionPointers(instance);
 	createDebugUtils(instance);
-	//createDebugReport(instance);
 }
 
 void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
@@ -68,7 +70,6 @@ void DebugExtension::destroy(std::shared_ptr<const Instance> instance)
 	if (!instance)
 		return;
 	destroyDebugUtils(instance);
-	//destroyDebugReport(instance);
 }
 
 void DebugExtension::createDebugUtils(std::shared_ptr<const Instance> instance)
@@ -128,68 +129,57 @@ void DebugExtension::destroyDebugUtils(std::shared_ptr<const Instance> instance)
 	data_->messeger = {};
 }
 
-void DebugExtension::createDebugReport(std::shared_ptr<const Instance> instance)
-{
-	VkDebugReportCallbackCreateInfoEXT reportInfo = {};
-	reportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
-	switch (logLevel_)
-	{
-	case 4:
-		reportInfo.flags |= VK_DEBUG_REPORT_DEBUG_BIT_EXT;
-	case 3:
-		reportInfo.flags |= VK_DEBUG_REPORT_INFORMATION_BIT_EXT;
-	case 2:
-		reportInfo.flags |= VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
-	case 1:
-		reportInfo.flags |= VK_DEBUG_REPORT_ERROR_BIT_EXT;
-	}
-	auto logCallback = [](
-		VkDebugReportFlagsEXT                       flags,
-		VkDebugReportObjectTypeEXT                  objectType,
-		uint64_t                                    object,
-		size_t                                      location,
-		int32_t                                     messageCode,
-		const char*                                 pLayerPrefix,
-		const char*                                 pMessage,
-		void*                                       pUserData) -> VkBool32
-	{
-		auto *loggerTagged = (ILoggerTagged*)pUserData;
-		LogLevel level;
-		switch (flags)
-		{
-		case VK_DEBUG_REPORT_ERROR_BIT_EXT:
-			level = LogLevel::Error;
-			break;
-		case VK_DEBUG_REPORT_WARNING_BIT_EXT:
-			level = LogLevel::Warning;
-			break;
-		case VK_DEBUG_REPORT_INFORMATION_BIT_EXT:
-			level = LogLevel::Info;
-			break;
-		case VK_DEBUG_REPORT_DEBUG_BIT_EXT:
-			level = LogLevel::Debug;
-			break;
-		case VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT:
-			level = LogLevel::Warning;
-			break;
-		}
-		loggerTagged->log(level, "{" + std::string(pLayerPrefix) + "} "+ pMessage);
-		return VK_FALSE;
-	};
-	reportInfo.pfnCallback = logCallback;
-	reportInfo.pUserData = (void *) &(*loggerTagged_);
-	data_->createDebugReportCallback(instance->getInstance(), &reportInfo, nullptr, &data_->callback);
-}
-
-void DebugExtension::destroyDebugReport(std::shared_ptr<const Instance> instance)
-{
-	data_->destroyDebugReportCallback(instance->getInstance(), data_->callback, nullptr);
-	data_->callback = {};
-}
-
 void DebugExtension::added(InstanceBuilder &builder)
 {
 
+}
+
+void DebugExtension::name(VkDevice device, VkObjectType type, uint64_t handle, const std::string &name)
+{
+	if (data_->setName)
+	{
+		VkDebugUtilsObjectNameInfoEXT info {
+			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+			.objectType = type,
+			.objectHandle = handle,
+			.pObjectName = name.c_str()
+		};
+		data_->setName(device, &info);
+	}
+}
+
+void DebugExtension::cmdLabelBegin(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
+{
+	if (data_->cmdBegin)
+	{
+		VkDebugUtilsLabelEXT info {
+			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+			.pLabelName = name.c_str(),
+			.color = {color[0], color[1], color[2], color[3]}
+		};
+		data_->cmdBegin(cmd, &info);
+	}
+}
+
+void DebugExtension::cmdLabelEnd(VkCommandBuffer cmd)
+{
+	if (data_->cmdEnd)
+	{
+		data_->cmdEnd(cmd);
+	}
+}
+
+void DebugExtension::cmdLabelInsert(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
+{
+	if (data_->cmdInsert)
+	{
+		VkDebugUtilsLabelEXT info {
+			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+			.pLabelName = name.c_str(),
+			.color = {color[0], color[1], color[2], color[3]}
+		};
+		data_->cmdInsert(cmd, &info);
+	}
 }
 
 void DebugExtension::fillFunctionPointers(std::shared_ptr<const Instance> instance)
@@ -197,6 +187,10 @@ void DebugExtension::fillFunctionPointers(std::shared_ptr<const Instance> instan
 	auto vkInstance = instance->getInstance();
 	data_->createDebugUtils = getVkFuncInstancePtr(vkInstance, vkCreateDebugUtilsMessengerEXT);
 	data_->destroyDebugUtils = getVkFuncInstancePtr(vkInstance, vkDestroyDebugUtilsMessengerEXT);
-	data_->createDebugReportCallback = getVkFuncInstancePtr(vkInstance, vkCreateDebugReportCallbackEXT);
-	data_->destroyDebugReportCallback = getVkFuncInstancePtr(vkInstance, vkDestroyDebugReportCallbackEXT);
+
+	data_->setName = getVkFuncInstancePtr(vkInstance, vkSetDebugUtilsObjectNameEXT);
+	data_->setTag = getVkFuncInstancePtr(vkInstance, vkSetDebugUtilsObjectTagEXT);
+	data_->cmdBegin = getVkFuncInstancePtr(vkInstance, vkCmdBeginDebugUtilsLabelEXT);
+	data_->cmdEnd = getVkFuncInstancePtr(vkInstance, vkCmdEndDebugUtilsLabelEXT);
+	data_->cmdInsert = getVkFuncInstancePtr(vkInstance, vkCmdInsertDebugUtilsLabelEXT);
 }

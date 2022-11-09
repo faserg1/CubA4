@@ -21,3 +21,8 @@ VkFence Fence::getFence() const
 {
 	return fence_;
 }
+
+void Fence::reset()
+{
+	vkResetFences(device_->getDevice(), 1, &fence_);
+}

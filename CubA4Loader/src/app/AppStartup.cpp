@@ -86,7 +86,7 @@ void AppStartup::doSomeTestThings()
 	auto renderEngine = renderEngine_.lock();
 	constexpr const float max = 4;
 	static float l = -max;
-	const float speed = 0.01f;
+	const float speed = 0.005f;
 	static bool up = true;
 	if (up)
 		l += speed;

@@ -117,7 +117,7 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	vkBindBufferMemory(device_->getDevice(), vertexTransitBuffer, memoryVertexTransitBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), vertexBuffer, memoryVertexBuffer->getMemory(), 0);
 
-	memoryHelper_->copyBufferToBuffer(vertexTransitBuffer, vertexBuffer, verticesSize);
+	memoryHelper_->copyBufferToBuffer(vertexTransitBuffer, vertexBuffer, verticesSize).wait();
 
 	vkDestroyBuffer(device_->getDevice(), vertexTransitBuffer, nullptr);
 
@@ -203,7 +203,7 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	vkBindBufferMemory(device_->getDevice(), indexTransitBuffer, memoryIndexTransitBuffer->getMemory(), 0);
 	vkBindBufferMemory(device_->getDevice(), indexBuffer, memoryIndexBuffer->getMemory(), 0);
 
-	memoryHelper_->copyBufferToBuffer(indexTransitBuffer, indexBuffer, indicesSize);
+	memoryHelper_->copyBufferToBuffer(indexTransitBuffer, indexBuffer, indicesSize).wait();
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 

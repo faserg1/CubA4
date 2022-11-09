@@ -103,6 +103,8 @@ void WorldManager::allocateBuffers()
 		return;
 	}
 
+	device_->getMarker().setName(worldBuffer, "worldBuffer");
+
 	VkMemoryRequirements req = {};
 	vkGetBufferMemoryRequirements(device_->getDevice(), worldBuffer, &req);
 
@@ -135,7 +137,7 @@ void WorldManager::writeSets()
 
 void WorldManager::updateViewMatrix()
 {
-	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform).wait();
 	glm::mat4 viewMatrix;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 
@@ -145,7 +147,7 @@ void WorldManager::updateViewMatrix()
 	float vMatrix[4][4];
 	memcpy(vMatrix, glm::value_ptr(viewMatrix), sizeof(float) * 16);
 	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
-	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
 }
 
 void WorldManager::updateProjectionMatrix()
@@ -158,5 +160,5 @@ void WorldManager::updateProjectionMatrix()
 	float projMatrix[4][4];
 	memcpy(projMatrix, glm::value_ptr(projection), sizeof(float) * 16);
 	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize;
-	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform);
+	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
 }

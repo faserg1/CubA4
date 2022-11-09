@@ -19,6 +19,7 @@ namespace CubA4::render::vulkan
 		std::unique_ptr<const CommandPoolLock> tryLock() const;
 		bool isLocked() const;
 		VkCommandPool getPool() const;
+		bool allocate(uint32_t count, VkCommandBuffer *data, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 		VkCommandPoolCreateFlags getFlags() const;
 	protected:
 	private:

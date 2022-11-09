@@ -47,10 +47,10 @@ CubA4::world::Layer ChunkRange::getLayer() const
 
 ChunkRange::Iterator ChunkRange::begin() const
 {
-	return Iterator(this, bounds_[0]);
+	return Iterator(this, bounds_[0], 0);
 }
 
 ChunkRange::Iterator ChunkRange::end() const
 {
-	return Iterator(this, bounds_[1], true);
+	return Iterator(this, bounds_[1], getBlockCount());
 }

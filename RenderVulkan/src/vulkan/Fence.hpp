@@ -14,6 +14,7 @@ namespace CubA4::render::vulkan
 		~Fence();
 
 		VkFence getFence() const;
+		void reset();
 	private:
 		std::shared_ptr<const Device> device_;
 		VkFence fence_;

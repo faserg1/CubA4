@@ -40,15 +40,15 @@ namespace CubA4::world
 	{
 		
 	public:
-		Iterator(const IChunkRange *range, world::BlockInChunkPos pos, bool end = false) : range_(range), current_(pos), isEnd_(end) {}
+		Iterator(const IChunkRange *range, world::BlockInChunkPos pos, uint32_t index) : range_(range), current_(pos), index_(index) {}
 		bool operator==(const Iterator &other) const
 		{
-			return range_ == other.range_ && (isEnd_ == other.isEnd_ || current_ == other.current_);
+			return range_ == other.range_ && index_ == other.index_;
 		}
 		bool operator!=(const Iterator &other) const = default;
 		Iterator &operator--()
 		{
-			if (current_ == range_->getBounds()[0])
+			if (index_ == 0)
 			{
 				// Assert?
 				return *this;
@@ -63,12 +63,13 @@ namespace CubA4::world
 				(current_.*coord) = range_->getBounds()[1].*coord;
 				return true;
 			};
-			[[maybe_unused]] auto isStart = func(&decltype(current_)::x) && func(&decltype(current_)::y) && func(&decltype(current_)::z);
+			index_--;
+			func(&decltype(current_)::x) && func(&decltype(current_)::y) && func(&decltype(current_)::z);
 			return *this;
 		}
 		Iterator &operator++()
 		{
-			if (isEnd_)
+			if (index_ > range_->getBlockCount())
 			{
 				// Assert?
 				return *this;
@@ -83,7 +84,8 @@ namespace CubA4::world
 				(current_.*coord) = range_->getBounds()[0].*coord;
 				return true;
 			};
-			isEnd_ = func(&decltype(current_)::x) && func(&decltype(current_)::y) && func(&decltype(current_)::z);
+			index_++;
+			func(&decltype(current_)::x) && func(&decltype(current_)::y) && func(&decltype(current_)::z);
 			return *this;
 		}
 		CubA4::world::BlockInChunkPos operator*() const
@@ -97,6 +99,6 @@ namespace CubA4::world
 	private:
 		const IChunkRange *range_;
 		CubA4::world::BlockInChunkPos current_;
-		bool isEnd_;
+		uint32_t index_;
 	};
 }

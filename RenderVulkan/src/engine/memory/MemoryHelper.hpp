@@ -4,10 +4,14 @@
 #include <future>
 #include <vector>
 #include <vulkan/vulkan.h>
-#include <vulkan/CommandPool.hpp>
 #include <vulkan/Device.hpp>
-#include <vulkan/Fence.hpp>
 #include <atomic>
+
+namespace tf
+{
+	class Task;
+	class Taskflow;
+}
 
 namespace CubA4::render::engine::memory
 {
@@ -20,28 +24,22 @@ namespace CubA4::render::engine::memory
 
 	class MemoryHelper
 	{
-		struct ConcurencyData
-		{
-			ConcurencyData() = default;
-			std::shared_ptr<CubA4::render::vulkan::CommandPool> cmdPool {};
-			std::shared_ptr<CubA4::render::vulkan::Fence> fence {};
-			VkCommandBuffer transitBuffer = nullptr;
-			std::unique_ptr<const CubA4::render::vulkan::CommandPool::CommandPoolLock> lock;
-		};
+		struct Queue;
 	public:
 		explicit MemoryHelper(std::shared_ptr<const vulkan::Device> device);
 		~MemoryHelper();
 
-		std::shared_future<bool> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
-		std::shared_future<bool> copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
+		std::future<void> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
+		std::future<void> copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
 			VkImageLayout srcLayout, VkImageSubresourceRange subresourceRange);
-		std::shared_future<bool> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType = BufferBarrierType::None);
+		std::future<void> updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType = BufferBarrierType::None);
 	protected:
 	private:
 		std::shared_ptr<const vulkan::Device> device_;
-		std::vector<ConcurencyData> concurency_;
+		std::vector<std::unique_ptr<Queue>> queues_;
+		std::atomic_uint8_t queueRotation_;
 	private:
-		bool allocateCmdBuffer(VkCommandBuffer &cmdBuffer, VkFence &fence, ConcurencyData *&data);
-		std::shared_future<bool> submitCmdBuffer(VkCommandBuffer cmdBuffer, VkFence fence, ConcurencyData &data);
+		Queue *getNextQueue();
+		void submitCmdBuffer(Queue *queue, tf::Taskflow *flow, tf::Task *prev);
 	};
 }
