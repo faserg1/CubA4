@@ -78,30 +78,58 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 
 void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter)
 {
-	const auto resource = core_->getResourcesManager()->find("data/vanilla/assets/textures/NewTexture.png");
-	auto importedTexture = textureImporter->importFromPng(resource);
-	textures_.insert(std::make_pair("newTexture", importedTexture));
+	std::vector<std::string> textures = {
+		"NewTexture",
+		"01",
+		"02",
+		"03",
+	};
+	for (auto texName : textures)
+	{
+		using namespace std::string_literals;
+		const auto resource = core_->getResourcesManager()->find("data/vanilla/assets/textures/"s + texName + ".png"s);
+		auto importedTexture = textureImporter->importFromPng(resource);
+		textures_.insert(std::make_pair(texName, importedTexture));
+	}
 }
 
 void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory)
 {
-	auto texture = textures_.find("newTexture")->second;
+	auto texture = textures_.find("NewTexture")->second;
 	auto layout = materialLayouts_.find("default")->second;
 	auto defaultMaterialBuilder = materialFactory->createMaterial(layout);
 	defaultMaterialBuilder->addTexture(texture);
 	auto defaultMaterial = defaultMaterialBuilder->build();
 	materials_.insert(std::make_pair("default", defaultMaterial));
+
+	std::vector<std::string> textures = {
+		"01",
+		"02",
+		"03",
+	};
+	for (auto texName : textures)
+	{
+		auto texture = textures_.find(texName)->second;
+		auto materialBuilder = materialFactory->createMaterial(layout);
+		materialBuilder->addTexture(texture);
+		auto material = materialBuilder->build();
+		materials_.insert(std::make_pair(texName, material));
+	}
+	core_->getLogger()->flush();
 }
 
 void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager)
 {
 	auto modelFactory = core_->getModelFactory();
 	auto resources = core_->getResourcesManager();
-	auto resource = resources->find("data/vanilla/assets/models/test.json");
-	auto blockModelDef = modelFactory->createSimpleBlockRenderModelDefinition("block", resource, materials_);
+	auto resource1 = resources->find("data/vanilla/assets/models/test.json");
+	auto resource2 = resources->find("data/vanilla/assets/models/test2.json");
+	auto blockModelDef1 = modelFactory->createSimpleBlockRenderModelDefinition("block", resource1, materials_);
+	auto blockModelDef2 = modelFactory->createSimpleBlockRenderModelDefinition("block2", resource2, materials_);
 	
 	auto blockManager = manager_->getBlockManager();
-	blockManager->addBlockDefinition("test", blockModelDef);
+	blockManager->addBlockDefinition("test1", blockModelDef1);
+	blockManager->addBlockDefinition("test2", blockModelDef2);
 
 	//auto blockModel = modelManager->registerModel(*blockModelDef);
 }

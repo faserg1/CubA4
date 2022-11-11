@@ -11,6 +11,7 @@
     "boost-bimap",
     "boost-stacktrace",
     "boost-dll",
+    "bullet3",
     "cpr",
     "fmt",
     "glm",

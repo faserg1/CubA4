@@ -22,6 +22,9 @@ namespace CubA4::world
 		std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const override;
 		CubA4::world::BlockAt getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const override;
 
+		void addBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos at) override;
+		void fillWithBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos start, world::BlockInChunkPos end) override;
+
 		void addChunkRange(std::shared_ptr<ChunkRange> chunkRange);
 	protected:
 		

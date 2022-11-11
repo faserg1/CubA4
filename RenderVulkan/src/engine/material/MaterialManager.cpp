@@ -12,9 +12,11 @@ MaterialManager::MaterialManager(std::shared_ptr<const Device> device,
 	std::shared_ptr<ResourceManager> resourceManager) :
 	device_(device), render_(render), resourceManager_(resourceManager)
 {
+	texturesDescriptorPool_ = std::make_shared<TexturesDescriptorPool>(device);
 	shaderFactory_ = std::make_shared<ShaderFactory>(device);
-	materialFactory_ = std::make_shared<MaterialFactory>(device);
+	materialFactory_ = std::make_shared<MaterialFactory>(device, texturesDescriptorPool_);
 	textureImporter_ = std::make_shared<TextureImporter>(device);
+	
 }
 
 MaterialManager::~MaterialManager()

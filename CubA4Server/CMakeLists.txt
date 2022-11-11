@@ -31,3 +31,10 @@ use_thread_library(CubA4Server)
 use_system_loader_library(CubA4Server)
 
 set_target_properties(CubA4Server PROPERTIES FOLDER "Executables")
+
+set_target_properties( CubA4Server
+    PROPERTIES
+    BUILD_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+    LIBRARY_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+	RUNTIME_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+)

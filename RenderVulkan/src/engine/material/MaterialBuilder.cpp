@@ -6,15 +6,16 @@
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-MaterialBuilder::MaterialBuilder(std::shared_ptr<const Device> device, std::shared_ptr<const IMaterialLayout> layout, sVkDescriptorPool pool) :
-	device_(device), layout_(layout), pool_(pool)
+MaterialBuilder::MaterialBuilder(std::shared_ptr<const Device> device, std::shared_ptr<const DescriptorPool> pool,
+	std::shared_ptr<const IMaterialLayout> layout, VkSampler sampler) :
+		device_(device), pool_(pool), layout_(layout), sampler_(sampler)
 {
-	createSampler();
+	
 }
 
 MaterialBuilder::~MaterialBuilder()
 {
-	vkDestroySampler(device_->getDevice(), sampler_, nullptr);
+	
 }
 
 void MaterialBuilder::addTexture(std::shared_ptr<const ITexture> texture)
@@ -24,23 +25,36 @@ void MaterialBuilder::addTexture(std::shared_ptr<const ITexture> texture)
 
 std::shared_ptr<const IMaterial> MaterialBuilder::build()
 {
+	auto layout = std::dynamic_pointer_cast<const MaterialLayout>(layout_);
+	auto set = createSet();
+	writeSet(set);
+	return std::make_shared<Material>(layout, textures_, set, sampler_);
+}
+
+VkDescriptorSet MaterialBuilder::createSet()
+{
 	VkDescriptorSet set;
 	VkDescriptorSetAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = pool_->get();
 	allocInfo.descriptorSetCount = 1;
-	auto layout = std::dynamic_pointer_cast<const MaterialLayout>(layout_);
-	VkDescriptorSetLayout layouts[] = { layout->getLayout()->get() };
+	auto layout = std::dynamic_pointer_cast<const MaterialLayout>(layout_)->getLayout();
+	VkDescriptorSetLayout layouts[] = { layout->get() };
 	allocInfo.pSetLayouts = layouts;
 	if (vkAllocateDescriptorSets(device_->getDevice(), &allocInfo, &set) != VK_SUCCESS)
 	{
 		// TODO: Exception
 		return {};
 	}
+	return set;
+}
+
+void MaterialBuilder::writeSet(VkDescriptorSet set)
+{
 	VkWriteDescriptorSet writeSet = {};
 	writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 	writeSet.descriptorCount = static_cast<uint32_t>(textures_.size());
-	writeSet.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+	writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	writeSet.dstBinding = 2;
 	writeSet.dstSet = set;
 	
@@ -56,19 +70,4 @@ std::shared_ptr<const IMaterial> MaterialBuilder::build()
 
 	writeSet.pImageInfo = imageInfos.data();
 	vkUpdateDescriptorSets(device_->getDevice(), 1, &writeSet, 0, nullptr);
-	return std::make_shared<Material>(layout, textures_, set);
-}
-
-void MaterialBuilder::createSampler()
-{
-	VkSamplerCreateInfo info {
-		.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
-		.magFilter = VK_FILTER_NEAREST,
-		.minFilter = VK_FILTER_NEAREST,
-		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
-		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-	};
-	vkCreateSampler(device_->getDevice(), &info, nullptr, &sampler_);
 }

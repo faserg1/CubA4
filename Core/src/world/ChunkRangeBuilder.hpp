@@ -27,15 +27,12 @@ namespace CubA4::world
 		ChunkRangeBuilder() = delete;
 		~ChunkRangeBuilder() = delete;
 
-		static sChunkRanges rebuildChunkRanges(const scIChunkRanges ranges);
+		static sChunkRanges rebuildChunkRanges(scIChunkRanges ranges);
 		static sChunkRange buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end);
-		static void test();
 	protected:
 	private:
-		static sChunkRanges rebuildAdjacentRanges(const scIChunkRanges ranges);
-		static std::vector<scIChunkRanges> findAdjacent(const scIChunkRanges ranges);
-		static bool isAdjacent(scIChunkRange first, scIChunkRange second);
-		static bool isIntersects(scIChunkRange first, scIChunkRange second);
+		static std::pair<BlockSide, BlockSide> isSameAdjacent(scIChunkRange first, scIChunkRange second);
+		static bool isSideAdjacent(const IChunkRange::Bounds &s1, const IChunkRange::Bounds &s2);
 		static std::array<BIC, MinMaxBoundsSize> minMaxBounds(const std::array<BIC, CubA4::world::BoundsSize> &positions);
 		static BIC minBound(const std::array<BIC, CubA4::world::BoundsSize> &positions);
 		static BIC maxBound(const std::array<BIC, CubA4::world::BoundsSize> &positions);

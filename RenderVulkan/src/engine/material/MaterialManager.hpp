@@ -3,6 +3,7 @@
 #include <memory>
 #include <vulkan/Device.hpp>
 #include <engine/material/IMaterialManager.hpp>
+#include <engine/material/TexturesDescriptorPool.hpp>
 
 namespace CubA4::render:: engine
 {
@@ -35,6 +36,7 @@ namespace CubA4::render::engine::material
 		const std::shared_ptr<const vulkan::Device> device_;
 		const std::shared_ptr<const Render> render_;
 		const std::shared_ptr<ResourceManager> resourceManager_;
+		std::shared_ptr<TexturesDescriptorPool> texturesDescriptorPool_;
 		std::shared_ptr<ShaderFactory> shaderFactory_;
 		std::shared_ptr<MaterialFactory> materialFactory_;
 		std::shared_ptr<TextureImporter> textureImporter_;

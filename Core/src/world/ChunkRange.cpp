@@ -20,9 +20,28 @@ std::shared_ptr<const IBlock> ChunkRange::getBlock() const
 	return block_;
 }
 
-const std::array<BlockInChunkPos, BoundsSize> &ChunkRange::getBounds() const
+const ChunkRange::Bounds &ChunkRange::getBounds() const
 {
 	return bounds_;
+}
+
+ChunkRange::Bounds ChunkRange::getSideRect(BlockSide side) const
+{
+	switch (side)
+	{
+	case BlockSide::Top:
+		return {BlockInChunkPos{bounds_[0].x, bounds_[1].y, bounds_[1].z}, bounds_[1]};
+	case BlockSide::Bottom:
+		return {bounds_[0], BlockInChunkPos{bounds_[1].x, bounds_[0].y, bounds_[1].z}};
+	case BlockSide::Left:
+		return {bounds_[0], BlockInChunkPos{bounds_[0].x, bounds_[1].y, bounds_[1].z}};
+	case BlockSide::Right:
+		return {BlockInChunkPos{bounds_[1].x, bounds_[0].y, bounds_[0].z}, bounds_[1]};
+	case BlockSide::Front:
+		return {bounds_[0], BlockInChunkPos{bounds_[1].x, bounds_[1].y, bounds_[0].z}};
+	case BlockSide::Back:
+		return {BlockInChunkPos{bounds_[0].x, bounds_[0].y, bounds_[1].z}, bounds_[1]};
+	}
 }
 
 uint32_t ChunkRange::getBlockCount() const

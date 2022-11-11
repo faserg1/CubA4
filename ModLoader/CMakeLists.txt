@@ -36,3 +36,10 @@ target_link_libraries(ModLoader PRIVATE Boost::boost Boost::filesystem fmt::fmt)
 use_system_loader_library(ModLoader)
 
 set_target_properties(ModLoader PROPERTIES FOLDER "Libs")
+
+set_target_properties( ModLoader
+    PROPERTIES
+    BUILD_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+    LIBRARY_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+	RUNTIME_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+)

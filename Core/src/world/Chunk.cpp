@@ -118,6 +118,16 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 	return {};
 }
 
+void Chunk::addBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos at)
+{
+
+}
+
+void Chunk::fillWithBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos start, world::BlockInChunkPos end)
+{
+
+}
+
 
 void Chunk::addChunkRange(std::shared_ptr<ChunkRange> chunkRange)
 {

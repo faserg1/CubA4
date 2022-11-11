@@ -4,52 +4,32 @@
 using namespace CubA4::render::engine::material;
 using namespace CubA4::render::vulkan;
 
-MaterialFactory::MaterialFactory(std::shared_ptr<const Device> device) :
-	device_(device)
+MaterialFactory::MaterialFactory(std::shared_ptr<const Device> device, std::shared_ptr<const DescriptorPool> pool) :
+	device_(device), pool_(pool)
 {
-	createDescriptorPool();
+	createSampler();
 }
 
 MaterialFactory::~MaterialFactory()
 {
-	
+	vkDestroySampler(device_->getDevice(), sampler_, nullptr);
 }
 
 std::shared_ptr<IMaterialBuilder> MaterialFactory::createMaterial(std::shared_ptr<const IMaterialLayout> layout)
 {
-	return std::make_shared<MaterialBuilder>(device_, layout, pool_);
+	return std::make_shared<MaterialBuilder>(device_, pool_, layout, sampler_);
 }
 
-void MaterialFactory::createDescriptorPool()
+void MaterialFactory::createSampler()
 {
-	std::vector<VkDescriptorPoolSize> sizes;
-
-	VkDescriptorPoolCreateInfo poolCreateInfo = {};
-	poolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolCreateInfo.maxSets = 1;
-
-	VkDescriptorPoolSize uniforms;
-	uniforms.descriptorCount = 10;
-	uniforms.type = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-
-	sizes.push_back(uniforms);
-
-	poolCreateInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
-	poolCreateInfo.pPoolSizes = sizes.data();
-
-	VkDescriptorPool pool = {};
-
-	if (vkCreateDescriptorPool(device_->getDevice(), &poolCreateInfo, nullptr, &pool) != VK_SUCCESS)
-	{
-		// TODO: [OOKAMI] Exceptions, etc
-	}
-
-	device_->getMarker().setName(pool, "Textures pool");
-
-	std::function<void(VkDescriptorPool pool)> deleter = [dev = device_](VkDescriptorPool pool)
-	{
-		vkDestroyDescriptorPool(dev->getDevice(), pool, nullptr);
+	VkSamplerCreateInfo info {
+		.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+		.magFilter = VK_FILTER_NEAREST,
+		.minFilter = VK_FILTER_NEAREST,
+		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
+		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
 	};
-
-	pool_ = util::createSharedVulkanObject(pool, deleter);
+	vkCreateSampler(device_->getDevice(), &info, nullptr, &sampler_);
 }

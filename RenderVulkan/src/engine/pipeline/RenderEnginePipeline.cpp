@@ -17,8 +17,6 @@ RenderEnginePipeline::~RenderEnginePipeline()
 
 void RenderEnginePipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks)
 {
-	if (!chunkQueue_.empty())
-		return;
 	for (auto chunk : chunks)
 	{
 		auto futureRenderChunk = chunkCompiler_->compileChunk(chunk);

@@ -57,6 +57,7 @@ void ResourceManager::createBuiltInDescriptorPool()
 
 	VkDescriptorPoolCreateInfo poolCreateInfo = {};
 	poolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolCreateInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 	poolCreateInfo.maxSets = 1;
 
 	VkDescriptorPoolSize uniforms;

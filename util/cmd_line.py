@@ -13,7 +13,7 @@ class CmdLineParser:
 		print("Where:")
 		print("<name> — Class or interface name with namespaces, separeted with dot (`.`).\nIf name starts with '#', namespace will be ignored, but folder created.")
 		print("\tIf section starts with '#', namespace will be ignored, but folder created.")
-		print("\tIf section starts with '@', folder will be ignored, but namespace created.")
+		print("\tIf section starts with '*', folder will be ignored, but namespace created.")
 		print("<module> — Module, where to place class or interface.")
 		print("Parameters:")
 		print("--dry-run — Not add files at really, but do work.")

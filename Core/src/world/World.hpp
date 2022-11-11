@@ -21,7 +21,7 @@ namespace CubA4::world
 
 		std::unique_ptr<CubA4::util::ISubscription> subscribe(CubA4::world::IWorldSubscriber *subscriber) const override;
 
-		void test(std::shared_ptr<const CubA4::object::IBlock> block) override;
+		void test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> blocks) override;
 
 		std::shared_ptr<const CubA4::world::IWorldDefinition> getWorldDefinition() const override;
 		std::vector<std::shared_ptr<const CubA4::world::IChunk>> getChunks() const override;

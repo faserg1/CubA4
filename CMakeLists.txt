@@ -9,26 +9,14 @@ set(CUBA4_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR})
 #prepare config
 include (cmake/Arch.cmake)
 include (cmake/Util.cmake)
-
-set(CUBA4_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/built/${TARGET_ARCH})
-
-set(BIN_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/bin)
-set(MOD_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/mods)
-set(RENDER_BUILD_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/render)
-set(RESOURCES_OUTPUT_DIRECTORY ${CUBA4_ROOT_DIR}/data)
-
-set(BUILD_OUTPUT_DIRECTORY ${BIN_BUILD_OUTPUT_DIRECTORY})
+include (cmake/ProjectPaths.cmake)
 
 #first prepare thirdparty libraries
 include (thirdparty/thirdparty.cmake)
 #add_subdirectory (thirdparty)
 
-set(EXECUTABLE_OUTPUT_PATH ${BUILD_OUTPUT_DIRECTORY})
-set(LIBRARY_OUTPUT_PATH  ${BUILD_OUTPUT_DIRECTORY})
-set(RUNTIME_OUTPUT_DIRECTORY  ${BUILD_OUTPUT_DIRECTORY})
-
 if (WIN32)
-	set (COPY_DLL_OUTPUT_DIR "${BUILD_OUTPUT_DIRECTORY}/$<CONFIG>/")
+	set (COPY_DLL_OUTPUT_DIR "${BUILD_OUTPUT_DIRECTORY}/")
 elseif(UNIX)
 	set (COPY_SO_OUTPUT_DIR "${BUILD_OUTPUT_DIRECTORY}/")
 endif ()

@@ -17,7 +17,8 @@ namespace CubA4::world
 		~ChunkRange();
 		
 		std::shared_ptr<const object::IBlock> getBlock() const override;
-		const std::array<BlockInChunkPos, BoundsSize> &getBounds() const override;
+		const Bounds &getBounds() const override;
+		Bounds getSideRect(BlockSide side) const override;
 		uint32_t getBlockCount() const override;
 		Layer getLayer() const override;
 		Iterator begin() const override;

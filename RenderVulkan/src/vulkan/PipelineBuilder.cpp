@@ -280,7 +280,7 @@ void PipelineBuilder::prepareDescriptorSets()
 	//Texture info
 	textureInfo.binding = 2;
 	textureInfo.descriptorCount = textureCount;
-	textureInfo.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+	textureInfo.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	textureInfo.stageFlags = VK_SHADER_STAGE_ALL;
 
 	VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo = {};

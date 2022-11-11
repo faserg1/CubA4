@@ -34,3 +34,10 @@ target_link_libraries(Network PRIVATE Boost::boost)
 use_thread_library(Network)
 
 set_target_properties(Network PROPERTIES FOLDER "Libs")
+
+set_target_properties( Network
+    PROPERTIES
+    BUILD_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+    LIBRARY_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+	RUNTIME_OUTPUT_DIRECTORY "${BIN_BUILD_OUTPUT_DIRECTORY}/$<0:>"
+)

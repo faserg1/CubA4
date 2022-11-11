@@ -102,12 +102,12 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(std
 		viewport.width = static_cast<float>(scissor.extent.width);
 		viewport.height = static_cast<float>(scissor.extent.height);
 
-		constexpr const uint16_t descriptorSetCount = 2;
-		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get(), renderMaterial->getDescriptorSet()};
+		constexpr const uint16_t descriptorSetCount = 1;
+		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get()};
 
 		vkBeginCommandBuffer(cmdBuffer, &beginInfo);
 		/////////////////////////////////////////////////
-		pipeline->bind(cmdBuffer);
+		renderMaterial->apply(cmdBuffer);
 
 		vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);

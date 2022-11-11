@@ -94,7 +94,7 @@ std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::bu
 	pipelinePtr = pipelines.data();
 	pipelineCreateInfoPtr = pipelineCreateInfos.data();
 	auto device = device_;
-	std::for_each(builders_.begin(), builders_.end(), [&pipelinePtr, &pipelineCreateInfoPtr, &layouts, device](std::shared_ptr<IMaterialLayoutBuilder> iBuilder)
+	std::for_each(builders_.begin(), builders_.end(), [this, &pipelinePtr, &pipelineCreateInfoPtr, &layouts, device](std::shared_ptr<IMaterialLayoutBuilder> iBuilder)
 	{
 		auto builder = std::dynamic_pointer_cast<MaterialLayoutBuilder>(iBuilder);
 		

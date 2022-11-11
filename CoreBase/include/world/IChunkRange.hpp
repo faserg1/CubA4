@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include <world/Position.hpp>
+#include <world/Sides.hpp>
 #include <object/IBlock.hpp>
 
 namespace CubA4::world
@@ -25,6 +26,7 @@ namespace CubA4::world
 			* \see BoundsSize
 		*/
 		virtual const Bounds &getBounds() const = 0;
+		virtual Bounds getSideRect(BlockSide side) const = 0;
 		/// Возвращает количество заполняемых блоков в диапазоне
 		virtual uint32_t getBlockCount() const = 0;
 		/// Получает слой, на котором расположены блоки

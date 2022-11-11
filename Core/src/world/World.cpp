@@ -37,20 +37,20 @@ std::unique_ptr<CubA4::util::ISubscription> World::subscribe(IWorldSubscriber *s
 	return std::move(subscriptionHelper_.add(subscriber));
 }
 
-void World::test(std::shared_ptr<const CubA4::object::IBlock> block)
+void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> blocks)
 {
 	// TODO: [OOKAMI] Test chunk range feature. Delete function later
-	for (auto x = 0; x < 2; x++)
+	for (auto x = -2; x < 4; x++)
 	{
-		for (auto y = 0; y < 2; y++)
+		for (auto y = -2; y < 2; y++)
 		{
-			for (auto z = 0; z < 2; z++)
+			for (auto z = -2; z < 4; z++)
 			{
 				auto chunk0 = findChunk({ x, y, z });
 				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 1, 1, 1 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 1, 2, 1 }, { 4, 4, 4 }));
-				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 3, 2, 3 }, { 40, 40, 40 }));
+				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[0], { 0, 0, 0 }, { 1, 1, 1 }));
+				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 1, 2, 1 }, { 4, 4, 4 }));
+				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));
 				break;
 			}
 		}
