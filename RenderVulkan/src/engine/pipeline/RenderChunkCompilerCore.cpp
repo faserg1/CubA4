@@ -10,6 +10,7 @@
 #include <string>
 #include <cmath>
 #include <unordered_map>
+#include <fmt/format.h>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
@@ -20,8 +21,8 @@ using namespace CubA4::world;
 
 constexpr const unsigned short commandPoolsCount = 64;
 
-RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const Device> device, std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager) :
-	device_(device), memManager_(std::make_shared<MemoryManager>(device)), modelManager_(modelManager)
+RenderChunkCompilerCore::RenderChunkCompilerCore(std::shared_ptr<const ICore> core, std::shared_ptr<const Device> device, std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager) :
+	core_(core), device_(device), memManager_(std::make_shared<MemoryManager>(device)), modelManager_(modelManager)
 {
 	initCommandPools();
 	initDescriptorPools();
@@ -102,6 +103,8 @@ void RenderChunkCompilerCore::initDescriptorPools()
 RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std::shared_ptr<const CubA4::world::IChunk> chunk)
 {
 	RenderModels models;
+	auto cpos = chunk->getChunkPos();
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiling chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
 	auto hiddenSides = compileHiddenSides(chunk);
 	struct Def
 	{
@@ -110,6 +113,8 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 	};
 	using Key = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
 	std::unordered_map<Key, Def> materialsToDefMap;
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Searching for materials in chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
+
 	for (auto block : chunk->getUsedBlocks())
 	{
 		auto modelDef = block->getRenderModelDefinition();
@@ -132,6 +137,8 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 			}
 		}
 	}
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiling chunk models in chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
+
 	for (const auto &pair : materialsToDefMap)
 	{
 		auto compiledModel = compileModelByMaterial(chunk, pair.second.materialId, pair.second.blocks, hiddenSides);
@@ -140,11 +147,15 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 		auto material = std::dynamic_pointer_cast<const CubA4::render::engine::material::Material>(pair.first);
 		models.insert(std::make_pair(material, compiledModel));
 	}
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiled chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
+
 	return std::move(models);
 }
 
 RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides)
 {
+	auto cpos = chunk->getChunkPos();
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models collecting {}, {}, {}", cpos.x, cpos.y, cpos.z));
 	model::ModelCompiler compiler;
 	for (auto block : blocks)
 	{
@@ -158,11 +169,14 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 				auto index = indexByPos(blockPos);
 				auto model = block->getRenderModelDefinition();
 				auto faces = model->getFaces(material, hiddenSides[index], data);
-				compiler.addFaces(model, faces, blockPos);
+				compiler.addFaces(model, std::move(faces), blockPos);
 			}
 		}
 	}
-	return compiler.compile(material, modelManager_);
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	auto model = compiler.compile(material, modelManager_);;
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building done {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	return model;
 }
 
 RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides(std::shared_ptr<const IChunk> chunk) const

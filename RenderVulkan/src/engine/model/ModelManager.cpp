@@ -28,9 +28,9 @@ std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::mod
 
 std::shared_ptr<const RenderModel> ModelManager::createModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
 {
-	auto vertices = renderModelDef.getVertices();
-	auto uvws = renderModelDef.getUVWCoords();
-	auto faces = renderModelDef.getFaceIndices();
+	auto &vertices = renderModelDef.getVertices();
+	auto &uvws = renderModelDef.getUVWCoords();
+	auto &faces = renderModelDef.getFaceIndices();
 	return createModel(renderModelDef.getId(), vertices, uvws, faces);
 }
 

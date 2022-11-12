@@ -25,9 +25,9 @@ using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
-RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
+RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const ICore> core, std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
 	std::shared_ptr<RenderManager> renderManager) :
-	RenderChunkCompilerCore(device, renderManager->getModelManager()), renderPass_(renderPass), 
+	RenderChunkCompilerCore(core, device, renderManager->getModelManager()), renderPass_(renderPass), 
 	resourceManager_(renderManager->getResourceManager()), worldManager_(std::dynamic_pointer_cast<const WorldManager>(renderManager->getWorldManager()))
 {
 }

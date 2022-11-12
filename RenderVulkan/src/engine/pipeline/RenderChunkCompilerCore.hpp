@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include <ICore.hpp>
+
 #include <world/IChunk.hpp>
 #include <model/IBlockRenderModelDefinition.hpp>
 #include <engine/model/RenderModel.hpp>
@@ -43,7 +45,7 @@ namespace CubA4
 					using RenderModels = std::map<MaterialPtr, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 				public:
 				protected:
-					explicit RenderChunkCompilerCore(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager);
+					explicit RenderChunkCompilerCore(std::shared_ptr<const ICore> core, std::shared_ptr<const vulkan::Device> device, std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager);
 					~RenderChunkCompilerCore();
 
 					std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> lockCommandPool();
@@ -54,6 +56,7 @@ namespace CubA4
 					void hideFrom(HiddenSides &hiddenSides, CubA4::world::BlockInChunkPos pos, CubA4::world::BlockSides nonOpaque) const;
 					static size_t indexByPos(const CubA4::world::BlockInChunkPos &pos);
 				protected:
+					const std::shared_ptr<const ICore> core_;
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<memory::MemoryManager> memManager_;
 					const std::shared_ptr<CubA4::render::engine::model::ModelManager> modelManager_;

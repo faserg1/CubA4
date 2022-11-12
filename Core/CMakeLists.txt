@@ -30,6 +30,7 @@ use_base_library(Core ModBase)
 #third-party library
 target_link_libraries(Core PRIVATE range-v3 range-v3-meta range-v3::meta range-v3-concepts)
 target_link_libraries(Core PRIVATE Boost::boost Boost::filesystem ${boost_stacktrace_lib})
+target_link_libraries(Core PRIVATE fmt::fmt)
 target_link_libraries(Core PRIVATE logguru_win_lib)
 target_link_libraries(Core PRIVATE tl::generator)
 

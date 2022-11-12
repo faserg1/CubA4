@@ -113,7 +113,7 @@ void VulkanRenderEngine::setup()
 {
 	// Создание компонентов
 	renderManager_ = std::make_shared<RenderManager>(getDevice(), core_, render_);
-	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(getDevice(), render_->getRenderPass(), renderManager_);
+	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(core_, getDevice(), render_->getRenderPass(), renderManager_);
 	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_);
 	
 	render_->setup(renderEnginePipeline_);

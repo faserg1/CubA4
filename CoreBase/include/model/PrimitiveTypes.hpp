@@ -22,6 +22,7 @@ namespace CubA4::model
 
 	struct Face
 	{
-		std::vector<uint16_t> indexes;
+		using IndexType = uint16_t;
+		std::vector<IndexType> indexes;
 	};
 }

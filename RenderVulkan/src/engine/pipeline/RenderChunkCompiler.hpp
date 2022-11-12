@@ -7,19 +7,10 @@
 #include <future>
 #include <cstddef>
 #include <tuple>
-#include "RenderChunkCompilerCore.hpp"
+#include <engine/pipeline/RenderChunkCompilerCore.hpp>
 
 namespace CubA4
 {
-	namespace mod
-	{
-		namespace world
-		{
-			class IChunk;
-		}
-	}
-
-
 	namespace render
 	{
 		namespace vulkan
@@ -51,7 +42,7 @@ namespace CubA4
 					public RenderChunkCompilerCore
 				{
 				public:
-					explicit RenderChunkCompiler(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::RenderPass> renderPass,
+					explicit RenderChunkCompiler(std::shared_ptr<const ICore> core, std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::RenderPass> renderPass,
 						 std::shared_ptr<RenderManager> renderManager);
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();

@@ -32,6 +32,12 @@ namespace CubA4::render::engine::model
 			const std::vector<CubA4::model::UVWCoords> &getUVWCoords() const override { return uvws; }
 			RMaterial getMaterial(const std::string &materialId) const override { return {}; }
 		} data_;
-		
+		struct TempData
+		{
+			Model model;
+			Faces faces;
+			CubA4::world::BlockInChunkPos pos;
+		};
+		std::vector<TempData> collected_;
 	};
 }
