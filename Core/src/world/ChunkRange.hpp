@@ -20,6 +20,7 @@ namespace CubA4::world
 		const Bounds &getBounds() const override;
 		Bounds getSideRect(BlockSide side) const override;
 		uint32_t getBlockCount() const override;
+		uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const override;
 		Layer getLayer() const override;
 		Iterator begin() const override;
 		Iterator end() const override;

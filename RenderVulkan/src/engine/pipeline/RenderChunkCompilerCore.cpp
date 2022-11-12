@@ -157,24 +157,43 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 	auto cpos = chunk->getChunkPos();
 	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models collecting {}, {}, {}", cpos.x, cpos.y, cpos.z));
 	model::ModelCompiler compiler;
+	std::vector<model::ModelCompiler::CollectedData> collected;
+	size_t toReserve = 0;
 	for (auto block : blocks)
 	{
 		auto ranges = chunk->getChunkRanges(block);
 		for (auto range : ranges)
 		{
-			for (auto blockPos : *range)
+			toReserve += range->getBlockCount();
+		}
+	}
+	collected.resize(toReserve);
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models collecting 2 {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	size_t offset = 0;
+	for (auto block : blocks)
+	{
+		auto model = block->getRenderModelDefinition();
+		auto ranges = chunk->getChunkRanges(block);
+		for (auto range : ranges)
+		{
+			std::for_each(std::execution::par_unseq, range->begin(), range->end(), [offset, range, &collected, &model, &material, &hiddenSides](auto blockPos)
 			{
 				// TODO: Fill with data
 				BlockData data;
 				auto index = indexByPos(blockPos);
-				auto model = block->getRenderModelDefinition();
+				auto fakeIdx = range->getBlockIndex(blockPos);
 				auto faces = model->getFaces(material, hiddenSides[index], data);
-				compiler.addFaces(model, std::move(faces), blockPos);
-			}
+				auto cIndex = offset + fakeIdx;
+				collected[cIndex].model = model.get();
+				collected[cIndex].faces = std::move(faces);
+				collected[cIndex].pos = blockPos;
+			});
+			offset += range->getBlockCount();
 		}
 	}
+	compiler.addFaces(std::move(collected));
 	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {}", cpos.x, cpos.y, cpos.z));
-	auto model = compiler.compile(material, modelManager_);;
+	auto model = compiler.compile(material, modelManager_);
 	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building done {}, {}, {}", cpos.x, cpos.y, cpos.z));
 	return model;
 }

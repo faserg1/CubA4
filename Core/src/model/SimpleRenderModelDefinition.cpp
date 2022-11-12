@@ -1,9 +1,8 @@
 #include "./SimpleRenderModelDefinition.hpp"
 #include <algorithm>
 #include <ranges>
+#include <set>
 #include <range/v3/range/conversion.hpp>
-#include <range/v3/action/sort.hpp>
-#include <range/v3/view/set_algorithm.hpp>
 using namespace CubA4::model;
 using namespace CubA4::world;
 
@@ -89,17 +88,23 @@ std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::str
 	auto allFacesIt = materialToFaces_.find(materialId);
 	if (allFacesIt == materialToFaces_.end())
 		return {};
-	auto totalFaces = allFacesIt->second;
-	// move to init?
-	ranges::sort(totalFaces);
+	std::vector<unsigned short> totalFaces;
+	totalFaces.reserve(allFacesIt->second.size());
+	std::set<unsigned short> hidden;
 	for (const auto &pair : hiddenFaces_)
 	{
 		if (hiddenSides & pair.first)
 		{
-			totalFaces = ranges::views::set_difference(totalFaces, pair.second) | ranges::to<std::vector>;
+			for (auto idx : pair.second)
+				hidden.insert(idx);
 		}
 	}
-	return totalFaces;
+	for (auto idx : allFacesIt->second)
+	{
+		if (hidden.find(idx) == hidden.end())
+			totalFaces.push_back(idx);
+	}
+	return std::move(totalFaces);
 }
 
 BlockSides SimpleRenderModelDefinition::getNonOpaqueSide(const BlockData& data) const

@@ -1,9 +1,9 @@
 #include "./ModelCompiler.hpp"
 using namespace CubA4::render::engine::model;
 
-void ModelCompiler::addFaces(Model model, Faces faces, CubA4::world::BlockInChunkPos pos)
+void ModelCompiler::addFaces(std::vector<CollectedData> data)
 {
-	collected_.push_back({model, std::move(faces), pos});
+	collected_ = std::move(data);
 }
 
 std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id, std::shared_ptr<ModelManager> modelManager)

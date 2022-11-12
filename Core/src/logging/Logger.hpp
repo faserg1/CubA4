@@ -31,6 +31,7 @@ namespace CubA4::logging
 		virtual std::string getTimeString(const char *format);
 	private:
 		std::string getNextLogName();
+		std::string getLogFullName(const std::string &fileName);
 		const std::string logsPath_;
 		std::weak_ptr<ILogger> this_;
 	};

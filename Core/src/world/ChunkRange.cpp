@@ -42,6 +42,8 @@ ChunkRange::Bounds ChunkRange::getSideRect(BlockSide side) const
 	case BlockSide::Back:
 		return {BlockInChunkPos{bounds_[0].x, bounds_[0].y, bounds_[1].z}, bounds_[1]};
 	}
+	// exception
+	return {};
 }
 
 uint32_t ChunkRange::getBlockCount() const
@@ -57,6 +59,13 @@ uint32_t ChunkRange::getBlockCount() const
 		diff(bounds_[0].x, bounds_[1].x) *
 		diff(bounds_[0].y, bounds_[1].y) * 
 		diff(bounds_[0].z, bounds_[1].z);
+}
+
+uint32_t ChunkRange::getBlockIndex(const world::BlockInChunkPos &pos) const
+{
+	const auto xSize = bounds_[1].x - bounds_[0].x + 1;
+	const auto ySize = bounds_[1].y - bounds_[0].y + 1;
+	return ((pos.z - bounds_[0].z) * ySize * xSize) + ((pos.y - bounds_[0].y) * xSize) + (pos.x - bounds_[0].x);
 }
 
 CubA4::world::Layer ChunkRange::getLayer() const

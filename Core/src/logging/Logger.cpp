@@ -58,7 +58,9 @@ Logger::Logger(std::string logsPath) :
 	logsPath_(logsPath)
 {
 	const auto logName = getNextLogName();
+	const auto logNameLatest = getLogFullName("latest.log");
 	loguru::add_file(logName.c_str(), loguru::FileMode::Truncate, loguru::Verbosity_MAX);
+	loguru::add_file(logNameLatest.c_str(), loguru::FileMode::Truncate, loguru::Verbosity_MAX);
 }
 
 std::shared_ptr<ILogger> Logger::create(std::string logsPath)
@@ -158,9 +160,13 @@ std::string CubA4::logging::Logger::getTimeString(const char *format)
 
 std::string Logger::getNextLogName()
 {
+	return getLogFullName(getTimeString("log%F_%H.%M.%S.txt"));
+}
+
+std::string Logger::getLogFullName(const std::string &fileName)
+{
 	std::filesystem::path path(logsPath_);
 	if (!std::filesystem::exists(path))
 		std::filesystem::create_directories(path);
-	return (path / getTimeString("log%F_%H.%M.%S.txt")).string();
+	return (path / fileName).string();
 }
-

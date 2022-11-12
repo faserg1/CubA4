@@ -13,9 +13,16 @@ namespace CubA4::render::engine::model
 		using Model = std::shared_ptr<const CubA4::model::IRenderModelDefinition>;
 		using Faces = std::vector<unsigned short>;
 	public:
+		struct CollectedData
+		{
+			const CubA4::model::IRenderModelDefinition *model;
+			std::vector<unsigned short> faces;
+			CubA4::world::BlockInChunkPos pos;
+		};
+	public:
 		ModelCompiler() = default;
 
-		void addFaces(Model model, Faces faces, CubA4::world::BlockInChunkPos pos);
+		void addFaces(std::vector<CollectedData> data);
 		[[nodiscard]] std::shared_ptr<const RenderModel> compile(const std::string &id, std::shared_ptr<ModelManager> modelManager);
 	private:
 		std::vector<size_t> calculateOffsets(const CubA4::model::FaceIndices &indices);
@@ -34,12 +41,6 @@ namespace CubA4::render::engine::model
 			const std::vector<CubA4::model::UVWCoords> &getUVWCoords() const override { return uvws; }
 			RMaterial getMaterial(const std::string &materialId) const override { return {}; }
 		} data_;
-		struct TempData
-		{
-			Model model;
-			Faces faces;
-			CubA4::world::BlockInChunkPos pos;
-		};
-		std::vector<TempData> collected_;
+		std::vector<CollectedData> collected_;
 	};
 }
