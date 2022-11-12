@@ -21,14 +21,22 @@ SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, 
 		uvws_[i].v = data.vertices[i].v;
 		uvws_[i].w = data.vertices[i].w;
 	}
-	faces_.reserve(data.faces.size());
-	std::transform(data.faces.begin(), data.faces.end(), std::back_inserter(faces_), [](const RenderModelData::Face &face) -> Face
+	faces_.faces.resize(data.faces.size());
+	size_t indexCount = 0;
+	for (auto &face : data.faces)
 	{
-		return Face
-		{
-			.indexes = face.indexes
-		};
-	});
+		indexCount += face.indexes.size();
+	}
+	faces_.indexes.resize(indexCount);
+	size_t indexOffset = 0;
+	size_t faceOffset = 0;
+	for (auto &face : data.faces)
+	{
+		std::copy(face.indexes.begin(), face.indexes.end(), faces_.indexes.begin() + indexOffset);
+		faces_.faces[faceOffset++] = face.indexes.size();
+		indexOffset += face.indexes.size();
+	}
+
 	nonOpaque_ = data.nonOpaque;
 	hiddenFaces_ = data.hidden | ranges::to<std::unordered_map>;
 	materialToFaces_ = data.materials | ranges::to<std::unordered_map>;
@@ -50,7 +58,7 @@ std::vector<std::string> SimpleRenderModelDefinition::getUsedMaterials() const
 	return std::vector(range.begin(), range.end());
 }
 
-const std::vector<Face> &SimpleRenderModelDefinition::getFaceIndices() const
+const FaceIndices &SimpleRenderModelDefinition::getFaceIndices() const
 {
 	return faces_;
 }

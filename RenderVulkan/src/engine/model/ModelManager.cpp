@@ -34,7 +34,7 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(const CubA4::model:
 	return createModel(renderModelDef.getId(), vertices, uvws, faces);
 }
 
-std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const std::vector<Face> &faces)
+std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const FaceIndices &faces)
 {
 	if (vertices.size() != uvws.size())
 	{
@@ -123,9 +123,9 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 
 	//-------------- Index
 
-	for (const auto &face : faces)
+	for (const auto faceSize : faces.faces)
 	{
-		indexCount += (face.indexes.size() - 2) * 3; // triangle fan
+		indexCount += (faceSize - 2) * 3; // triangle fan
 	}
 
 	indicesSize = indexCount * sizeof(uint16_t);
@@ -175,9 +175,10 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 		memcpy(idxPtr, triangleIndices, sizeof(triangleIndices));
 		idxPtr += 3;
 	};
-	for (auto &face : faces)
+	size_t faceOffset = 0;
+	for (auto faceSize : faces.faces)
 	{
-		for (size_t vertexIndex = 0; vertexIndex < face.indexes.size(); vertexIndex++)
+		for (size_t vertexIndex = 0; vertexIndex < faceSize; vertexIndex++)
 		{
 			//save first triangle
 			if (vertexIndex == 3)
@@ -187,15 +188,16 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 			//record first triangle
 			if (vertexIndex < 3)
 			{
-				triangleIndices[vertexIndex] = static_cast<uint16_t>(face.indexes[vertexIndex]);
+				triangleIndices[vertexIndex] = static_cast<uint16_t>(faces.indexes[faceOffset + vertexIndex]);
 			}
 			else //record next triangles
 			{
 				triangleIndices[1] = triangleIndices[2];
-				triangleIndices[2] = static_cast<uint16_t>(face.indexes[vertexIndex]);
+				triangleIndices[2] = static_cast<uint16_t>(faces.indexes[faceOffset + vertexIndex]);
 				saveTriangle();
 			}
 		}
+		faceOffset += faceSize;
 	}
 	
 	mappedIndexMemory.reset();

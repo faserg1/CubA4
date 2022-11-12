@@ -18,16 +18,18 @@ namespace CubA4::render::engine::model
 		void addFaces(Model model, Faces faces, CubA4::world::BlockInChunkPos pos);
 		[[nodiscard]] std::shared_ptr<const RenderModel> compile(const std::string &id, std::shared_ptr<ModelManager> modelManager);
 	private:
+		std::vector<size_t> calculateOffsets(const CubA4::model::FaceIndices &indices);
+	private:
 		struct : public CubA4::model::IRenderModelDefinition
 		{
 			std::string id;
 			std::vector<CubA4::model::Vertex> vertices;
 			std::vector<CubA4::model::UVWCoords> uvws;
-			std::vector<CubA4::model::Face> faces;
+			CubA4::model::FaceIndices faces;
 
 			const std::string &getId() const { return id; }
 			std::vector<std::string> getUsedMaterials() const override { return {}; }
-			const std::vector<CubA4::model::Face> &getFaceIndices() const override { return faces; }
+			const CubA4::model::FaceIndices &getFaceIndices() const override { return faces; }
 			const std::vector<CubA4::model::Vertex> &getVertices() const override { return vertices; }
 			const std::vector<CubA4::model::UVWCoords> &getUVWCoords() const override { return uvws; }
 			RMaterial getMaterial(const std::string &materialId) const override { return {}; }

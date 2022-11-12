@@ -18,14 +18,16 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		faces_size += faces.size();
 		for (auto faceIdx : faces)
 		{
-			auto &face = indexes[faceIdx];
-			vertex_size += face.indexes.size();
+			auto faceSize = indexes.faces[faceIdx];
+			vertex_size += faceSize;
 		}
 	}
 	data_.vertices.resize(vertex_size);
 	data_.uvws.resize(vertex_size);
-	data_.faces.resize(faces_size);
+	data_.faces.indexes.resize(vertex_size);
+	data_.faces.faces.resize(faces_size);
 	size_t newFaceIdx = 0;
+	size_t newIndexIdx = 0;
 	size_t newVertexIdx = 0;
 	for (const auto &data : collected_)
 	{
@@ -35,15 +37,16 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		const auto &vertices = model->getVertices();
 		const auto &uvws = model->getUVWCoords();
 		const auto &indexes = model->getFaceIndices();
+		auto offsets = calculateOffsets(indexes);
 		for (auto faceIdx : faces)
 		{
-			const auto &face = indexes[faceIdx];
-			auto &newFace = data_.faces[newFaceIdx++];
-			newFace.indexes.resize(face.indexes.size());
-			size_t newIndexIdx = 0;
-			for (auto idx : face.indexes)
+			auto faceOffset = offsets[faceIdx];
+			auto faceSize = indexes.faces[faceIdx];
+			data_.faces.faces[newFaceIdx++] = faceSize;
+			for (size_t fIdx = faceOffset; fIdx < faceOffset + faceSize; fIdx++)
 			{
-				newFace.indexes[newIndexIdx] = static_cast<CubA4::model::Face::IndexType>(newVertexIdx);
+				data_.faces.indexes[newIndexIdx] = static_cast<CubA4::model::FaceIndices::IndexType>(newVertexIdx);
+				auto idx = indexes.indexes[fIdx];
 				auto vertex = vertices[idx];
 				auto uvw = uvws[idx];
 				vertex.x += pos.x;
@@ -58,7 +61,19 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 	}
 	
 	data_.id = id;
-	if (data_.vertices.empty() || data_.faces.empty())
+	if (data_.vertices.empty() || data_.faces.indexes.empty())
 		return {};
 	return modelManager->createModel(data_);
+}
+
+std::vector<size_t> ModelCompiler::calculateOffsets(const CubA4::model::FaceIndices &indices)
+{
+	std::vector<size_t> offsets(indices.faces.size());
+	size_t tempOffset = 0;
+	for (size_t i = 0; i < offsets.size(); i++)
+	{
+		offsets[i] = tempOffset;
+		tempOffset += indices.faces[i];
+	}
+	return std::move(offsets);
 }

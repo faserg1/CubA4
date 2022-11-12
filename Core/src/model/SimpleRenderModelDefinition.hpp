@@ -15,7 +15,7 @@ namespace CubA4::model
 
 		const std::string &getId() const override;
 		std::vector<std::string> getUsedMaterials() const override;
-		const std::vector<Face> &getFaceIndices() const override;
+		const FaceIndices &getFaceIndices() const override;
 		const std::vector<Vertex> &getVertices() const override;
 		const std::vector<UVWCoords> &getUVWCoords() const override;
 		RMaterial getMaterial(const std::string &materialId) const override;
@@ -23,7 +23,7 @@ namespace CubA4::model
 		world::BlockSides getNonOpaqueSide(const world::BlockData& data) const override;
 	private:
 		const std::string id_;
-		std::vector<Face> faces_;
+		FaceIndices faces_;
 		std::unordered_map<std::string, std::vector<uint16_t>> materialToFaces_;
 		std::vector<Vertex> vertices_;
 		std::vector<UVWCoords> uvws_;

@@ -20,9 +20,12 @@ namespace CubA4::model
 		float w;
 	};
 
-	struct Face
+	struct FaceIndices
 	{
 		using IndexType = uint16_t;
+		/// @brief all the vertex indexes, 
 		std::vector<IndexType> indexes;
+		/// @brief for each face the length of the indecies to consume
+		std::vector<size_t> faces;
 	};
 }
