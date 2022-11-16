@@ -23,6 +23,9 @@ namespace CubA4::system
 
 		std::shared_ptr<CubA4::game::IGame> getGame() const override;
 	protected:
+		void loadConfigs();
+		void saveConfigs();
+
 		void initMods();
 		void unloadMods();
 

@@ -25,8 +25,10 @@ Core::Core(int argc, const char *const argv[]) :
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
 	auto cacheProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->cachePath());
+	auto cfgProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->configPath());
 	resourceManager_->mount(CubA4::resources::ResourcesType::Mod, "data", fsProvider, "data");
 	resourceManager_->mount(CubA4::resources::ResourcesType::Cache, "cache", cacheProvider, "cache");
+	resourceManager_->mount(CubA4::resources::ResourcesType::Config, "config", cfgProvider, "config");
 }
 
 Core::~Core()

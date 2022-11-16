@@ -23,6 +23,8 @@ namespace CubA4::app
 		std::shared_ptr<const CubA4::info::IApplicationInfo> getApplicationInfo() const override;
 		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
 		const CubA4::render::IRenderInfo &getRenderInfo() const override;
+		std::pair<bool, CubA4::game::controller::BMods> getButtonState(CubA4::game::controller::Button btn) const override;
+		bool requestMouseCapture(bool enable) override;
 	private:
 		void loadRender();
 		void unloadRender();

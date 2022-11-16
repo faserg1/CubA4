@@ -15,10 +15,24 @@ class RenderVulkanDefaults:
 	def get_header_folder(cls):
 		return "src"
 
+class CubA4LoaderDefaults:
+	@classmethod
+	def get_header_folder(cls):
+		return "src"
+
+class CubA4ServerDefaults:
+	@classmethod
+	def get_header_folder(cls):
+		return "src"
+
 class Defaults:
-	_modules = {"Core": CoreDefaults}
-	_modules = {"ModVanilla": ModVanillaDefaults}
-	_modules = {"RenderVulkan": RenderVulkanDefaults}
+	_modules = {
+		"Core": CoreDefaults,
+		"ModVanilla": ModVanillaDefaults,
+		"RenderVulkan": RenderVulkanDefaults,
+		"CubA4Loader": CubA4LoaderDefaults,
+		"CubA4Server": CubA4ServerDefaults,
+	}
 
 	@classmethod
 	def get_header_folder(cls, module: str):

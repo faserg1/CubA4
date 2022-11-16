@@ -18,6 +18,7 @@ namespace CubA4::app
 		AppStartup(AppStartup &&) = delete;
 
 		void nextMainLoopIteration();
+		void keyChanged(CubA4::game::controller::Button btn, CubA4::game::controller::BMods mods, bool pressed);
 	protected:
 	private:
 		bool setup();

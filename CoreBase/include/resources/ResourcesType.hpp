@@ -7,5 +7,6 @@ namespace CubA4::resources
 		Mod, ///< Ресурсы модификаций
 		Addon, ///< Ресурсы дополнений (текстур паки?)
 		Cache, 
+		Config
 	};
 }

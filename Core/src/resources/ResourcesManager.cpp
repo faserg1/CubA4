@@ -62,7 +62,7 @@ tl::generator<const ResourcesManager::MountData &> ResourcesManager::findProvide
 {
 	const auto filterFunction = [this, path, write](const MountData &providerData) -> bool
 	{
-		const std::vector<ResourcesType> allowedToWrite {ResourcesType::Cache, };
+		const std::vector<ResourcesType> allowedToWrite {ResourcesType::Cache,ResourcesType::Config, };
 		if (write && std::find(allowedToWrite.begin(), allowedToWrite.end(), providerData.type) == allowedToWrite.end())
 		{
 			return false;

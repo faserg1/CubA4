@@ -27,6 +27,12 @@ AppStartup::~AppStartup()
 	shutdown();
 }
 
+void AppStartup::keyChanged(CubA4::game::controller::Button btn, CubA4::game::controller::BMods mods, bool pressed)
+{
+	startup_->getGame()->getController()->onButtonChanged(btn, mods, pressed);
+}
+
+
 void CubA4::app::AppStartup::nextMainLoopIteration()
 {
 	doSomeTestThings();

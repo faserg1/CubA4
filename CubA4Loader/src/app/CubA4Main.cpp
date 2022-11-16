@@ -2,6 +2,8 @@
 #include "AppInfo.hpp"
 #include "AppStartup.hpp"
 
+#include <controls/ButtonAdapter.hpp>
+
 #include <SDL.h>
 #include <stdexcept>
 #include <thread>
@@ -32,6 +34,7 @@
 
 using namespace CubA4::app;
 using namespace CubA4::logging;
+using namespace CubA4::controls;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
 	core_(CubA4::CommonFactory::createCore(argc, argv)),
@@ -137,11 +140,23 @@ void AppMain::loop(AppStartup &startup)
 			case SDL_QUIT:
 				running_ = false;
 				break;
-				//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
 			case SDL_KEYUP:
+				{
+					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
+					auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
+					startup.keyChanged(btn, mods, false);
+				}
+				//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
 				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
 					window_->toggleFullscreen();
 				break;
+			case SDL_KEYDOWN:
+				{
+					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
+					auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
+					startup.keyChanged(btn, mods, true);
+					break;
+				}
 			}
 		}
 		startup.nextMainLoopIteration();
@@ -221,3 +236,15 @@ void AppMain::destroyRender()
 	renderEngine->destroy();
 }
 
+std::pair<bool, CubA4::game::controller::BMods> AppMain::getButtonState(CubA4::game::controller::Button btn) const
+{
+	const auto *keys = SDL_GetKeyboardState(nullptr);
+	const auto mods = SDL_GetModState();
+	const auto idx = ButtonAdapter::adapt(btn);
+	return std::make_pair(idx != SDL_SCANCODE_UNKNOWN ? (bool) keys[idx] : false, ButtonAdapter::adapt(mods));
+}
+
+bool AppMain::requestMouseCapture(bool enable)
+{
+	return SDL_SetRelativeMouseMode(static_cast<SDL_bool>(enable)) == 0;
+}

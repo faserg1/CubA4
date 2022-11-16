@@ -26,6 +26,11 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilder::getRe
 	return data_.getRenderManager();
 }
 
+std::shared_ptr<CubA4::game::controller::IActions> EnvironmentBuilder::getActions() const
+{
+	return data_.getActions();
+}
+
 bool EnvironmentBuilder::registerObject(std::shared_ptr<const CubA4::object::IObject> object)
 {
 	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), object->getId());
@@ -44,3 +49,4 @@ std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std:
 	data_.getObjects().insert(std::make_pair(genId, world));
 	return world;
 }
+
