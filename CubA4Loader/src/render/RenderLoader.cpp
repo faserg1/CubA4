@@ -62,12 +62,12 @@ RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<system::IRunt
 		}*/
 		if (!library.is_loaded())
 		{
-			//todo: вывести ошибку
+			//TODO: вывести ошибку
 			continue;
 		}
 		if (!library.has(importSymbolName_))
 		{
-			//todo: вывести ошибку
+			//TODO: вывести ошибку
 			library.unload();
 			continue;
 		}

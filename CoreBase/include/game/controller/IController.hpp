@@ -13,7 +13,10 @@ namespace CubA4::game::controller
 		virtual ~IController() = default;
 
 		virtual void onButtonChanged(Button btn, BMods mods, bool pressed) = 0;
+		virtual void onPosition(int32_t x, int32_t y) = 0;
+		virtual void onMove(AxisBinding binding, int32_t x, int32_t y) = 0;
 		virtual std::pair<bool, BMods> getButtonState(Button btn) const = 0;
+		virtual bool getActionState(const std::string &action) const = 0;
 		virtual std::shared_ptr<const IActions> getActions() const = 0;
 		virtual std::shared_ptr<const IBindings> getBindings() const = 0;
 		virtual std::shared_ptr<IActions> getActions() = 0;

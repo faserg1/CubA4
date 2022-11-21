@@ -16,7 +16,7 @@ StandardValidationLayer::~StandardValidationLayer()
 std::vector<std::string> StandardValidationLayer::names() const
 {
 	std::vector<std::string> metaName = {
-		"VK_LAYER_LUNARG_standard_validation"
+		"VK_LAYER_KHRONOS_validation"
 	};
 	std::vector<std::string> oldNativeNames = {
 		"VK_LAYER_GOOGLE_threading",
@@ -39,7 +39,9 @@ std::vector<std::string> StandardValidationLayer::names() const
 		return std::move(metaName);
 	if (checkNames(oldNativeNames))
 		return std::move(oldNativeNames);
-	return std::move(nativeNames);
+	if (checkNames(nativeNames))
+		return std::move(nativeNames);
+	return {};
 }
 
 void StandardValidationLayer::init(std::shared_ptr<const Instance> instance)

@@ -10,6 +10,7 @@
 #include <engine/world/IWorldManager.hpp>
 #include <ctime>
 #include <cmath>
+#include <fmt/format.h>
 
 using namespace CubA4::app;
 
@@ -32,10 +33,17 @@ void AppStartup::keyChanged(CubA4::game::controller::Button btn, CubA4::game::co
 	startup_->getGame()->getController()->onButtonChanged(btn, mods, pressed);
 }
 
-
-void CubA4::app::AppStartup::nextMainLoopIteration()
+void AppStartup::mouseMove(int32_t x, int32_t y, bool relative)
 {
-	doSomeTestThings();
+	if (relative)
+		startup_->getGame()->getController()->onMove(CubA4::game::controller::AxisBinding::MOUSE, x, y);
+	else
+		startup_->getGame()->getController()->onPosition(x, y);
+}
+
+void CubA4::app::AppStartup::nextMainLoopIteration(double delta)
+{
+	doSomeTestThings(delta);
 }
 
 bool AppStartup::setup()
@@ -58,6 +66,22 @@ bool AppStartup::setupGame()
 {
 	auto renderEngine = renderEngine_.lock();
 	renderEngine->setGame(startup_->getGame());
+	auto rm = renderEngine->getRenderManager();
+	auto wm = rm->getWorldManager();
+	camera_ = wm->createCamera();
+	wm->setActiveCamera(camera_);
+	static auto sub2 = startup_->getGame()->getController()->getActions()->addActionCallback("mouse", [this]()
+	{
+		static auto request = false;
+		startup_->getGame()->getController()->requestMouseCapture(!request);
+		request = !request;
+	});
+	
+	// test thing
+	static auto sub = startup_->getGame()->getController()->getActions()->addActionAxisCallback("camera", [this](int64_t x, int64_t y){
+		float sensivity = 0.05f;
+		camera_->rotate(0, y * sensivity, x * sensivity);
+	});
 	return true;
 }
 
@@ -77,7 +101,6 @@ void AppStartup::run()
 	auto rm = renderEngine->getRenderManager();
 	auto wm = rm->getWorldManager();
 	wm->setFieldOfView(60);
-	//wm->setCameraPosition({-2,0,0}, 0, 10, 0);
 }
 
 void AppStartup::stop()
@@ -87,26 +110,16 @@ void AppStartup::stop()
 	renderEngine->stop();
 }
 
-void AppStartup::doSomeTestThings()
+void AppStartup::doSomeTestThings(double delta)
 {
-	auto renderEngine = renderEngine_.lock();
-	constexpr const float max = 4;
-	static float l = -max;
-	const float speed = 0.005f;
-	static bool up = true;
-	if (up)
-		l += speed;
-	else
-		l -= speed;
-	if (l > max)
-		up = false;
-	else if (l < -max)
-		up = true;
-	auto rm = renderEngine->getRenderManager();
-	auto wm = rm->getWorldManager();
-	double cl = clock();
-	//wm->setCameraRotation(0, 0, cl / CLOCKS_PER_SEC);
-	double x = sin(cl / CLOCKS_PER_SEC) * 10;
-	double z = cos(cl / CLOCKS_PER_SEC) * 10;
-	wm->setCameraPosition({ 0, 0, 0 }, static_cast<float>(x), l, static_cast<float>(z));
+	const auto speed = 0.05f;
+	const auto vel = speed * delta;
+	if (startup_->getGame()->getController()->getActionState("forward"))
+		camera_->move(0.f, 0.f, -vel);
+	if (startup_->getGame()->getController()->getActionState("back"))
+		camera_->move(0.f, 0.f, vel);
+	if (startup_->getGame()->getController()->getActionState("left"))
+		camera_->move(-vel, 0.f, 0.f);
+	if (startup_->getGame()->getController()->getActionState("right"))
+		camera_->move(vel, 0.f, 0.f);
 }

@@ -9,8 +9,8 @@ layout (location = 1) out vec3 outUVW;
 layout(binding = 0/*, row_major*/) uniform Matricies
 {
 	ivec3 viewChunkPos;
-	layout(offset = 32, row_major) mat4 view;
-	layout(offset = 96, row_major) mat4 proj;
+	layout(offset = 16, row_major) mat4 view;
+	layout(offset = 80, row_major) mat4 proj;
 } matricies;
 
 layout( push_constant ) uniform Constants

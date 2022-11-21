@@ -74,7 +74,7 @@ std::future<void> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std
 		VkImageMemoryBarrier outMemoryBarrier = {};
 		outMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		outMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+		outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // TODO: get the layout from params
 		outMemoryBarrier.image = dst;
 		outMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		outMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -101,7 +101,7 @@ std::future<void> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std
 	return queue->executor.run(std::move(flow));
 }
 
-std::future<void> MemoryHelper::updateBuffer(void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType)
+std::future<void> MemoryHelper::updateBuffer(const void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType)
 {
 	auto queue = getNextQueue();
 

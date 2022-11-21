@@ -5,6 +5,7 @@
 #include <system/IStartup.hpp>
 #include <ICore.hpp>
 #include <engine/IRenderEngine.hpp>
+#include <engine/world/ICamera.hpp>
 
 namespace CubA4::app
 {
@@ -17,8 +18,9 @@ namespace CubA4::app
 		AppStartup(const AppStartup&) = delete;
 		AppStartup(AppStartup &&) = delete;
 
-		void nextMainLoopIteration();
+		void nextMainLoopIteration(double delta);
 		void keyChanged(CubA4::game::controller::Button btn, CubA4::game::controller::BMods mods, bool pressed);
+		void mouseMove(int32_t x, int32_t y, bool relative);
 	protected:
 	private:
 		bool setup();
@@ -30,12 +32,15 @@ namespace CubA4::app
 		void run();
 		void stop();
 
-		void doSomeTestThings();
+		void doSomeTestThings(double delta);
 	private:
 		CubA4::system::IAppCallback &appCallback_;
 		std::weak_ptr<CubA4::ICore> core_;
 		std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine_;
 		std::shared_ptr<CubA4::system::IStartup> startup_;
+
+		// test
+		std::shared_ptr<CubA4::render::engine::world::ICamera> camera_;
 	};
 }
 

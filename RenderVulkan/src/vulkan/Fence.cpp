@@ -8,7 +8,7 @@ Fence::Fence(std::shared_ptr<const Device> device, VkFenceCreateFlags flags) :
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	if (vkCreateFence(device_->getDevice(), &fenceInfo, nullptr, &fence_) != VK_SUCCESS)
 	{
-		// todo: exception?
+		// TODO: exception?
 	}
 }
 

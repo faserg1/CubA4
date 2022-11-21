@@ -16,15 +16,23 @@ std::unique_ptr<CubA4::util::ISubscription> Actions::addActionCallback(const std
 	auto id = idCounter_++;
 	auto callback = Callback{.id = id, .callbackOnce = callbackOnce};
 	addActionCallback(action, callback);
-	return std::move(std::make_unique<Subscription>(this, action, id));
+	return std::move(std::make_unique<Subscription>(shared_from_this(), action, id));
 }
 
-std::unique_ptr<CubA4::util::ISubscription> Actions::addActionCallback(const std::string &action, std::function<void(int32_t)> callbackAxis)
+std::unique_ptr<CubA4::util::ISubscription> Actions::addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis)
 {
 	auto id = idCounter_++;
 	auto callback = Callback{.id = id, .callbackAxis = callbackAxis};
 	addActionCallback(action, callback);
-	return std::move(std::make_unique<Subscription>(this, action, id));
+	return std::move(std::make_unique<Subscription>(shared_from_this(), action, id));
+}
+
+std::unique_ptr<CubA4::util::ISubscription> Actions::addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition)
+{
+	auto id = idCounter_++;
+	auto callback = Callback{.id = id, .callbackAxis = callbackPosition};
+	addActionCallback(action, callback);
+	return std::move(std::make_unique<Subscription>(shared_from_this(), action, id));
 }
 
 void Actions::addActionCallback(const std::string &action, Callback callback)
@@ -43,7 +51,7 @@ const std::unordered_map<std::string, std::vector<Actions::Callback>> &Actions::
 	return callbacks_;
 }
 
-Actions::Subscription::Subscription(Actions *actions, const std::string &action, uint64_t id) :
+Actions::Subscription::Subscription(std::shared_ptr<Actions> actions, const std::string &action, uint64_t id) :
 	actions_(actions), action_(action), id_(id)
 {
 
@@ -56,8 +64,11 @@ Actions::Subscription::~Subscription()
 
 void Actions::Subscription::unsubscribe()
 {
-	const auto actionIt = actions_->callbacks_.find(action_);
-	if (actionIt == actions_->callbacks_.end())
+	const auto lock = actions_.lock();
+	if (!lock)
+		return;
+	const auto actionIt = lock->callbacks_.find(action_);
+	if (actionIt == lock->callbacks_.end())
 		return;
 	auto it = std::find_if(actionIt->second.begin(), actionIt->second.end(), [id = this->id_](Actions::Callback &c)
 	{
@@ -77,11 +88,20 @@ void Actions::onAction(const std::string &action)
 		callback();
 }
 
-void Actions::onAxisAction(const std::string &action, int32_t axis)
+void Actions::onAxisAction(const std::string &action, int32_t axisX, int32_t axisY)
 {
 	const auto actionIt = callbacks_.find(action);
 	if (actionIt == callbacks_.end())
 		return;
 	for (auto &callback : actionIt->second)
-		callback(axis);
+		callback(axisX, axisY);
+}
+
+void Actions::onPositionAction(const std::string &action, int32_t axisX, int32_t axisY)
+{
+	const auto actionIt = callbacks_.find(action);
+	if (actionIt == callbacks_.end())
+		return;
+	for (auto &callback : actionIt->second)
+		callback(axisX, axisY);
 }

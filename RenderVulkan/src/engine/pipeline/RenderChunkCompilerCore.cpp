@@ -104,7 +104,6 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 {
 	RenderModels models;
 	auto cpos = chunk->getChunkPos();
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiling chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
 	auto hiddenSides = compileHiddenSides(chunk);
 	struct Def
 	{
@@ -113,7 +112,6 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 	};
 	using Key = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
 	std::unordered_map<Key, Def> materialsToDefMap;
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Searching for materials in chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
 
 	for (auto block : chunk->getUsedBlocks())
 	{
@@ -137,7 +135,6 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 			}
 		}
 	}
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiling chunk models in chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
 
 	for (const auto &pair : materialsToDefMap)
 	{
@@ -147,7 +144,6 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 		auto material = std::dynamic_pointer_cast<const CubA4::render::engine::material::Material>(pair.first);
 		models.insert(std::make_pair(material, compiledModel));
 	}
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Compiled chunk {}, {}, {}", cpos.x, cpos.y, cpos.z));
 
 	return std::move(models);
 }
@@ -155,7 +151,8 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides)
 {
 	auto cpos = chunk->getChunkPos();
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models collecting {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	auto start = clock();
+	auto cl = clock();
 	model::ModelCompiler compiler;
 	std::vector<model::ModelCompiler::CollectedData> collected;
 	size_t toReserve = 0;
@@ -168,7 +165,9 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 		}
 	}
 	collected.resize(toReserve);
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models collecting 2 {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models preparing {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
+	cl = clock();
 	size_t offset = 0;
 	for (auto block : blocks)
 	{
@@ -192,9 +191,11 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 		}
 	}
 	compiler.addFaces(std::move(collected));
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model collecting {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
+	cl = clock();
 	auto model = compiler.compile(material, modelManager_);
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building done {}, {}, {}", cpos.x, cpos.y, cpos.z));
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
+	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building total {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - start));
 	return model;
 }
 

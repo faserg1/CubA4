@@ -131,6 +131,7 @@ void AppMain::shutdown()
 void AppMain::loop(AppStartup &startup)
 {
 	SDL_Event event;
+	double time = clock();
 	while (running_)
 	{
 		if (SDL_PollEvent(&event))
@@ -140,6 +141,12 @@ void AppMain::loop(AppStartup &startup)
 			case SDL_QUIT:
 				running_ = false;
 				break;
+			case SDL_MOUSEMOTION:
+				{
+					const auto rel = SDL_GetRelativeMouseMode();
+					startup.mouseMove(rel ? event.motion.xrel : event.motion.x, rel ? event.motion.yrel : event.motion.y, rel);
+					break;
+				}
 			case SDL_KEYUP:
 				{
 					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
@@ -159,7 +166,9 @@ void AppMain::loop(AppStartup &startup)
 				}
 			}
 		}
-		startup.nextMainLoopIteration();
+		double now = clock();
+		startup.nextMainLoopIteration(now - time);
+		time = now;
 		//std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 }

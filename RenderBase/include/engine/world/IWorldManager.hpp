@@ -1,34 +1,23 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <world/IChunk.hpp>
+#include <engine/world/ICamera.hpp>
 
-namespace CubA4
+namespace CubA4::render::engine::world
 {
-	namespace render
+	class IWorldManager
 	{
-		namespace engine
-		{
-			namespace world
-			{
-				class IWorldManager
-				{
-				public:
-					virtual void setCameraPosition(CubA4::world::ChunkPos globalPos, float x, float y, float z) = 0;
-					/**
-					\param roll Вращение вокруг оси x
-					\param pitch Вращение вокруг оси y
-					\param yaw Вращение вокруг оси z
-					**/
-					virtual void setCameraRotation(float roll, float pitch, float yaw) = 0;
-					virtual void setFieldOfView(float degrees) = 0;
-				protected:
-					explicit IWorldManager() = default;
-					virtual ~IWorldManager() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual std::shared_ptr<ICamera> createCamera() = 0;
+		virtual void setActiveCamera(std::shared_ptr<ICamera> camera) = 0;
+		virtual void setFieldOfView(float degrees) = 0;
+	protected:
+		explicit IWorldManager() = default;
+		virtual ~IWorldManager() = default;
+	private:
+	};
 }
+
 

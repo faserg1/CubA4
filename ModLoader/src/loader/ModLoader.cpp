@@ -149,7 +149,8 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 						});
 						for (auto mod : brokenMods)
 						{
-							std::remove(depsCheckedMods.begin(), depsCheckedMods.end(), mod);
+							auto it = std::remove(depsCheckedMods.begin(), depsCheckedMods.end(), mod);
+							depsCheckedMods.erase(it, depsCheckedMods.end());
 						}
 					}
 				}

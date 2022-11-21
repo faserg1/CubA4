@@ -144,6 +144,7 @@ void VulkanRenderEngine::loop()
 		auto imgIndex = presetation_->acquire();
 		if (imgIndex == UINT32_MAX)
 			continue;
+		renderManager_->getWorldManager()->onFrameUpdate();
 		render_->record(imgIndex);
 		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
 

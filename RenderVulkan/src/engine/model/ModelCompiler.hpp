@@ -15,9 +15,15 @@ namespace CubA4::render::engine::model
 	public:
 		struct CollectedData
 		{
+			friend ModelCompiler;
 			const CubA4::model::IRenderModelDefinition *model;
 			std::vector<unsigned short> faces;
 			CubA4::world::BlockInChunkPos pos;
+		private:
+			// internal
+			std::vector<size_t> faceOffsets_;
+			size_t vertexOffset_ = 0;
+			size_t faceOffset_ = 0;
 		};
 	public:
 		ModelCompiler() = default;

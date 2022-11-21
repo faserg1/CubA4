@@ -32,10 +32,16 @@ namespace CubA4::game::controller
 		const std::vector<std::string> *getKeyAction(Button btn, BMods mods) const override;
 		const std::vector<std::string> *getAxisAction(AxisBinding axis) const override;
 
+		bool forEachKeyAction(const std::string &action, std::function<bool(Button, BMods)> callback) const override;
+
 		void load(std::shared_ptr<const CubA4::resources::IResource> resource) override;
 		void save(std::shared_ptr<CubA4::resources::IResource> resource) const override;
 	private:
+		void addKeyInBackwardsMap(const std::string &action, Button btn, BMods mods);
+		void removeKeyInBackwardsMap(const std::string &action, Button btn, BMods mods);
+	private:
 		std::unordered_map<std::pair<Button, BMods>, std::vector<std::string>> keyMap_;
+		std::unordered_multimap<std::string, std::pair<Button, BMods>> backKeyMap_;
 		std::unordered_map<uint32_t, std::vector<std::string>> axisMap_;
 	};
 }

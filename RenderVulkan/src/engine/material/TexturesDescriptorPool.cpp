@@ -14,7 +14,7 @@ TexturesDescriptorPool::~TexturesDescriptorPool()
 
 uint32_t TexturesDescriptorPool::getMaxSetCount() const
 {
-	// todo: adjust?
+	// TODO: adjust?
 	return 1000;
 }
 
@@ -22,7 +22,7 @@ std::vector<VkDescriptorPoolSize> TexturesDescriptorPool::getPoolSizes() const
 {
 	std::vector<VkDescriptorPoolSize> sizes;
 	VkDescriptorPoolSize textures;
-	textures.descriptorCount = 1000; // todo: adjust?
+	textures.descriptorCount = 1000; // TODO: adjust?
 	textures.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 
 	sizes.push_back(textures);

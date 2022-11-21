@@ -33,7 +33,7 @@ use_library(CubA4Loader Network)
 #thrid-party include directories
 target_include_directories(CubA4Loader PRIVATE ${STEAM_AUDIO_INCLUDE_DIR})
 #thridparty link libraries
-target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main)
+target_link_libraries(CubA4Loader PRIVATE Boost::boost Boost::filesystem SDL2::SDL2 SDL2::SDL2main fmt::fmt)
 
 #system libraries
 use_system_loader_library(CubA4Loader)

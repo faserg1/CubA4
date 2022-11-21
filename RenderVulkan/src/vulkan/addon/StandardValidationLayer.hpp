@@ -1,33 +1,22 @@
-#ifndef RENDERVULKAN_STANDARTVALIDATIONLAYER_HPP
-#define RENDERVULKAN_STANDARTVALIDATIONLAYER_HPP
+#pragma once
 
 #include "InstanceLayer.hpp"
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	class StandardValidationLayer :
+		public InstanceLayer
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				class StandardValidationLayer :
-					public InstanceLayer
-				{
-				public:
-					explicit StandardValidationLayer();
-					~StandardValidationLayer();
+	public:
+		explicit StandardValidationLayer();
+		~StandardValidationLayer();
 
-					std::vector<std::string> names() const override;
-					void init(std::shared_ptr<const Instance> instance) override;
-					void destroy(std::shared_ptr<const Instance> instance) override;
-					void added(InstanceBuilder &builder) override;
-				protected:
-				private:
-				};
-			}
-		}
-	}
+		std::vector<std::string> names() const override;
+		void init(std::shared_ptr<const Instance> instance) override;
+		void destroy(std::shared_ptr<const Instance> instance) override;
+		void added(InstanceBuilder &builder) override;
+	protected:
+	private:
+	};
 }
 
-#endif // RENDERVULKAN_STANDARTVALIDATIONLAYER_HPP

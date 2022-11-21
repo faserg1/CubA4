@@ -13,6 +13,7 @@
     "boost-dll",
     "bullet3",
     "cpr",
+    "entt",
     "fmt",
     "glm",
     "glslang",

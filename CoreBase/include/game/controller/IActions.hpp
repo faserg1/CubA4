@@ -12,10 +12,11 @@ namespace CubA4::game::controller
 	public:
 		virtual ~IActions() = default;
 
-		// todo: ask for mod info?
+		// TODO: ask for mod info?
 
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void()> callbackOnce) = 0;
-		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void(int32_t)> callbackAxis) = 0;
+		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
+		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
 	protected:
 		explicit IActions() = default;
 	};

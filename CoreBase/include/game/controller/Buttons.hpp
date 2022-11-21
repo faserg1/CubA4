@@ -7,8 +7,7 @@ namespace CubA4::game::controller
 {
 	enum class AxisBinding : uint32_t
 	{
-		MOUSE_X = 1,
-		MOUSE_Y = 2
+		MOUSE = 1,
 	};
 
 	enum class Button : uint32_t

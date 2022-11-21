@@ -53,7 +53,6 @@ void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> block
 				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[0], { 0, 0, 0 }, { 1, 1, 1 }));
 				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 1, 2, 1 }, { 4, 4, 4 }));
 				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));
-				break;
 			}
 		}
 	}

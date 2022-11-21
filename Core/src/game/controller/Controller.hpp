@@ -17,7 +17,11 @@ namespace CubA4::game::controller
 		~Controller();
 
 		void onButtonChanged(Button btn, BMods mods, bool pressed) override;
+		void onPosition(int32_t x, int32_t y) override;
+		void onMove(AxisBinding binding, int32_t x, int32_t y) override;
+		
 		std::pair<bool, BMods> getButtonState(Button btn) const override;
+		bool getActionState(const std::string &action) const override;
 		std::shared_ptr<const IActions> getActions() const override;
 		std::shared_ptr<const IBindings> getBindings() const override;
 		std::shared_ptr<IActions> getActions() override;

@@ -76,7 +76,7 @@ void Render::record(uint32_t imgIndex)
 	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
 	VkClearValue depthAttachmentsClearValue = {};
-	depthAttachmentsClearValue.depthStencil.depth = FLT_MAX;
+	depthAttachmentsClearValue.depthStencil.depth = 1.f;
 	
 
 	std::vector<VkClearValue> clearValues = 

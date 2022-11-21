@@ -1,5 +1,8 @@
 #pragma once
 
+#include <utility>
+#include <cstdint>
+
 struct SDL_Window;
 
 namespace CubA4

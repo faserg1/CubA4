@@ -37,7 +37,8 @@ void PipelineBuilder::useShader(std::shared_ptr<const IShader> shader)
 	{
 		return shader->getType() == oldShader->getType();
 	};
-	std::remove_if(shaders_.begin(), shaders_.end(), removePred);
+	auto it = std::remove_if(shaders_.begin(), shaders_.end(), removePred);
+	//shaders_.erase(it, shaders_.end());
 	shaders_.push_back(shader);
 }
 

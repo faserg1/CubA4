@@ -6,6 +6,8 @@
 #include "../memory/MemoryManager.hpp"
 #include "../memory/MemoryHelper.hpp"
 
+#include <engine/world/Camera.hpp>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -33,29 +35,46 @@ WorldManager::~WorldManager()
 {
 }
 
-void WorldManager::setCameraPosition(CubA4::world::ChunkPos globalPos, float x, float y, float z)
+std::shared_ptr<ICamera> WorldManager::createCamera()
 {
-	worldData_.viewGlobalPos = globalPos;
-	worldData_.viewX = x;
-	worldData_.viewY = y;
-	worldData_.viewZ = z;
-	updateViewMatrix();
+	return std::make_shared<Camera>();
 }
 
-void WorldManager::setCameraRotation(float roll, float pitch, float yaw)
+void WorldManager::setActiveCamera(std::shared_ptr<ICamera> camera)
 {
-	worldData_.viewRoll = roll;
-	worldData_.viewPitch = pitch;
-	worldData_.viewYaw = yaw;
-	updateViewMatrix();
+	auto activeCamera = activeCamera_.lock();
+	if (activeCamera)
+		activeCamera->setActive(false);
+	if (camera)
+	{
+		auto rcamera = std::dynamic_pointer_cast<Camera>(camera);
+		rcamera->setActive(true);
+		activeCamera_ = rcamera;
+	}
+	else
+		activeCamera_.reset();
 }
 
 void WorldManager::setFieldOfView(float degrees)
 {
 	worldData_.projectionFov = static_cast<float>(degrees * glm::pi<float>() / 360);
+	// TODO: right info
 	worldData_.projectionWidth = 1024;
 	worldData_.projectionHeight = 720;
 	updateProjectionMatrix();
+}
+
+void WorldManager::onFrameUpdate()
+{
+	auto activeCamera = activeCamera_.lock();
+	if (!activeCamera)
+		return;
+	const auto &matrix = activeCamera->getViewMatrix();
+	const auto &chunkPos = activeCamera->getChunkPos();
+	memoryHelper_->updateBuffer(&chunkPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform).wait();
+	VkDeviceSize matrixSize = sizeof(float) * 16;
+	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
+	memoryHelper_->updateBuffer(glm::value_ptr(matrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
 }
 
 sVkDescriptorSet WorldManager::getWorldDescriptorSet() const
@@ -135,24 +154,9 @@ void WorldManager::writeSets()
 	vkUpdateDescriptorSets(device_->getDevice(), 1, &writeSet, 0, nullptr);
 }
 
-void WorldManager::updateViewMatrix()
-{
-	memoryHelper_->updateBuffer(&worldData_.viewGlobalPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform).wait();
-	glm::mat4 viewMatrix;
-	VkDeviceSize matrixSize = sizeof(float) * 16;
-
-	glm::vec3 up { 0, 1, 0};
-	viewMatrix = glm::lookAtRH({ worldData_.viewX, worldData_.viewY, worldData_.viewZ }, {0, 0, 0}, up);
-
-	float vMatrix[4][4];
-	memcpy(vMatrix, glm::value_ptr(viewMatrix), sizeof(float) * 16);
-	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
-	memoryHelper_->updateBuffer(glm::value_ptr(viewMatrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
-}
-
 void WorldManager::updateProjectionMatrix()
 {
-	//TODO: [OOKAMI] Set normal aspect ratio
+	// TODO: [OOKAMI] Set normal aspect ratio
 	glm::mat4 projection = glm::perspectiveFovRH(worldData_.projectionFov, worldData_.projectionWidth, worldData_.projectionHeight, 0.01f, 16.f * 32.f);
 
 	VkDeviceSize matrixSize = sizeof(float) * 16;

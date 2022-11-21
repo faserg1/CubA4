@@ -12,6 +12,7 @@ void Bindings::addKeyBinding(const std::string &action, Button btn, BMods mods)
 		it->second.push_back(action);
 	else
 		keyMap_.insert(std::make_pair(std::make_pair(btn, mods), std::vector{action}));
+	addKeyInBackwardsMap(action, btn, mods);
 }
 
 void Bindings::addAxisBinding(const std::string &action, AxisBinding axis)
@@ -29,6 +30,7 @@ void Bindings::removeKeyBinding(const std::string &action, Button btn, BMods mod
 		auto toRemove = std::remove(it->second.begin(), it->second.end(), action);
 		it->second.erase(toRemove, it->second.end());
 	}
+	removeKeyInBackwardsMap(action, btn, mods);
 }
 
 void Bindings::removeAxisBinding(const std::string &action, AxisBinding axis)
@@ -54,6 +56,18 @@ const std::vector<std::string> *Bindings::getAxisAction(AxisBinding axis) const
 	return nullptr;
 }
 
+bool Bindings::forEachKeyAction(const std::string &action, std::function<bool(Button, BMods)> callback) const
+{
+	const auto actionKeys = backKeyMap_.equal_range(action);
+	for (auto it = actionKeys.first; it != actionKeys.second; it++)
+	{
+		auto [btn, bmods] = it->second;
+		if (callback(btn, bmods))
+			return true;
+	}
+	return false;
+}
+
 void Bindings::load(std::shared_ptr<const CubA4::resources::IResource> resource)
 {
 	auto data = resource->data();
@@ -64,7 +78,14 @@ void Bindings::load(std::shared_ptr<const CubA4::resources::IResource> resource)
 		decltype(keyMap_) tempMap;
 		j.at("keys").get_to(tempMap);
 		for (auto binding : tempMap)
+		{
 			keyMap_.insert_or_assign(binding.first, binding.second);
+			for (auto action : binding.second)
+			{
+				auto [btn, mods] = binding.first;
+				addKeyInBackwardsMap(action, btn, mods);
+			}
+		}
 	}
 	if (j.contains("axis"))
 	{
@@ -83,4 +104,16 @@ void Bindings::save(std::shared_ptr<CubA4::resources::IResource> resource) const
 	};
 	auto s = j.dump(1, '\t', true);
 	resource->save(s.data(), s.size());
+}
+
+
+void Bindings::addKeyInBackwardsMap(const std::string &action, Button btn, BMods mods)
+{
+	// TODO: Cheack of same exists
+	backKeyMap_.insert(std::make_pair(action, std::make_pair(btn, mods)));
+}
+
+void Bindings::removeKeyInBackwardsMap(const std::string &action, Button btn, BMods mods)
+{
+	// TODO:
 }

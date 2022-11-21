@@ -25,9 +25,31 @@ void Controller::onButtonChanged(Button btn, BMods mods, bool pressed)
 		actions_->onAction(action);
 }
 
+void Controller::onPosition(int32_t x, int32_t y)
+{
+	// TODO: 
+}
+
+void Controller::onMove(AxisBinding binding, int32_t x, int32_t y)
+{
+	auto actions = bindings_->getAxisAction(binding);
+	if (!actions)
+		return;
+	for (const auto &action : *actions)
+		actions_->onAxisAction(action, x, y);
+}
+
 std::pair<bool, BMods> Controller::getButtonState(Button btn) const
 {
 	return appCallback_.getButtonState(btn);
+}
+
+bool Controller::getActionState(const std::string &action) const
+{
+	return bindings_->forEachKeyAction(action, [this](auto btn, auto bmods) -> bool
+	{
+		return getButtonState(btn).first;
+	});
 }
 
 std::shared_ptr<const IActions> Controller::getActions() const
