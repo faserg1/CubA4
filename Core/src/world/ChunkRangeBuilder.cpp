@@ -1,12 +1,17 @@
 #include "./ChunkRangeBuilder.hpp"
 #include "./ChunkRange.hpp"
 #include <algorithm>
+#include <iterator>
 using namespace CubA4::world;
 
-ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(scIChunkRanges ranges)
+ChunkRangeBuilder::scIChunkRanges ChunkRangeBuilder::rebuildChunkRanges(scIChunkRanges ranges)
 {
-	sChunkRanges rebuildedRanges;
-	constexpr std::pair<BlockSide, BlockSide> empty{};
+	scIChunkRanges rebuildedRanges;
+	constexpr const std::pair<BlockSide, BlockSide> empty{};
+	std::sort(ranges.begin(), ranges.end(), [](const scIChunkRange& range1, const scIChunkRange& range2) -> bool
+	{
+		return range1->getBlockCount() > range2->getBlockCount();
+	});
 	while (!ranges.empty())
 	{
 		struct AdjacentData
@@ -30,14 +35,42 @@ ChunkRangeBuilder::sChunkRanges ChunkRangeBuilder::rebuildChunkRanges(scIChunkRa
 		{
 			ranges.erase(it);
 		}
-		
+		if (adjacents.empty())
+		{
+			rebuildedRanges.push_back(range);
+			continue;
+		}
+		std::sort(adjacents.begin(), adjacents.end(), [](const AdjacentData& data1, const AdjacentData& data2) -> bool
+		{
+			return data1.adjacent->getBlockCount() < data2.adjacent->getBlockCount();
+		});
+		const auto lastIdx = adjacents.size() - 1;
+		auto bestMirrorType = std::make_pair(adjacents[lastIdx].type.second, adjacents[lastIdx].type.first);
+		std::vector<BIC> bestBounds;
+		const auto layer = adjacents.back().adjacent->getLayer();
+		const auto block = adjacents.back().adjacent->getBlock();
+		std::copy(adjacents.back().adjacent->getBounds().begin(), adjacents.back().adjacent->getBounds().end(), std::back_inserter(bestBounds));
+		adjacents.pop_back();
+		auto bestSecondAdj = std::find_if(adjacents.begin(), adjacents.end(), [&bestMirrorType](const AdjacentData& data) -> bool
+		{
+			return data.type == bestMirrorType;
+		});
+		if (bestSecondAdj != adjacents.end())
+		{
+			std::copy(bestSecondAdj->adjacent->getBounds().begin(), bestSecondAdj->adjacent->getBounds().end(), std::back_inserter(bestBounds));
+			adjacents.erase(bestSecondAdj);
+		}
+		for (auto toReturn  : adjacents)
+			ranges.push_back(toReturn.adjacent);
+		auto newBounds = minMaxBounds(bestBounds);
+		rebuildedRanges.push_back(buildRange(block, newBounds[0], newBounds[1], layer));
 	}
 	return rebuildedRanges;
 }
 
-ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end)
+ChunkRangeBuilder::sChunkRange ChunkRangeBuilder::buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end, CubA4::world::Layer layer)
 {
-	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }));
+	return std::make_shared<ChunkRange>(block, minMaxBounds({ start, end }), layer);
 }
 
 std::pair<BlockSide, BlockSide> ChunkRangeBuilder::isSameAdjacent(scIChunkRange first, scIChunkRange second)
@@ -76,7 +109,7 @@ bool ChunkRangeBuilder::isSideAdjacent(const IChunkRange::Bounds &s1, const IChu
 	return p1 == p2 && p1 >= 3 && p1 != all;
 }
 
-std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkRangeBuilder::minMaxBounds(const std::array<BlockInChunkPos, BoundsSize> &positions)
+std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkRangeBuilder::minMaxBounds(const std::vector<BlockInChunkPos> &positions)
 {
 	static_assert(MinMaxBoundsSize == 2, "Количество точек для минимальной/максимальной границы должно равнятся двум.");
 	std::array<BlockInChunkPos, MinMaxBoundsSize> bounds;
@@ -85,7 +118,7 @@ std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkRangeBuilder::minMaxBounds(co
 	return std::move(bounds);
 }
 
-BlockInChunkPos ChunkRangeBuilder::minBound(const std::array<BlockInChunkPos, BoundsSize> &positions)
+BlockInChunkPos ChunkRangeBuilder::minBound(const std::vector<BlockInChunkPos> &positions)
 {
 	BlockInChunkPos bound;
 	auto find_min = [&positions, &bound](decltype(BlockInChunkPos::x) BlockInChunkPos::*coord)
@@ -98,7 +131,7 @@ BlockInChunkPos ChunkRangeBuilder::minBound(const std::array<BlockInChunkPos, Bo
 	return bound;
 }
 
-BlockInChunkPos ChunkRangeBuilder::maxBound(const std::array<BlockInChunkPos, BoundsSize> &positions)
+BlockInChunkPos ChunkRangeBuilder::maxBound(const std::vector<BlockInChunkPos> &positions)
 {
 	BlockInChunkPos bound;
 	auto find_max = [&positions, &bound](decltype(BlockInChunkPos::x) BlockInChunkPos::*coord)

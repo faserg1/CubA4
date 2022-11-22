@@ -1,12 +1,10 @@
 #pragma once
 
-#include <memory>
 #include <array>
 #include <cstdint>
-
+#include <object/IBlock.hpp>
 #include <world/Position.hpp>
 #include <world/Sides.hpp>
-#include <object/IBlock.hpp>
 
 namespace CubA4::world
 {
@@ -21,17 +19,20 @@ namespace CubA4::world
 	public:
 		/// Возвращает блок, который заполняет этот диапазон
 		virtual std::shared_ptr<const object::IBlock> getBlock() const = 0;
+		/// Возвращает количество заполняемых блоков в диапазоне
+		virtual uint32_t getBlockCount() const = 0;
+		/// Получает слой, на котором расположены блоки
+		virtual CubA4::world::Layer getLayer() const = 0;
+
 		/* \brief Получает границы диапазона блоков в чанке
 			* \return Возвращает координаты диапазона чанка
 			* \see BoundsSize
 		*/
 		virtual const Bounds &getBounds() const = 0;
 		virtual Bounds getSideRect(BlockSide side) const = 0;
-		/// Возвращает количество заполняемых блоков в диапазоне
-		virtual uint32_t getBlockCount() const = 0;
+		
 		virtual uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const = 0; 
-		/// Получает слой, на котором расположены блоки
-		virtual CubA4::world::Layer getLayer() const = 0;
+		
 		virtual Iterator begin() const = 0;
 		virtual Iterator end() const = 0;
 	protected:

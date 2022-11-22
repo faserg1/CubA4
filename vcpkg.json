@@ -30,6 +30,7 @@
     },
     "nlohmann-json",
     "openssl",
+    "openal-soft",
     "vulkan",
     "spirv-tools",
     {

@@ -27,15 +27,15 @@ namespace CubA4::world
 		ChunkRangeBuilder() = delete;
 		~ChunkRangeBuilder() = delete;
 
-		static sChunkRanges rebuildChunkRanges(scIChunkRanges ranges);
-		static sChunkRange buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end);
+		static scIChunkRanges rebuildChunkRanges(scIChunkRanges ranges);
+		static sChunkRange buildRange(std::shared_ptr<const CubA4::object::IBlock> block, const BIC &start, const BIC &end, CubA4::world::Layer layer = 0);
 	protected:
 	private:
 		static std::pair<BlockSide, BlockSide> isSameAdjacent(scIChunkRange first, scIChunkRange second);
 		static bool isSideAdjacent(const IChunkRange::Bounds &s1, const IChunkRange::Bounds &s2);
-		static std::array<BIC, MinMaxBoundsSize> minMaxBounds(const std::array<BIC, CubA4::world::BoundsSize> &positions);
-		static BIC minBound(const std::array<BIC, CubA4::world::BoundsSize> &positions);
-		static BIC maxBound(const std::array<BIC, CubA4::world::BoundsSize> &positions);
+		static std::array<BIC, MinMaxBoundsSize> minMaxBounds(const std::vector<BIC> &positions);
+		static BIC minBound(const std::vector<BIC> &positions);
+		static BIC maxBound(const std::vector<BIC> &positions);
 		static std::array<BIC, 8> points(const BIC &min, const BIC &max);
 	};
 }
