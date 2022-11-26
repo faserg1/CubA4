@@ -1,13 +1,14 @@
 #include "Chunk.hpp"
-#include "ChunkRange.hpp"
 #include <object/IBlock.hpp>
 #include <algorithm>
 #include <execution>
+#include <range/v3/view/map.hpp>
+#include <range/v3/range/conversion.hpp>
 using namespace CubA4::world;
 using namespace CubA4::object;
 
 Chunk::Chunk(const ChunkPos &chunkPos) :
-	chunkPos_(chunkPos), globalLock_(false)
+	chunkPos_(chunkPos)
 {
 	
 }
@@ -24,23 +25,7 @@ const ChunkPos &Chunk::getChunkPos() const
 
 std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
 {
-	decltype(chunkRanges_) rangesCopy;
-	{
-		Locker locker(globalLock_);
-		rangesCopy = chunkRanges_;
-	}
-	std::vector<std::shared_ptr<const IBlock>> usedBlocks;
-	for (std::shared_ptr<ChunkRange> range : rangesCopy)
-	{
-		const auto finded = std::find_if(usedBlocks.begin(), usedBlocks.end(), [range](std::shared_ptr<const IBlock> ptr) -> bool
-		{
-			return ptr == range->getBlock();
-		});
-		if (finded != usedBlocks.end())
-			continue;
-		usedBlocks.push_back(range->getBlock());
-	}
-	return std::move(usedBlocks);
+	return usedBlocks | ranges::views::keys | ranges::to<std::vector>;
 }
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers() const
@@ -91,43 +76,11 @@ std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContain
 	return std::move(containers);
 }
 
-std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges() const
-{
-	std::vector<std::shared_ptr<const IChunkRange>> rangesCopy;
-	{
-		Locker locker(globalLock_);
-		rangesCopy.resize(chunkRanges_.size());
-		std::copy(chunkRanges_.begin(), chunkRanges_.end(), rangesCopy.begin());
-	}
-	return std::move(rangesCopy);
-}
-
-std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges(const std::shared_ptr<const IBlock> usedBlock) const
-{
-	decltype(chunkRanges_) rangesCopy;
-	{
-		Locker locker(globalLock_);
-		rangesCopy = chunkRanges_;
-	}
-	std::vector<std::shared_ptr<const IChunkRange>> rangesUsed;
-	for (std::shared_ptr<ChunkRange> range : rangesCopy)
-	{
-		if (range->getBlock() != usedBlock)
-			continue;
-		rangesUsed.push_back(range);
-	}
-	return std::move(rangesUsed);
-}
-
 std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos) const
 {
 	std::vector<BlockAt> blocks;
-	decltype(chunkRanges_) rangesCopy;
-	{
-		Locker locker(globalLock_);
-		rangesCopy = chunkRanges_;
-	}
-	for (auto range : rangesCopy)
+	// todo: other containers
+	for (auto range : chunkBRanges_)
 	{
 		const auto &bounds = range->getBounds();
 		if (isInBounds(bounds[0], bounds[1], pos))
@@ -143,12 +96,8 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const
 {
 	std::vector<BlockAt> blocks;
-	decltype(chunkRanges_) rangesCopy;
-	{
-		Locker locker(globalLock_);
-		rangesCopy = chunkRanges_;
-	}
-	for (auto range : rangesCopy)
+	// todo: other containers
+	for (auto range : chunkBRanges_)
 	{
 		if (range->getLayer() != layer)
 			continue;
@@ -166,33 +115,33 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 	return {};
 }
 
-void Chunk::addBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos at)
+void Chunk::addRange(std::shared_ptr<ChunkBRange> container)
 {
-
+	chunkBRanges_.push_back(container);
+	onContainerAdded(container);
 }
 
-void Chunk::fillWithBlock(std::shared_ptr<const object::IBlock>, world::BlockInChunkPos start, world::BlockInChunkPos end)
+void Chunk::onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container)
 {
-
+	const auto block = container->getBlock();
+	auto it = usedBlocks.find(block);
+	if (it == usedBlocks.end())
+		usedBlocks.insert(std::make_pair(block, 1u));
+	else
+		it->second++;
 }
 
-
-void Chunk::addChunkRange(std::shared_ptr<ChunkRange> chunkRange)
+void Chunk::onContainerRemoved(std::shared_ptr<const IChunkBBaseContainer> container)
 {
-	Locker locker(globalLock_);
-	chunkRanges_.push_back(chunkRange);
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-Chunk::Locker::Locker(std::atomic_bool &lock) :
-	lock_(lock)
-{
-	while (lock_);
-	lock_ = true;
-}
-
-Chunk::Locker::~Locker()
-{
-	lock_ = false;
+	const auto block = container->getBlock();
+	auto it = usedBlocks.find(block);
+	if (it == usedBlocks.end() || !it->second)
+	{
+		// assert!
+		return;
+	}
+	
+	it->second--;
+	if (!it->second)
+		usedBlocks.erase(it);
 }

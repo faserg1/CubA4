@@ -5,7 +5,7 @@
 #include <algorithm>
 
 // test
-#include "ChunkRangeBuilder.hpp"
+#include <world/ChunkAssembler.hpp>
 
 using namespace CubA4::world;
 using namespace CubA4::world;
@@ -50,9 +50,9 @@ void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> block
 			{
 				auto chunk0 = findChunk({ x, y, z });
 				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[0], { 0, 0, 0 }, { 1, 1, 1 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 1, 2, 1 }, { 4, 4, 4 }));
-				chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));
+				chunk0->addRange(ChunkAssembler::buildRange(blocks[0], { 0, 0, 0 }, { 1, 1, 1 }));
+				chunk0->addRange(ChunkAssembler::buildRange(blocks[1], { 1, 2, 1 }, { 4, 4, 4 }));
+				chunk0->addRange(ChunkAssembler::buildRange(blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));
 			}
 		}
 	}

@@ -6,7 +6,6 @@
 #include "../../vulkan/Pipeline.hpp"
 #include "../world/RenderChunk.hpp"
 #include <world/IChunk.hpp>
-#include <world/IChunkRange.hpp>
 #include <object/IBlock.hpp>
 #include "../model/RenderModel.hpp"
 #include "../material/MaterialLayout.hpp"

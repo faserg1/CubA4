@@ -49,9 +49,10 @@ namespace CubA4::world
 		using difference_type = int32_t;
 		using reference = const world::BlockInChunkPos&;
 		using pointer = const world::BlockInChunkPos*;
-		using iterator_category = std::random_access_iterator_tag;
+		using iterator_category = std::forward_iterator_tag;
+		//using iterator_category = std::random_access_iterator_tag;
 
-		explicit Iterator() {}
+		Iterator() {}
 		explicit Iterator(std::unique_ptr<IChunkBIterator> impl) : impl_(std::move(impl)) {}
 		Iterator(const Iterator &other) : impl_(other.impl_->copy()) {}
 		bool operator==(const Iterator &other) const
@@ -100,6 +101,12 @@ namespace CubA4::world
 		const CubA4::world::BlockInChunkPos *operator->() const
 		{
 			return &impl_->get();
+		}
+		Iterator &operator=(const Iterator& other)
+		{
+			impl_.reset();
+			impl_ = std::move(other.impl_->copy());
+			return *this;
 		}
 	private:
 		std::unique_ptr<IChunkBIterator> impl_;

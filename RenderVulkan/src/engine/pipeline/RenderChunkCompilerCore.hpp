@@ -3,10 +3,12 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <array>
 
 #include <ICore.hpp>
 
 #include <world/IChunk.hpp>
+#include <world/Sides.hpp>
 #include <model/IBlockRenderModelDefinition.hpp>
 #include <engine/model/RenderModel.hpp>
 #include <engine/material/Material.hpp>

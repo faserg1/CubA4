@@ -158,10 +158,10 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 	size_t toReserve = 0;
 	for (auto block : blocks)
 	{
-		auto ranges = chunk->getChunkRanges(block);
-		for (auto range : ranges)
+		auto containers = chunk->getChunkBContainers(block);
+		for (auto container : containers)
 		{
-			toReserve += range->getBlockCount();
+			toReserve += container->getBlockCount();
 		}
 	}
 	collected.resize(toReserve);
@@ -172,22 +172,22 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 	for (auto block : blocks)
 	{
 		auto model = block->getRenderModelDefinition();
-		auto ranges = chunk->getChunkRanges(block);
-		for (auto range : ranges)
+		auto containers = chunk->getChunkBContainers(block);
+		for (auto container : containers)
 		{
-			std::for_each(std::execution::par_unseq, range->begin(), range->end(), [offset, range, &collected, &model, &material, &hiddenSides](auto blockPos)
+			std::for_each(std::execution::par_unseq, container->begin(), container->end(), [offset, container, &collected, &model, &material, &hiddenSides](auto blockPos)
 			{
 				// TODO: Fill with data
 				BlockData data;
 				auto index = indexByPos(blockPos);
-				auto fakeIdx = range->getBlockIndex(blockPos);
+				auto fakeIdx = container->getBlockIndex(blockPos);
 				auto faces = model->getFaces(material, hiddenSides[index], data);
 				auto cIndex = offset + fakeIdx;
 				collected[cIndex].model = model.get();
 				collected[cIndex].faces = std::move(faces);
 				collected[cIndex].pos = blockPos;
 			});
-			offset += range->getBlockCount();
+			offset += container->getBlockCount();
 		}
 	}
 	compiler.addFaces(std::move(collected));
@@ -203,10 +203,10 @@ RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides
 {
 	RenderChunkCompilerCore::HiddenSides hiddenSides;
 	hiddenSides.fill(0);
-	for (auto range : chunk->getChunkRanges())
+	for (auto container : chunk->getChunkBContainers())
 	{
-		auto block = range->getBlock();
-		for (auto blockPos : *range)
+		auto block = container->getBlock();
+		for (auto blockPos : *container)
 		{
 			// TODO: Fill with data
 			BlockData data;

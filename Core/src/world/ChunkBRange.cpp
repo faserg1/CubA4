@@ -69,14 +69,17 @@ uint32_t ChunkBRange::getBlockIndex(const world::BlockInChunkPos &pos) const
 
 CubA4::world::BlockInChunkPos ChunkBRange::getBlockPosition(uint32_t index) const
 {
+	using xType = decltype(CubA4::world::BlockInChunkPos::x);
+	using yType = decltype(CubA4::world::BlockInChunkPos::y);
+	using zType = decltype(CubA4::world::BlockInChunkPos::z);
     const auto xSize = bounds_[1].x - bounds_[0].x + 1;
 	const auto ySize = bounds_[1].y - bounds_[0].y + 1;
-    decltype(BlockInChunkPos::x) x = index % xSize;
+    xType x = index % xSize;
     index -= x;
-    decltype(BlockInChunkPos::y) y = (index % (ySize * xSize)) / xSize;
+    yType y = (index % (ySize * xSize)) / xSize;
     index -= (y * xSize);
-    decltype(BlockInChunkPos::z) z = index / (xSize * ySize);
-    return {x, y, z};
+    zType z = index / (xSize * ySize);
+    return {static_cast<xType>(bounds_[0].x + x), static_cast<yType>(bounds_[0].y + y), static_cast<zType>(bounds_[0].z + z)};
 }
 
 const BlockData &ChunkBRange::getBlockData(const world::BlockInChunkPos &pos) const
@@ -100,7 +103,7 @@ ChunkBRange::Iterator ChunkBRange::end() const
 }
 
 ChunkBRange::RangeIterator::RangeIterator(const ChunkBRange *range, uint32_t index):
-    range_(range), index_(index), pos_({})
+    range_(range), index_(index), pos_(range->getBlockPosition(index))
 {
 
 }
