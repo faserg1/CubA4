@@ -7,8 +7,8 @@ namespace CubA4::world
 	class IChunkBMulti : public IChunkBBaseContainer
 	{
 	public:
-		ChunkBContainerType getType() const override final { return ChunkBContainerType::Multi; }
 		virtual ~IChunkBMulti() = default;
+		ChunkBContainerType getType() const override final { return ChunkBContainerType::Multi; }
 	protected:
 		explicit IChunkBMulti() = default;
 	};

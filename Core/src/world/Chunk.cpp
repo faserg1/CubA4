@@ -43,6 +43,54 @@ std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
 	return std::move(usedBlocks);
 }
 
+std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers() const
+{
+	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers;
+	containers.resize(chunkBRanges_.size() + chunkBSets_.size() + chunkBMultis_.size());
+	size_t idx = 0;
+	for (auto range : chunkBRanges_)
+	{
+		containers[idx++] = range;
+	}
+	for (auto set : chunkBSets_)
+	{
+		containers[idx++] = set;
+	}
+	for (auto multi : chunkBMultis_)
+	{
+		containers[idx++] = multi;
+	}
+	return std::move(containers);
+}
+
+std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const
+{
+	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers;
+	containers.resize(chunkBRanges_.size() + chunkBSets_.size() + chunkBMultis_.size());
+	size_t idx = 0;
+	for (auto range : chunkBRanges_)
+	{
+		if (range->getBlock() != usedBlock)
+			continue;
+		containers[idx++] = range;
+	}
+	for (auto set : chunkBSets_)
+	{
+		if (set->getBlock() != usedBlock)
+			continue;
+		containers[idx++] = set;
+	}
+	for (auto multi : chunkBMultis_)
+	{
+		if (multi->getBlock() != usedBlock)
+			continue;
+		containers[idx++] = multi;
+	}
+	const auto removeFrom = containers.begin() + idx;
+	containers.erase(removeFrom, containers.end());
+	return std::move(containers);
+}
+
 std::vector<std::shared_ptr<const IChunkRange>> Chunk::getChunkRanges() const
 {
 	std::vector<std::shared_ptr<const IChunkRange>> rangesCopy;

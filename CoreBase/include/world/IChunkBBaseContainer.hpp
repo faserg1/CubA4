@@ -33,6 +33,7 @@ namespace CubA4::world
 		/// Получает слой, на котором расположены блоки
 		virtual CubA4::world::Layer getLayer() const = 0;
 		virtual uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const = 0;
+		virtual CubA4::world::BlockInChunkPos getBlockPosition(uint32_t index) const = 0;
 		virtual const BlockData &getBlockData(const world::BlockInChunkPos &pos) const = 0;
 
 		virtual Iterator begin() const = 0;
@@ -45,7 +46,7 @@ namespace CubA4::world
 	{
 	public:
 		using value_type = world::BlockInChunkPos;
-		using difference_type = std::ptrdiff_t;
+		using difference_type = int32_t;
 		using reference = const world::BlockInChunkPos&;
 		using pointer = const world::BlockInChunkPos*;
 		using iterator_category = std::random_access_iterator_tag;
@@ -78,6 +79,18 @@ namespace CubA4::world
 		{
 			auto it = *this;
 			impl_->move(1);
+			return it;
+		}
+		Iterator operator+(const difference_type offset) const
+		{
+			auto it = *this;
+			impl_->move(offset);
+			return it;
+		}
+		Iterator operator-(const difference_type offset) const
+		{
+			auto it = *this;
+			impl_->move(-offset);
 			return it;
 		}
 		const CubA4::world::BlockInChunkPos &operator*() const

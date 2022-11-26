@@ -8,9 +8,6 @@
 
 namespace CubA4::world
 {
-	constexpr const uint8_t BoundsSize = 2;
-	
-	/// Диапазон блоков в чанке
 	class IChunkRange
 	{
 	public:

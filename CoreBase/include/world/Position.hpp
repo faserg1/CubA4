@@ -66,4 +66,7 @@ namespace CubA4::world
 	constexpr uint16_t ChunkSize = 64;
 	static_assert(ChunkSize >= 8, "Чанк не может быть размером меньше 8.");
 	static_assert(ChunkSize <= ipow(2, sizeof(decltype(BlockInChunkPos::x)) * 8), "Чанк не может привышать размер, превышающий макисмальные позиции блоков в чанке.");
+
+	/// Диапазон блоков в чанке измеряется начальной минимальной точкой и конечной максимальной точкой
+	constexpr const uint8_t BoundsSize = 2;
 }

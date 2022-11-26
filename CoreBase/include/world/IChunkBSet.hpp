@@ -8,6 +8,7 @@ namespace CubA4::world
 	{
 	public:
 		virtual ~IChunkBSet() = default;
+		ChunkBContainerType getType() const override final { return ChunkBContainerType::Set; }
 	protected:
 		explicit IChunkBSet() = default;
 	};

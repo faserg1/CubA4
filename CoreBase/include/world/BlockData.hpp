@@ -9,5 +9,6 @@ namespace CubA4::world
 	{
 		ChunkPos chunkPos;
 		BlockInChunkPos pos;
+		Layer layer;
 	};
 }

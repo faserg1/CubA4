@@ -4,7 +4,7 @@
 
 namespace CubA4::world
 {
-	class ChunkBSet
+	class ChunkBSet : public virtual IChunkBSet
 	{
 	public:
 		explicit ChunkBSet();

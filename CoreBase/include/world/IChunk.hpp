@@ -7,6 +7,7 @@
 #include <memory>
 #include <world/Position.hpp>
 #include <world/IChunkRange.hpp>
+#include <world/IChunkBBaseContainer.hpp>
 #include <object/IBlock.hpp>
 
 namespace CubA4::world
@@ -32,6 +33,8 @@ namespace CubA4::world
 		virtual std::vector<std::shared_ptr<const object::IBlock>> getUsedBlocks() const = 0;
 		/** \brief Получает диапазоны блоков в чанке.
 		*/
+		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const = 0;
+		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const = 0;
 		virtual std::vector<std::shared_ptr<const IChunkRange>> getChunkRanges() const = 0;
 		virtual std::vector<std::shared_ptr<const IChunkRange>> getChunkRanges(const std::shared_ptr<const object::IBlock> usedBlock) const = 0;
 		virtual std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const = 0;

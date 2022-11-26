@@ -4,7 +4,7 @@
 
 namespace CubA4::world
 {
-	class ChunkBMulti
+	class ChunkBMulti : public virtual IChunkBMulti
 	{
 	public:
 		explicit ChunkBMulti();

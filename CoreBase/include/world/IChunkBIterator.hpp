@@ -13,7 +13,7 @@ namespace CubA4::world
 
 		virtual std::unique_ptr<IChunkBIterator> copy() const = 0;
 		virtual bool equal(const IChunkBIterator *other) const = 0;
-		virtual void move(int64_t shift) = 0;
+		virtual void move(int32_t shift) = 0;
 		virtual const CubA4::world::BlockInChunkPos &get() const = 0;
 	protected:
 		explicit IChunkBIterator() = default;
