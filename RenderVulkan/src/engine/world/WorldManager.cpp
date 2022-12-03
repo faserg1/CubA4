@@ -58,9 +58,13 @@ void WorldManager::setActiveCamera(std::shared_ptr<ICamera> camera)
 void WorldManager::setFieldOfView(float degrees)
 {
 	worldData_.projectionFov = static_cast<float>(degrees * glm::pi<float>() / 360);
-	// TODO: right info
-	worldData_.projectionWidth = 1024;
-	worldData_.projectionHeight = 720;
+	updateProjectionMatrix();
+}
+
+void WorldManager::onViewportUpdate(uint64_t width, uint64_t height)
+{
+	worldData_.projectionWidth = static_cast<float>(width);
+	worldData_.projectionHeight = static_cast<float>(height);
 	updateProjectionMatrix();
 }
 

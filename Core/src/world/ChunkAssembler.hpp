@@ -11,9 +11,11 @@ namespace CubA4::world
 {
 	struct ReassmebledChunkContainers
 	{
-		std::vector<std::shared_ptr<ChunkBRange>> ranges;
-		std::vector<std::shared_ptr<ChunkBSet>> sets;
-		std::vector<std::shared_ptr<ChunkBMulti>> multis;
+		std::vector<std::shared_ptr<ChunkBRange>> addedRanges;
+		std::vector<std::shared_ptr<ChunkBSet>> addedSets;
+		std::vector<std::shared_ptr<ChunkBMulti>> addedMultis;
+
+		std::vector<std::shared_ptr<const IChunkBBaseContainer>> removed;
 	};
 
 	constexpr const uint8_t MinMaxBoundsSize = 2;

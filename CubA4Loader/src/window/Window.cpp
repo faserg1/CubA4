@@ -5,7 +5,7 @@
 using namespace CubA4::window;
 
 Window::Window(int sizeX, int sizeY, uint32_t additionalSDLWindowFlags) :
-	flags_(SDL_WINDOW_SHOWN | additionalSDLWindowFlags)
+	flags_(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE  | additionalSDLWindowFlags)
 {
 	window_ = SDL_CreateWindow("CubA4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, sizeX, sizeY, flags_);
 	if (!window_)

@@ -40,7 +40,7 @@ bool CommandPool::allocate(uint32_t count, VkCommandBuffer *data, VkCommandBuffe
 	allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocateInfo.commandPool = pool_;
 	allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocateInfo.commandBufferCount = 1;
+	allocateInfo.commandBufferCount = count;
 	return vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, data) == VK_SUCCESS;
 }
 

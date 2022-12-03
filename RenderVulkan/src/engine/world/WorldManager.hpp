@@ -41,6 +41,7 @@ namespace CubA4
 					void setActiveCamera(std::shared_ptr<ICamera> camera) override;
 					void setFieldOfView(float degrees) override;
 
+					void onViewportUpdate(uint64_t width, uint64_t height);
 					void onFrameUpdate();
 					vulkan::sVkDescriptorSet getWorldDescriptorSet() const;
 				protected:
@@ -52,7 +53,8 @@ namespace CubA4
 
 					std::weak_ptr<Camera> activeCamera_;
 				private:
-					
+					uint64_t width_;
+					uint64_t height_;
 
 					vulkan::sVkDescriptorPool pool_;
 					vulkan::sVkDescriptorSetLayout layout_;
@@ -70,9 +72,9 @@ namespace CubA4
 						float viewPitch;
 						float viewYaw;
 
-						float projectionFov;
-						float projectionWidth;
-						float projectionHeight;
+						float projectionFov = 1;
+						float projectionWidth = 1;
+						float projectionHeight = 1;
 					} worldData_;
 				private:
 					void allocateSets();

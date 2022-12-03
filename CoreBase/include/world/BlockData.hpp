@@ -7,6 +7,11 @@ namespace CubA4::world
 {
 	struct BlockData : ObjectData
 	{
+
+	};
+
+	struct PosBlockData : BlockData
+	{
 		ChunkPos chunkPos;
 		BlockInChunkPos pos;
 		Layer layer;

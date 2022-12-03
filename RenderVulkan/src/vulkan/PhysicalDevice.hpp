@@ -1,27 +1,18 @@
-#ifndef RENDERVULKAN_PHYSICALDEVICE_HPP
-#define RENDERVULKAN_PHYSICALDEVICE_HPP
+#pragma once
 
 #include <vulkan/vulkan.h>
 
-namespace CubA4
+namespace CubA4::render::vulkan
 {
-	namespace render
+	class PhysicalDevice
 	{
-		namespace vulkan
-		{
-			class PhysicalDevice
-			{
-			public:
-				explicit PhysicalDevice(VkPhysicalDevice physicalDevice);
-				~PhysicalDevice();
+	public:
+		explicit PhysicalDevice(VkPhysicalDevice physicalDevice);
+		~PhysicalDevice();
 
-				VkPhysicalDevice getPhysicalDevice() const;
-			protected:
-			private:
-				VkPhysicalDevice physicalDevice_;
-			};
-		}
-	}
+		VkPhysicalDevice getPhysicalDevice() const;
+	protected:
+	private:
+		VkPhysicalDevice physicalDevice_;
+	};
 }
-
-#endif // RENDERVULKAN_PHYSICALDEVICE_HPP

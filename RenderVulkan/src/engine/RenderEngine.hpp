@@ -1,71 +1,67 @@
-#ifndef RENDERVULKAN_RENDERENGINE_HPP
-#define RENDERVULKAN_RENDERENGINE_HPP
+#pragma once
 
 #include <engine/IRenderEngine.hpp>
 #include <vector>
 #include <thread>
+#include <atomic>
 #include "RenderEngineCore.hpp"
 
-namespace CubA4
+namespace CubA4::render::engine
 {
-	namespace render
+	class Presentaion;
+	class Render;
+	class RenderManager;
+	class RenderGameHandler;
+
+	namespace pipeline
 	{
-		namespace engine
-		{
-			class Presentaion;
-			class Render;
-			class RenderManager;
-			class RenderGameHandler;
-
-			namespace pipeline
-			{
-				class RenderChunkCompiler;
-				class RenderEnginePipeline;
-			}
-
-			class VulkanRenderEngine :
-				public virtual IRenderEngine,
-				public RenderEngineCore
-			{
-			public:
-				explicit VulkanRenderEngine(std::shared_ptr<const info::IApplicationInfo> info, std::shared_ptr<const ICore> core);
-				explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
-				~VulkanRenderEngine();
-
-				void init(std::shared_ptr<const window::IWindow> window) override;
-				void destroy() override;
-
-				void setGame(std::shared_ptr<const CubA4::game::IGame> game) override;
-
-				void run() override;
-				void stop() override;
-
-				std::shared_ptr<IRenderManager> getRenderManager() const override;
-			protected:
-				void initPresentation();
-				void destroyPresentation();
-
-				void initRender();
-				void destroyRender();
-
-				void setup();
-				void shutdown();
-
-				void loop();
-			private:
-				std::shared_ptr<Presentaion> presetation_;
-				std::shared_ptr<Render> render_;
-
-				std::shared_ptr<RenderManager> renderManager_;
-				std::shared_ptr<RenderGameHandler> renderGameHandler_;
-				std::shared_ptr<pipeline::RenderChunkCompiler> renderChunkCompiler_;
-				std::shared_ptr<pipeline::RenderEnginePipeline> renderEnginePipeline_;
-
-				bool running_;
-				std::thread renderLoopThread_;
-			};
-		}
+		class RenderChunkCompiler;
+		class RenderEnginePipeline;
 	}
-}
 
-#endif // RENDERVULKAN_RENDERENGINE_HPP
+	class VulkanRenderEngine :
+		public virtual IRenderEngine,
+		public RenderEngineCore
+	{
+	public:
+		explicit VulkanRenderEngine(std::shared_ptr<const info::IApplicationInfo> info, std::shared_ptr<const ICore> core);
+		explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
+		~VulkanRenderEngine();
+
+		void init(std::shared_ptr<const window::IWindow> window) override;
+		void destroy() override;
+
+		void setGame(std::shared_ptr<const CubA4::game::IGame> game) override;
+		void onWindowResized() override;
+
+		void run() override;
+		void stop() override;
+
+		std::shared_ptr<IRenderManager> getRenderManager() const override;
+	protected:
+		void initPresentation();
+		void destroyPresentation();
+
+		void initRender();
+		void destroyRender();
+
+		void setup();
+		void shutdown();
+
+		void loop();
+
+		void inFrameRebuild();
+	private:
+		std::shared_ptr<Presentaion> presetation_;
+		std::shared_ptr<Render> render_;
+
+		std::shared_ptr<RenderManager> renderManager_;
+		std::shared_ptr<RenderGameHandler> renderGameHandler_;
+		std::shared_ptr<pipeline::RenderChunkCompiler> renderChunkCompiler_;
+		std::shared_ptr<pipeline::RenderEnginePipeline> renderEnginePipeline_;
+
+		bool running_;
+		std::atomic_bool rebuildSwapchain_;
+		std::thread renderLoopThread_;
+	};
+}

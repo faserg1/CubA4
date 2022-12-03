@@ -28,6 +28,23 @@ namespace CubA4::world
 				&& one.y == other.y
 				&& one.z == other.z;
 		}
+
+		friend bool operator<(const BasePos &one, const BasePos &other)
+		{
+			if (one.z < other.z)
+				return true;
+			if (one.z > other.z)
+				return false;
+			if (one.y < other.y)
+				return true;
+			if (one.y > other.y)
+				return false;
+			if (one.x < other.x)
+				return true;
+			if (one.x > other.x)
+				return false;
+			return false;
+		}
 	};
 
 	/*Позиция блока в чанке */

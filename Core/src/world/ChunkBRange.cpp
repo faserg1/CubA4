@@ -60,6 +60,11 @@ uint32_t ChunkBRange::getBlockCount() const
 		diff(bounds_[0].z, bounds_[1].z);
 }
 
+bool ChunkBRange::hasBlockAt(const world::BlockInChunkPos &pos) const
+{
+	return isInBounds(bounds_[0], bounds_[1], pos);
+}
+
 uint32_t ChunkBRange::getBlockIndex(const world::BlockInChunkPos &pos) const
 {
 	const auto xSize = bounds_[1].x - bounds_[0].x + 1;

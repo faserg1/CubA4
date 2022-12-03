@@ -1,15 +1,11 @@
-#include "./Presentaion.hpp"
-#include "../vulkan/Device.hpp"
-#include "../vulkan/Swapchain.hpp"
-#include "../vulkan/Semaphore.hpp"
-
+#include <engine/Presentaion.hpp>
 #include <algorithm>
 
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
-Presentaion::Presentaion(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain) :
-	device_(device), swapchain_(swapchain), timeout_(50)
+Presentaion::Presentaion(std::shared_ptr<const Device> device) :
+	device_(device), timeout_(50)
 {
 	acquireSignalSemaphore_ = Semaphore::create(device);
 }
@@ -24,10 +20,10 @@ std::shared_ptr<const Semaphore> Presentaion::getAcquireSignalSemaphore() const
 	return acquireSignalSemaphore_;
 }
 
-uint32_t Presentaion::acquire()
+uint32_t Presentaion::acquire(std::shared_ptr<const vulkan::Swapchain> swapchain)
 {
 	uint32_t imageIndex = 0;
-	if (vkAcquireNextImageKHR(device_->getDevice(), swapchain_->getSwapchain(), timeout_,
+	if (vkAcquireNextImageKHR(device_->getDevice(), swapchain->getSwapchain(), timeout_,
 		acquireSignalSemaphore_->getSemaphore(), VK_NULL_HANDLE, &imageIndex) != VK_SUCCESS)
 	{
 		//TODO: [OOKAMI] Разберись с этим...
@@ -36,7 +32,7 @@ uint32_t Presentaion::acquire()
 	return imageIndex;
 }
 
-void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Semaphore>> awaitSemaphores)
+void Presentaion::send(std::shared_ptr<const vulkan::Swapchain> swapchain, uint32_t imageIndex, std::vector<std::shared_ptr<const Semaphore>> awaitSemaphores)
 {
 	VkPresentInfoKHR info = {};
 	std::vector<VkSemaphore> awaitVkSemaphores(awaitSemaphores.size());
@@ -47,8 +43,8 @@ void Presentaion::send(uint32_t imageIndex, std::vector<std::shared_ptr<const Se
 	});
 	info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	info.swapchainCount = 1;
-	VkSwapchainKHR swapchain = swapchain_->getSwapchain();
-	info.pSwapchains = &swapchain;
+	VkSwapchainKHR vkSwapchain = swapchain->getSwapchain();
+	info.pSwapchains = &vkSwapchain;
 	info.waitSemaphoreCount = static_cast<uint32_t>(awaitVkSemaphores.size());
 	info.pWaitSemaphores = awaitVkSemaphores.data();
 	info.pImageIndices = &imageIndex;

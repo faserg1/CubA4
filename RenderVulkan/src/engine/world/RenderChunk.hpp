@@ -1,8 +1,11 @@
 #pragma once
 
 #include <world/IChunk.hpp>
-#include <engine/model/IRenderModel.hpp>
+#include <engine/pipeline/RenderChunkPipelineData.hpp>
+#include <engine/model/RenderModel.hpp>
+#include <engine/material/Material.hpp>
 #include <vector>
+#include <map>
 #include <vulkan/vulkan.h>
 #include <functional>
 
@@ -13,15 +16,20 @@ namespace CubA4::render::engine::world
 	public:
 		struct Data
 		{
+			using MaterialPtr = std::shared_ptr<const CubA4::render::engine::material::Material>;
+			using RenderModels = std::map<MaterialPtr, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 			CubA4::world::ChunkPos pos;
 			std::vector<VkCommandBuffer> cmdBuffers;
-			std::vector<std::shared_ptr<const CubA4::render::engine::model::IRenderModel>> compiledBlockData;
+			RenderModels compiledBlockData;
+			CubA4::render::engine::pipeline::RenderChunkPipelineData data;
 		};
 		explicit RenderChunk(Data data, std::function<void()> deleter);
 		~RenderChunk();
 
 		void executeFrom(VkCommandBuffer primaryCmdBuffer) const;
 		const CubA4::world::ChunkPos &getChunkPos() const;
+		const Data::RenderModels &getBlockData() const;
+		const CubA4::render::engine::pipeline::RenderChunkPipelineData &getPipelineData() const;
 	protected:
 	private:
 		const Data data_;

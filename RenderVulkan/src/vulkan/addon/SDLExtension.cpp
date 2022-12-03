@@ -1,8 +1,5 @@
 #include "./SDLExtension.hpp"
-#include "../Surface.hpp"
 #include "../Instance.hpp"
-#include <window/IWindow.hpp>
-#include <vulkan/vulkan.h>
 #include <SDL_vulkan.h>
 #include <stdexcept>
 using namespace CubA4::render::vulkan::addon;
@@ -33,19 +30,12 @@ std::vector<std::string> SDLExtension::names() const
 
 void SDLExtension::init(std::shared_ptr<const Instance> instance)
 {
-	VkSurfaceKHR nativeSurface;
-	if (!SDL_Vulkan_CreateSurface(window_->getSDLWindow(), instance->getInstance(), &nativeSurface))
-		throw std::runtime_error("Cant create surface!");
-	surface_ = std::make_shared<Surface>(nativeSurface);
+	instance_ = instance;
 }
 
 void SDLExtension::destroy(std::shared_ptr<const Instance> instance)
 {
-	if (surface_)
-	{
-		vkDestroySurfaceKHR(instance->getInstance(), surface_->getSurface(), nullptr);
-		surface_.reset();
-	}
+
 }
 
 void SDLExtension::added(InstanceBuilder &builder)
@@ -53,7 +43,14 @@ void SDLExtension::added(InstanceBuilder &builder)
 
 }
 
-std::shared_ptr<const Surface> SDLExtension::getSurface() const
+
+std::shared_ptr<Surface> SDLExtension::createSurface() const
 {
-	return surface_;
+	auto instance = instance_.lock();
+	if (!instance)
+		throw std::runtime_error("Cant create surface: instance lock failed!");
+	VkSurfaceKHR nativeSurface;
+	if (!SDL_Vulkan_CreateSurface(window_->getSDLWindow(), instance->getInstance(), &nativeSurface))
+		throw std::runtime_error("Cant create surface!");
+	return std::make_shared<Surface>(instance, nativeSurface);
 }

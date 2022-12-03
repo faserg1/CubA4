@@ -164,6 +164,23 @@ void AppMain::loop(AppStartup &startup)
 					startup.keyChanged(btn, mods, true);
 					break;
 				}
+			case SDL_WINDOWEVENT:
+				{
+					switch (event.window.event)
+					{
+					case SDL_WINDOWEVENT_RESIZED:
+					case SDL_WINDOWEVENT_SIZE_CHANGED:
+						{
+							auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+							renderEngine->onWindowResized();
+							break;
+						}
+					default:
+						break;
+					}
+					
+					break;
+				}
 			}
 		}
 		double now = clock();

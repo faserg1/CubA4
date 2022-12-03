@@ -42,6 +42,7 @@ add_subdirectory (RenderVulkan)
 #executables
 add_subdirectory (CubA4Loader)
 add_subdirectory (CubA4Server)
+add_subdirectory (CubA4Launcher)
 
 #deps
 add_dependencies(CubA4Loader Core Network ModLoader RenderVulkan ModVanilla)

@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <tuple>
 #include <engine/pipeline/RenderChunkCompilerCore.hpp>
+#include <engine/pipeline/RenderChunkPipelineData.hpp>
 
 namespace CubA4
 {
@@ -47,17 +48,15 @@ namespace CubA4
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
 
-					std::future<std::shared_ptr<const world::RenderChunk>> compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk);
+					std::shared_ptr<const world::RenderChunk> compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk, const RenderChunkPipelineData &data);
+					std::shared_ptr<const world::RenderChunk> compileChunk(std::shared_ptr<const world::RenderChunk> chunk, const RenderChunkPipelineData &data);
 				protected:
 				private:
 					const std::shared_ptr<const vulkan::RenderPass> renderPass_;
 					const std::shared_ptr<ResourceManager> resourceManager_;
 					const std::shared_ptr<const world::WorldManager> worldManager_;
 				private:
-					std::shared_ptr<const world::RenderChunk> compileChunkInternal(std::shared_ptr<const CubA4::world::IChunk> chunk);
-					std::tuple<VkBuffer, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>>
-						createBufferFromData(void *data, size_t size, VkBufferUsageFlags flags) const;
-					VkDescriptorSet prepareSetWithBuffer(VkDescriptorPool pool, VkDescriptorSetLayout layout, VkBuffer buffer, VkDescriptorType type, uint32_t binding) const;
+					std::shared_ptr<const world::RenderChunk> compileChunkInternal(const RenderModels &compiledBlockData, const CubA4::world::ChunkPos &chunkPos, const RenderChunkPipelineData &data);
 				};
 			}
 		}

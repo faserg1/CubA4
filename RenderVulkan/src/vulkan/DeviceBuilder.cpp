@@ -30,7 +30,7 @@ namespace CubA4
 }
 
 DeviceBuilder::DeviceBuilder(std::shared_ptr<const Instance> instance,
-	std::weak_ptr<const Surface> surface) :
+	std::weak_ptr<Surface> surface) :
 	data_(std::make_shared<DeviceBuilderData>()), instance_(instance), surface_(surface)
 {
 	enumPhysicalDevices();
@@ -135,6 +135,12 @@ void DeviceBuilder::enumPhysicalDevices()
 
 void DeviceBuilder::choosePhysicalDevice()
 {
+	auto surface = surface_.lock();
+	if (!surface)
+	{
+		throw std::runtime_error("Surface gone...");
+		return;
+	}
 	for (auto physicalDevice : data_->physicalDevices)
 	{
 		uint32_t queueCount;
@@ -146,17 +152,12 @@ void DeviceBuilder::choosePhysicalDevice()
 
 		for (uint32_t queueFamilyCurrentIndex = 0; queueFamilyCurrentIndex < queueFamilyProperties.size(); queueFamilyCurrentIndex++)
 		{
-			if (auto surface = surface_.lock())
+			VkBool32 supported;
+			if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyCurrentIndex, surface->getSurface(), &supported) == VK_SUCCESS)
 			{
-				VkBool32 supported;
-				if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyCurrentIndex, surface->getSurface(), &supported) == VK_SUCCESS)
-				{
-					if (!supported)
-						continue;
-				}
+				if (!supported)
+					continue;
 			}
-			else
-				throw std::runtime_error("Surface gone...");
 
 			auto props = queueFamilyProperties[queueFamilyCurrentIndex];
 			if (!(props.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT)))
@@ -166,6 +167,7 @@ void DeviceBuilder::choosePhysicalDevice()
 		}
 
 		data_->choosedDevice = std::make_shared<PhysicalDevice>(physicalDevice);
+		surface->init(physicalDevice);
 		data_->queueFamilyIndex = queueFamilyIndex;
 		break;
 	}

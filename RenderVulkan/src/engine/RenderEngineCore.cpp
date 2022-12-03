@@ -60,6 +60,11 @@ void RenderEngineCore::destroyCore()
 	destroyInstance();
 }
 
+void RenderEngineCore::rebuildSwapChain()
+{
+	swapchain_ = swapchainBuilder_->build(swapchain_);
+}
+
 std::shared_ptr<const CubA4::render::config::IRenderConfig> RenderEngineCore::getConfig() const
 {
 	return config_;
@@ -133,13 +138,14 @@ void RenderEngineCore::initInstance()
 	instance_ = instanceBuilder_->build();
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<InstanceAddon> addon) {addon->init(instance_); });
-	surface_ = vkSDLExt->getSurface();
+	surface_ = vkSDLExt->createSurface();
 }
 
 void RenderEngineCore::destroyInstance()
 {
 	if (!instance_)
 		return;
+	surface_.reset();
 	std::for_each(instanceAddons_.begin(), instanceAddons_.end(),
 		[this](std::shared_ptr<InstanceAddon> addon) {addon->destroy(instance_); });
 	instanceAddons_.clear();
@@ -181,11 +187,6 @@ void RenderEngineCore::initSwapchain()
 		swapchainBuilder_ = std::make_shared<SwapchainBuilder>(getDevice(), getSurface(), config_);
 	swapchain_ = swapchainBuilder_->build();
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Swapchain builded.");
-}
-
-void RenderEngineCore::rebuildSwapchain()
-{
-
 }
 
 void RenderEngineCore::destroySwapchain()

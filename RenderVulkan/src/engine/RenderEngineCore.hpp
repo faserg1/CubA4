@@ -46,6 +46,8 @@ namespace CubA4
 				void initCore(std::shared_ptr<const CubA4::window::IWindow> window);
 				void destroyCore();
 
+				void rebuildSwapChain();
+
 				std::shared_ptr<const CubA4::render::config::IRenderConfig> getConfig() const;
 				std::shared_ptr<const vulkan::Instance> getInstance() const;
 				std::shared_ptr<const vulkan::Device> getDevice() const;
@@ -61,7 +63,7 @@ namespace CubA4
 				std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
 
 				std::weak_ptr<const CubA4::window::IWindow> window_;
-				std::weak_ptr<const vulkan::Surface> surface_;
+				std::shared_ptr<vulkan::Surface> surface_;
 
 				std::shared_ptr<vulkan::InstanceBuilder> instanceBuilder_;
 				std::shared_ptr<const vulkan::Instance> instance_;

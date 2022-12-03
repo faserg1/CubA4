@@ -27,7 +27,7 @@ namespace CubA4
 			{
 			public:
 				explicit DeviceBuilder(std::shared_ptr<const Instance> instance,
-					std::weak_ptr<const Surface> surface);
+					std::weak_ptr<Surface> surface);
 				~DeviceBuilder();
 
 				void addLayer(addon::DeviceLayer &layer);
@@ -43,7 +43,7 @@ namespace CubA4
 			private:
 				std::shared_ptr<DeviceBuilderData> data_;
 				std::shared_ptr<const Instance> instance_;
-				std::weak_ptr<const Surface> surface_;
+				std::weak_ptr<Surface> surface_;
 
 				std::vector<std::string> extensions_;
 				std::vector<std::string> layers_;

@@ -79,39 +79,51 @@ std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContain
 std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos) const
 {
 	std::vector<BlockAt> blocks;
-	// todo: other containers
-	for (auto range : chunkBRanges_)
+	auto checkContainer = [&blocks, pos](const auto &containers)
 	{
-		const auto &bounds = range->getBounds();
-		if (isInBounds(bounds[0], bounds[1], pos))
-			blocks.push_back(BlockAt {
-				.block = range->getBlock(),
-				.pos = pos,
-				.layer = range->getLayer()
-			});
-	}
+		for (auto container : containers)
+		{
+			if (container->hasBlockAt(pos))
+			{
+				blocks.push_back(BlockAt {
+					.block = container->getBlock(),
+					.pos = pos,
+					.layer = container->getLayer()
+				});
+			}
+		}
+	};
+	checkContainer(chunkBRanges_);
+	checkContainer(chunkBSets_);
+	checkContainer(chunkBMultis_);
 	return std::move(blocks);
 }
 
 CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const
 {
-	std::vector<BlockAt> blocks;
-	// todo: other containers
-	for (auto range : chunkBRanges_)
+	auto checkContainer = [pos, layer](const auto &containers) -> BlockAt
 	{
-		if (range->getLayer() != layer)
-			continue;
-		const auto &bounds = range->getBounds();
-		if (isInBounds(bounds[0], bounds[1], pos))
+		for (auto container : containers)
 		{
-			return BlockAt {
-				.block = range->getBlock(),
-				.pos = pos,
-				.layer = range->getLayer()
-			};
+			if (container->getLayer() != layer)
+				continue;
+			if (container->hasBlockAt(pos))
+			{
+				return BlockAt {
+					.block = container->getBlock(),
+					.pos = pos,
+					.layer = container->getLayer()
+				};
+			}
 		}
-			
-	}
+		return {};
+	};
+	if (auto blockAt = checkContainer(chunkBRanges_); blockAt.block)
+		return blockAt;
+	if (auto blockAt = checkContainer(chunkBSets_); blockAt.block)
+		return blockAt;
+	if (auto blockAt = checkContainer(chunkBMultis_); blockAt.block)
+		return blockAt;
 	return {};
 }
 

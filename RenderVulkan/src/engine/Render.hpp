@@ -1,11 +1,12 @@
-#ifndef RENDERVULKAN_RENDER_HPP
-#define RENDERVULKAN_RENDER_HPP
+#pragma once
 
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <atomic>
 #include <util/ISubscription.hpp>
+#include <vulkan/FramebuffersBuilder.hpp>
+#include <vulkan/Framebuffer.hpp>
 #include "./pipeline/IRenderEnginePipelineSubscriber.hpp"
 
 namespace CubA4
@@ -31,6 +32,13 @@ namespace CubA4
 			class Render :
 				public virtual pipeline::IRenderEnginePipelineSubscriber
 			{
+				struct OldFramebufferInfo
+				{
+					uint32_t cyclesLeft;
+					std::shared_ptr<const vulkan::Swapchain> oldSwapchain;
+					std::vector<std::shared_ptr<vulkan::Framebuffer>> oldFramebuffers;
+					std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> oldChunks;
+				};
 			public:
 				explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::Swapchain> swapchain);
 				explicit Render(const Render &) = delete;
@@ -39,48 +47,33 @@ namespace CubA4
 				void setup(std::shared_ptr<pipeline::RenderEnginePipeline> pipeline);
 				void shutdown();
 
-				void record(uint32_t imgIndex);
-				std::shared_ptr<const vulkan::Semaphore> send(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
+				void swapchainChanged(std::shared_ptr<const vulkan::Swapchain> swapchain);
+				void onAcquireFailed();
+				std::shared_ptr<vulkan::Framebuffer> onAcquire(uint32_t imgIndex);
+				void record(std::shared_ptr<vulkan::Framebuffer> framebuffer);
+				std::shared_ptr<const vulkan::Semaphore> send(std::shared_ptr<vulkan::Framebuffer> framebuffer, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 
 				std::shared_ptr<const vulkan::RenderPass> getRenderPass() const;
 			protected:
-				void createMainCommandPool();
-				void destroyMainCommandPool();
-
 				void createFramebuffers();
 				void destroyFramebuffers();
 
 				void createRenderPass();
 				void destroyRenderPass();
 			private:
-				void chunkCompiled(std::shared_ptr<const CubA4::render::engine::world::RenderChunk> renderChunk) override;
+				void onCycle();
+
+				void chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks) override;
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
-				const std::shared_ptr<const vulkan::Swapchain> swapchain_;
-				VkCommandPool mainCommandPool_;
-
-				struct FramebufferData
-				{
-					FramebufferData();
-					FramebufferData(const FramebufferData &);
-					VkFence fence;
-					VkFramebuffer framebuffer;
-					VkImage image;
-					VkImageView imageView;
-
-					std::shared_ptr<vulkan::Memory> depthMemory;
-					VkImage depthImage;
-					VkImageView depthImageView;
-
-					VkCommandBuffer cmdBuffer;
-					std::shared_ptr<const vulkan::Semaphore> renderDoneSemaphore;
-					std::atomic_bool dirty;
-					std::atomic_bool needUpdate;
-					std::atomic_bool recorded;
-				};
-				std::vector<FramebufferData> framebuffersData_;
+				std::shared_ptr<const vulkan::Swapchain> swapchain_;
+				vulkan::FramebuffersBuilder framebuffersBuilder_;
 
 				std::shared_ptr<const vulkan::RenderPass> renderPass_;
+				std::vector<std::shared_ptr<vulkan::Framebuffer>> framebuffers_;
+	
+				std::vector<OldFramebufferInfo> oldFramebuffers_;
+
 				std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> chunks_;
 				std::atomic_bool chunksLocked_;
 				std::unique_ptr<CubA4::util::ISubscription> chunkUpdateSubscription_;
@@ -88,5 +81,3 @@ namespace CubA4
 		}
 	}
 }
-
-#endif // RENDERVULKAN_RENDER_HPP

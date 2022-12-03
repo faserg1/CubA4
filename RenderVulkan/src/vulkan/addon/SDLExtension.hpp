@@ -1,45 +1,29 @@
-#ifndef RENDERVULKAN_SDLEXTENSION_HPP
-#define RENDERVULKAN_SDLEXTENSION_HPP
+#pragma once
 
 #include <memory>
+#include <window/IWindow.hpp>
+#include <vulkan/Surface.hpp>
 #include "InstanceExtension.hpp"
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace window
+	class SDLExtension :
+		public InstanceExtension
 	{
-		class IWindow;
-	}
+	public:
+		explicit SDLExtension(std::shared_ptr<const window::IWindow> window);
+		~SDLExtension();
 
-	namespace render
-	{
-		namespace vulkan
-		{
-			class Surface;
+		std::vector<std::string> names() const override;
+		void init(std::shared_ptr<const Instance> instance) override;
+		void destroy(std::shared_ptr<const Instance> instance) override;
+		void added(InstanceBuilder &builder) override;
 
-			namespace addon
-			{
-				class SDLExtension :
-					public InstanceExtension
-				{
-				public:
-					explicit SDLExtension(std::shared_ptr<const window::IWindow> window);
-					~SDLExtension();
-
-					std::vector<std::string> names() const override;
-					void init(std::shared_ptr<const Instance> instance) override;
-					void destroy(std::shared_ptr<const Instance> instance) override;
-					void added(InstanceBuilder &builder) override;
-
-					std::shared_ptr<const Surface> getSurface() const;
-				protected:
-				private:
-					std::shared_ptr<const window::IWindow> window_;
-					std::shared_ptr<Surface> surface_;
-				};
-			}
-		}
-	}
+		std::shared_ptr<Surface> createSurface() const;
+	protected:
+	private:
+		std::weak_ptr<const Instance> instance_;
+		std::shared_ptr<const window::IWindow> window_;
+	};
 }
 
-#endif // RENDERVULKAN_SDLEXTENSION_HPP

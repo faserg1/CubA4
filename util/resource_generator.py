@@ -23,8 +23,7 @@ class ResourceGenerator:
 		self._generate_irs_data_hpp(files)
 
 	def _generate_irs_hpp(self):
-		total = "#ifndef IRS_HPP\n"
-		total += "#define IRS_HPP\n\n"
+		total = "#pragma once\n"
 		total += "#include <cstddef>\n\n"
 		total += "namespace CubA4\n{\n\tnamespace irs\n\t{\n"
 		nstabs = "\t\t"
@@ -34,9 +33,9 @@ class ResourceGenerator:
 		total += nstabs + "/// \\return Указатель на начало файла, если файл найден. Иначе nullptr.\n"
 		total += nstabs + "const void *findFile(const char *name, std::size_t &size);\n"
 		total += "\t}\n}\n\n"
-		total += "#endif // IRS_HPP\n"
 		filename = os.path.join(self._gen_path, "irs.hpp")
-		self._write(filename, total)
+		if self._check(filename, total):
+			self._write(filename, total)
 
 	def _generate_irs_cpp(self):
 		total = "#include \"irs.hpp\"\n"
@@ -45,7 +44,7 @@ class ResourceGenerator:
 		total += "#include <cstddef>\n\n"
 		total += "namespace CubA4\n{\n\tnamespace irs\n\t{\n"
 		nstabs = "\t\t"
-		total += nstabs + "const void *findFile(const char *name, std::size_t &size)\n{\n"
+		total += nstabs + "\tconst void *findFile(const char *name, std::size_t &size)\n{\n"
 		total += nstabs + "\tconst unsigned char *ptr = data;\n"
 		total += nstabs + "\tsize = 0;\n"
 		total += nstabs + "\tauto iter = info.find(name);\n"
@@ -101,6 +100,10 @@ class ResourceGenerator:
 	def _write(self, filename, data):
 		with open(filename, "wb") as file:
 			file.write(data.encode("UTF-8"))
+
+	def _check(self, filename, data):
+		# TODO: hash?
+		return not os.path.exists(filename)
 
 	_cwd = ""
 	_module_name = ""

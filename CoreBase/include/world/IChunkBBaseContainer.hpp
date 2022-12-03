@@ -32,6 +32,7 @@ namespace CubA4::world
 		virtual uint32_t getBlockCount() const = 0;
 		/// Получает слой, на котором расположены блоки
 		virtual CubA4::world::Layer getLayer() const = 0;
+		virtual bool hasBlockAt(const world::BlockInChunkPos &pos) const = 0;
 		virtual uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const = 0;
 		virtual CubA4::world::BlockInChunkPos getBlockPosition(uint32_t index) const = 0;
 		virtual const BlockData &getBlockData(const world::BlockInChunkPos &pos) const = 0;

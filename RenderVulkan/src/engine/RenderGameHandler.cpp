@@ -28,6 +28,7 @@ void RenderGameHandler::setGame(std::shared_ptr<const CubA4::game::IGame> game)
 	gameSubscription_ = game->subscribe(this);
 }
 
+
 void RenderGameHandler::worldChanged(std::shared_ptr<const CubA4::world::IWorld> newWorld)
 {
 	currentWorld_ = newWorld;

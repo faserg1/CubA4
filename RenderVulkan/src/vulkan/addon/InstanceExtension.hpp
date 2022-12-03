@@ -1,34 +1,21 @@
-#ifndef RENDERVULKAN_INSTANCEEXTENSION_HPP
-#define RENDERVULKAN_INSTANCEEXTENSION_HPP
+#pragma once
 
 #include "InstanceAddon.hpp"
 #include <memory>
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	struct InstanceExtensionData;
+
+	class InstanceExtension :
+		public InstanceAddon
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				struct InstanceExtensionData;
-
-				class InstanceExtension :
-					public InstanceAddon
-				{
-				public:
-					
-					~InstanceExtension();
-				protected:
-					explicit InstanceExtension();
-					std::vector<std::string> allNames() const override;
-				private:
-					std::shared_ptr<InstanceExtensionData> data_;
-				};
-			}
-		}
-	}
+	public:
+		~InstanceExtension();
+	protected:
+		explicit InstanceExtension();
+		std::vector<std::string> allNames() const override;
+	private:
+		std::shared_ptr<InstanceExtensionData> data_;
+	};
 }
-
-#endif // RENDERVULKAN_INSTANCEEXTENSION_HPP

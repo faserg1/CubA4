@@ -10,10 +10,11 @@ namespace CubA4::render::vulkan
 		public std::enable_shared_from_this<Fence>
 	{
 	public:
-		explicit Fence(std::shared_ptr<const Device> device, VkFenceCreateFlags flags);
+		explicit Fence(std::shared_ptr<const Device> device, VkFenceCreateFlags flags = 0);
 		~Fence();
 
 		VkFence getFence() const;
+		VkResult wait(uint64_t timeout = VK_WHOLE_SIZE);
 		void reset();
 	private:
 		std::shared_ptr<const Device> device_;

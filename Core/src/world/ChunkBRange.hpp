@@ -15,6 +15,7 @@ namespace CubA4::world
 		const Bounds &getBounds() const override;
 		Bounds getSideRect(BlockSide side) const override;
 		uint32_t getBlockCount() const override;
+		bool hasBlockAt(const world::BlockInChunkPos &pos) const override;
 		uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const override;
 		CubA4::world::BlockInChunkPos getBlockPosition(uint32_t index) const override;
 		const BlockData &getBlockData(const world::BlockInChunkPos &pos) const override;

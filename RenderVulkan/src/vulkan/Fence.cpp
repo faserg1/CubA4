@@ -22,6 +22,11 @@ VkFence Fence::getFence() const
 	return fence_;
 }
 
+VkResult Fence::wait(uint64_t timeout)
+{
+	return vkWaitForFences(device_->getDevice(), 1, &fence_, VK_TRUE, timeout);
+}
+
 void Fence::reset()
 {
 	vkResetFences(device_->getDevice(), 1, &fence_);

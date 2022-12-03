@@ -16,6 +16,7 @@ namespace CubA4::render::engine
 		virtual void destroy() = 0;
 
 		virtual void setGame(std::shared_ptr<const CubA4::game::IGame> game) = 0;
+		virtual void onWindowResized() = 0;
 
 		virtual void run() = 0;
 		virtual void stop() = 0;

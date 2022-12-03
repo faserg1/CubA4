@@ -14,7 +14,8 @@ ChunkAssembler::~ChunkAssembler()
 
 ReassmebledChunkContainers ChunkAssembler::reassmeble(std::shared_ptr<Chunk> chunk, const ChunkBModification &modification)
 {
-    return {};
+	ReassmebledChunkContainers rcc {};
+    return std::move(rcc);
 }
 
 std::shared_ptr<ChunkBRange> ChunkAssembler::buildRange(

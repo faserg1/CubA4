@@ -1,42 +1,28 @@
-#ifndef RENDERVULKAN_PRESENTAION_HPP
-#define RENDERVULKAN_PRESENTAION_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
+#include <vulkan/Device.hpp>
+#include <vulkan/Swapchain.hpp>
+#include <vulkan/Semaphore.hpp>
 
-namespace CubA4
+namespace CubA4::render::engine
 {
-	namespace render
+	class Presentaion
 	{
-		namespace vulkan
-		{
-			class Device;
-			class Swapchain;
-			class Semaphore;
-		}
+	public:
+		explicit Presentaion(std::shared_ptr<const vulkan::Device> device);
+		~Presentaion();
 
-		namespace engine
-		{
-			class Presentaion
-			{
-			public:
-				explicit Presentaion(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::Swapchain> swapchain);
-				~Presentaion();
+		std::shared_ptr<const vulkan::Semaphore> getAcquireSignalSemaphore() const;
 
-				std::shared_ptr<const vulkan::Semaphore> getAcquireSignalSemaphore() const;
-
-				uint32_t acquire();
-				void send(uint32_t imageIndex, std::vector<std::shared_ptr<const vulkan::Semaphore>> awaitSemaphores);
-			protected:
-				
-			private:
-				const std::shared_ptr<const vulkan::Device> device_;
-				const std::shared_ptr<const vulkan::Swapchain> swapchain_;
-				std::shared_ptr<vulkan::Semaphore> acquireSignalSemaphore_;
-				uint32_t timeout_;
-			};
-		}
-	}
+		uint32_t acquire(std::shared_ptr<const vulkan::Swapchain> swapchain);
+		void send(std::shared_ptr<const vulkan::Swapchain> swapchain, uint32_t imageIndex, std::vector<std::shared_ptr<const vulkan::Semaphore>> awaitSemaphores);
+	protected:
+		
+	private:
+		const std::shared_ptr<const vulkan::Device> device_;
+		std::shared_ptr<vulkan::Semaphore> acquireSignalSemaphore_;
+		uint32_t timeout_;
+	};
 }
-
-#endif // RENDERVULKAN_PRESENTAION_HPP

@@ -24,7 +24,8 @@ VulkanRenderEngine::VulkanRenderEngine(
 	std::shared_ptr<const CubA4::info::IApplicationInfo> info,
 	std::shared_ptr<const CubA4::ICore> core) :
 	RenderEngineCore(info, core),
-	running_(false)
+	running_(false),
+	rebuildSwapchain_(false)
 {
 }
 
@@ -63,6 +64,11 @@ void VulkanRenderEngine::setGame(std::shared_ptr<const CubA4::game::IGame> game)
 	renderGameHandler_->setGame(game);
 }
 
+void VulkanRenderEngine::onWindowResized()
+{
+	rebuildSwapchain_.store(true);
+}
+
 void VulkanRenderEngine::run()
 {
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Starting.");
@@ -87,7 +93,7 @@ void VulkanRenderEngine::stop()
 void VulkanRenderEngine::initPresentation()
 {
 	if (!presetation_)
-		presetation_ = std::make_shared<Presentaion>(getDevice(), getSwapchain());
+		presetation_ = std::make_shared<Presentaion>(getDevice());
 
 }
 
@@ -95,7 +101,6 @@ void VulkanRenderEngine::destroyPresentation()
 {
 	presetation_.reset();
 }
-
 
 void VulkanRenderEngine::initRender()
 {
@@ -108,13 +113,20 @@ void VulkanRenderEngine::destroyRender()
 	render_.reset();
 }
 
-
 void VulkanRenderEngine::setup()
 {
 	// Создание компонентов
 	renderManager_ = std::make_shared<RenderManager>(getDevice(), core_, render_);
 	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(core_, getDevice(), render_->getRenderPass(), renderManager_);
-	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_);
+	auto [width, height] = getSwapchain()->getResolution();
+	auto data = pipeline::RenderChunkPipelineData {
+		.width = width,
+		.height = height,
+		// TODO: Where to take subpass number?
+		.subpass = 0
+	};
+	renderManager_->getWorldManager()->onViewportUpdate(width, height);
+	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_, data);
 	
 	render_->setup(renderEnginePipeline_);
 
@@ -141,16 +153,19 @@ void VulkanRenderEngine::loop()
 	auto start = clock();
 	while (running_)
 	{
-		auto imgIndex = presetation_->acquire();
+		inFrameRebuild();
+		auto currentSwapchain = getSwapchain();
+		auto imgIndex = presetation_->acquire(currentSwapchain);
 		if (imgIndex == UINT32_MAX)
 			continue;
+		// Take framebuffer and work with him
+		auto framebuffer = render_->onAcquire(imgIndex);
 		renderManager_->getWorldManager()->onFrameUpdate();
-		render_->record(imgIndex);
-		auto renderDoneSemaphore = render_->send(imgIndex, acquireSemaphore);
+		render_->record(framebuffer);
+		auto renderDoneSemaphore = render_->send(framebuffer, acquireSemaphore);
 
 		if (renderDoneSemaphore)
-			presetation_->send(imgIndex, { renderDoneSemaphore });
-		
+			presetation_->send(currentSwapchain, imgIndex, { renderDoneSemaphore });
 		
 		fps++;
 		auto currentClock = clock();
@@ -162,4 +177,25 @@ void VulkanRenderEngine::loop()
 		}
 		std::this_thread::yield();
 	}
+}
+
+
+void VulkanRenderEngine::inFrameRebuild()
+{
+	if (!rebuildSwapchain_.load())
+		return;
+	rebuildSwapchain_.store(false);
+	rebuildSwapChain();
+	render_->swapchainChanged(getSwapchain());
+
+	auto [width, height] = getSwapchain()->getResolution();
+	auto data = pipeline::RenderChunkPipelineData {
+		.width = width,
+		.height = height,
+		// TODO: Where to take subpass number?
+		.subpass = 0
+	};
+	renderManager_->getWorldManager()->onViewportUpdate(width, height);
+
+	renderEnginePipeline_->onFramebufferUpdated(data);
 }
