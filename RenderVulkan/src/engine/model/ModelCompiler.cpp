@@ -1,10 +1,17 @@
 #include "./ModelCompiler.hpp"
 #include <algorithm>
 #include <execution>
+#include <ctime>
 using namespace CubA4::render::engine::model;
 
 void ModelCompiler::addFaces(std::vector<CollectedData> data)
 {
+	auto it = std::remove_if(std::execution::par_unseq, data.begin(), data.end(), [](const CollectedData& data) -> bool
+	{
+		return data.faces.empty();
+	});
+	if (it != data.end())
+		data.erase(it, data.end());
 	collected_ = std::move(data);
 }
 
@@ -12,6 +19,9 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 {
 	size_t vertex_size = 0;
 	size_t faces_size = 0;
+
+	std::clock_t start = std::clock();
+
 	for (auto &data : collected_)
 	{
 		const auto model = data.model;
@@ -27,10 +37,15 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 			vertex_size += faceSize;
 		}
 	}
+
+	std::clock_t mid1 = std::clock();
+
 	data_.vertices.resize(vertex_size);
 	data_.uvws.resize(vertex_size);
 	data_.faces.indexes.resize(vertex_size);
 	data_.faces.faces.resize(faces_size);
+
+	std::clock_t mid2 = std::clock();
 	
 	std::for_each(std::execution::par_unseq, collected_.begin(), collected_.end(), [this](const auto &data)
 	{
@@ -63,6 +78,13 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 			}
 		}
 	});
+
+	std::clock_t done = std::clock();
+
+	auto total = done - start;
+	auto prepare = mid1 - start;
+	auto allocate = mid2 - mid1;
+	auto compile = done - mid2;
 	
 	data_.id = id;
 	if (data_.vertices.empty() || data_.faces.indexes.empty())
