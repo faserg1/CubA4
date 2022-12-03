@@ -1,6 +1,7 @@
 #include "./ModelCompiler.hpp"
 #include <algorithm>
 #include <execution>
+#include <atomic>
 #include <ctime>
 using namespace CubA4::render::engine::model;
 
@@ -31,11 +32,17 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		faces_size += faces.size();
 		data.faceOffsets_ = std::move(calculateOffsets(indexes));
 		data.vertexOffset_ = vertex_size;
-		for (auto faceIdx : faces)
+		std::atomic<size_t> currentVertexSize(0);
+		std::for_each(std::execution::par_unseq, faces.begin(), faces.end(), [&indexes, &currentVertexSize](const auto faceIdx)
+		{
+			currentVertexSize += indexes.faces[faceIdx];
+		});
+		vertex_size += currentVertexSize.load();
+		/*for (auto faceIdx : faces)
 		{
 			auto faceSize = indexes.faces[faceIdx];
 			vertex_size += faceSize;
-		}
+		}*/
 	}
 
 	std::clock_t mid1 = std::clock();

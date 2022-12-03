@@ -8,10 +8,15 @@ file(GLOB_RECURSE CubA4LauncherSources
     "${CubA4LauncherSourceDir}/*.cpp"
 )
 
+if (WIN32)
+	set(OPTIONS WIN32)
+endif ()
 
 add_executable(CubA4Launcher ${OPTIONS} ${CubA4LauncherSources})
 target_include_directories(CubA4Launcher PRIVATE ${wxWidgets_INCLUDE_DIRS})
+target_include_directories(CubA4Launcher PRIVATE src)
 target_link_libraries(CubA4Launcher PRIVATE ${wxWidgets_LIBRARIES})
+
 
 set_target_properties(CubA4Launcher PROPERTIES FOLDER "Executables")
 
