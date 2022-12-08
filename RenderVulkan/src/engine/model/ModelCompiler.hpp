@@ -21,7 +21,7 @@ namespace CubA4::render::engine::model
 			CubA4::world::BlockInChunkPos pos;
 		private:
 			// internal
-			std::vector<size_t> faceOffsets_;
+			std::vector<size_t> *faceOffsets_;
 			size_t vertexOffset_ = 0;
 			size_t faceOffset_ = 0;
 		};
