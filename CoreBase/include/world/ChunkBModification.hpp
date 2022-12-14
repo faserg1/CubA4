@@ -14,6 +14,7 @@ namespace CubA4::world
 		{
 			std::shared_ptr<const CubA4::object::IBlock> block;
 			CubA4::world::BlockData data;
+			CubA4::world::BlockInChunkPos pos;
 		};
 		struct RemoveInfo
 		{

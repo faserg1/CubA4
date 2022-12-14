@@ -147,6 +147,13 @@ void AppMain::loop(AppStartup &startup)
 					startup.mouseMove(rel ? event.motion.xrel : event.motion.x, rel ? event.motion.yrel : event.motion.y, rel);
 					break;
 				}
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				{
+					const auto mods = ButtonAdapter::adapt(SDL_GetModState());
+					startup.keyChanged(ButtonAdapter::adaptMouse(event.button.button), mods, event.button.state == SDL_PRESSED);
+					break;
+				}
 			case SDL_KEYUP:
 				{
 					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);

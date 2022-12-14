@@ -157,7 +157,10 @@ void VulkanRenderEngine::loop()
 		auto currentSwapchain = getSwapchain();
 		auto imgIndex = presetation_->acquire(currentSwapchain);
 		if (imgIndex == UINT32_MAX)
+		{
+			render_->onAcquireFailed(acquireSemaphore);
 			continue;
+		}
 		// Take framebuffer and work with him
 		auto framebuffer = render_->onAcquire(imgIndex);
 		renderManager_->getWorldManager()->onFrameUpdate();

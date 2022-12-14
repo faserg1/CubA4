@@ -177,9 +177,12 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 		{
 			std::for_each(std::execution::par_unseq, container->begin(), container->end(), [offset, container, &collected, &model, &material, &hiddenSides](auto blockPos)
 			{
-				// TODO: Fill with data
-				BlockData data;
+				const BlockData &data = container->getBlockData(blockPos);
 				auto index = indexByPos(blockPos);
+				constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
+				// assume, that if we have 6 sides and all them are hidden, we have nothing to render
+				if (hiddenSides[index] == allSides)
+					return;
 				auto fakeIdx = container->getBlockIndex(blockPos);
 				auto faces = model->getFaces(material, hiddenSides[index], data);
 				auto cIndex = offset + fakeIdx;
@@ -206,13 +209,12 @@ RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides
 	for (auto container : chunk->getChunkBContainers())
 	{
 		auto block = container->getBlock();
-		for (auto blockPos : *container)
+		std::for_each(std::execution::par_unseq, container->begin(), container->end(), [this, &container, &block, &hiddenSides](auto blockPos)
 		{
-			// TODO: Fill with data
-			BlockData data;
+			const BlockData &data = container->getBlockData(blockPos);
 			auto nonOpaque = block->getRenderModelDefinition()->getNonOpaqueSide(data);
 			hideFrom(hiddenSides, blockPos, nonOpaque);
-		}
+		});
 	}
 	return std::move(hiddenSides);
 }
@@ -261,9 +263,4 @@ void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos
 		auto index = indexByPos(posFront);
 		hiddenSides[index] |= BlockSide::Front;
 	}
-}
-
-size_t RenderChunkCompilerCore::indexByPos(const BlockInChunkPos &pos)
-{
-	return (pos.z * ChunkSize * ChunkSize) + (pos.y * ChunkSize) + pos.x;
 }

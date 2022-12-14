@@ -43,7 +43,7 @@ namespace CubA4
 					using ModelDefPtr = std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition>;
 				protected:
 					using BlockPtr = std::shared_ptr<const CubA4::object::IBlock>;
-					using HiddenSides = std::array<CubA4::world::BlockSides, CubA4::world::ChunkSize*CubA4::world::ChunkSize*CubA4::world::ChunkSize>;
+					using HiddenSides = std::array<CubA4::world::BlockSides, CubA4::world::ChunkCube>;
 					using RenderModelPtr = std::shared_ptr<const CubA4::render::engine::model::RenderModel>;
 					using RenderModels = std::map<MaterialPtr, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 				public:
@@ -57,7 +57,6 @@ namespace CubA4
 					RenderModelPtr compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides);
 					HiddenSides compileHiddenSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const;
 					void hideFrom(HiddenSides &hiddenSides, CubA4::world::BlockInChunkPos pos, CubA4::world::BlockSides nonOpaque) const;
-					static size_t indexByPos(const CubA4::world::BlockInChunkPos &pos);
 				protected:
 					const std::shared_ptr<const ICore> core_;
 					const std::shared_ptr<const vulkan::Device> device_;

@@ -7,7 +7,7 @@ namespace CubA4::world
 	class ChunkBSet : public virtual IChunkBSet
 	{
 	public:
-		explicit ChunkBSet(std::vector<BlockInChunkPos> positions, BlockData data, Layer layer = 0);
+		explicit ChunkBSet(std::shared_ptr<const object::IBlock> block, std::vector<BlockInChunkPos> positions, std::shared_ptr<BlockData> data, Layer layer = 0);
 		~ChunkBSet();
 
 		std::shared_ptr<const object::IBlock> getBlock() const override;
@@ -20,8 +20,23 @@ namespace CubA4::world
 		Iterator begin() const override;
 		Iterator end() const override;
 	private:
+		class SetIterator : public virtual IChunkBIterator
+		{
+		public:
+			SetIterator(const ChunkBSet *set, uint32_t index);
+			std::unique_ptr<IChunkBIterator> copy() const override;
+			bool equal(const IChunkBIterator *other) const override;
+			void move(int32_t shift) override;
+			const CubA4::world::BlockInChunkPos &get() const override;
+		private:
+			const ChunkBSet *set_;
+			uint32_t index_;
+			CubA4::world::BlockInChunkPos pos_;
+		};
+	private:
+		std::shared_ptr<const object::IBlock> block_;
 		std::vector<BlockInChunkPos> positions_;
-		BlockData data_;
+		std::shared_ptr<BlockData> data_;
 		Layer layer_;
 	};
 }

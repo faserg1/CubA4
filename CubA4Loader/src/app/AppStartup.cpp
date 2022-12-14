@@ -112,14 +112,15 @@ void AppStartup::stop()
 
 void AppStartup::doSomeTestThings(double delta)
 {
+	//TODO: [OOKAMI] Убрать тестовые вещи
 	const auto speed = 0.05f;
 	const auto vel = speed * delta;
 	if (startup_->getGame()->getController()->getActionState("forward"))
-		camera_->move(0.f, 0.f, -vel);
+		camera_->move(0.f, 0.f, static_cast<float>(-vel));
 	if (startup_->getGame()->getController()->getActionState("back"))
-		camera_->move(0.f, 0.f, vel);
+		camera_->move(0.f, 0.f, static_cast<float>(vel));
 	if (startup_->getGame()->getController()->getActionState("left"))
-		camera_->move(-vel, 0.f, 0.f);
+		camera_->move(static_cast<float>(-vel), 0.f, 0.f);
 	if (startup_->getGame()->getController()->getActionState("right"))
-		camera_->move(vel, 0.f, 0.f);
+		camera_->move(static_cast<float>(vel), 0.f, 0.f);
 }

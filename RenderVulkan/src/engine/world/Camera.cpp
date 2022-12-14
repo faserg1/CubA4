@@ -77,11 +77,27 @@ void Camera::move(float x, float y, float z, bool local)
         y_ += y;
         z_ += z;
     }
-    /*std::cout << fmt::format("Before [{}, {}, {}] in chunk [{}, {}, {}]", x_, y_, z_, chunkPos_.x, chunkPos_.y, chunkPos_.z);
+    auto chunkPosBefore = chunkPos_;
+    auto xB = x_;
+    auto yB = y_;
+    auto zB = z_;
+    
     clampWith(x_, chunkPos_.x);
     clampWith(y_, chunkPos_.y);
     clampWith(z_, chunkPos_.z);
-    std::cout << fmt::format("After [{}, {}, {}] in chunk [{}, {}, {}]", x_, y_, z_, chunkPos_.x, chunkPos_.y, chunkPos_.z);*/
+
+    auto same = [](float a, float b) -> bool
+    {
+        auto diff = a - a;
+        return (diff < 0.1) && (-diff < 0.1);
+    };
+
+    if (chunkPos_ != chunkPosBefore || !same(xB, x_) || !same(yB, y_) || !same(zB, z_))
+    {
+        std::cout << fmt::format("Before [{}, {}, {}] in chunk [{}, {}, {}]\n", xB, yB, zB, chunkPosBefore.x, chunkPosBefore.y, chunkPosBefore.z);
+        std::cout << fmt::format("After [{}, {}, {}] in chunk [{}, {}, {}]\n", x_, y_, z_, chunkPos_.x, chunkPos_.y, chunkPos_.z);
+    }
+    
     updateMatrix();
 }
 

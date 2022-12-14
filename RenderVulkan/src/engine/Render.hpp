@@ -7,6 +7,7 @@
 #include <util/ISubscription.hpp>
 #include <vulkan/FramebuffersBuilder.hpp>
 #include <vulkan/Framebuffer.hpp>
+#include <tools/SpinLock.hpp>
 #include "./pipeline/IRenderEnginePipelineSubscriber.hpp"
 
 namespace CubA4
@@ -48,7 +49,7 @@ namespace CubA4
 				void shutdown();
 
 				void swapchainChanged(std::shared_ptr<const vulkan::Swapchain> swapchain);
-				void onAcquireFailed();
+				void onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 				std::shared_ptr<vulkan::Framebuffer> onAcquire(uint32_t imgIndex);
 				void record(std::shared_ptr<vulkan::Framebuffer> framebuffer);
 				std::shared_ptr<const vulkan::Semaphore> send(std::shared_ptr<vulkan::Framebuffer> framebuffer, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
@@ -75,7 +76,8 @@ namespace CubA4
 				std::vector<OldFramebufferInfo> oldFramebuffers_;
 
 				std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> chunks_;
-				std::atomic_bool chunksLocked_;
+				CubA4::render::tools::SpinLock chunkLock_;
+				CubA4::render::tools::SpinLock oldFramebuffersLock_;
 				std::unique_ptr<CubA4::util::ISubscription> chunkUpdateSubscription_;
 			};
 		}

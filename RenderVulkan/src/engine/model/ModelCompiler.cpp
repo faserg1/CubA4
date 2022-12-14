@@ -10,7 +10,7 @@ void ModelCompiler::addFaces(std::vector<CollectedData> data)
 {
 	auto it = std::remove_if(std::execution::par_unseq, data.begin(), data.end(), [](const CollectedData& data) -> bool
 	{
-		return data.faces.empty();
+		return !data.model || data.faces.empty();
 	});
 	if (it != data.end())
 		data.erase(it, data.end());

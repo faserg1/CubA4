@@ -8,7 +8,7 @@ namespace CubA4::world
 	{
 	public:
 		explicit ChunkBRange(std::shared_ptr<const object::IBlock> block,
-			const std::array<BlockInChunkPos, BoundsSize> &bounds, BlockData data, Layer layer = 0);
+			const std::array<BlockInChunkPos, BoundsSize> &bounds, std::shared_ptr<BlockData> data, Layer layer = 0);
 		~ChunkBRange();
 
 		std::shared_ptr<const object::IBlock> getBlock() const override;
@@ -39,7 +39,7 @@ namespace CubA4::world
 	private:
 		const std::shared_ptr<const object::IBlock> block_;
 		const std::array<BlockInChunkPos, BoundsSize> bounds_;
-		const BlockData data_;
+		const std::shared_ptr<BlockData> data_;
 		const Layer layer_;
 	};
 }

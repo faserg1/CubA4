@@ -108,9 +108,9 @@ FramebufferState Framebuffer::getState() const
     return state_.load();
 }
 
-void Framebuffer::waitFence()
+bool Framebuffer::waitFence()
 {
-    fence_.wait(50);
+    return fence_.wait(50) == VK_SUCCESS;
 }
 
 void Framebuffer::resetFence()
@@ -126,6 +126,8 @@ void Framebuffer::onAquired()
 void Framebuffer::onRecorded()
 {
     dirty_.store(false);
+    recordAwait_.store(false);
+    recorded_.store(true);
 }
 
 void Framebuffer::onSend()
@@ -141,6 +143,22 @@ void Framebuffer::markDirty()
 bool Framebuffer::isDirty() const
 {
     return dirty_.load();
+}
+
+bool Framebuffer::isRecorded() const
+{
+    return recorded_.load();
+}
+
+void Framebuffer::onRecordAwait()
+{
+    recordAwait_.store(true);
+    recorded_.store(false);
+}
+
+bool Framebuffer::isRecordAwait() const
+{
+    return recordAwait_.load();
 }
 
 VkCommandBuffer Framebuffer::getCommandBuffer() const

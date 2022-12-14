@@ -70,6 +70,11 @@ namespace CubA4::game::controller
 		F10,
 		F11,
 		F12,
+		LMB,
+		RMB,
+		MMB,
+		MScrollDown,
+		MScrollUp
 	};
 
 	enum class BMod : uint16_t

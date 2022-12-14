@@ -135,6 +135,20 @@ CubA4::game::controller::Button ButtonAdapter::adapt(SDL_Scancode scancode)
 	return Button::None;
 }
 
+CubA4::game::controller::Button ButtonAdapter::adaptMouse(uint8_t btn)
+{
+	switch (btn)
+	{
+	case SDL_BUTTON_LEFT:
+		return Button::LMB;
+	case SDL_BUTTON_RIGHT:
+		return Button::RMB;
+	case SDL_BUTTON_MIDDLE:
+		return Button::MMB;
+	}
+	return Button::None;
+}
+
 BMods ButtonAdapter::adapt(uint16_t mod)
 {
 	BMods mods {};

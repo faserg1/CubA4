@@ -2,7 +2,7 @@
 using namespace CubA4::world;
 
 ChunkBRange::ChunkBRange(std::shared_ptr<const object::IBlock> block,
-	const std::array<BlockInChunkPos, BoundsSize> &bounds, BlockData data, Layer layer) :
+	const std::array<BlockInChunkPos, BoundsSize> &bounds, std::shared_ptr<BlockData> data, Layer layer) :
         block_(block), bounds_(bounds), data_(data), layer_(layer)
 {
 	
@@ -65,6 +65,8 @@ bool ChunkBRange::hasBlockAt(const world::BlockInChunkPos &pos) const
 	return isInBounds(bounds_[0], bounds_[1], pos);
 }
 
+// TODO: Move index details to constexpr in Position.hpp
+
 uint32_t ChunkBRange::getBlockIndex(const world::BlockInChunkPos &pos) const
 {
 	const auto xSize = bounds_[1].x - bounds_[0].x + 1;
@@ -89,7 +91,7 @@ CubA4::world::BlockInChunkPos ChunkBRange::getBlockPosition(uint32_t index) cons
 
 const BlockData &ChunkBRange::getBlockData(const world::BlockInChunkPos &pos) const
 {
-    return data_;
+    return *data_;
 }
 
 CubA4::world::Layer ChunkBRange::getLayer() const

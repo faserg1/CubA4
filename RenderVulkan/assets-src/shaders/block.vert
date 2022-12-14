@@ -23,7 +23,7 @@ layout (constant_id = 0) const int ChunkSize = 1;
 void main()
 {
 	outUVW = inUVW;
-	vec3 chunkFromView = (pushConstants.chunkPos - matricies.viewChunkPos) * ChunkSize;
+	ivec3 chunkFromView = (pushConstants.chunkPos - matricies.viewChunkPos) * ChunkSize;
 	vec3 transformedVertex = inPos + chunkFromView;
 	vec4 sub = vec4(transformedVertex.x, transformedVertex.y, transformedVertex.z, 1.0);
 	sub.y *= -1.0;

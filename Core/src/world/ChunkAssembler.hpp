@@ -9,7 +9,7 @@
 
 namespace CubA4::world
 {
-	struct ReassmebledChunkContainers
+	struct ReassembledChunkContainers
 	{
 		std::vector<std::shared_ptr<ChunkBRange>> addedRanges;
 		std::vector<std::shared_ptr<ChunkBSet>> addedSets;
@@ -28,7 +28,7 @@ namespace CubA4::world
 		explicit ChunkAssembler();
 		~ChunkAssembler();
 
-		ReassmebledChunkContainers reassmeble(std::shared_ptr<Chunk> chunk, const ChunkBModification &modification);
+		ReassembledChunkContainers reassemble(std::shared_ptr<Chunk> chunk, const ChunkBModification &modification);
 		static std::shared_ptr<ChunkBRange> buildRange(
 			std::shared_ptr<const CubA4::object::IBlock> block,
 			const CubA4::world::BlockInChunkPos &start,
@@ -36,6 +36,8 @@ namespace CubA4::world
 			BlockData data = {},
 			CubA4::world::Layer layer = 0);
 	private:
+		ReassembledChunkContainers reassembleByBlock(std::shared_ptr<Chunk> chunk, std::shared_ptr<const CubA4::object::IBlock> block, const ChunkBModification &modification);
+
 		static std::array<CubA4::world::BlockInChunkPos, MinMaxBoundsSize> minMaxBounds(const std::vector<CubA4::world::BlockInChunkPos> &positions);
 		static CubA4::world::BlockInChunkPos minBound(const std::vector<CubA4::world::BlockInChunkPos> &positions);
 		static CubA4::world::BlockInChunkPos maxBound(const std::vector<CubA4::world::BlockInChunkPos> &positions);

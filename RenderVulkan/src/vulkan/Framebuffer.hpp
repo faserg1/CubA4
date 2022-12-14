@@ -30,15 +30,19 @@ namespace CubA4::render::vulkan
 
 		FramebufferState getState() const;
 
-		void waitFence();
+		bool waitFence();
 		void resetFence();
 		
 		void onAquired();
 		void onRecorded();
 		void onSend();
-		void markDirty();
 
+		void markDirty();
 		bool isDirty() const;
+		bool isRecorded() const;
+
+		void onRecordAwait();
+		bool isRecordAwait() const;
 
 		VkCommandBuffer getCommandBuffer() const;
 		VkFramebuffer getFrameBuffer() const;
@@ -59,6 +63,8 @@ namespace CubA4::render::vulkan
 		VkImageView depthImageView_;
 		
 		std::atomic_bool dirty_;
+		std::atomic_bool recordAwait_;
+		std::atomic_bool recorded_;
 		std::atomic<FramebufferState> state_;
 	};
 }

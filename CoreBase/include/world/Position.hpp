@@ -5,6 +5,7 @@
 
 namespace CubA4::world
 {
+	/// Details
 	namespace
 	{
 		template <typename T>
@@ -14,6 +15,13 @@ namespace CubA4::world
 				pow == 0 ? 1 : num * ipow(num, pow - 1);
 		}
 	}
+
+	/* Длинна грани чанка. (Объем чанка = длинна в кубе) */
+	constexpr const uint16_t ChunkSize = 64;
+	constexpr const uint32_t ChunkCube = ChunkSize * ChunkSize * ChunkSize;
+
+	/// Диапазон блоков в чанке измеряется начальной минимальной точкой и конечной максимальной точкой
+	constexpr const uint8_t BoundsSize = 2;
 
 	template <typename TPosType>
 	struct BasePos
@@ -44,6 +52,24 @@ namespace CubA4::world
 			if (one.x > other.x)
 				return false;
 			return false;
+		}
+
+		friend BasePos operator+(const BasePos &one, const BasePos &two)
+		{
+			return BasePos {
+				one.x + two.x,
+				one.y + two.y,
+				one.z + two.z,
+			};
+		}
+
+		friend BasePos operator-(const BasePos &one, const BasePos &two)
+		{
+			return BasePos {
+				one.x - two.x,
+				one.y - two.y,
+				one.z - two.z,
+			};
 		}
 	};
 
@@ -79,11 +105,12 @@ namespace CubA4::world
 			min.z <= check.z && check.z <= max.z; 
 	}
 
-	/* Длинна грани чанка. (Объем чанка = длинна в кубе) */
-	constexpr uint16_t ChunkSize = 64;
+	constexpr size_t indexByPos(const BlockInChunkPos &pos)
+	{
+		return (pos.z * ChunkSize * ChunkSize) + (pos.y * ChunkSize) + pos.x;
+	}
+
+	/// Static checks
 	static_assert(ChunkSize >= 8, "Чанк не может быть размером меньше 8.");
 	static_assert(ChunkSize <= ipow(2, sizeof(decltype(BlockInChunkPos::x)) * 8), "Чанк не может привышать размер, превышающий макисмальные позиции блоков в чанке.");
-
-	/// Диапазон блоков в чанке измеряется начальной минимальной точкой и конечной максимальной точкой
-	constexpr const uint8_t BoundsSize = 2;
 }

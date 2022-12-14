@@ -18,7 +18,7 @@ using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
 Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain) :
-	device_(device), swapchain_(swapchain), framebuffersBuilder_(device_),  chunksLocked_(false)
+	device_(device), swapchain_(swapchain), framebuffersBuilder_(device_)
 {
 	createRenderPass();
 	createFramebuffers();
@@ -52,8 +52,21 @@ void Render::swapchainChanged(std::shared_ptr<const vulkan::Swapchain> swapchain
 	createFramebuffers();
 }
 
-void Render::onAcquireFailed()
+void Render::onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
 {
+	//send command buffer to queue
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+	std::vector<VkSemaphore> waitSemaphores = { awaitSemaphore->getSemaphore() };
+	std::vector<VkPipelineStageFlags> waitFlags = { VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT };
+
+	submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
+	submitInfo.pWaitSemaphores = waitSemaphores.data();
+	submitInfo.pWaitDstStageMask = waitFlags.data();
+
+	auto q = device_->getQueue();
+	vkQueueSubmit(q->get(), 1, &submitInfo, VK_NULL_HANDLE );
 	onCycle();
 }
 
@@ -67,8 +80,12 @@ std::shared_ptr<Framebuffer> Render::onAcquire(uint32_t imgIndex)
 
 void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 {
-	if (!framebuffer->isDirty())
+	if (!framebuffer->isRecordAwait())
 		return;
+
+	if (!framebuffer->waitFence())
+		return;
+	framebuffer->resetFence();
 
 	auto vkCmdBuffer = framebuffer->getCommandBuffer();
 	auto vkFramebuffer = framebuffer->getFrameBuffer();
@@ -100,19 +117,15 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 
 	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
 
-	framebuffer->waitFence();
-	framebuffer->resetFence();
-
 	vkBeginCommandBuffer(vkCmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(vkCmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-
 	////////////////////////////////////////////////////////////
-	while (chunksLocked_);
-	chunksLocked_ = true;
-	////////////////////////
-	auto chunks = chunks_;
-	////////////////////////
-	chunksLocked_ = false;
+	decltype(chunks_) chunks;
+
+	{
+		auto locker = chunkLock_.lock();
+		chunks = chunks_;
+	}
 
 	for (auto chunk : chunks)
 	{
@@ -128,18 +141,17 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 
 std::shared_ptr<const Semaphore> Render::send(std::shared_ptr<vulkan::Framebuffer> framebuffer, std::shared_ptr<const Semaphore> awaitSemaphore)
 {
-	if (framebuffer->isDirty())
-		return {};
-	framebuffer->waitFence();
-	framebuffer->resetFence();
 	auto vkCmdBuffer = framebuffer->getCommandBuffer();
 	auto renderDoneSemaphore = framebuffer->getRenderDoneSemaphore();
 
 	//send command buffer to queue
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &vkCmdBuffer;
+	if (framebuffer->isRecorded())
+	{
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &vkCmdBuffer;
+	}
 	
 	std::vector<VkSemaphore> signalSemaphores = { renderDoneSemaphore->getSemaphore() };
 	std::vector<VkSemaphore> waitSemaphores = { awaitSemaphore->getSemaphore() };
@@ -153,7 +165,9 @@ std::shared_ptr<const Semaphore> Render::send(std::shared_ptr<vulkan::Framebuffe
 	submitInfo.pWaitDstStageMask = waitFlags.data();
 
 	auto q = device_->getQueue();
-	vkQueueSubmit(q->get(), 1, &submitInfo, framebuffer->getFence());
+	vkQueueSubmit(q->get(), 1, &submitInfo, framebuffer->isDirty() ? framebuffer->getFence() : VK_NULL_HANDLE);
+	if (framebuffer->isDirty())
+		framebuffer->onRecordAwait();
 
 	return renderDoneSemaphore;
 }
@@ -186,6 +200,7 @@ void Render::destroyFramebuffers()
 
 void Render::onCycle()
 {
+	auto locker = oldFramebuffersLock_.lock();
 	auto it = std::remove_if(oldFramebuffers_.begin(), oldFramebuffers_.end(), [](OldFramebufferInfo &oldInfo) -> bool
 	{
 		if (oldInfo.cyclesLeft > 0)
@@ -197,16 +212,15 @@ void Render::onCycle()
 
 void Render::chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks)
 {
-	while (chunksLocked_);
-	chunksLocked_ = true;
-	////////////////////////
-	oldFramebuffers_.push_back(OldFramebufferInfo {
-		.cyclesLeft = 10,
-		.oldChunks = chunks_
-	});
-	chunks_ = renderChunks;
-	////////////////////////
-	chunksLocked_ = false;
+	{
+		auto locker = chunkLock_.lock();
+		auto locker2 = oldFramebuffersLock_.lock();
+		oldFramebuffers_.push_back(OldFramebufferInfo {
+			.cyclesLeft = 10,
+			.oldChunks = chunks_
+		});
+		chunks_ = renderChunks;
+	}
 	for (auto &framebuffer : framebuffers_)
 	{
 		framebuffer->markDirty();
