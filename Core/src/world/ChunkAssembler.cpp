@@ -3,9 +3,20 @@
 #include <algorithm>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/filter.hpp>
+#include <limits>
 using namespace CubA4::world;
 
-ChunkAssembler::ChunkAssembler()
+ReassembledChunkContainers &ReassembledChunkContainers::operator+=(const ReassembledChunkContainers &other)
+{
+	addedMultis.insert_range(addedMultis.end(), other.addedMultis);
+	addedRanges.insert_range(addedRanges.end(), other.addedRanges);
+	addedSets.insert_range(addedSets.end(), other.addedSets);
+	removed.insert_range(removed.end(), other.removed);
+	return *this;
+}
+
+ChunkAssembler::ChunkAssembler(CubA4::system::IEnvironment &env) :
+	env_(env)
 {
 	
 }
@@ -19,29 +30,20 @@ ReassembledChunkContainers ChunkAssembler::reassemble(std::shared_ptr<Chunk> chu
 {
 	ReassembledChunkContainers rcc {};
 	auto usedBlocks = chunk->getUsedBlocks();
-	std::vector<ReassembledChunkContainers> rccByBlocks;
-	std::transform(usedBlocks.begin(), usedBlocks.end(), std::back_inserter(rccByBlocks), [this, chunk, &modification](std::shared_ptr<const CubA4::object::IBlock> block)
+	std::vector<ReassembledChunkContainers> rccByBlocks(usedBlocks.size());
+	std::transform(usedBlocks.begin(), usedBlocks.end(), rccByBlocks.begin(), [this, chunk, &modification](std::shared_ptr<const CubA4::object::IBlock> block)
 	{
 		ChunkBModification mods;
 		mods.add = modification.add | ranges::views::filter([block](auto mod) -> bool {return mod.block == block;}) | ranges::to<std::vector>;
+		mods.mod = modification.mod;
 		mods.remove = modification.remove;
 		return reassembleByBlock(chunk, block, mods);
 	});
 	rcc = std::accumulate(rccByBlocks.begin(), rccByBlocks.end(), ReassembledChunkContainers {}, [](const ReassembledChunkContainers &a, const ReassembledChunkContainers &b) -> ReassembledChunkContainers
 	{
 		ReassembledChunkContainers total;
-		total.addedMultis.insert_range(total.addedMultis.end(), a.addedMultis);
-		total.addedMultis.insert_range(total.addedMultis.end(), b.addedMultis);
-
-		total.addedRanges.insert_range(total.addedRanges.end(), a.addedRanges);
-		total.addedRanges.insert_range(total.addedRanges.end(), b.addedRanges);
-		
-		total.addedSets.insert_range(total.addedSets.end(), a.addedSets);
-		total.addedSets.insert_range(total.addedSets.end(), b.addedSets);
-
-		total.removed.insert_range(total.removed.end(), a.removed);
-		total.removed.insert_range(total.removed.end(), b.removed);
-		
+		total += a;
+		total += b;
 		return std::move(total);
 	});
     return std::move(rcc);
@@ -50,36 +52,147 @@ ReassembledChunkContainers ChunkAssembler::reassemble(std::shared_ptr<Chunk> chu
 ReassembledChunkContainers ChunkAssembler::reassembleByBlock(std::shared_ptr<Chunk> chunk, std::shared_ptr<const CubA4::object::IBlock> block, const ChunkBModification &modification)
 {
 	ReassembledChunkContainers rcc {};
+	const auto id = env_.getId(block);
+	auto &storage = chunk->getDataProvider().getBlockDataStorage(id);
+	for (const auto &addMod : modification.add)
+	{
+		storage.getOrAdd(addMod.data);
+	}
+	std::vector<ReassembledChunkContainers> rccByBlockDatas(storage.getStorage().size());
+	std::transform(storage.getStorage().begin(), storage.getStorage().end(), rccByBlockDatas.begin(), [this, chunk, block, &modification](std::shared_ptr<const BlockData> blockData)
+	{
+		return reassembleByBlockData(chunk, block, *blockData, modification);
+	});
+	rcc = std::accumulate(rccByBlockDatas.begin(), rccByBlockDatas.end(), ReassembledChunkContainers {}, [](const ReassembledChunkContainers &a, const ReassembledChunkContainers &b) -> ReassembledChunkContainers
+	{
+		ReassembledChunkContainers total;
+		total += a;
+		total += b;
+		return std::move(total);
+	});
+	return std::move(rcc);
+}
+
+ReassembledChunkContainers ChunkAssembler::reassembleByBlockData(std::shared_ptr<Chunk> chunk, std::shared_ptr<const CubA4::object::IBlock> block, BlockData data, const ChunkBModification &modification)
+{
+	ReassembledChunkContainers rcc {};
 	struct BlockInfo
 	{
-		uint32_t beginOfNextX;
-		uint32_t beginOfNextY;
-		uint32_t beginOfNextZ;
-		BlockInfo *beginX = nullptr;
-		BlockInfo *beginY = nullptr;
-		BlockInfo *beginZ = nullptr;
-		std::vector<std::shared_ptr<const IChunkBBaseContainer>> parentContainers;
+		Layer layer = std::numeric_limits<Layer>::max();
+		size_t containerId = std::numeric_limits<size_t>::max();
+		size_t tempContainerId = std::numeric_limits<size_t>::max();
+		ChunkBContainerType next = ChunkBContainerType::None;
 	};
-	std::array<BlockInfo, ChunkCube> cube;
-	for (auto container : chunk->getChunkBContainers())
+	
+	using BlockInfoCollection = std::vector<BlockInfo>;
+	std::array<BlockInfoCollection, ChunkCube> cube;
+	for (auto container : chunk->getChunkBContainers(block))
 	{
 		for (auto blockPos : *container)
 		{
 			const auto index = indexByPos(blockPos);
-			const auto &blockInfo = cube[index];
+			auto &blockInfoCollection = cube[index];
+			blockInfoCollection.push_back(BlockInfo{container->getLayer(), container->getId()});
 		}
 	}
+	// Remove blocks
+	for (const auto &removeInfo : modification.remove)
+	{
+		const auto index = indexByPos(removeInfo.pos);
+		auto &blockInfoCollection = cube[index];
+		auto blockInfoIt = std::remove_if(blockInfoCollection.begin(), blockInfoCollection.end(), [layer = removeInfo.layer](const auto &bi)
+		{
+			return bi.layer == layer;
+		});
+		if (blockInfoIt == blockInfoCollection.end())
+			continue;
+		blockInfoCollection.erase(blockInfoIt);
+	}
+
+	// Helper for adding
+
+	auto countAdjancentBlocks = [&cube](BlockInChunkPos pos, Layer layer) -> uint8_t {
+		uint8_t count = 0;
+		for (const auto adjancentPos : AdjancentPositions)
+		{
+			const auto neighborPos = pos + adjancentPos;
+			if (neighborPos.x < 0 || neighborPos.x >= ChunkSize
+				|| neighborPos.y < 0 || neighborPos.y >= ChunkSize
+				|| neighborPos.z < 0 || neighborPos.z >= ChunkSize)
+			{
+				// Skip if neighborPos is out of bounds
+				continue;
+			}
+			const auto adjancentIndex = indexByPos(neighborPos);
+			const auto &blockInfoCollection = cube[adjancentIndex];
+			for (const auto &blockInfo : blockInfoCollection)
+			{
+				if (blockInfo.layer == layer)
+				{
+					count++;
+					break;
+				}
+			}
+		}
+		return count;
+	};
+
+	// Add blocks. Should try to insert in layer with more neighbors as possible
+	for (const auto &addInfo : modification.add)
+	{
+		const auto index = indexByPos(addInfo.pos);
+		auto &blockInfoCollection = cube[index];
+
+		// Find the layer with the most neighbors
+		Layer targetLayer = 0;
+		int maxNeighbors = 0;
+		for (const auto &blockInfo : blockInfoCollection)
+		{
+			if (blockInfo.layer > targetLayer)
+			{
+				const auto neighbors = countAdjancentBlocks(addInfo.pos, blockInfo.layer);
+				if (neighbors > maxNeighbors)
+				{
+					targetLayer = blockInfo.layer;
+					maxNeighbors = neighbors;
+				}
+			}
+		}
+
+		if (!maxNeighbors)
+		{
+			const auto blocks = chunk->getBlocksAt(addInfo.pos);
+			
+			Layer requestedLayer = 0;
+			for (const auto &block : blocks)
+			{
+				if (block.layer == requestedLayer)
+				{
+					requestedLayer++;
+				}
+			}
+		}
+
+		blockInfoCollection.push_back(BlockInfo{targetLayer, std::numeric_limits<size_t>::max()});
+	}
+
+	// Find most occupied place. Start making range from center
+	// Anything else would be range
+
+	// ...
+	
 	return std::move(rcc);
 }
 
 std::shared_ptr<ChunkBRange> ChunkAssembler::buildRange(
+	size_t id,
     std::shared_ptr<const CubA4::object::IBlock> block,
     const CubA4::world::BlockInChunkPos &start,
     const CubA4::world::BlockInChunkPos &end,
     BlockData data,
     CubA4::world::Layer layer)
 {
-    return std::make_shared<ChunkBRange>(block, minMaxBounds({start, end}), std::make_shared<BlockData>(data), layer);
+    return std::make_shared<ChunkBRange>(id, block, minMaxBounds({start, end}), std::make_shared<BlockData>(data), layer);
 }
 
 
@@ -87,8 +200,8 @@ std::array<BlockInChunkPos, MinMaxBoundsSize> ChunkAssembler::minMaxBounds(const
 {
 	static_assert(MinMaxBoundsSize == 2, "Количество точек для минимальной/максимальной границы должно равнятся двум.");
 	std::array<BlockInChunkPos, MinMaxBoundsSize> bounds;
-	bounds[MinIndex] = minBound(positions);
-	bounds[MaxIndex] = maxBound(positions);
+	bounds[0] = minBound(positions);
+	bounds[1] = maxBound(positions);
 	return std::move(bounds);
 }
 

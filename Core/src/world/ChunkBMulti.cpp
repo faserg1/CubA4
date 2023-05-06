@@ -1,8 +1,8 @@
 #include <world/ChunkBMulti.hpp>
 using namespace CubA4::world;
 
-ChunkBMulti::ChunkBMulti(std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer, std::map<world::BlockInChunkPos, std::shared_ptr<BlockData>> data) :
-    block_(block), layer_(layer), data_(data)
+ChunkBMulti::ChunkBMulti(size_t id, std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer, std::map<world::BlockInChunkPos, std::shared_ptr<BlockData>> data) :
+    id_(id), block_(block), layer_(layer), data_(data)
 {
 	
 }
@@ -10,6 +10,11 @@ ChunkBMulti::ChunkBMulti(std::shared_ptr<const object::IBlock> block, CubA4::wor
 ChunkBMulti::~ChunkBMulti()
 {
 	
+}
+
+size_t ChunkBMulti::getId() const
+{
+    return id_;
 }
 
 std::shared_ptr<const CubA4::object::IBlock> ChunkBMulti::getBlock() const

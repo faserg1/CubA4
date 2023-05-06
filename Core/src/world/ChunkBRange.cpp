@@ -1,9 +1,9 @@
 #include <world/ChunkBRange.hpp>
 using namespace CubA4::world;
 
-ChunkBRange::ChunkBRange(std::shared_ptr<const object::IBlock> block,
+ChunkBRange::ChunkBRange(size_t id, std::shared_ptr<const object::IBlock> block,
 	const std::array<BlockInChunkPos, BoundsSize> &bounds, std::shared_ptr<BlockData> data, Layer layer) :
-        block_(block), bounds_(bounds), data_(data), layer_(layer)
+        id_(id), block_(block), bounds_(bounds), data_(data), layer_(layer)
 {
 	
 }
@@ -13,6 +13,10 @@ ChunkBRange::~ChunkBRange()
 	
 }
 
+size_t ChunkBRange::getId() const
+{
+    return id_;
+}
 
 std::shared_ptr<const CubA4::object::IBlock> ChunkBRange::getBlock() const
 {

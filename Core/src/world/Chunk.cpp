@@ -96,6 +96,10 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 	checkContainer(chunkBRanges_);
 	checkContainer(chunkBSets_);
 	checkContainer(chunkBMultis_);
+	std::sort(std::execution::par_unseq, blocks.begin(), blocks.end(), [](const auto &a, const auto &b) -> bool
+	{
+		return a.layer < b.layer;
+	});
 	return std::move(blocks);
 }
 
@@ -125,6 +129,16 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 	if (auto blockAt = checkContainer(chunkBMultis_); blockAt.block)
 		return blockAt;
 	return {};
+}
+
+DataProvider &Chunk::getDataProvider()
+{
+	return dataProvider_;
+}
+
+const DataProvider &Chunk::getDataProvider() const
+{
+	return dataProvider_;
 }
 
 void Chunk::addRange(std::shared_ptr<ChunkBRange> container)

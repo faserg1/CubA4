@@ -22,8 +22,9 @@ constexpr const char *loggerTag = "ENGINE";
 
 VulkanRenderEngine::VulkanRenderEngine(
 	std::shared_ptr<const CubA4::info::IApplicationInfo> info,
-	std::shared_ptr<const CubA4::ICore> core) :
-	RenderEngineCore(info, core),
+	std::shared_ptr<const CubA4::ICore> core,
+	std::shared_ptr<config::IRenderConfig> config) :
+	RenderEngineCore(info, core, config),
 	running_(false),
 	rebuildSwapchain_(false)
 {

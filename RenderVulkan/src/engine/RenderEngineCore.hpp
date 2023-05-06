@@ -39,7 +39,7 @@ namespace CubA4
 			{
 			public:
 			protected:
-				explicit RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core);
+				explicit RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core, std::shared_ptr<config::IRenderConfig> config);
 				explicit RenderEngineCore(const RenderEngineCore &) = delete;
 				~RenderEngineCore();
 
@@ -60,7 +60,7 @@ namespace CubA4
 				const std::shared_ptr<const CubA4::ICore> core_;
 				const std::shared_ptr<CubA4::logging::ILogger> logger_;
 			private:
-				std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
+				const std::shared_ptr<CubA4::render::config::IRenderConfig> config_;
 
 				std::weak_ptr<const CubA4::window::IWindow> window_;
 				std::shared_ptr<vulkan::Surface> surface_;

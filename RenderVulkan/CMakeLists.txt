@@ -34,8 +34,7 @@ target_link_libraries(RenderVulkan PRIVATE
     range-v3 range-v3-meta range-v3::meta range-v3-concepts
     Taskflow::Taskflow
     nlohmann_json nlohmann_json::nlohmann_json fmt::fmt
-    SDL2::SDL2 SDL2::SDL2main glm::glm png)
-
+    SDL2::SDL2 SDL2::SDL2main glm::glm png skia skia::skia)
 #use_library(RenderVulkan zlib)
 #use_library(RenderVulkan pnglib)
 

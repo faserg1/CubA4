@@ -4,6 +4,7 @@
 #include <world/ChunkBRange.hpp>
 #include <world/ChunkBSet.hpp>
 #include <world/ChunkBMulti.hpp>
+#include <world/DataProvider.hpp>
 #include <memory>
 #include <vector>
 #include <map>
@@ -26,6 +27,9 @@ namespace CubA4::world
 		std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const override;
 		CubA4::world::BlockAt getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const override;
 
+		DataProvider &getDataProvider();
+		const DataProvider &getDataProvider() const;
+
 		// temp
 		void addRange(std::shared_ptr<ChunkBRange> container);
 	protected:
@@ -36,6 +40,8 @@ namespace CubA4::world
 		std::vector<std::shared_ptr<ChunkBRange>> chunkBRanges_;
 		std::vector<std::shared_ptr<ChunkBSet>> chunkBSets_;
 		std::vector<std::shared_ptr<ChunkBMulti>> chunkBMultis_;
+
+		DataProvider dataProvider_;
 
 		// used blocks cache
 		std::map<std::shared_ptr<const CubA4::object::IBlock>, uint32_t> usedBlocks;

@@ -1,5 +1,4 @@
-#ifndef RENDERVULKAN_VULKAN_INFO_HPP
-#define RENDERVULKAN_VULKAN_INFO_HPP
+#pragma once
 
 #include <IRenderInfo.hpp>
 
@@ -17,13 +16,13 @@ namespace CubA4
 			void destroy() override;
 			std::string getRenderEngineId() const override;
 			std::shared_ptr<engine::IRenderEngine> getRenderEngine() override;
+			std::shared_ptr<config::IRenderConfig> getRenderConfig() const;
 			uint32_t getSDLWindowFlags() const override;
 		private:
 			std::shared_ptr<const info::IApplicationInfo> info_;
+			std::shared_ptr<config::IRenderConfig> config_;
 			std::shared_ptr<const ICore> core_;
 			std::shared_ptr<engine::IRenderEngine> engine_;
 		};
 	}
 }
-
-#endif // RENDERVULKAN_VULKAN_INFO_HPP

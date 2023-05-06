@@ -24,7 +24,7 @@ namespace CubA4::render::engine
 		public RenderEngineCore
 	{
 	public:
-		explicit VulkanRenderEngine(std::shared_ptr<const info::IApplicationInfo> info, std::shared_ptr<const ICore> core);
+		explicit VulkanRenderEngine(std::shared_ptr<const info::IApplicationInfo> info, std::shared_ptr<const ICore> core, std::shared_ptr<config::IRenderConfig> config);
 		explicit VulkanRenderEngine(const VulkanRenderEngine &) = delete;
 		~VulkanRenderEngine();
 

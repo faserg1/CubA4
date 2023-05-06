@@ -13,7 +13,7 @@ namespace CubA4::render::engine::world
 		~Camera();
 
 		void setActive(bool active);
-		void setPosition(float x, float y, float z, CubA4::world::ChunkPos chunkPos) override;
+		void setPosition(CubA4::world::GlobalPosition position) override;
 		void setRotation(float roll, float pitch, float yaw) override;
 		void move(float x, float y, float z, bool local) override;
 		void rotate(float roll, float pitch, float yaw) override;
@@ -25,15 +25,11 @@ namespace CubA4::render::engine::world
 	private:
 		bool active_ = false;
 
-		float x_ = 0;
-		float y_ = 0;
-		float z_ = 0;
-
 		float roll_ = 0;
 		float pitch_ = 0;
 		float yaw_ = 0;
 
-		CubA4::world::ChunkPos chunkPos_ {};
+		CubA4::world::GlobalPosition position_;
 		glm::mat4 viewMatrix_ {};
 	};
 }

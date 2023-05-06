@@ -25,12 +25,9 @@ void Camera::setActive(bool active)
     updateMatrix();
 }
 
-void Camera::setPosition(float x, float y, float z, CubA4::world::ChunkPos chunkPos)
+void Camera::setPosition(CubA4::world::GlobalPosition position)
 {
-    x_ = x;
-    y_ = y;
-    z_ = z;
-    chunkPos_ = chunkPos;
+    position_ = position;
     updateMatrix();
 }
 
@@ -44,19 +41,6 @@ void Camera::setRotation(float roll, float pitch, float yaw)
 
 void Camera::move(float x, float y, float z, bool local)
 {
-    const auto clampWith = [](float &coord, decltype(chunkPos_.x) &inChunk)
-    {
-        if (coord > CubA4::world::ChunkSize + 1)
-        {
-            coord -= CubA4::world::ChunkSize;
-            inChunk++;
-        }
-        else if (coord < -1)
-        {
-            coord += CubA4::world::ChunkSize;
-            inChunk--;
-        }
-    };
     if (local)
     {
         glm::vec3 direction;
@@ -67,37 +51,12 @@ void Camera::move(float x, float y, float z, bool local)
         auto viewLook = glm::quatLookAt(glm::normalize(direction), {0, 1, 0});
         auto m = glm::toMat3(viewLook);
         move = m * move;
-        x_ += move.x;
-        y_ += move.y;
-        z_ += move.z;
+        position_ += CubA4::world::BasePos<float>{move.x, move.y, move.z};
     }
     else
     {
-        x_ += x;
-        y_ += y;
-        z_ += z;
+        position_ += CubA4::world::BasePos<float>{x, y, z};
     }
-    auto chunkPosBefore = chunkPos_;
-    auto xB = x_;
-    auto yB = y_;
-    auto zB = z_;
-    
-    clampWith(x_, chunkPos_.x);
-    clampWith(y_, chunkPos_.y);
-    clampWith(z_, chunkPos_.z);
-
-    auto same = [](float a, float b) -> bool
-    {
-        auto diff = a - a;
-        return (diff < 0.1) && (-diff < 0.1);
-    };
-
-    if (chunkPos_ != chunkPosBefore || !same(xB, x_) || !same(yB, y_) || !same(zB, z_))
-    {
-        std::cout << fmt::format("Before [{}, {}, {}] in chunk [{}, {}, {}]\n", xB, yB, zB, chunkPosBefore.x, chunkPosBefore.y, chunkPosBefore.z);
-        std::cout << fmt::format("After [{}, {}, {}] in chunk [{}, {}, {}]\n", x_, y_, z_, chunkPos_.x, chunkPos_.y, chunkPos_.z);
-    }
-    
     updateMatrix();
 }
 
@@ -121,7 +80,7 @@ const glm::mat4 &Camera::getViewMatrix() const
 
 const CubA4::world::ChunkPos &Camera::getChunkPos() const
 {
-    return chunkPos_;
+    return position_.chunkPos();
 }
 
 void Camera::updateMatrix()
@@ -133,5 +92,8 @@ void Camera::updateMatrix()
     direction.y = sin(glm::radians(pitch_));
     direction.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
     direction = glm::normalize(direction);
-    viewMatrix_ = glm::lookAt({x_, y_, z_}, glm::vec3{x_, y_, z_} + direction, {0, 1, 0});
+    auto &[bx, by, bz] = position_.blockPosition();
+    auto &[x, y, z] = position_.inBlockPos();
+    auto pos = glm::vec3{bx + x, by + y, bz + z};
+    viewMatrix_ = glm::lookAt(pos, pos + direction, {0, 1, 0});
 }

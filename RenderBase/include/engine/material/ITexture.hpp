@@ -1,25 +1,13 @@
-#ifndef RENDERBASE_ITEXTURE_HPP
-#define RENDERBASE_ITEXTURE_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::render::engine::material
 {
-	namespace render
+	class ITexture
 	{
-		namespace engine
-		{
-			namespace material
-			{
-				class ITexture
-				{
-				public:
-					virtual ~ITexture() = default;
-				protected:
-					explicit ITexture() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual ~ITexture() = default;
+	protected:
+		explicit ITexture() = default;
+	private:
+	};
 }
-
-#endif // RENDERBASE_ITEXTURE_HPP

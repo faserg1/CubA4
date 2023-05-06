@@ -225,6 +225,7 @@ void PipelineBuilder::prepareRasterization()
 void PipelineBuilder::prepareMultisampling()
 {
 	multisampleInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+	// TODO: [OOKAMI] Multisampling settings
 	multisampleInfo_.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 }
 

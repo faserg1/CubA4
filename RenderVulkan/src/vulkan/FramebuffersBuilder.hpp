@@ -18,6 +18,8 @@ namespace CubA4::render::vulkan
 		~FramebuffersBuilder();
 
 		[[nodiscard]] std::vector<std::shared_ptr<Framebuffer>> createFramebuffers(std::shared_ptr<const Swapchain> swapchain, std::shared_ptr<const vulkan::RenderPass> renderPass);
+
+		// TODO: [OOKAMI] Make framebuffer not from swapchain, but with same parameters
 	private:
 		const std::shared_ptr<const vulkan::Device> device_;
 		CubA4::render::engine::memory::MemoryAllocator allocator_;

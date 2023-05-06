@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <engine/IRenderEngine.hpp>
+#include <config/IRenderConfig.hpp>
 #include <ICore.hpp>
 #include <info/IApplicationInfo.hpp>
 
@@ -18,6 +19,7 @@ namespace CubA4::render
 		virtual void destroy() = 0;
 		virtual std::string getRenderEngineId() const = 0;
 		virtual std::shared_ptr<engine::IRenderEngine> getRenderEngine() = 0;
+		virtual std::shared_ptr<config::IRenderConfig> getRenderConfig() const = 0;
 		virtual uint32_t getSDLWindowFlags() const = 0;
 	protected:
 		explicit IRenderInfo() = default;

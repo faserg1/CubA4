@@ -32,6 +32,12 @@
     "openssl",
     "openal-soft",
     "vulkan",
+    {
+      "name": "skia",
+      "features": [
+        "vulkan"
+      ]
+    },
     "spirv-tools",
     {
       "name": "sdl2",

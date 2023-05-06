@@ -3,8 +3,8 @@
 #include <algorithm>
 using namespace CubA4::world;
 
-ChunkBSet::ChunkBSet(std::shared_ptr<const object::IBlock> block, std::vector<BlockInChunkPos> positions, std::shared_ptr<BlockData> data, Layer layer) :
-    block_(block), positions_(std::move(positions)), data_(std::move(data)), layer_(layer)
+ChunkBSet::ChunkBSet(size_t id, std::shared_ptr<const object::IBlock> block, std::vector<BlockInChunkPos> positions, std::shared_ptr<BlockData> data, Layer layer) :
+    id_(id), block_(block), positions_(std::move(positions)), data_(std::move(data)), layer_(layer)
 {
 	
 }
@@ -12,6 +12,11 @@ ChunkBSet::ChunkBSet(std::shared_ptr<const object::IBlock> block, std::vector<Bl
 ChunkBSet::~ChunkBSet()
 {
 	
+}
+
+size_t ChunkBSet::getId() const
+{
+    return id_;
 }
 
 std::shared_ptr<const CubA4::object::IBlock> ChunkBSet::getBlock() const

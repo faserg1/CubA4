@@ -30,14 +30,53 @@ namespace CubA4::world
 		TPosType x;
 		TPosType y;
 		TPosType z;
-		friend bool operator==(const BasePos &one, const BasePos &other)
+
+		BasePos &operator+=(const BasePos &other)
+		{
+			x += other.x;
+			y += other.y;
+			z += other.z;
+			return *this;
+		}
+		BasePos &operator-=(const BasePos &other)
+		{
+			x -= other.x;
+			y -= other.y;
+			z -= other.z;
+			return *this;
+		}
+		BasePos &operator*=(const TPosType val)
+		{
+			x *= val;
+			y *= val;
+			z *= val;
+			return *this;
+		}
+		BasePos &operator/=(const TPosType val)
+		{
+			x /= val;
+			y /= val;
+			z /= val;
+			return *this;
+		}
+		BasePos &operator=(const BasePos &other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+			return *this;
+		}
+
+		template <typename TOtherPos>
+		friend bool operator==(const BasePos &one, const BasePos<TOtherPos> &other)
 		{
 			return one.x == other.x
 				&& one.y == other.y
 				&& one.z == other.z;
 		}
 
-		friend bool operator<(const BasePos &one, const BasePos &other)
+		template <typename TOtherPos>
+		friend bool operator<(const BasePos &one, const BasePos<TOtherPos> &other)
 		{
 			if (one.z < other.z)
 				return true;
@@ -54,42 +93,33 @@ namespace CubA4::world
 			return false;
 		}
 
-		friend BasePos operator+(const BasePos &one, const BasePos &two)
+		template <typename TOtherPos>
+		friend BasePos operator+(const BasePos &one, const BasePos<TOtherPos> &two)
 		{
 			return BasePos {
-				one.x + two.x,
-				one.y + two.y,
-				one.z + two.z,
+				static_cast<TPosType>(one.x + two.x),
+				static_cast<TPosType>(one.y + two.y),
+				static_cast<TPosType>(one.z + two.z),
 			};
 		}
 
-		friend BasePos operator-(const BasePos &one, const BasePos &two)
+		template <typename TOtherPos>
+		friend BasePos operator-(const BasePos &one, const BasePos<TOtherPos> &two)
 		{
 			return BasePos {
-				one.x - two.x,
-				one.y - two.y,
-				one.z - two.z,
+				static_cast<TPosType>(one.x - two.x),
+				static_cast<TPosType>(one.y - two.y),
+				static_cast<TPosType>(one.z - two.z),
 			};
 		}
 	};
 
 	/*Позиция блока в чанке */
-	using BlockInChunkPos = BasePos<uint8_t>;
+	using BlockInChunkPos = BasePos<int16_t>;
 	/*Позиция чанка в мире */
-	using ChunkPos = BasePos<int32_t>;
+	using ChunkPos = BasePos<int64_t>;
 
 	using Layer = uint8_t;
-
-	template <typename TPosTypeOut, typename TPosTypeIn>
-	BasePos<TPosTypeOut> convertPos(BasePos<TPosTypeIn> pos)
-	{
-		return
-		{
-			static_cast<TPosTypeOut>(pos.x),
-			static_cast<TPosTypeOut>(pos.y),
-			static_cast<TPosTypeOut>(pos.z)
-		};
-	}
 
 	struct BlockPosition
 	{
@@ -108,6 +138,26 @@ namespace CubA4::world
 	constexpr size_t indexByPos(const BlockInChunkPos &pos)
 	{
 		return (pos.z * ChunkSize * ChunkSize) + (pos.y * ChunkSize) + pos.x;
+	}
+
+	constexpr const BasePos<int8_t> AdjancentPositions[] = {
+		{-1, 0, 0},  // left
+		{1, 0, 0},   // right
+		{0, -1, 0},  // down
+		{0, 1, 0},   // up
+		{0, 0, -1},  // back
+		{0, 0, 1}    // front
+	};
+
+	template <typename TPosTypeOut, typename TPosTypeIn>
+	BasePos<TPosTypeOut> convertPos(BasePos<TPosTypeIn> pos)
+	{
+		return
+		{
+			static_cast<TPosTypeOut>(pos.x),
+			static_cast<TPosTypeOut>(pos.y),
+			static_cast<TPosTypeOut>(pos.z)
+		};
 	}
 
 	/// Static checks

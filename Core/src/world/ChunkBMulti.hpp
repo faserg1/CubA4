@@ -9,9 +9,10 @@ namespace CubA4::world
 	class ChunkBMulti : public virtual IChunkBMulti
 	{
 	public:
-		explicit ChunkBMulti(std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer, std::map<world::BlockInChunkPos, std::shared_ptr<BlockData>> data);
+		explicit ChunkBMulti(size_t id, std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer, std::map<world::BlockInChunkPos, std::shared_ptr<BlockData>> data);
 		~ChunkBMulti();
 
+		size_t getId() const override;
 		std::shared_ptr<const object::IBlock> getBlock() const;
 		uint32_t getBlockCount() const;
 		CubA4::world::Layer getLayer() const;
@@ -37,6 +38,7 @@ namespace CubA4::world
 			CubA4::world::BlockInChunkPos pos_;
 		};
 	private:
+		const size_t id_;
 		std::shared_ptr<const object::IBlock> block_;
 		CubA4::world::Layer layer_;
 		std::map<world::BlockInChunkPos, std::shared_ptr<BlockData>> data_;

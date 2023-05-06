@@ -116,14 +116,14 @@ bool AppMain::setup()
 	loadRender();
 	if (!createWindow())
 		return false;
-	initRender();
+	initRenderEngine();
 	return true;
 }
 
 void AppMain::shutdown()
 {
 	log_->flush();
-	destroyRender();
+	destroyRenderEngine();
 	unloadRender();
 	SDL_Quit();
 }
@@ -245,7 +245,17 @@ bool AppMain::createWindow()
 	}
 	try
 	{
-		window_ = CubA4::window::Window::createWindow(1024, 720, renderInfo->getSDLWindowFlags());
+		auto config = renderInfo->getRenderConfig();
+		auto [width, height] = config->getRenderResolution();
+		
+		if (!width || !height)
+		{
+			width = 1280;
+			height = 720;
+			config->setRenderResolution({width, height});
+		}
+		
+		window_ = CubA4::window::Window::createWindow(width, height, renderInfo->getSDLWindowFlags());
 	}
 	catch (std::exception &ex)
 	{
@@ -256,14 +266,13 @@ bool AppMain::createWindow()
 	return true;
 }
 
-void AppMain::initRender()
+void AppMain::initRenderEngine()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->init(window_);
-	//Send fucking surface to render info and create fucking render engine
 }
 
-void AppMain::destroyRender()
+void AppMain::destroyRenderEngine()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->destroy();

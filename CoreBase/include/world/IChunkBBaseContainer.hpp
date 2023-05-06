@@ -10,6 +10,7 @@ namespace CubA4::world
 {
 	enum class ChunkBContainerType
 	{
+		None,
 		Range,
 		Set,
 		Multi
@@ -25,6 +26,8 @@ namespace CubA4::world
 	public:
 		virtual ~IChunkBBaseContainer() = default;
 
+		/// Возвращает идентификатор контейнера (уникален для чанка)
+		virtual size_t getId() const = 0;
 		virtual ChunkBContainerType getType() const = 0;
 		/// Возвращает блок, который заполняет этот диапазон
 		virtual std::shared_ptr<const object::IBlock> getBlock() const = 0;

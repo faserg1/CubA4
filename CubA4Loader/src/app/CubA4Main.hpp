@@ -29,8 +29,8 @@ namespace CubA4::app
 		void loadRender();
 		void unloadRender();
 		bool createWindow();
-		void initRender();
-		void destroyRender();
+		void initRenderEngine();
+		void destroyRenderEngine();
 
 		bool setup();
 		void shutdown();

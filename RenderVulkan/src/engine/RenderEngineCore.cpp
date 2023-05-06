@@ -33,10 +33,10 @@ using namespace CubA4::render::vulkan::addon;
 
 constexpr const char *loggerTag = "ENGINE_CORE";
 
-RenderEngineCore::RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core) :
-	info_(info), core_(core), logger_(core->getLogger())
+RenderEngineCore::RenderEngineCore(std::shared_ptr<const CubA4::info::IApplicationInfo> info, std::shared_ptr<const CubA4::ICore> core, std::shared_ptr<config::IRenderConfig> config) :
+	info_(info), core_(core), logger_(core->getLogger()), config_(config)
 {
-	config_ = std::make_shared<config::RenderConfig>(core->getPaths()->configPath());
+	
 }
 
 RenderEngineCore::~RenderEngineCore()

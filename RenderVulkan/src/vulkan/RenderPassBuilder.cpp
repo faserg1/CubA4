@@ -27,6 +27,7 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = swapchain_->getFormat();
+	// TODO: [OOKAMI] Multisampling settings
 	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -37,6 +38,7 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 
 	VkAttachmentDescription depthAttachment = {};
 	depthAttachment.format = VK_FORMAT_D32_SFLOAT_S8_UINT;
+	// TODO: [OOKAMI] Multisampling settings
 	depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

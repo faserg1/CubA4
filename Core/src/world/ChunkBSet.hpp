@@ -7,9 +7,10 @@ namespace CubA4::world
 	class ChunkBSet : public virtual IChunkBSet
 	{
 	public:
-		explicit ChunkBSet(std::shared_ptr<const object::IBlock> block, std::vector<BlockInChunkPos> positions, std::shared_ptr<BlockData> data, Layer layer = 0);
+		explicit ChunkBSet(size_t id, std::shared_ptr<const object::IBlock> block, std::vector<BlockInChunkPos> positions, std::shared_ptr<BlockData> data, Layer layer = 0);
 		~ChunkBSet();
 
+		size_t getId() const override;
 		std::shared_ptr<const object::IBlock> getBlock() const override;
 		uint32_t getBlockCount() const override;
 		bool hasBlockAt(const world::BlockInChunkPos &pos) const override;
@@ -34,7 +35,8 @@ namespace CubA4::world
 			CubA4::world::BlockInChunkPos pos_;
 		};
 	private:
-		std::shared_ptr<const object::IBlock> block_;
+		const size_t id_;
+		const std::shared_ptr<const object::IBlock> block_;
 		std::vector<BlockInChunkPos> positions_;
 		std::shared_ptr<BlockData> data_;
 		Layer layer_;
