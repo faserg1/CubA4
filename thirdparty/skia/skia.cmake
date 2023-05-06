@@ -1,1 +1,1 @@
-find_package(skia CONFIG REQUIRED)
+find_package(unofficial-skia CONFIG REQUIRED)

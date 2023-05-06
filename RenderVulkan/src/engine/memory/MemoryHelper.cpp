@@ -155,8 +155,9 @@ MemoryHelper::Queue *MemoryHelper::getNextQueue()
 	auto idx = queueRotation_.fetch_add(1);
 	if (idx >= queues_.size())
 	{
-		queueRotation_.fetch_sub(queues_.size());
-		idx -= queues_.size();
+		auto count = static_cast<unsigned char>(queues_.size());
+		queueRotation_.fetch_sub(count);
+		idx -= count;
 	}
 	return queues_[idx].get();
 }
