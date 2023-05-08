@@ -1,5 +1,6 @@
 #include "./FilesystemResource.hpp"
 #include <fstream>
+#include <filesystem>
 using namespace CubA4::resources;
 
 FilesystemResource::FilesystemResource(std::filesystem::path fullPath) :
@@ -45,6 +46,9 @@ size_t FilesystemResource::copyIn(void *data, size_t maxSize, size_t offset) con
 
 void FilesystemResource::save(const void *data, size_t size)
 {
+	auto parentPath = fullPath_.parent_path();
+	if (!std::filesystem::exists(parentPath))
+		std::filesystem::create_directories(parentPath);
 	std::ofstream outFile(fullPath_, std::ios::binary);
 	outFile.write(reinterpret_cast<const char*>(data), size);
 }

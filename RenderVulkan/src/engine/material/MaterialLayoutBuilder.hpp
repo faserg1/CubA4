@@ -4,56 +4,52 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-#include "../../vulkan/PipelineBuilder.hpp"
-#include "../../vulkan/util/VulkanHandlerContainer.hpp"
+#include <vulkan/pipeline/PipelineBuilderMaterial.hpp>
+#include <vulkan/util/VulkanHandlerContainer.hpp>
 
-namespace CubA4
+namespace CubA4::render
 {
-	namespace render
+	namespace vulkan
 	{
-		namespace vulkan
-		{
-			class Device;
-			struct PipelineInfo;
-		}
+		class Device;
+		struct PipelineInfo;
+	}
 
-		namespace engine
-		{
-			class Render;
-			class ResourceManager;
+	namespace engine
+	{
+		class Render;
+		class ResourceManager;
 
-			namespace material
+		namespace material
+		{
+			class ShaderFactory;
+
+			class MaterialLayoutBuilder :
+				public virtual IMaterialLayoutBuilder
 			{
-				class ShaderFactory;
+			public:
+				explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device,
+					std::shared_ptr<const Render> render,
+					std::shared_ptr<const ResourceManager> resourceManager);
+				~MaterialLayoutBuilder();
 
-				class MaterialLayoutBuilder :
-					public virtual IMaterialLayoutBuilder
-				{
-				public:
-					explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device,
-						std::shared_ptr<const Render> render,
-						std::shared_ptr<const ResourceManager> resourceManager);
-					~MaterialLayoutBuilder();
+				void setType(MaterialType type) override;
+				void addTexture() override;
+				vulkan::sVkDescriptorSetLayout getTextureLayout();
 
-					void setType(MaterialType type) override;
-					void addTexture() override;
-					vulkan::sVkDescriptorSetLayout getTextureLayout();
-
-					/** \brief Подготовка MaterialLayout к созданию
-					* \param[out] pipelineCreateInfo 
-					*/
-					void prepare(VkGraphicsPipelineCreateInfo &pipelineCreateInfo);
-					void fillPipelineInfo(vulkan::PipelineInfo &pipelineInfo) const;
-				protected:
-				private:
-					const std::shared_ptr<const vulkan::Device> device_;
-					const std::shared_ptr<const Render> render_;
-					const std::shared_ptr<const ResourceManager> resourceManager_;
-					const std::unique_ptr<ShaderFactory> shaderFactory_;
-					CubA4::render::vulkan::PipelineBuilder pipelineBuilder_;
-				};
-			}
+				/** \brief Подготовка MaterialLayout к созданию
+				* \param[out] pipelineCreateInfo 
+				*/
+				void prepare(VkGraphicsPipelineCreateInfo &pipelineCreateInfo);
+				void fillPipelineInfo(vulkan::PipelineInfo &pipelineInfo) const;
+			protected:
+			private:
+				const std::shared_ptr<const vulkan::Device> device_;
+				const std::shared_ptr<const Render> render_;
+				const std::shared_ptr<const ResourceManager> resourceManager_;
+				const std::unique_ptr<ShaderFactory> shaderFactory_;
+				CubA4::render::vulkan::PipelineBuilderMaterial pipelineBuilder_;
+			};
 		}
 	}
 }
-

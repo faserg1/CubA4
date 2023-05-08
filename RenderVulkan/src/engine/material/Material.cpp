@@ -2,7 +2,7 @@
 #include <engine/material/MaterialLayout.hpp>
 #include <engine/material/Texture.hpp>
 #include <vulkan/Device.hpp>
-#include <vulkan/Pipeline.hpp>
+#include <vulkan/pipeline/Pipeline.hpp>
 using namespace CubA4::render::engine::material;
 
 Material::Material(std::shared_ptr<const MaterialLayout> layout, std::vector<std::shared_ptr<const ITexture>> textures,

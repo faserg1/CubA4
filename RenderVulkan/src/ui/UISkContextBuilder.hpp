@@ -19,6 +19,8 @@ namespace CubA4::ui
 
         std::shared_ptr<UISkContext> createContext();
     private:
+        
+    private:
         const std::shared_ptr<CubA4::render::vulkan::Instance> instance_;
         const std::shared_ptr<CubA4::render::vulkan::PhysicalDevice> physDevice_;
         const std::shared_ptr<CubA4::render::vulkan::Device> device_;

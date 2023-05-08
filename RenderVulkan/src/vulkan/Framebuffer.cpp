@@ -3,62 +3,19 @@ using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
 Framebuffer::Framebuffer(std::shared_ptr<const Device> device, CubA4::render::engine::memory::MemoryAllocator &allocator,
-    VkImage swapchainImage, VkFormat format, uint32_t width, uint32_t height, VkRenderPass renderPass, VkCommandBuffer cmdBuffer) :
-        device_(device), fence_(device), renderDoneSemaphore_(Semaphore::create(device)), cmdBuffer_(cmdBuffer), image_(swapchainImage), dirty_(true)
+    std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, VkImage swapchainImage,
+    VkRenderPass renderPass, VkCommandBuffer cmdBuffer) :
+        device_(device), fence_(device), renderDoneSemaphore_(Semaphore::create(device)), cmdBuffer_(cmdBuffer),
+        imagePresent_(swapchainImage), framebufferImage_(framebufferImage), depthImage_(depthImage),
+        dirty_(true)
 {
-    VkImageViewCreateInfo imageViewCreateInfo = {};
-    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewCreateInfo.image = swapchainImage;
-    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.format = format;
-    imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    imageViewCreateInfo.subresourceRange.layerCount = 1;
-    imageViewCreateInfo.subresourceRange.levelCount = 1;
-    
-    if (vkCreateImageView(device_->getDevice(), &imageViewCreateInfo, nullptr, &imageView_) != VK_SUCCESS)
-    {
-        //TODO: [OOKAMI] Exception, etc
-        return;
-    }
 
-    // TODO: [OOKAMI] Хранить формат в едином месте
-    VkImageCreateInfo depthInfo = {};
-    depthInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    depthInfo.format = VK_FORMAT_D32_SFLOAT_S8_UINT;
-    depthInfo.imageType = VK_IMAGE_TYPE_2D;
-    depthInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    depthInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-    depthInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    depthInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-    depthInfo.extent.width = width;
-    depthInfo.extent.height = height;
-    depthInfo.extent.depth = 1;
-    depthInfo.arrayLayers = 1;
-    depthInfo.mipLevels = 1;
-    
-    if (vkCreateImage(device_->getDevice(), &depthInfo, nullptr, &depthImage_) != VK_SUCCESS)
-    {
-        //TODO: [OOKAMI] Exception, etc
+    if (!(imageView_ = createImageView(framebufferImage_->getImage(), framebufferImage_->getFormat(), VK_IMAGE_ASPECT_COLOR_BIT)))
         return;
-    }
-
-    depthMemory_ = allocator.allocateAndBind(depthImage_, MemoryAllocationPrefered::Device);
 
     //create depth image view
-    VkImageViewCreateInfo depthImageViewCreateInfo = {};
-    depthImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    depthImageViewCreateInfo.image = depthImage_;
-    depthImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    depthImageViewCreateInfo.format = depthInfo.format;
-    depthImageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-    depthImageViewCreateInfo.subresourceRange.layerCount = 1;
-    depthImageViewCreateInfo.subresourceRange.levelCount = 1;
-
-    if (vkCreateImageView(device_->getDevice(), &depthImageViewCreateInfo, nullptr, &depthImageView_) != VK_SUCCESS)
-    {
-        //TODO: [OOKAMI] Exception, etc
+    if (!(depthImageView_ = createImageView(depthImage_->getImage(), depthImage_->getFormat(), VK_IMAGE_ASPECT_DEPTH_BIT)))
         return;
-    }
 
     //create framebuffer
 
@@ -72,8 +29,8 @@ Framebuffer::Framebuffer(std::shared_ptr<const Device> device, CubA4::render::en
     framebufferCreateInfo.attachmentCount = 2;
     framebufferCreateInfo.pAttachments = attachments;
     framebufferCreateInfo.layers = 1;
-    framebufferCreateInfo.width = width;
-    framebufferCreateInfo.height = height;
+    framebufferCreateInfo.width = framebufferImage_->getSize().width;
+    framebufferCreateInfo.height = framebufferImage_->getSize().height;
 
     if (vkCreateFramebuffer(device_->getDevice(), &framebufferCreateInfo, nullptr, &framebuffer_) != VK_SUCCESS)
     {
@@ -87,17 +44,10 @@ Framebuffer::Framebuffer(std::shared_ptr<const Device> device, CubA4::render::en
 Framebuffer::~Framebuffer()
 {
     // No need to wait - they MUST be destroyed after no usage for sure
-
 	vkDestroyFramebuffer(device_->getDevice(), framebuffer_, nullptr);
 
     //destroy depth image view
     vkDestroyImageView(device_->getDevice(), depthImageView_, nullptr);
-
-    //destroy depth image
-    vkDestroyImage(device_->getDevice(), depthImage_, nullptr);
-
-    //destroy depth image memory
-    depthMemory_.reset();
 
     //destroy image view
     vkDestroyImageView(device_->getDevice(), imageView_, nullptr);
@@ -171,6 +121,16 @@ VkFramebuffer Framebuffer::getFrameBuffer() const
     return framebuffer_;
 }
 
+VkImage Framebuffer::getPresentImage() const
+{
+    return imagePresent_;
+}
+
+VkImage Framebuffer::getFramebufferImage() const
+{
+    return framebufferImage_->getImage();
+}
+
 std::shared_ptr<const Semaphore> Framebuffer::getRenderDoneSemaphore() const
 {
     return renderDoneSemaphore_;
@@ -179,4 +139,26 @@ std::shared_ptr<const Semaphore> Framebuffer::getRenderDoneSemaphore() const
 VkFence Framebuffer::getFence() const
 {
     return fence_.getFence();
+}
+
+VkImageView Framebuffer::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspect)
+{
+    VkImageView view;
+
+    VkImageViewCreateInfo imageViewCreateInfo = {};
+    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewCreateInfo.image = image;
+    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageViewCreateInfo.format = format;
+    imageViewCreateInfo.subresourceRange.aspectMask = aspect;
+    imageViewCreateInfo.subresourceRange.layerCount = 1;
+    imageViewCreateInfo.subresourceRange.levelCount = 1;
+    
+    if (vkCreateImageView(device_->getDevice(), &imageViewCreateInfo, nullptr, &view) != VK_SUCCESS)
+    {
+        //TODO: [OOKAMI] Exception, etc
+        return VK_NULL_HANDLE;
+    }
+
+    return view;
 }

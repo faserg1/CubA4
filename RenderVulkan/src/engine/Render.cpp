@@ -135,6 +135,19 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 	}
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(vkCmdBuffer);
+
+	if (false)
+	{
+		VkResolveImageInfo2 resolveImageInfo;
+		resolveImageInfo.sType = VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2;
+		resolveImageInfo.srcImage = framebuffer->getFramebufferImage();
+		resolveImageInfo.dstImage = framebuffer->getPresentImage();
+		resolveImageInfo.srcImageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		resolveImageInfo.dstImageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		vkCmdResolveImage2(vkCmdBuffer, &resolveImageInfo);
+	}
+	
+
 	vkEndCommandBuffer(vkCmdBuffer);
 	framebuffer->onRecorded();
 }

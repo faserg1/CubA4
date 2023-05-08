@@ -1,9 +1,9 @@
 #include "./RenderChunkCompiler.hpp"
 #include "../ResourceManager.hpp"
-#include "../../vulkan/Device.hpp"
-#include "../../vulkan/Memory.hpp"
-#include "../../vulkan/RenderPass.hpp"
-#include "../../vulkan/Pipeline.hpp"
+#include <vulkan/Device.hpp>
+#include <vulkan/Memory.hpp>
+#include <vulkan/RenderPass.hpp>
+#include <vulkan/pipeline/Pipeline.hpp>
 #include "../world/RenderChunk.hpp"
 #include <world/IChunk.hpp>
 #include <object/IBlock.hpp>

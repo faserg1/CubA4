@@ -1,38 +1,30 @@
-#ifndef RENDERVULKAN_IMEMORYPART_HPP
-#define RENDERVULKAN_IMEMORYPART_HPP
+#pragma once
+
 
 #include <memory>
 #include <vulkan/vulkan.h>
 
-namespace CubA4
+namespace CubA4::render
 {
-	namespace render
+	namespace vulkan
 	{
-		namespace vulkan
-		{
-			class Memory;
-		}
+		class Memory;
+	}
 
-		namespace engine
-		{
-			namespace memory
-			{
-				class IMemoryBlock;
+	namespace engine::memory
+	{
+		class IMemoryBlock;
 
-				class IMemoryPart
-				{
-				public:
-					virtual std::shared_ptr<vulkan::Memory> getMemory() const = 0;
-					virtual VkDeviceSize getOffset() const = 0;
-					virtual VkDeviceSize getSize() const = 0;
-					virtual std::shared_ptr<const IMemoryBlock> getBlock() const = 0;
-				protected:
-					IMemoryPart() = default;
-					virtual ~IMemoryPart() = default;
-				};
-			}
-		}
+		class IMemoryPart
+		{
+		public:
+			virtual std::shared_ptr<vulkan::Memory> getMemory() const = 0;
+			virtual VkDeviceSize getOffset() const = 0;
+			virtual VkDeviceSize getSize() const = 0;
+			virtual std::shared_ptr<const IMemoryBlock> getBlock() const = 0;
+		protected:
+			IMemoryPart() = default;
+			virtual ~IMemoryPart() = default;
+		};
 	}
 }
-
-#endif // RENDERVULKAN_IMEMORYPART_HPP
