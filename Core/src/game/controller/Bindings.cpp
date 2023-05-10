@@ -1,5 +1,6 @@
 #include <game/controller/Bindings.hpp>
 #include <nlohmann/json.hpp>
+#include <algorithm>
 using namespace CubA4::game::controller;
 
 Bindings::Bindings() = default;
@@ -9,7 +10,10 @@ Bindings::~Bindings() = default;
 void Bindings::addKeyBinding(const std::string &action, Button btn, BMods mods)
 {
 	if (auto it = keyMap_.find(std::make_pair(btn, mods)); it != keyMap_.end())
-		it->second.push_back(action);
+	{
+		if (std::find(it->second.begin(), it->second.end(), action) == it->second.end())
+			it->second.push_back(action);
+	}
 	else
 		keyMap_.insert(std::make_pair(std::make_pair(btn, mods), std::vector{action}));
 	addKeyInBackwardsMap(action, btn, mods);
@@ -18,7 +22,10 @@ void Bindings::addKeyBinding(const std::string &action, Button btn, BMods mods)
 void Bindings::addAxisBinding(const std::string &action, AxisBinding axis)
 {
 	if (auto it = axisMap_.find(static_cast<uint32_t>(axis)); it != axisMap_.end())
-		it->second.push_back(action);
+	{
+		if (std::find(it->second.begin(), it->second.end(), action) == it->second.end())
+			it->second.push_back(action);
+	}
 	else
 		axisMap_.insert(std::make_pair(static_cast<uint32_t>(axis), std::vector{action}));
 }

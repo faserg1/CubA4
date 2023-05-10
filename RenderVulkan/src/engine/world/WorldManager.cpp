@@ -162,11 +162,7 @@ void WorldManager::updateProjectionMatrix()
 {
 	// TODO: [OOKAMI] Set normal aspect ratio
 	glm::mat4 projection = glm::perspectiveFovRH(worldData_.projectionFov, worldData_.projectionWidth, worldData_.projectionHeight, 0.01f, 16.f * 32.f);
-
 	VkDeviceSize matrixSize = sizeof(float) * 16;
-
-	float projMatrix[4][4];
-	memcpy(projMatrix, glm::value_ptr(projection), sizeof(float) * 16);
 	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize;
 	memoryHelper_->updateBuffer(glm::value_ptr(projection), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
 }

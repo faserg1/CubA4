@@ -117,7 +117,7 @@ namespace CubA4::world
 	/*Позиция блока в чанке */
 	using BlockInChunkPos = BasePos<int16_t>;
 	/*Позиция чанка в мире */
-	using ChunkPos = BasePos<int64_t>;
+	using ChunkPos = BasePos<int32_t>;
 
 	using Layer = uint8_t;
 
