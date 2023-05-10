@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <vulkan/pipeline/PipelineBuilderBase.hpp>
+#include <config/VulkanConfigAdapter.hpp>
 #include <vulkan/util/VulkanHandlerContainer.hpp>
 
 namespace CubA4::render
@@ -26,15 +27,13 @@ namespace CubA4::render
 		class PipelineBuilderMaterial : public PipelineBuilderBase
 		{
 		public:
-			explicit PipelineBuilderMaterial(std::shared_ptr<const Device> device);
+			explicit PipelineBuilderMaterial(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config);
 			~PipelineBuilderMaterial();
 
 			void addTexture();
 			sVkDescriptorSetLayout getTextureLayout();
 		protected:
 		private:
-			
-
 			VkSpecializationInfo vertexShaderSpec_;
 			std::vector<VkSpecializationMapEntry> vertexShaderSpecEntries_;
 			std::vector<unsigned char> vertexShaderSpecData_;
@@ -45,7 +44,7 @@ namespace CubA4::render
 			std::vector<VkRect2D> scissors_;
 			std::vector<VkDynamicState> dynamicStates_;
 
-			uint32_t textureCount;
+			uint32_t textureCount = 0;
 			sVkDescriptorSetLayout textureLayout_;
 		private:
 			void prepareVertexInput() override;

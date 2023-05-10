@@ -1,32 +1,25 @@
-#ifndef RENDERVULKAN_RENDERPASSBUILDER_HPP
-#define RENDERVULKAN_RENDERPASSBUILDER_HPP
+#pragma once
 
 #include <memory>
+#include <config/VulkanConfigAdapter.hpp>
 
-namespace CubA4
+namespace CubA4::render::vulkan
 {
-	namespace render
+	class Device;
+	class RenderPass;
+	class Swapchain;
+
+	class RenderPassBuilder
 	{
-		namespace vulkan
-		{
-			class Device;
-			class RenderPass;
-			class Swapchain;
+	public:
+		explicit RenderPassBuilder(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain, CubA4::render::config::VulkanConfigAdapter config);
+		~RenderPassBuilder();
 
-			class RenderPassBuilder
-			{
-			public:
-				explicit RenderPassBuilder(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain);
-				~RenderPassBuilder();
-
-				std::shared_ptr<RenderPass> build();
-			protected:
-			private:
-				const std::shared_ptr<const Device> device_;
-				const std::shared_ptr<const Swapchain> swapchain_;
-			};
-		}
-	}
+		std::shared_ptr<RenderPass> build();
+	protected:
+	private:
+		const std::shared_ptr<const Device> device_;
+		const std::shared_ptr<const Swapchain> swapchain_;
+		const CubA4::render::config::VulkanConfigAdapter config_;
+	};
 }
-
-#endif // RENDERVULKAN_RENDERPASSBUILDER_HPP

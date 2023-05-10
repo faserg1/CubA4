@@ -51,6 +51,14 @@ bool AppStartup::setup()
 	startup_->setup();
 	if (!setupGame())
 		return false;
+	/// test
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("mouse", CubA4::game::controller::Button::F1, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("forward", CubA4::game::controller::Button::W, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("back", CubA4::game::controller::Button::S, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("left", CubA4::game::controller::Button::A, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("right", CubA4::game::controller::Button::D, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addAxisBinding("camera", CubA4::game::controller::AxisBinding::MOUSE);
+	/// end test
 	run();
 	return true;
 }

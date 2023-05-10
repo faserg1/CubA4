@@ -4,6 +4,7 @@
 #include <engine/material/IMaterialLayoutSetFactory.hpp>
 #include <vulkan/Device.hpp>
 #include <vulkan/util/VulkanHandlerContainer.hpp>
+#include <config/VulkanConfigAdapter.hpp>
 
 namespace CubA4::render::engine
 {
@@ -18,7 +19,8 @@ namespace CubA4::render::engine
 		public:
 			explicit MaterialLayoutSetFactory(std::shared_ptr<const vulkan::Device> device,
 				std::shared_ptr<const Render> render,
-				std::shared_ptr<const ResourceManager> resourceManager);
+				std::shared_ptr<const ResourceManager> resourceManager,
+				CubA4::render::config::VulkanConfigAdapter config);
 			~MaterialLayoutSetFactory();
 
 			std::shared_ptr<IMaterialLayoutBuilder> createMaterialLayout() override;
@@ -29,6 +31,7 @@ namespace CubA4::render::engine
 			const std::shared_ptr<const vulkan::Device> device_;
 			const std::shared_ptr<const Render> render_;
 			const std::shared_ptr<const ResourceManager> resourceManager_;
+			const CubA4::render::config::VulkanConfigAdapter config_;
 			std::vector<std::shared_ptr<IMaterialLayoutBuilder>> builders_;
 		};
 	}

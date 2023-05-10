@@ -1,33 +1,26 @@
 #include <vulkan/Framebuffer.hpp>
+#include <vector>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
 Framebuffer::Framebuffer(std::shared_ptr<const Device> device, CubA4::render::engine::memory::MemoryAllocator &allocator,
-    std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, VkImage swapchainImage,
+    std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, std::shared_ptr<FramebufferImage> presentImage,
     VkRenderPass renderPass, VkCommandBuffer cmdBuffer) :
         device_(device), fence_(device), renderDoneSemaphore_(Semaphore::create(device)), cmdBuffer_(cmdBuffer),
-        imagePresent_(swapchainImage), framebufferImage_(framebufferImage), depthImage_(depthImage),
+        presentImage_(presentImage), framebufferImage_(framebufferImage), depthImage_(depthImage),
         dirty_(true)
 {
-
-    if (!(imageView_ = createImageView(framebufferImage_->getImage(), framebufferImage_->getFormat(), VK_IMAGE_ASPECT_COLOR_BIT)))
-        return;
-
-    //create depth image view
-    if (!(depthImageView_ = createImageView(depthImage_->getImage(), depthImage_->getFormat(), VK_IMAGE_ASPECT_DEPTH_BIT)))
-        return;
-
     //create framebuffer
 
     // TODO: Info about attaches in common place?
 
-    VkImageView attachments[] = { imageView_, depthImageView_};
+    std::vector<VkImageView> attachments = { framebufferImage->getImageView(), depthImage_->getImageView(), presentImage_->getImageView()};
 
     VkFramebufferCreateInfo framebufferCreateInfo = {};
     framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferCreateInfo.renderPass = renderPass;
-    framebufferCreateInfo.attachmentCount = 2;
-    framebufferCreateInfo.pAttachments = attachments;
+    framebufferCreateInfo.attachmentCount = static_cast<decltype(framebufferCreateInfo.attachmentCount)>(attachments.size());
+    framebufferCreateInfo.pAttachments = attachments.data();
     framebufferCreateInfo.layers = 1;
     framebufferCreateInfo.width = framebufferImage_->getSize().width;
     framebufferCreateInfo.height = framebufferImage_->getSize().height;
@@ -45,12 +38,6 @@ Framebuffer::~Framebuffer()
 {
     // No need to wait - they MUST be destroyed after no usage for sure
 	vkDestroyFramebuffer(device_->getDevice(), framebuffer_, nullptr);
-
-    //destroy depth image view
-    vkDestroyImageView(device_->getDevice(), depthImageView_, nullptr);
-
-    //destroy image view
-    vkDestroyImageView(device_->getDevice(), imageView_, nullptr);
 }
 
 FramebufferState Framebuffer::getState() const
@@ -123,7 +110,7 @@ VkFramebuffer Framebuffer::getFrameBuffer() const
 
 VkImage Framebuffer::getPresentImage() const
 {
-    return imagePresent_;
+    return presentImage_->getImage();
 }
 
 VkImage Framebuffer::getFramebufferImage() const
@@ -139,26 +126,4 @@ std::shared_ptr<const Semaphore> Framebuffer::getRenderDoneSemaphore() const
 VkFence Framebuffer::getFence() const
 {
     return fence_.getFence();
-}
-
-VkImageView Framebuffer::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspect)
-{
-    VkImageView view;
-
-    VkImageViewCreateInfo imageViewCreateInfo = {};
-    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewCreateInfo.image = image;
-    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.format = format;
-    imageViewCreateInfo.subresourceRange.aspectMask = aspect;
-    imageViewCreateInfo.subresourceRange.layerCount = 1;
-    imageViewCreateInfo.subresourceRange.levelCount = 1;
-    
-    if (vkCreateImageView(device_->getDevice(), &imageViewCreateInfo, nullptr, &view) != VK_SUCCESS)
-    {
-        //TODO: [OOKAMI] Exception, etc
-        return VK_NULL_HANDLE;
-    }
-
-    return view;
 }

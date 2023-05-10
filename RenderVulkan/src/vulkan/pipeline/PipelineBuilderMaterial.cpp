@@ -8,23 +8,12 @@
 #include <vulkan/vulkan.h>
 #include <string.h>
 
-
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::material;
 
-PipelineBuilderMaterial::PipelineBuilderMaterial(std::shared_ptr<const Device> device) :
-	PipelineBuilderBase(device)
+PipelineBuilderMaterial::PipelineBuilderMaterial(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config) :
+	PipelineBuilderBase(device, config)
 {
-	vertexInputInfo_ = {};
-	inputAssemblyInfo_ = {};
-	rasterizationInfo_ = {};
-	multisampleInfo_ = {};
-	depthStencilInfo_ = {};
-	colorBlendInfo_ = {};
-	dynamicStateInfo_ = {};
-	viewportStateInfo_ = {};
-
-	textureCount = 0;
 }
 
 PipelineBuilderMaterial::~PipelineBuilderMaterial()
@@ -87,13 +76,11 @@ void PipelineBuilderMaterial::prepareVertexInput()
 
 void PipelineBuilderMaterial::prepareInputAssembly()
 {
-	inputAssemblyInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	inputAssemblyInfo_.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 }
 
 void PipelineBuilderMaterial::prepareRasterization()
 {
-	rasterizationInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizationInfo_.polygonMode = VK_POLYGON_MODE_FILL;
 	rasterizationInfo_.cullMode = VK_CULL_MODE_NONE;
 	rasterizationInfo_.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
@@ -102,14 +89,12 @@ void PipelineBuilderMaterial::prepareRasterization()
 
 void PipelineBuilderMaterial::prepareMultisampling()
 {
-	multisampleInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	// TODO: [OOKAMI] Multisampling settings
-	multisampleInfo_.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+	multisampleInfo_.rasterizationSamples = config_.getAntialiasing();
 }
 
 void PipelineBuilderMaterial::prepareDepthStencil()
 {
-	depthStencilInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	depthStencilInfo_.depthTestEnable = VK_TRUE;
 	depthStencilInfo_.depthWriteEnable = VK_TRUE;
 	depthStencilInfo_.depthCompareOp = VK_COMPARE_OP_LESS;
@@ -117,8 +102,6 @@ void PipelineBuilderMaterial::prepareDepthStencil()
 
 void PipelineBuilderMaterial::prepareColorBlending()
 {
-	colorBlendInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-
 	VkPipelineColorBlendAttachmentState clr = {};
 	clr.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
@@ -130,8 +113,6 @@ void PipelineBuilderMaterial::prepareColorBlending()
 
 void PipelineBuilderMaterial::prepareDynmaic()
 {
-	dynamicStateInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-
 	dynamicStates_.push_back(VK_DYNAMIC_STATE_VIEWPORT);
 	dynamicStates_.push_back(VK_DYNAMIC_STATE_SCISSOR);
 
@@ -141,8 +122,6 @@ void PipelineBuilderMaterial::prepareDynmaic()
 
 void PipelineBuilderMaterial::prepareViewport()
 {
-	viewportStateInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-
 	viewports_.push_back({});
 	scissors_.push_back({});
 

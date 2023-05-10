@@ -6,6 +6,9 @@
 #include "../vulkan/RenderPass.hpp"
 #include "../vulkan/RenderPassBuilder.hpp"
 
+#include <vulkan/util/ConfigConverter.hpp>
+#include <config/IRenderConfig.hpp>
+
 #include "./pipeline/RenderEnginePipeline.hpp"
 #include "./world/RenderChunk.hpp"
 
@@ -17,8 +20,8 @@ using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
-Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain) :
-	device_(device), swapchain_(swapchain), framebuffersBuilder_(device_)
+Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain, std::shared_ptr<const config::IRenderConfig> config) :
+	device_(device), config_(config), swapchain_(swapchain), framebuffersBuilder_(device_, config_)
 {
 	createRenderPass();
 	createFramebuffers();
@@ -135,19 +138,6 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 	}
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(vkCmdBuffer);
-
-	if (false)
-	{
-		VkResolveImageInfo2 resolveImageInfo;
-		resolveImageInfo.sType = VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2;
-		resolveImageInfo.srcImage = framebuffer->getFramebufferImage();
-		resolveImageInfo.dstImage = framebuffer->getPresentImage();
-		resolveImageInfo.srcImageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		resolveImageInfo.dstImageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-		vkCmdResolveImage2(vkCmdBuffer, &resolveImageInfo);
-	}
-	
-
 	vkEndCommandBuffer(vkCmdBuffer);
 	framebuffer->onRecorded();
 }
@@ -190,9 +180,14 @@ std::shared_ptr<const RenderPass> Render::getRenderPass() const
 	return renderPass_;
 }
 
+std::shared_ptr<const CubA4::render::config::IRenderConfig> Render::getConfig() const
+{
+	return config_;
+}
+
 void Render::createRenderPass()
 {
-	RenderPassBuilder builder(device_, swapchain_);
+	RenderPassBuilder builder(device_, swapchain_, config_);
 	renderPass_ = builder.build();
 }
 

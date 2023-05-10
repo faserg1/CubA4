@@ -11,18 +11,9 @@
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::material;
 
-PipelineBuilderBase::PipelineBuilderBase(std::shared_ptr<const Device> device) :
-	device_(device)
+PipelineBuilderBase::PipelineBuilderBase(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config) :
+	device_(device), config_(config)
 {
-	vertexInputInfo_ = {};
-	inputAssemblyInfo_ = {};
-	rasterizationInfo_ = {};
-	multisampleInfo_ = {};
-	depthStencilInfo_ = {};
-	colorBlendInfo_ = {};
-	dynamicStateInfo_ = {};
-	viewportStateInfo_ = {};
-
     fillDefaults();
 }
 
@@ -163,12 +154,6 @@ void PipelineBuilderBase::prepareRasterization()
 	rasterizationInfo_.cullMode = VK_CULL_MODE_NONE;
 	rasterizationInfo_.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizationInfo_.lineWidth = 1.f;
-}
-
-void PipelineBuilderBase::prepareMultisampling()
-{
-	// TODO: [OOKAMI] Multisampling settings
-	multisampleInfo_.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 }
 
 void PipelineBuilderBase::prepareDepthStencil()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/material/IMaterialLayoutBuilder.hpp>
+#include <config/VulkanConfigAdapter.hpp>
 #include <vulkan/vulkan.h>
 #include <vector>
 
@@ -30,7 +31,8 @@ namespace CubA4::render
 			public:
 				explicit MaterialLayoutBuilder(std::shared_ptr<const vulkan::Device> device,
 					std::shared_ptr<const Render> render,
-					std::shared_ptr<const ResourceManager> resourceManager);
+					std::shared_ptr<const ResourceManager> resourceManager,
+					CubA4::render::config::VulkanConfigAdapter config);
 				~MaterialLayoutBuilder();
 
 				void setType(MaterialType type) override;
@@ -47,6 +49,7 @@ namespace CubA4::render
 				const std::shared_ptr<const vulkan::Device> device_;
 				const std::shared_ptr<const Render> render_;
 				const std::shared_ptr<const ResourceManager> resourceManager_;
+				const CubA4::render::config::VulkanConfigAdapter config_;
 				const std::unique_ptr<ShaderFactory> shaderFactory_;
 				CubA4::render::vulkan::PipelineBuilderMaterial pipelineBuilder_;
 			};

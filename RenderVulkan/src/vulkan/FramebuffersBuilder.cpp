@@ -2,9 +2,12 @@
 using namespace CubA4::render::vulkan;
 
 constexpr const size_t MemoryManagerBlockSize = 1024 * 1024 * 128; // 128MB
+// extern do not work =(
+VkSampleCountFlagBits aaSamples = VK_SAMPLE_COUNT_2_BIT;
 
-FramebuffersBuilder::FramebuffersBuilder(std::shared_ptr<const vulkan::Device> device) :
-    device_(device), allocator_(device), memoryManager_(device, MemoryManagerBlockSize), commandPool_(device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
+FramebuffersBuilder::FramebuffersBuilder(std::shared_ptr<const vulkan::Device> device, CubA4::render::config::VulkanConfigAdapter config) :
+    device_(device), config_(config), allocator_(device),
+    memoryManager_(device, MemoryManagerBlockSize), commandPool_(device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
 {
 	
 }
@@ -31,27 +34,21 @@ std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffer
     auto vkRenderPass = renderPass->getRenderPass();
     for (size_t idx = 0; idx < imgCount; idx++)
     {
-        std::shared_ptr<FramebufferImage> framebufferImage;
-        if (false)
-        {
-            // multisampling
-            framebufferImage = createImageWithMemory(format, resolution, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        }
-        else
-            framebufferImage = std::make_shared<FramebufferImage>(device_, images[idx], format, resolution, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>{});
+        auto framebufferImage = createImageWithMemory(format, resolution, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_ASPECT_COLOR_BIT);
+        auto presentImage = std::make_shared<FramebufferImage>(device_, images[idx], format, resolution, VK_IMAGE_ASPECT_COLOR_BIT, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>{});
         
-        auto depthImage = createImageWithMemory(VK_FORMAT_D32_SFLOAT_S8_UINT, resolution, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        auto depthImage = createImageWithMemory(VK_FORMAT_D32_SFLOAT_S8_UINT, resolution, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
 
         framebuffers[idx] = std::make_shared<Framebuffer>(
             device_, allocator_, 
-            framebufferImage, depthImage, images[idx],
+            framebufferImage, depthImage, presentImage,
             vkRenderPass, cmdBuffers[idx]);
     }
 	
     return std::move(framebuffers);
 }
 
-std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkFormat format, VkExtent2D resolution, VkImageUsageFlags usage, VkImageLayout initLayout)
+std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkFormat format, VkExtent2D resolution, VkImageUsageFlags usage, VkImageAspectFlags aspectFlags, VkImageLayout initLayout)
 {
     VkImage image;
 
@@ -61,7 +58,7 @@ std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkF
     info.imageType = VK_IMAGE_TYPE_2D;
     info.initialLayout = initLayout;
     // TODO: [OOKAMI] Multisampling? Take from settings
-    info.samples = VK_SAMPLE_COUNT_1_BIT;
+    info.samples = config_.getAntialiasing();
     info.usage = usage;
     // TODO: [OOKAMI] Get from capabilities
     info.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -88,5 +85,5 @@ std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkF
         return {};
     }
 
-    return std::make_shared<FramebufferImage>(device_, image, format, resolution, part);
+    return std::make_shared<FramebufferImage>(device_, image, format, resolution, aspectFlags, part);
 }

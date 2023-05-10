@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <vulkan/util/VulkanHandlerContainer.hpp>
+#include <config/VulkanConfigAdapter.hpp>
 
 namespace CubA4::render
 {
@@ -25,7 +26,7 @@ namespace CubA4::render
         class PipelineBuilderBase
         {
         public:
-            explicit PipelineBuilderBase(std::shared_ptr<const Device> device);
+            explicit PipelineBuilderBase(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config);
             ~PipelineBuilderBase();
 
             void useShader(std::shared_ptr<const engine::material::IShader> shader);
@@ -35,6 +36,7 @@ namespace CubA4::render
             void fillPipelineInfo(PipelineInfo &pipelineInfo) const;
         protected:
             const std::shared_ptr<const Device> device_;
+            const CubA4::render::config::VulkanConfigAdapter config_;
 
             std::vector<VkVertexInputBindingDescription> vertexBindingDescriptions_;
             std::vector<VkVertexInputAttributeDescription> vertexAttrDescriptions_;
@@ -55,7 +57,7 @@ namespace CubA4::render
             virtual void prepareVertexInput() = 0;
             virtual void prepareInputAssembly();
             virtual void prepareRasterization();
-            virtual void prepareMultisampling();
+            virtual void prepareMultisampling() = 0;
             virtual void prepareDepthStencil();
             virtual void prepareColorBlending() = 0;
             virtual void prepareDynmaic() = 0;

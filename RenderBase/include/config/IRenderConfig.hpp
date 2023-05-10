@@ -2,7 +2,7 @@
 
 #include <tuple>
 #include <string>
-
+#include <config/Enums.hpp>
 namespace CubA4::render::config
 {
 	class IRenderConfig
@@ -16,6 +16,9 @@ namespace CubA4::render::config
 
 		virtual int getLoggingLevel() const = 0;
 		virtual void setLoggingLevel(int lvl) = 0;
+
+		virtual AntiAliasing getAntialiasing() const = 0;
+		virtual void setAntialiasing(AntiAliasing lvl) = 0;
 
 		virtual void reload() = 0;
 	protected:

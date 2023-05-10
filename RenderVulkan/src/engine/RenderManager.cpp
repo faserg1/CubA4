@@ -3,6 +3,7 @@
 #include "material/MaterialManager.hpp"
 #include "model/ModelManager.hpp"
 #include "world/WorldManager.hpp"
+#include <config/VulkanConfigAdapter.hpp>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::model;
 using namespace CubA4::render::engine::material;
@@ -15,7 +16,7 @@ RenderManager::RenderManager(std::shared_ptr<const Device> device,
 	device_(device), core_(core), render_(render)
 {
 	resourceManager_ = std::make_shared<ResourceManager>(device, core_);
-	materialManager_ = std::make_shared<MaterialManager>(device, render, resourceManager_);
+	materialManager_ = std::make_shared<MaterialManager>(device, render, resourceManager_, render->getConfig());
 	modelManager_ = std::make_shared<ModelManager>(device);
 	worldManager_ = std::make_shared<WorldManager>(device, resourceManager_);
 }

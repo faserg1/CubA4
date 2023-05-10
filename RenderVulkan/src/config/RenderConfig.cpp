@@ -73,6 +73,17 @@ void RenderConfig::setLoggingLevel(int lvl)
 	flushConfig();
 }
 
+AntiAliasing RenderConfig::getAntialiasing() const
+{
+	return static_cast<AntiAliasing>(configTree_->quality.antialiasing);
+}
+
+void RenderConfig::setAntialiasing(AntiAliasing lvl)
+{
+	configTree_->quality.antialiasing = static_cast<decltype(configTree_->quality.antialiasing)>(lvl);
+	flushConfig();
+}
+
 void RenderConfig::reload()
 {
 	std::ifstream file(native_config_path_);

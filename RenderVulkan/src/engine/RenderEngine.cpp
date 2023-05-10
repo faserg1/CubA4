@@ -106,7 +106,7 @@ void VulkanRenderEngine::destroyPresentation()
 void VulkanRenderEngine::initRender()
 {
 	if (!render_)
-		render_ = std::make_shared<Render>(getDevice(), getSwapchain());
+		render_ = std::make_shared<Render>(getDevice(), getSwapchain(), getConfig());
 }
 
 void VulkanRenderEngine::destroyRender()

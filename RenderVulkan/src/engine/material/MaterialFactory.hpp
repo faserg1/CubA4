@@ -6,35 +6,32 @@
 #include <vulkan/vulkan.h>
 #include "../../vulkan/util/VulkanHandlerContainer.hpp"
 
-namespace CubA4
+namespace CubA4::render
 {
-	namespace render
+	namespace vulkan
 	{
-		namespace vulkan
-		{
-			class Device;
-		}
+		class Device;
+	}
 
-		namespace engine
+	namespace engine
+	{
+		namespace material
 		{
-			namespace material
+			class MaterialFactory :
+				public virtual IMaterialFactory
 			{
-				class MaterialFactory :
-					public virtual IMaterialFactory
-				{
-				public:
-					explicit MaterialFactory(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const DescriptorPool> pool);
-					~MaterialFactory();
+			public:
+				explicit MaterialFactory(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const DescriptorPool> pool);
+				~MaterialFactory();
 
-					std::shared_ptr<IMaterialBuilder> createMaterial(std::shared_ptr<const IMaterialLayout> layout) override;
-				protected:
-					void createSampler();
-				private:
-					const std::shared_ptr<const vulkan::Device> device_;
-					const std::shared_ptr<const DescriptorPool> pool_;
-					VkSampler sampler_;
-				};
-			}
+				std::shared_ptr<IMaterialBuilder> createMaterial(std::shared_ptr<const IMaterialLayout> layout) override;
+			protected:
+				void createSampler();
+			private:
+				const std::shared_ptr<const vulkan::Device> device_;
+				const std::shared_ptr<const DescriptorPool> pool_;
+				VkSampler sampler_;
+			};
 		}
 	}
 }

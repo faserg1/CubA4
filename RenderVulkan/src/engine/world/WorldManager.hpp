@@ -53,9 +53,6 @@ namespace CubA4
 
 					std::weak_ptr<Camera> activeCamera_;
 				private:
-					uint64_t width_;
-					uint64_t height_;
-
 					vulkan::sVkDescriptorPool pool_;
 					vulkan::sVkDescriptorSetLayout layout_;
 					vulkan::sVkDescriptorSet worldSet_;

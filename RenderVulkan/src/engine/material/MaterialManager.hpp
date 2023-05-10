@@ -4,6 +4,7 @@
 #include <vulkan/Device.hpp>
 #include <engine/material/IMaterialManager.hpp>
 #include <engine/material/TexturesDescriptorPool.hpp>
+#include <config/VulkanConfigAdapter.hpp>
 
 namespace CubA4::render:: engine
 {
@@ -24,7 +25,8 @@ namespace CubA4::render::engine::material
 	public:
 		explicit MaterialManager(std::shared_ptr<const vulkan::Device> device,
 			std::shared_ptr<const Render> render,
-			std::shared_ptr<ResourceManager> resourceManager);
+			std::shared_ptr<ResourceManager> resourceManager,
+			CubA4::render::config::VulkanConfigAdapter config);
 		~MaterialManager();
 
 		std::shared_ptr<IShaderFactory> getShaderFactory() const override;
@@ -36,6 +38,7 @@ namespace CubA4::render::engine::material
 		const std::shared_ptr<const vulkan::Device> device_;
 		const std::shared_ptr<const Render> render_;
 		const std::shared_ptr<ResourceManager> resourceManager_;
+		const CubA4::render::config::VulkanConfigAdapter config_;
 		std::shared_ptr<TexturesDescriptorPool> texturesDescriptorPool_;
 		std::shared_ptr<ShaderFactory> shaderFactory_;
 		std::shared_ptr<MaterialFactory> materialFactory_;

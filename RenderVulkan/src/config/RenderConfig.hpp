@@ -22,6 +22,9 @@ namespace CubA4::render::config
 		int getLoggingLevel() const override;
 		void setLoggingLevel(int lvl) override;
 
+		AntiAliasing getAntialiasing() const override;
+		void setAntialiasing(AntiAliasing lvl) override;
+
 		void reload() override;
 	protected:
 	private:

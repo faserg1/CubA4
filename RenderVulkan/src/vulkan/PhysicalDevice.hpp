@@ -11,8 +11,10 @@ namespace CubA4::render::vulkan
 		~PhysicalDevice();
 
 		VkPhysicalDevice getPhysicalDevice() const;
+		const VkPhysicalDeviceProperties &getProperties() const;
 	protected:
 	private:
 		VkPhysicalDevice physicalDevice_;
+		VkPhysicalDeviceProperties properties_;
 	};
 }

@@ -25,7 +25,7 @@ namespace CubA4::render::vulkan
 	public:
 		explicit Framebuffer(std::shared_ptr<const Device> device,
 			CubA4::render::engine::memory::MemoryAllocator &allocator,
-			std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, VkImage swapchainImage,
+			std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, std::shared_ptr<FramebufferImage> presentImage,
 			VkRenderPass renderPass, VkCommandBuffer cmdBuffer);
 		~Framebuffer();
 
@@ -53,20 +53,16 @@ namespace CubA4::render::vulkan
 		std::shared_ptr<const Semaphore> getRenderDoneSemaphore() const;
 		VkFence getFence() const;
 	private:
-		VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspect);
-	private:
 		const std::shared_ptr<const Device> device_;
 		Fence fence_;
 		std::shared_ptr<const Semaphore> renderDoneSemaphore_;
 		VkCommandBuffer cmdBuffer_;
-		VkImage imagePresent_;
 
 		VkFramebuffer framebuffer_;
-		VkImageView imageView_;
-		VkImageView depthImageView_;
 
 		std::shared_ptr<FramebufferImage> framebufferImage_;
 		std::shared_ptr<FramebufferImage> depthImage_;
+		std::shared_ptr<FramebufferImage> presentImage_;
 
 		std::atomic_bool dirty_;
 		std::atomic_bool recordAwait_;

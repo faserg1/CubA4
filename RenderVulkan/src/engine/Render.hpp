@@ -14,6 +14,11 @@ namespace CubA4
 {
 	namespace render
 	{
+		namespace config
+		{
+			class IRenderConfig;
+		}
+
 		namespace vulkan
 		{
 			class Device;
@@ -41,7 +46,7 @@ namespace CubA4
 					std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> oldChunks;
 				};
 			public:
-				explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::Swapchain> swapchain);
+				explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const vulkan::Swapchain> swapchain, std::shared_ptr<const config::IRenderConfig> config);
 				explicit Render(const Render &) = delete;
 				~Render();
 
@@ -55,6 +60,8 @@ namespace CubA4
 				std::shared_ptr<const vulkan::Semaphore> send(std::shared_ptr<vulkan::Framebuffer> framebuffer, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 
 				std::shared_ptr<const vulkan::RenderPass> getRenderPass() const;
+
+				std::shared_ptr<const config::IRenderConfig> getConfig() const;
 			protected:
 				void createFramebuffers();
 				void destroyFramebuffers();
@@ -67,6 +74,7 @@ namespace CubA4
 				void chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks) override;
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
+				const std::shared_ptr<const config::IRenderConfig> config_;
 				std::shared_ptr<const vulkan::Swapchain> swapchain_;
 				vulkan::FramebuffersBuilder framebuffersBuilder_;
 
