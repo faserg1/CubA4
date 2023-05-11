@@ -84,11 +84,13 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	VkPhysicalDeviceFeatures availableFeatures = {}, enabledFeatures = {};
 	vkGetPhysicalDeviceFeatures(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
 
+	// TODO: [OOKAMI] Disable this?
 	if (!availableFeatures.shaderInt64)
 	{
 		throw std::runtime_error("Cannot create device without shaderInt64 feature!");
 	}
 	enabledFeatures.shaderInt64 = VK_TRUE;
+	enabledFeatures.samplerAnisotropy = availableFeatures.samplerAnisotropy;
 	createInfo.pEnabledFeatures = &enabledFeatures;
 
 	float queuePriorities[2] = { 1.f, 1.f };

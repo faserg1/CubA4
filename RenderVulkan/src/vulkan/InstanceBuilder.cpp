@@ -95,6 +95,6 @@ void InstanceBuilder::fillAppInfo()
 	data_->appInfo.pApplicationName = info_->name().c_str();
 	auto &appVer = info_->version();
 	data_->appInfo.applicationVersion = VK_MAKE_VERSION(appVer.major(), appVer.minor(), appVer.patch());
-	data_->appInfo.apiVersion = VK_MAKE_VERSION(1, 1, 0);
+	data_->appInfo.apiVersion = VK_MAKE_VERSION(1, 2, 0);
 }
 

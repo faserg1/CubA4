@@ -137,6 +137,16 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 		chunk->executeFrom(vkCmdBuffer);
 	}
 	////////////////////////////////////////////////////////////
+	VkSubpassBeginInfo uiSubpassBegin {};
+	uiSubpassBegin.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
+	uiSubpassBegin.contents = VK_SUBPASS_CONTENTS_INLINE;
+	VkSubpassEndInfo uiSubpassEnd {};
+	uiSubpassEnd.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO;
+	//vkCmdNextSubpass2(vkCmdBuffer, &uiSubpassBegin, &uiSubpassEnd);
+
+	// TODO: [OOKAMI] Call the RenderUI
+
+	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(vkCmdBuffer);
 	vkEndCommandBuffer(vkCmdBuffer);
 	framebuffer->onRecorded();

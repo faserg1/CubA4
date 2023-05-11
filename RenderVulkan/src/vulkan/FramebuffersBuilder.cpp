@@ -1,7 +1,7 @@
 #include <vulkan/FramebuffersBuilder.hpp>
 using namespace CubA4::render::vulkan;
 
-constexpr const size_t MemoryManagerBlockSize = 1024 * 1024 * 128; // 128MB
+constexpr const size_t MemoryManagerBlockSize = 1024 * 1024 * 256; // 128MB
 // extern do not work =(
 VkSampleCountFlagBits aaSamples = VK_SAMPLE_COUNT_2_BIT;
 
@@ -37,7 +37,7 @@ std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffer
         auto framebufferImage = createImageWithMemory(format, resolution, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_ASPECT_COLOR_BIT);
         auto presentImage = std::make_shared<FramebufferImage>(device_, images[idx], format, resolution, VK_IMAGE_ASPECT_COLOR_BIT, std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart>{});
         
-        auto depthImage = createImageWithMemory(VK_FORMAT_D32_SFLOAT_S8_UINT, resolution, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
+        auto depthImage = createImageWithMemory(VK_FORMAT_D32_SFLOAT_S8_UINT, resolution, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
 
         framebuffers[idx] = std::make_shared<Framebuffer>(
             device_, allocator_, 

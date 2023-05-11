@@ -1,33 +1,21 @@
-#ifndef RENDERVULKAN_DEVICEEXTENSION_HPP
-#define RENDERVULKAN_DEVICEEXTENSION_HPP
+#pragma once
 
 #include <memory>
 #include "DeviceAddon.hpp"
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	struct DeviceExtensionData;
+
+	class DeviceExtension :
+		public DeviceAddon
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				struct DeviceExtensionData;
-
-				class DeviceExtension :
-					public DeviceAddon
-				{
-				public:
-					explicit DeviceExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
-					~DeviceExtension();
-				protected:
-					std::vector<std::string> allNames() const override;
-				private:
-					std::shared_ptr<DeviceExtensionData> data_;
-				};
-			}
-		}
-	}
+	public:
+		explicit DeviceExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
+		~DeviceExtension();
+	protected:
+		std::vector<std::string> allNames() const override;
+	private:
+		std::shared_ptr<DeviceExtensionData> data_;
+	};
 }
-
-#endif // RENDERVULKAN_DEVICEEXTENSION_HPP
