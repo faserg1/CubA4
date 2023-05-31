@@ -9,7 +9,7 @@
 #include <vulkan/util/ConfigConverter.hpp>
 #include <config/IRenderConfig.hpp>
 
-#include "./pipeline/RenderEnginePipeline.hpp"
+#include <engine/pipeline/RenderEngineWorldPipeline.hpp>
 #include "./world/RenderChunk.hpp"
 
 #include <cstring>
@@ -20,21 +20,18 @@ using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
-Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<const Swapchain> swapchain, std::shared_ptr<const config::IRenderConfig> config) :
-	device_(device), config_(config), swapchain_(swapchain), framebuffersBuilder_(device_, config_)
+Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<RenderPassManager> rpManager, std::shared_ptr<FramebufferManager> framebufferManager, std::shared_ptr<const config::IRenderConfig> config) :
+	device_(device), renderPassManager_(rpManager), framebufferManager_(framebufferManager), config_(config)
 {
-	createRenderPass();
-	createFramebuffers();
+	
 }
 
 Render::~Render()
 {
 	vkQueueWaitIdle(device_->getQueue()->get());
-	destroyFramebuffers();
-	destroyRenderPass();
 }
 
-void Render::setup(std::shared_ptr<RenderEnginePipeline> pipeline)
+void Render::setup(std::shared_ptr<RenderEngineWorldPipeline> pipeline)
 {
 	chunkUpdateSubscription_ = pipeline->subscribe(this);
 }
@@ -42,17 +39,6 @@ void Render::setup(std::shared_ptr<RenderEnginePipeline> pipeline)
 void Render::shutdown()
 {
 	chunkUpdateSubscription_->unsubscribe();
-}
-
-void Render::swapchainChanged(std::shared_ptr<const vulkan::Swapchain> swapchain)
-{
-	oldFramebuffers_.push_back(OldFramebufferInfo {
-		.cyclesLeft = 10,
-		.oldSwapchain = swapchain_,
-		.oldFramebuffers = framebuffers_,
-	});
-	swapchain_ = swapchain;
-	createFramebuffers();
 }
 
 void Render::onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
@@ -73,12 +59,10 @@ void Render::onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemap
 	onCycle();
 }
 
-std::shared_ptr<Framebuffer> Render::onAcquire(uint32_t imgIndex)
+void Render::onAcquire(uint32_t imgIndex)
 {
 	if (imgIndex == 0)
 		onCycle();
-	framebuffers_[imgIndex]->onAquired();
-	return framebuffers_[imgIndex];
 }
 
 void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
@@ -100,7 +84,7 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassBeginInfo.framebuffer = vkFramebuffer;
-	renderPassBeginInfo.renderPass = renderPass_->getRenderPass();
+	renderPassBeginInfo.renderPass = renderPassManager_->getMainRenderPass()->getRenderPass();
 
 	VkClearValue colorAttachmentClearValue = {};
 	float clrClearFloat[4] = { 0.2f,0.3f,0.4f,0.f };
@@ -118,7 +102,7 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 	renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 	renderPassBeginInfo.pClearValues = clearValues.data();
 
-	renderPassBeginInfo.renderArea.extent = swapchain_->getResolution();
+	renderPassBeginInfo.renderArea.extent = framebufferManager_->getExtent();
 
 	vkBeginCommandBuffer(vkCmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(vkCmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
@@ -136,16 +120,6 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 			continue;
 		chunk->executeFrom(vkCmdBuffer);
 	}
-	////////////////////////////////////////////////////////////
-	VkSubpassBeginInfo uiSubpassBegin {};
-	uiSubpassBegin.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
-	uiSubpassBegin.contents = VK_SUBPASS_CONTENTS_INLINE;
-	VkSubpassEndInfo uiSubpassEnd {};
-	uiSubpassEnd.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO;
-	//vkCmdNextSubpass2(vkCmdBuffer, &uiSubpassBegin, &uiSubpassEnd);
-
-	// TODO: [OOKAMI] Call the RenderUI
-
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(vkCmdBuffer);
 	vkEndCommandBuffer(vkCmdBuffer);
@@ -185,62 +159,33 @@ std::shared_ptr<const Semaphore> Render::send(std::shared_ptr<vulkan::Framebuffe
 	return renderDoneSemaphore;
 }
 
-std::shared_ptr<const RenderPass> Render::getRenderPass() const
-{
-	return renderPass_;
-}
-
 std::shared_ptr<const CubA4::render::config::IRenderConfig> Render::getConfig() const
 {
 	return config_;
 }
 
-void Render::createRenderPass()
-{
-	RenderPassBuilder builder(device_, swapchain_, config_);
-	renderPass_ = builder.build();
-}
-
-void Render::destroyRenderPass()
-{
-	renderPass_.reset();
-}
-
-void Render::createFramebuffers()
-{
-	framebuffers_ = framebuffersBuilder_.createFramebuffers(swapchain_, renderPass_);
-}
-
-void Render::destroyFramebuffers()
-{
-	framebuffers_.clear();
-}
-
 void Render::onCycle()
 {
-	auto locker = oldFramebuffersLock_.lock();
-	auto it = std::remove_if(oldFramebuffers_.begin(), oldFramebuffers_.end(), [](OldFramebufferInfo &oldInfo) -> bool
+	auto locker = oldChunksLock_.lock();
+	auto it = std::remove_if(olChunks_.begin(), olChunks_.end(), [](OldChunksInfo &oldInfo) -> bool
 	{
 		if (oldInfo.cyclesLeft > 0)
 			oldInfo.cyclesLeft--;
 		return !oldInfo.cyclesLeft;
 	});
-	oldFramebuffers_.erase(it, oldFramebuffers_.end());
+	olChunks_.erase(it, olChunks_.end());
 }
 
 void Render::chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks)
 {
 	{
 		auto locker = chunkLock_.lock();
-		auto locker2 = oldFramebuffersLock_.lock();
-		oldFramebuffers_.push_back(OldFramebufferInfo {
+		auto locker2 = oldChunksLock_.lock();
+		olChunks_.push_back(OldChunksInfo {
 			.cyclesLeft = 10,
 			.oldChunks = chunks_
 		});
 		chunks_ = renderChunks;
 	}
-	for (auto &framebuffer : framebuffers_)
-	{
-		framebuffer->markDirty();
-	}
+	framebufferManager_->markDirty();
 }

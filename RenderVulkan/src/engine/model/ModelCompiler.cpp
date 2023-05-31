@@ -91,7 +91,7 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 			auto faceOffset = offsets[faceIdx];
 			auto faceSize = indexes.faces[faceIdx];
 			data_.faces.faces[newFaceIdx++] = faceSize;
-			for (size_t fIdx = faceOffset; fIdx < faceOffset + faceSize; fIdx++)
+			for (size_t fIdx = faceOffset; fIdx < faceOffset + faceSize; fIdx++, newVertexIdx++)
 			{
 				data_.faces.indexes[newVertexIdx] = static_cast<CubA4::model::FaceIndices::IndexType>(newVertexIdx);
 				auto idx = indexes.indexes[fIdx];
@@ -102,7 +102,6 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 				vertex.z += pos.z;
 				data_.vertices[newVertexIdx] = vertex;
 				data_.uvws[newVertexIdx] = uvw;
-				newVertexIdx++;
 			}
 		}
 	});

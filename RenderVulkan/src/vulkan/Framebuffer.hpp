@@ -7,6 +7,7 @@
 #include <vulkan/Semaphore.hpp>
 #include <engine/memory/MemoryAllocator.hpp>
 #include <vulkan/FramebufferImage.hpp>
+#include <vector>
 #include <memory>
 #include <atomic>
 
@@ -23,9 +24,7 @@ namespace CubA4::render::vulkan
 	class Framebuffer
 	{
 	public:
-		explicit Framebuffer(std::shared_ptr<const Device> device,
-			CubA4::render::engine::memory::MemoryAllocator &allocator,
-			std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, std::shared_ptr<FramebufferImage> presentImage,
+		explicit Framebuffer(std::shared_ptr<const Device> device, std::vector<std::shared_ptr<FramebufferImage>> attachments,
 			VkRenderPass renderPass, VkCommandBuffer cmdBuffer);
 		~Framebuffer();
 
@@ -45,9 +44,6 @@ namespace CubA4::render::vulkan
 		void onRecordAwait();
 		bool isRecordAwait() const;
 
-		VkImage getPresentImage() const;
-		VkImage getFramebufferImage() const;
-
 		VkCommandBuffer getCommandBuffer() const;
 		VkFramebuffer getFrameBuffer() const;
 		std::shared_ptr<const Semaphore> getRenderDoneSemaphore() const;
@@ -60,9 +56,7 @@ namespace CubA4::render::vulkan
 
 		VkFramebuffer framebuffer_;
 
-		std::shared_ptr<FramebufferImage> framebufferImage_;
-		std::shared_ptr<FramebufferImage> depthImage_;
-		std::shared_ptr<FramebufferImage> presentImage_;
+		std::vector<std::shared_ptr<FramebufferImage>> attachments_;
 
 		std::atomic_bool dirty_;
 		std::atomic_bool recordAwait_;

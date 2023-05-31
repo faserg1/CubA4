@@ -1,12 +1,12 @@
 #pragma once
 
-namespace CubA4::ui
+namespace CubA4::render::ui
 {
     class IUIManager
     {
     public:
     protected:
-        IUIManager() {}
-        virtual ~IUIManager() {}
+        IUIManager() = default;
+        virtual ~IUIManager() = default;
     };
 }

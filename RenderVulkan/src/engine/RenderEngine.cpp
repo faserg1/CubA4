@@ -39,6 +39,7 @@ VulkanRenderEngine::~VulkanRenderEngine()
 void VulkanRenderEngine::init(std::shared_ptr<const CubA4::window::IWindow> window)
 {
 	initCore(window);
+	initManagers();
 	initPresentation();
 	initRender();
 	setup();
@@ -50,6 +51,7 @@ void VulkanRenderEngine::destroy()
 	shutdown();
 	destroyRender();
 	destroyPresentation();
+	destroyManagers();
 	destroyCore();	
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Render engine destroyed.");
 }
@@ -90,12 +92,24 @@ void VulkanRenderEngine::stop()
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }
 
+void VulkanRenderEngine::initManagers()
+{
+	renderPassManager_ = std::make_shared<RenderPassManager>(getDevice(), getConfig());
+	framebufferManager_ = std::make_shared<FramebufferManager>(getDevice(), getConfig());
+	renderManager_ = std::make_shared<RenderManager>(getInstance(), getDevice(), core_, renderPassManager_, getConfig());
+}
+
+void VulkanRenderEngine::destroyManagers()
+{
+	renderManager_.reset();
+	framebufferManager_.reset();
+	renderPassManager_.reset();
+}
 
 void VulkanRenderEngine::initPresentation()
 {
 	if (!presetation_)
 		presetation_ = std::make_shared<Presentaion>(getDevice());
-
 }
 
 void VulkanRenderEngine::destroyPresentation()
@@ -106,7 +120,7 @@ void VulkanRenderEngine::destroyPresentation()
 void VulkanRenderEngine::initRender()
 {
 	if (!render_)
-		render_ = std::make_shared<Render>(getDevice(), getSwapchain(), getConfig());
+		render_ = std::make_shared<Render>(getDevice(), renderPassManager_, framebufferManager_, getConfig());
 }
 
 void VulkanRenderEngine::destroyRender()
@@ -117,21 +131,23 @@ void VulkanRenderEngine::destroyRender()
 void VulkanRenderEngine::setup()
 {
 	// Создание компонентов
-	renderManager_ = std::make_shared<RenderManager>(getDevice(), core_, render_);
-	renderChunkCompiler_ = std::make_shared<pipeline::RenderChunkCompiler>(core_, getDevice(), render_->getRenderPass(), renderManager_);
 	auto [width, height] = getSwapchain()->getResolution();
-	auto data = pipeline::RenderChunkPipelineData {
+	auto data = pipeline::RenderFramebufferData {
 		.width = width,
-		.height = height,
-		// TODO: Where to take subpass number?
-		.subpass = 0
+		.height = height
 	};
 	renderManager_->getWorldManager()->onViewportUpdate(width, height);
-	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(renderChunkCompiler_, data);
-	
-	render_->setup(renderEnginePipeline_);
 
-	renderGameHandler_ = std::make_shared<RenderGameHandler>(renderEnginePipeline_);
+	renderPassManager_->createRenderPasses(getSwapchain()->getFormat());
+	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
+
+	// TODO: [OOKAMI] Call UI and pass VkImageInfo from framebuffers
+	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(core_, getDevice(), renderPassManager_, renderManager_);
+	renderEnginePipeline_->onFramebufferUpdated(data);
+
+	render_->setup(renderEnginePipeline_->getWorldPipeline());
+
+	renderGameHandler_ = std::make_shared<RenderGameHandler>(renderEnginePipeline_->getWorldPipeline());
 }
 
 void VulkanRenderEngine::shutdown()
@@ -143,8 +159,6 @@ void VulkanRenderEngine::shutdown()
 		render_->shutdown();
 
 	renderEnginePipeline_.reset();
-	renderChunkCompiler_.reset();
-	renderManager_.reset();
 }
 
 void VulkanRenderEngine::loop()
@@ -160,10 +174,13 @@ void VulkanRenderEngine::loop()
 		if (imgIndex == UINT32_MAX)
 		{
 			render_->onAcquireFailed(acquireSemaphore);
+			framebufferManager_->onAcquireFailed();
 			continue;
 		}
 		// Take framebuffer and work with him
-		auto framebuffer = render_->onAcquire(imgIndex);
+		// take framebuffer from framebufferManager_?
+		// auto framebuffer = render_->onAcquire(imgIndex);
+		auto framebuffer = framebufferManager_->onAcquire(imgIndex);
 		renderManager_->getWorldManager()->onFrameUpdate();
 		render_->record(framebuffer);
 		auto renderDoneSemaphore = render_->send(framebuffer, acquireSemaphore);
@@ -190,14 +207,14 @@ void VulkanRenderEngine::inFrameRebuild()
 		return;
 	rebuildSwapchain_.store(false);
 	rebuildSwapChain();
-	render_->swapchainChanged(getSwapchain());
+	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
+
+	// TODO: [OOKAMI] Call UI and pass VkImageInfo from framebuffers
 
 	auto [width, height] = getSwapchain()->getResolution();
-	auto data = pipeline::RenderChunkPipelineData {
+	auto data = pipeline::RenderFramebufferData {
 		.width = width,
-		.height = height,
-		// TODO: Where to take subpass number?
-		.subpass = 0
+		.height = height
 	};
 	renderManager_->getWorldManager()->onViewportUpdate(width, height);
 

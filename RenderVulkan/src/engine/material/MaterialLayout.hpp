@@ -1,41 +1,35 @@
-#ifndef RENDERVULKAN_MATERIALLAYOUT_HPP
-#define RENDERVULKAN_MATERIALLAYOUT_HPP
+#pragma once
 
 #include <memory>
 #include <engine/material/IMaterialLayout.hpp>
 #include <vulkan/vulkan.h>
 #include "../../vulkan/util/VulkanHandlerContainer.hpp"
 
-namespace CubA4
+namespace CubA4::render
 {
-	namespace render
+	namespace vulkan
 	{
-		namespace vulkan
-		{
-			class Pipeline;
-		}
+		class Pipeline;
+	}
 
-		namespace engine
+	namespace engine
+	{
+		namespace material
 		{
-			namespace material
+			class MaterialLayout :
+				virtual public IMaterialLayout
 			{
-				class MaterialLayout :
-					virtual public IMaterialLayout
-				{
-				public:
-					explicit MaterialLayout(std::shared_ptr<vulkan::Pipeline> pipeline, vulkan::sVkDescriptorSetLayout textureLayout);
-					~MaterialLayout();
+			public:
+				explicit MaterialLayout(std::shared_ptr<vulkan::Pipeline> pipeline, vulkan::sVkDescriptorSetLayout textureLayout);
+				~MaterialLayout();
 
-					std::shared_ptr<vulkan::Pipeline> getPipeline() const;
-					vulkan::sVkDescriptorSetLayout getLayout() const;
-				protected:
-				private:
-					const std::shared_ptr<vulkan::Pipeline> pipeline_;
-					const vulkan::sVkDescriptorSetLayout textureLayout_;
-				};
-			}
+				std::shared_ptr<vulkan::Pipeline> getPipeline() const;
+				vulkan::sVkDescriptorSetLayout getLayout() const;
+			protected:
+			private:
+				const std::shared_ptr<vulkan::Pipeline> pipeline_;
+				const vulkan::sVkDescriptorSetLayout textureLayout_;
+			};
 		}
 	}
 }
-
-#endif // RENDERVULKAN_MATERIALLAYOUT_HPP

@@ -23,6 +23,8 @@ namespace CubA4::mod
 		virtual std::vector<std::string> getPreferedMods() const = 0;
 		virtual const info::IVersionDependency &getModDependency(std::string modIdName) const = 0;
 
+		// TODO: [OOKAMI] Declare features
+
 		virtual std::shared_ptr<IMod> createMod() const = 0;
 	protected:
 		explicit IModInfo() = default;

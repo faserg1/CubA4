@@ -1,7 +1,7 @@
 #pragma once
 
 #include <world/IChunk.hpp>
-#include <engine/pipeline/RenderChunkPipelineData.hpp>
+#include <engine/pipeline/RenderFramebufferData.hpp>
 #include <engine/model/RenderModel.hpp>
 #include <engine/material/Material.hpp>
 #include <vector>
@@ -21,7 +21,7 @@ namespace CubA4::render::engine::world
 			CubA4::world::ChunkPos pos;
 			std::vector<VkCommandBuffer> cmdBuffers;
 			RenderModels compiledBlockData;
-			CubA4::render::engine::pipeline::RenderChunkPipelineData data;
+			CubA4::render::engine::pipeline::RenderFramebufferData data;
 		};
 		explicit RenderChunk(Data data, std::function<void()> deleter);
 		~RenderChunk();
@@ -29,7 +29,7 @@ namespace CubA4::render::engine::world
 		void executeFrom(VkCommandBuffer primaryCmdBuffer) const;
 		const CubA4::world::ChunkPos &getChunkPos() const;
 		const Data::RenderModels &getBlockData() const;
-		const CubA4::render::engine::pipeline::RenderChunkPipelineData &getPipelineData() const;
+		const CubA4::render::engine::pipeline::RenderFramebufferData &getPipelineData() const;
 	protected:
 	private:
 		const Data data_;

@@ -1,49 +1,32 @@
 #pragma once
 
+#include <ICore.hpp>
+#include <vulkan/Device.hpp>
+#include <engine/pipeline/IRenderEnginePipeline.hpp>
+#include <engine/pipeline/RenderEngineWorldPipeline.hpp>
+#include <engine/RenderPassManager.hpp>
+#include <engine/RenderManager.hpp>
 #include <memory>
-#include <vector>
-#include <map>
-#include <thread>
-#include <atomic>
-#include <util/SubscriptionHelper.hpp>
-#include <taskflow/taskflow.hpp>
 
-#include "IRenderEnginePipelineSubscriber.hpp"
-#include "IRenderEnginePipelineUpdater.hpp"
-
-namespace CubA4::render::engine
+namespace CubA4::render::engine::pipeline
 {
-	namespace world
+	class RenderEnginePipeline : public virtual IRenderEnginePipeline
 	{
-		class RenderChunk;
-	}
+	public:
+		RenderEnginePipeline(std::shared_ptr<const ICore> core, std::shared_ptr<const vulkan::Device> device,
+			std::shared_ptr<const engine::RenderPassManager> renderPassManager, std::shared_ptr<engine::RenderManager> renderManager);
+		~RenderEnginePipeline() = default;
 
-	namespace pipeline
-	{
-		class RenderChunkCompiler;
+		void setup(const RenderFramebufferData &data); // todo
 
-		class RenderEnginePipeline :
-			public virtual IRenderEnginePipelineUpdater
-		{
-		public:
-			using sRenderChunk = std::shared_ptr<const world::RenderChunk>;
-			explicit RenderEnginePipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler, RenderChunkPipelineData data);
-			~RenderEnginePipeline();
-
-			void pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks) override;
-			void onFramebufferUpdated(const RenderChunkPipelineData &data) override;
-
-			std::unique_ptr<CubA4::util::ISubscription> subscribe(IRenderEnginePipelineSubscriber *subscriber);
-		protected:
-		private:
-			void updateChunk(sRenderChunk chunk);
-			void dropChunk(const CubA4::world::ChunkPos &chunkPos);
-		private:
-			const std::shared_ptr<RenderChunkCompiler> chunkCompiler_;
-			tf::Executor exec_;
-			CubA4::util::SubscriptionHelper<IRenderEnginePipelineSubscriber> subHelper_;
-			RenderChunkPipelineData data_;
-			std::map<CubA4::world::ChunkPos, sRenderChunk> chunks_;
-		};
-	}
+		void onFramebufferUpdated(const RenderFramebufferData &data) override;
+		std::shared_ptr<RenderEngineWorldPipeline> getWorldPipeline() const;
+	private:
+		const std::shared_ptr<const ICore> core_;
+		const std::shared_ptr<const vulkan::Device> device_;
+		const std::shared_ptr<const engine::RenderPassManager> renderPassManager_;
+		const std::shared_ptr<RenderManager> renderManager_;
+		
+		std::shared_ptr<RenderEngineWorldPipeline> worldPipeline_;
+	};
 }

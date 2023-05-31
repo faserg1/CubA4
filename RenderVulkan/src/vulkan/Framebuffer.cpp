@@ -1,29 +1,33 @@
 #include <vulkan/Framebuffer.hpp>
 #include <vector>
+#include <algorithm>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
-Framebuffer::Framebuffer(std::shared_ptr<const Device> device, CubA4::render::engine::memory::MemoryAllocator &allocator,
-    std::shared_ptr<FramebufferImage> framebufferImage, std::shared_ptr<FramebufferImage> depthImage, std::shared_ptr<FramebufferImage> presentImage,
+Framebuffer::Framebuffer(std::shared_ptr<const Device> device,
+    std::vector<std::shared_ptr<FramebufferImage>> attachments,
     VkRenderPass renderPass, VkCommandBuffer cmdBuffer) :
         device_(device), fence_(device), renderDoneSemaphore_(Semaphore::create(device)), cmdBuffer_(cmdBuffer),
-        presentImage_(presentImage), framebufferImage_(framebufferImage), depthImage_(depthImage),
+        attachments_(attachments),
         dirty_(true)
 {
-    //create framebuffer
+    std::vector<VkImageView> viewAttachments(attachments_.size());
 
-    // TODO: Info about attaches in common place?
+    std::transform(attachments_.begin(), attachments_.end(), viewAttachments.begin(), [](std::shared_ptr<FramebufferImage> framebufferImage) -> VkImageView
+    {
+        return framebufferImage->getImageView();
+    });
 
-    std::vector<VkImageView> attachments = { framebufferImage->getImageView(), depthImage_->getImageView(), presentImage_->getImageView()};
 
     VkFramebufferCreateInfo framebufferCreateInfo = {};
     framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferCreateInfo.renderPass = renderPass;
-    framebufferCreateInfo.attachmentCount = static_cast<decltype(framebufferCreateInfo.attachmentCount)>(attachments.size());
-    framebufferCreateInfo.pAttachments = attachments.data();
+    framebufferCreateInfo.attachmentCount = static_cast<decltype(framebufferCreateInfo.attachmentCount)>(viewAttachments.size());
+    framebufferCreateInfo.pAttachments = viewAttachments.data();
     framebufferCreateInfo.layers = 1;
-    framebufferCreateInfo.width = framebufferImage_->getSize().width;
-    framebufferCreateInfo.height = framebufferImage_->getSize().height;
+    // TODO: Think about different sizes
+    framebufferCreateInfo.width = attachments.front()->getSize().width;
+    framebufferCreateInfo.height = attachments.front()->getSize().height;
 
     if (vkCreateFramebuffer(device_->getDevice(), &framebufferCreateInfo, nullptr, &framebuffer_) != VK_SUCCESS)
     {
@@ -106,16 +110,6 @@ VkCommandBuffer Framebuffer::getCommandBuffer() const
 VkFramebuffer Framebuffer::getFrameBuffer() const
 {
     return framebuffer_;
-}
-
-VkImage Framebuffer::getPresentImage() const
-{
-    return presentImage_->getImage();
-}
-
-VkImage Framebuffer::getFramebufferImage() const
-{
-    return framebufferImage_->getImage();
 }
 
 std::shared_ptr<const Semaphore> Framebuffer::getRenderDoneSemaphore() const

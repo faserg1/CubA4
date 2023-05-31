@@ -1,12 +1,12 @@
 #include <ui/UISkContextBuilder.hpp>
 #include <skia/include/gpu/vk/GrVkBackendContext.h>
 #include <skia/include/gpu/GrDirectContext.h>
-using namespace CubA4::ui;
+using namespace CubA4::render::ui;
 using namespace CubA4::render::vulkan;
 
 
-UISkContextBuilder::UISkContextBuilder(std::shared_ptr<Instance> instance,
-            std::shared_ptr<Device> device) :
+UISkContextBuilder::UISkContextBuilder(std::shared_ptr<const Instance> instance,
+            std::shared_ptr<const Device> device) :
 	instance_(instance), device_(device)
 {
 

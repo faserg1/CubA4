@@ -24,7 +24,7 @@ const RenderChunk::Data::RenderModels &RenderChunk::getBlockData() const
 	return data_.compiledBlockData;
 }
 
-const CubA4::render::engine::pipeline::RenderChunkPipelineData &RenderChunk::getPipelineData() const
+const CubA4::render::engine::pipeline::RenderFramebufferData &RenderChunk::getPipelineData() const
 {
 	return data_.data;
 }

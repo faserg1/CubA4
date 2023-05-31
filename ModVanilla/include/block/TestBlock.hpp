@@ -15,6 +15,7 @@ namespace CubA4::block
 		std::wstring getName() const override;
 
 		std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> getRenderModelDefinition() const override;
+		bool isMultilayered() const override;
 	protected:
 	private:
 		const std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef_;

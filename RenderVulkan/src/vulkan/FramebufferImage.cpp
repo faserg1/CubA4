@@ -1,8 +1,8 @@
 #include <vulkan/FramebufferImage.hpp>
 using namespace CubA4::render::vulkan;
 
-FramebufferImage::FramebufferImage(std::shared_ptr<const vulkan::Device> device, VkImage image, VkFormat format, VkExtent2D size, VkImageAspectFlags aspectFlags, std::shared_ptr<const IMemoryPart> memory) :
-    device_(device), image_(image), format_(format), size_(size), memoryPart_(memory)
+FramebufferImage::FramebufferImage(std::shared_ptr<const vulkan::Device> device, VkImage image, VkFormat format, VkExtent2D size, VkImageAspectFlags aspectFlags, std::shared_ptr<const Memory> memory) :
+    device_(device), image_(image), format_(format), size_(size), memory_(memory)
 {
     imageView_ = createImageView(image, format, aspectFlags);
 }
@@ -10,7 +10,7 @@ FramebufferImage::FramebufferImage(std::shared_ptr<const vulkan::Device> device,
 FramebufferImage::~FramebufferImage()
 {
     vkDestroyImageView(device_->getDevice(), imageView_, nullptr);
-    if (memoryPart_) // if we own that image
+    if (memory_) // if we own that image
         vkDestroyImage(device_->getDevice(), image_, nullptr);
 }
 

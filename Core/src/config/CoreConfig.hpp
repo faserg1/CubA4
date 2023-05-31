@@ -13,12 +13,12 @@ namespace CubA4:: config
 		explicit CoreConfig(std::string configsPath);
 		~CoreConfig();
 
-		std::string getRenderEngineId() const;
+		std::string getRenderEngineId() const override;
 		void setRenderEngineId(const std::string &renderEngineId) override;
 		std::string getMainFeatiresModId() const override;
 		void setMainFeaturesModId(const std::string &modId) override;
-		unsigned short getWorldChunkSize() override;
-		void setWorldChunkSize(unsigned short size) override;
+		std::string checkFeatureModId(const std::string &feature) const override;
+		void setFeatureModId(const std::string &feature, const std::string &modId) override;
 
 		void reload() override;
 	private:

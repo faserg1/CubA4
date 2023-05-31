@@ -1,8 +1,8 @@
 #include "./Swapchain.hpp"
 using namespace CubA4::render::vulkan;
 
-Swapchain::Swapchain(VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format) :
-	swapchain_(swapchain), resolution_(res), imageCount_(imageCount), format_(format)
+Swapchain::Swapchain(std::shared_ptr<const Device> device, VkSwapchainKHR swapchain, VkExtent2D res, uint32_t imageCount, VkFormat format) :
+	device_(device), swapchain_(swapchain), resolution_(res), imageCount_(imageCount), format_(format)
 {
 	
 }
@@ -30,4 +30,12 @@ uint32_t Swapchain::getImageCount() const
 VkFormat Swapchain::getFormat() const
 {
 	return format_;
+}
+
+std::vector<VkImage> Swapchain::getImages() const
+{
+	std::vector<VkImage> images(imageCount_);
+	uint32_t imageCount = imageCount_;
+	vkGetSwapchainImagesKHR(device_->getDevice(), swapchain_, &imageCount, images.data());
+	return std::move(images);
 }

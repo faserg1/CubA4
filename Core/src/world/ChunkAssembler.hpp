@@ -5,6 +5,7 @@
 #include <world/ChunkBRange.hpp>
 #include <world/ChunkBSet.hpp>
 #include <world/ChunkBMulti.hpp>
+#include <world/ChunkBMutable.hpp>
 #include <world/ChunkBModification.hpp>
 #include <system/IEnvironment.hpp>
 
@@ -15,6 +16,9 @@ namespace CubA4::world
 		std::vector<std::shared_ptr<ChunkBRange>> addedRanges;
 		std::vector<std::shared_ptr<ChunkBSet>> addedSets;
 		std::vector<std::shared_ptr<ChunkBMulti>> addedMultis;
+		std::vector<std::shared_ptr<ChunkBMutable>> addedMutable;
+
+		// mutable mutated?
 
 		std::vector<std::shared_ptr<const IChunkBBaseContainer>> removed;
 

@@ -59,10 +59,18 @@ ReassembledChunkContainers ChunkAssembler::reassembleByBlock(std::shared_ptr<Chu
 		storage.getOrAdd(addMod.data);
 	}
 	std::vector<ReassembledChunkContainers> rccByBlockDatas(storage.getStorage().size());
-	std::transform(storage.getStorage().begin(), storage.getStorage().end(), rccByBlockDatas.begin(), [this, chunk, block, &modification](std::shared_ptr<const BlockData> blockData)
+	if (block->isMultilayered())
 	{
-		return reassembleByBlockData(chunk, block, *blockData, modification);
-	});
+		std::transform(storage.getStorage().begin(), storage.getStorage().end(), rccByBlockDatas.begin(), [this, chunk, block, &modification](std::shared_ptr<const BlockData> blockData)
+		{
+			return reassembleByBlockData(chunk, block, *blockData, modification);
+		});
+	}
+	else
+	{
+		// TODO: [OOKAMI] Transform mutable
+	}
+	
 	rcc = std::accumulate(rccByBlockDatas.begin(), rccByBlockDatas.end(), ReassembledChunkContainers {}, [](const ReassembledChunkContainers &a, const ReassembledChunkContainers &b) -> ReassembledChunkContainers
 	{
 		ReassembledChunkContainers total;

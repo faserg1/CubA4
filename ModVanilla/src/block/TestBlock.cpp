@@ -26,3 +26,8 @@ std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> TestBlock::getR
 {
 	return modelDef_;
 }
+
+bool TestBlock::isMultilayered() const
+{
+	return false;
+}

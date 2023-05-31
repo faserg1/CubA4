@@ -1,11 +1,10 @@
 #include "./RenderGameHandler.hpp"
 #include <game/IGame.hpp>
 #include <world/IWorld.hpp>
-#include "pipeline/IRenderEnginePipelineUpdater.hpp"
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::pipeline;
 
-RenderGameHandler::RenderGameHandler(std::shared_ptr<IRenderEnginePipelineUpdater> updater) :
+RenderGameHandler::RenderGameHandler(std::shared_ptr<IRenderEngineWorldPipeline> updater) :
 	updater_(updater)
 {
 }

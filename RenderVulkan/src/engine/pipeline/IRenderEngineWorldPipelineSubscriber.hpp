@@ -6,13 +6,13 @@
 
 namespace CubA4:: render::engine::pipeline
 {
-	class IRenderEnginePipelineSubscriber
+	class IRenderEngineWorldPipelineSubscriber
 	{
 	public:
 		virtual void chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks) = 0;
 	protected:
-		explicit IRenderEnginePipelineSubscriber() = default;
-		virtual ~IRenderEnginePipelineSubscriber() = default;
+		explicit IRenderEngineWorldPipelineSubscriber() = default;
+		virtual ~IRenderEngineWorldPipelineSubscriber() = default;
 	private:
 	};
 }

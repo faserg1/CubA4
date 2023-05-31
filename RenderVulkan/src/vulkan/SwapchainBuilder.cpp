@@ -47,7 +47,11 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build(std::shared_ptr<const Swapcha
 	if (vkCreateSwapchainKHR(device_->getDevice(), &swapchainInfo, nullptr, &swapchain) != VK_SUCCESS)
 		throw std::runtime_error("Cannot create swapchain");
 	device_->getMarker().setName(swapchain, "Default swapchain");
-	return std::make_shared<Swapchain>(swapchain, swapchainInfo.imageExtent, swapchainInfo.minImageCount, swapchainInfo.imageFormat);
+	uint32_t imageCount = 0;
+	if (vkGetSwapchainImagesKHR(device_->getDevice(), swapchain, &imageCount, nullptr) != VK_SUCCESS)
+		throw std::runtime_error("Cannot determinete image count of swapchain");
+
+	return std::make_shared<Swapchain>(device_, swapchain, swapchainInfo.imageExtent, imageCount, swapchainInfo.imageFormat);
 }
 
 void SwapchainBuilder::destroy(std::shared_ptr<const Swapchain> swapchain)

@@ -51,20 +51,22 @@ std::string CoreConfig::getMainFeatiresModId() const
 	return configTree_->mods.mainMod;
 }
 
+std::string CoreConfig::checkFeatureModId(const std::string &feature) const
+{
+	auto it = configTree_->mods.overridedFeatures.find(feature);
+	if (it == configTree_->mods.overridedFeatures.end())
+		return configTree_->mods.mainMod;
+	return it->second;
+}
+
+void CoreConfig::setFeatureModId(const std::string &feature, const std::string &modId)
+{
+	configTree_->mods.overridedFeatures.insert_or_assign(feature, modId);
+}
+
 void CoreConfig::setMainFeaturesModId(const std::string &modId)
 {
 	configTree_->mods.mainMod = modId;
-	flushConfig();
-}
-
-unsigned short CoreConfig::getWorldChunkSize()
-{
-	return configTree_->world.chunkSize;
-}
-
-void CoreConfig::setWorldChunkSize(unsigned short size)
-{
-	configTree_->world.chunkSize = size;
 	flushConfig();
 }
 

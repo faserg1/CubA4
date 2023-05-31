@@ -4,13 +4,15 @@
 #include <vector>
 #include <thread>
 #include <atomic>
-#include "RenderEngineCore.hpp"
+#include <engine/RenderEngineCore.hpp>
 
 namespace CubA4::render::engine
 {
 	class Presentaion;
 	class Render;
 	class RenderManager;
+	class RenderPassManager;
+	class FramebufferManager;
 	class RenderGameHandler;
 
 	namespace pipeline
@@ -39,6 +41,9 @@ namespace CubA4::render::engine
 
 		std::shared_ptr<IRenderManager> getRenderManager() const override;
 	protected:
+		void initManagers();
+		void destroyManagers();
+
 		void initPresentation();
 		void destroyPresentation();
 
@@ -55,10 +60,12 @@ namespace CubA4::render::engine
 		std::shared_ptr<Presentaion> presetation_;
 		std::shared_ptr<Render> render_;
 
-		std::shared_ptr<RenderManager> renderManager_;
 		std::shared_ptr<RenderGameHandler> renderGameHandler_;
-		std::shared_ptr<pipeline::RenderChunkCompiler> renderChunkCompiler_;
 		std::shared_ptr<pipeline::RenderEnginePipeline> renderEnginePipeline_;
+		
+		std::shared_ptr<RenderManager> renderManager_;
+		std::shared_ptr<RenderPassManager> renderPassManager_;
+		std::shared_ptr<FramebufferManager> framebufferManager_;
 
 		bool running_;
 		std::atomic_bool rebuildSwapchain_;

@@ -8,7 +8,7 @@
 
 namespace CubA4::render::engine
 {
-	class Render;
+	class RenderPassManager;
 	class ResourceManager;
 
 	namespace material
@@ -18,7 +18,7 @@ namespace CubA4::render::engine
 		{
 		public:
 			explicit MaterialLayoutSetFactory(std::shared_ptr<const vulkan::Device> device,
-				std::shared_ptr<const Render> render,
+				std::shared_ptr<const RenderPassManager> rpManager,
 				std::shared_ptr<const ResourceManager> resourceManager,
 				CubA4::render::config::VulkanConfigAdapter config);
 			~MaterialLayoutSetFactory();
@@ -29,7 +29,7 @@ namespace CubA4::render::engine
 			
 		private:
 			const std::shared_ptr<const vulkan::Device> device_;
-			const std::shared_ptr<const Render> render_;
+			const std::shared_ptr<const RenderPassManager> rpManager_;
 			const std::shared_ptr<const ResourceManager> resourceManager_;
 			const CubA4::render::config::VulkanConfigAdapter config_;
 			std::vector<std::shared_ptr<IMaterialLayoutBuilder>> builders_;

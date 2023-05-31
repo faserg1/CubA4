@@ -25,8 +25,8 @@ using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
 
 RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const ICore> core, std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
-	std::shared_ptr<RenderManager> renderManager) :
-	RenderChunkCompilerCore(core, device, renderManager->getModelManager()), renderPass_(renderPass), 
+	std::shared_ptr<RenderManager> renderManager, uint32_t subpassNumber) :
+	RenderChunkCompilerCore(core, device, renderManager->getModelManager()), subpassNumber_(subpassNumber), renderPass_(renderPass), 
 	resourceManager_(renderManager->getResourceManager()), worldManager_(std::dynamic_pointer_cast<const WorldManager>(renderManager->getWorldManager()))
 {
 }
@@ -35,7 +35,7 @@ RenderChunkCompiler::~RenderChunkCompiler()
 {
 }
 
-std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk, const RenderChunkPipelineData &data)
+std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk, const RenderFramebufferData &data)
 {
 	auto compiledBlockData = compileBlocks(chunk);
 	if (compiledBlockData.empty())
@@ -43,14 +43,14 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunk(std::shared
 	return RenderChunkCompiler::compileChunkInternal(compiledBlockData, chunk->getChunkPos(), data);
 }
 
-std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunk(std::shared_ptr<const world::RenderChunk> chunk, const RenderChunkPipelineData &data)
+std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunk(std::shared_ptr<const world::RenderChunk> chunk, const RenderFramebufferData &data)
 {
 	return RenderChunkCompiler::compileChunkInternal(chunk->getBlockData(), chunk->getChunkPos(), data);
 }
 
 // TODO: [OOKAMI] Отрефакторить это всё! 
 
-std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(const RenderModels &compiledBlockData, const CubA4::world::ChunkPos &chunkPos, const RenderChunkPipelineData &pipelineData)
+std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(const RenderModels &compiledBlockData, const CubA4::world::ChunkPos &chunkPos, const RenderFramebufferData &pipelineData)
 {
 	auto materials = compiledBlockData | ranges::views::keys | ranges::to<std::vector>;
 	auto renderModels = compiledBlockData | ranges::views::values | ranges::to<std::vector>;
@@ -69,7 +69,7 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(con
 	VkCommandBufferInheritanceInfo inheritanceInfo = {};
 	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 	inheritanceInfo.renderPass = renderPass_->getRenderPass();
-	inheritanceInfo.subpass = pipelineData.subpass;
+	inheritanceInfo.subpass = subpassNumber_;
 
 	VkCommandBufferBeginInfo beginInfo = {};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;

@@ -12,8 +12,8 @@ namespace CubA4::config
 		virtual void setRenderEngineId(const std::string &renderEngineId) = 0;
 		virtual std::string getMainFeatiresModId() const = 0;
 		virtual void setMainFeaturesModId(const std::string &modId) = 0;
-		virtual unsigned short getWorldChunkSize() = 0;
-		virtual void setWorldChunkSize(unsigned short size) = 0;
+		virtual std::string checkFeatureModId(const std::string &feature) const = 0;
+		virtual void setFeatureModId(const std::string &feature, const std::string &modId) = 0;
 
 		virtual void reload() = 0;
 

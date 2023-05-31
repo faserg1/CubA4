@@ -7,7 +7,7 @@ namespace CubA4::config
 {
 	struct WorldData
 	{
-		unsigned short chunkSize;	
+		
 	};
 	
 	void from_json(const nlohmann::json& j, WorldData& v);

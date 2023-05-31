@@ -2,7 +2,7 @@
 
 #include <skia/include/gpu/GrDirectContext.h>
 
-namespace CubA4::ui
+namespace CubA4::render::ui
 {
     class UISkContext
     {

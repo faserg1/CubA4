@@ -6,9 +6,9 @@
 #include <engine/material/TexturesDescriptorPool.hpp>
 #include <config/VulkanConfigAdapter.hpp>
 
-namespace CubA4::render:: engine
+namespace CubA4::render::engine
 {
-	class Render;
+	class RenderPassManager;
 	class ResourceManager;
 }
 
@@ -24,7 +24,7 @@ namespace CubA4::render::engine::material
 	{
 	public:
 		explicit MaterialManager(std::shared_ptr<const vulkan::Device> device,
-			std::shared_ptr<const Render> render,
+			std::shared_ptr<const RenderPassManager> rpManager,
 			std::shared_ptr<ResourceManager> resourceManager,
 			CubA4::render::config::VulkanConfigAdapter config);
 		~MaterialManager();
@@ -36,7 +36,7 @@ namespace CubA4::render::engine::material
 	protected:
 	private:
 		const std::shared_ptr<const vulkan::Device> device_;
-		const std::shared_ptr<const Render> render_;
+		const std::shared_ptr<const RenderPassManager> rpManager_;
 		const std::shared_ptr<ResourceManager> resourceManager_;
 		const CubA4::render::config::VulkanConfigAdapter config_;
 		std::shared_ptr<TexturesDescriptorPool> texturesDescriptorPool_;

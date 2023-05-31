@@ -28,7 +28,6 @@ namespace CubA4::render::vulkan
 		const std::shared_ptr<const vulkan::Device> device_;
 		const CubA4::render::config::VulkanConfigAdapter config_;
 		CubA4::render::engine::memory::MemoryAllocator allocator_;
-		CubA4::render::engine::memory::MemoryManager memoryManager_;
 		CommandPool commandPool_;
 	};
 }
