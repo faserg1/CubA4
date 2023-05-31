@@ -115,7 +115,7 @@ void RenderPassBuilder::addColorReference(uint32_t subpassIndex, uint32_t idxCol
 	subpassInfo.referencesColor_.resolve.push_back(resolve);
 
 	auto &subpass = subpassesDesc_[subpassIndex];
-	subpass.colorAttachmentCount = subpassInfo.referencesColor_.color.size();
+	subpass.colorAttachmentCount = static_cast<uint32_t>(subpassInfo.referencesColor_.color.size());
 	subpass.pColorAttachments = subpassInfo.referencesColor_.color.data();
 	subpass.pDepthStencilAttachment = subpassInfo.referencesColor_.depth.data();
 	subpass.pResolveAttachments = subpassInfo.referencesColor_.resolve.data();

@@ -4,24 +4,33 @@
 #include <ui/UISkContext.hpp>
 #include <vulkan/Instance.hpp>
 #include <vulkan/Device.hpp>
-#include <engine/memory/MemoryAllocator.hpp>
+#include <vulkan/Swapchain.hpp>
+#include <vulkan/Semaphore.hpp>
 #include <memory>
+#include <vector>
 
 namespace CubA4::render::ui
 {
+	struct UIFramebuffer
+	{
+		sk_sp<SkSurface> surface;
+		std::shared_ptr<CubA4::render::vulkan::Semaphore> renderDoneSemaphore;
+	};
+
     class UIManager : public virtual IUIManager
     {
-        struct UIFramebuffer
-        {
-            VkImage image;
-            std::shared_ptr<const CubA4::render::vulkan::Memory> memory;
-        };
+        
     public:
         UIManager(std::shared_ptr<const CubA4::render::vulkan::Instance> instance,
             std::shared_ptr<const CubA4::render::vulkan::Device> device);
         ~UIManager();
 
-        void initFramebuffer(VkFormat format, VkExtent2D resolution);
+        void swapchainChanged(std::shared_ptr<const CubA4::render::vulkan::Swapchain> swapchain);
+		const UIFramebuffer &getFramebuffer(uint32_t imageIdx) const;
+
+		void drawOn(uint32_t imageIdx);
+
+		void submit();
     private:
         static std::shared_ptr<UISkContext> createContext(std::shared_ptr<const CubA4::render::vulkan::Instance> instance,
             std::shared_ptr<const CubA4::render::vulkan::Device> device);
@@ -29,8 +38,7 @@ namespace CubA4::render::ui
         const std::shared_ptr<const CubA4::render::vulkan::Instance> instance_;
         const std::shared_ptr<const CubA4::render::vulkan::Device> device_;
         const std::shared_ptr<UISkContext> context_;
-        CubA4::render::engine::memory::MemoryAllocator allocator_;
-        std::shared_ptr<UIFramebuffer> framebuffer_;
+        std::vector<UIFramebuffer> framebuffers_;
 
     };
 }

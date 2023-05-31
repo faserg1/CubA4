@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <vulkan/vulkan.h>
-#include <vector>
-#include <atomic>
+#include <engine/FramebufferManager.hpp>
+#include <engine/RenderManager.hpp>
+#include <vulkan/Device.hpp>
+#include <vulkan/Semaphore.hpp>
 
 namespace CubA4::render
 {
@@ -12,25 +13,20 @@ namespace CubA4::render
 		class IRenderConfig;
 	}
 
-	namespace vulkan
-	{
-		class Device;
-		class Memory;
-		class Swapchain;
-		class Semaphore;
-		class RenderPass;
-	}
-
 	namespace engine
 	{
 		class RenderUI
 		{
 		public:
-			RenderUI(std::shared_ptr<const vulkan::Device> device);
-			void recordApplyUI(VkCommandBuffer cmd);
+			RenderUI(std::shared_ptr<const vulkan::Device> device,
+				std::shared_ptr<FramebufferManager> framebufferManager,
+				std::shared_ptr<RenderManager> renderManager);
 
+			std::shared_ptr<vulkan::Semaphore> render(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 		private:
 			const std::shared_ptr<const vulkan::Device> device_;
+			const std::shared_ptr<FramebufferManager> framebufferManager_;
+			const std::shared_ptr<RenderManager> renderManager_;
 		};
 	}
 }

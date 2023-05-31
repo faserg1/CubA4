@@ -2,8 +2,9 @@
 
 #include <logging/ILogger.hpp>
 
-#include "./Presentaion.hpp"
-#include "./Render.hpp"
+#include <engine/Presentaion.hpp>
+#include <engine/Render.hpp>
+#include <engine/RenderUI.hpp>
 
 #include "./RenderManager.hpp"
 #include "./RenderGameHandler.hpp"
@@ -121,6 +122,8 @@ void VulkanRenderEngine::initRender()
 {
 	if (!render_)
 		render_ = std::make_shared<Render>(getDevice(), renderPassManager_, framebufferManager_, getConfig());
+	if (!renderUi_)
+		renderUi_ = std::make_shared<RenderUI>(getDevice(), framebufferManager_, renderManager_);
 }
 
 void VulkanRenderEngine::destroyRender()
@@ -137,6 +140,7 @@ void VulkanRenderEngine::setup()
 		.height = height
 	};
 	renderManager_->getWorldManager()->onViewportUpdate(width, height);
+	renderManager_->getUIManager()->swapchainChanged(getSwapchain());
 
 	renderPassManager_->createRenderPasses(getSwapchain()->getFormat());
 	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
@@ -184,9 +188,19 @@ void VulkanRenderEngine::loop()
 		renderManager_->getWorldManager()->onFrameUpdate();
 		render_->record(framebuffer);
 		auto renderDoneSemaphore = render_->send(framebuffer, acquireSemaphore);
+		
 
 		if (renderDoneSemaphore)
+		{
+			auto uiRenderDoneSemaphore = renderUi_->render(imgIndex, renderDoneSemaphore);
+			if (uiRenderDoneSemaphore)
+				renderDoneSemaphore = uiRenderDoneSemaphore;
+		}
+			
+			
+		if (renderDoneSemaphore)
 			presetation_->send(currentSwapchain, imgIndex, { renderDoneSemaphore });
+			
 		
 		fps++;
 		auto currentClock = clock();
@@ -208,6 +222,7 @@ void VulkanRenderEngine::inFrameRebuild()
 	rebuildSwapchain_.store(false);
 	rebuildSwapChain();
 	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
+	renderManager_->getUIManager()->swapchainChanged(getSwapchain());
 
 	// TODO: [OOKAMI] Call UI and pass VkImageInfo from framebuffers
 
@@ -216,7 +231,7 @@ void VulkanRenderEngine::inFrameRebuild()
 		.width = width,
 		.height = height
 	};
+	
 	renderManager_->getWorldManager()->onViewportUpdate(width, height);
-
 	renderEnginePipeline_->onFramebufferUpdated(data);
 }

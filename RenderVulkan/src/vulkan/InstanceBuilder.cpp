@@ -79,7 +79,7 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 		std::string details = util::ErrorHelper::getResultString(resultCreate);
 		throw std::runtime_error(errMsg + " " + details);
 	}
-	return std::make_shared<Instance>(instance);
+	return std::make_shared<Instance>(instance, data_->appInfo.apiVersion);
 }
 
 void InstanceBuilder::destroy(std::shared_ptr<const Instance> instance)

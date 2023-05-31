@@ -10,6 +10,7 @@ namespace CubA4::render::engine
 {
 	class Presentaion;
 	class Render;
+	class RenderUI;
 	class RenderManager;
 	class RenderPassManager;
 	class FramebufferManager;
@@ -59,6 +60,7 @@ namespace CubA4::render::engine
 	private:
 		std::shared_ptr<Presentaion> presetation_;
 		std::shared_ptr<Render> render_;
+		std::shared_ptr<RenderUI> renderUi_;
 
 		std::shared_ptr<RenderGameHandler> renderGameHandler_;
 		std::shared_ptr<pipeline::RenderEnginePipeline> renderEnginePipeline_;

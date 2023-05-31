@@ -81,17 +81,19 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(cStrExtensions.size());
 	createInfo.ppEnabledExtensionNames = cStrExtensions.data();
 	
-	VkPhysicalDeviceFeatures availableFeatures = {}, enabledFeatures = {};
-	vkGetPhysicalDeviceFeatures(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
+	VkPhysicalDeviceFeatures2 availableFeatures = {}, enabledFeatures = {};
+	availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	enabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	vkGetPhysicalDeviceFeatures2(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
 
 	// TODO: [OOKAMI] Disable this?
-	if (!availableFeatures.shaderInt64)
+	if (!availableFeatures.features.shaderInt64)
 	{
 		throw std::runtime_error("Cannot create device without shaderInt64 feature!");
 	}
-	enabledFeatures.shaderInt64 = VK_TRUE;
-	enabledFeatures.samplerAnisotropy = availableFeatures.samplerAnisotropy;
-	createInfo.pEnabledFeatures = &enabledFeatures;
+	enabledFeatures.features.shaderInt64 = VK_TRUE;
+	enabledFeatures.features.samplerAnisotropy = availableFeatures.features.samplerAnisotropy;
+	createInfo.pEnabledFeatures = &enabledFeatures.features;
 
 	float queuePriorities[2] = { 1.f, 1.f };
 	VkDeviceQueueCreateInfo qCreateInfo = {};
@@ -111,7 +113,7 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 0, &queue);
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 1, &transmitQueue);
 
-	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue, transmitQueue);
+	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue, transmitQueue, extensions_, enabledFeatures);
 }
 
 void DeviceBuilder::destroy(std::shared_ptr<const Device> device)

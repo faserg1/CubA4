@@ -33,8 +33,9 @@ namespace CubA4
 	}
 }
 
-Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue renderQueue, VkQueue transmitQueue) :
-	device_(device), physicalDevice_(physicalDevice), marker_(*this)
+Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue renderQueue, VkQueue transmitQueue,
+	std::vector<std::string> extensions, VkPhysicalDeviceFeatures2 enabledFeatures) :
+	device_(device), physicalDevice_(physicalDevice), marker_(*this), extensions_(extensions), enabledFeatures_(enabledFeatures)
 {
 	renderQueue_.queue = renderQueue;
 	transmitQueue_.queue = transmitQueue;
@@ -80,6 +81,16 @@ std::unique_ptr<IQueue> Device::getQueue(QueueType type) const
 	if (needLock)
 		data->mutex.lock();
 	return std::make_unique<Queue>(data->queue, deleter);
+}
+
+const std::vector<std::string> &Device::getEnabledExtensions() const
+{
+	return extensions_;
+}
+
+const VkPhysicalDeviceFeatures2 &Device::getEnabledFeatures() const
+{
+	return enabledFeatures_;
 }
 
 DebugMarker &Device::getMarker() const
