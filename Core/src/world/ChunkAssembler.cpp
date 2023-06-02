@@ -68,6 +68,12 @@ ReassembledChunkContainers ChunkAssembler::reassembleByBlock(std::shared_ptr<Chu
 	}
 	else
 	{
+		for (const auto &toRemove : modification.remove)
+		{
+			if (toRemove.layer != 0)
+				continue;
+			
+		}
 		// TODO: [OOKAMI] Transform mutable
 	}
 	

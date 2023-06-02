@@ -1,10 +1,9 @@
 #include <ui/UIManager.hpp>
 #include <ui/UISkContextBuilder.hpp>
+#include <ui/utils/ColorUtils.hpp>
 #include <skia/include/gpu/GrSurfaceInfo.h>
 #include <skia/include/gpu/vk/GrVkTypes.h>
 #include <skia/include/core/SkSurface.h>
-#include <skia/include/core/SkCanvas.h>
-#include <skia/include/core/SkFont.h>
 #include <skia/include/core/SkColorSpace.h>
 
 using namespace CubA4::render::ui;
@@ -13,14 +12,25 @@ UIManager::UIManager(std::shared_ptr<const CubA4::render::vulkan::Instance> inst
     std::shared_ptr<const CubA4::render::vulkan::Device> device) :
     instance_(instance), device_(device), context_(createContext(instance, device))
 {
-    
+    componentFactory_ = std::make_shared<ComponentFactory>(context_);
+    mainCanvas_ = std::make_shared<MainCanvas>();
 }
 
 UIManager::~UIManager() = default;
 
+std::shared_ptr<IComponentFactory> UIManager::getComponentFactory() const
+{
+	return componentFactory_;
+}
+
+std::shared_ptr<IMainCanvas> UIManager::getMainCanvas() const
+{
+	return mainCanvas_;
+}
+
 void UIManager::swapchainChanged(std::shared_ptr<const CubA4::render::vulkan::Swapchain> swapchain)
 {
-	framebuffers_.clear(); // TODO: [OOKAMI] Make as in framebuffer manager?
+	framebuffers_.clear(); // TODO: [OOKAMI] Make old as in framebuffer manager?
 	auto images = swapchain->getImages();
 	for (auto &image : images)
 	{
@@ -34,7 +44,7 @@ void UIManager::swapchainChanged(std::shared_ptr<const CubA4::render::vulkan::Sw
     	};
 		GrBackendRenderTarget renderTarget(width, height, imageInfo);
 		GrSurfaceOrigin origin = kTopLeft_GrSurfaceOrigin;
-		SkColorType colorType = kBGRA_8888_SkColorType;
+		SkColorType colorType = getColorType(swapchain->getFormat());
 		auto colorSpace = SkColorSpace::MakeSRGB();
 		auto surface = SkSurface::MakeFromBackendRenderTarget(context_->get().get(), renderTarget, origin, colorType, colorSpace, nullptr);
 
@@ -54,20 +64,9 @@ const UIFramebuffer &UIManager::getFramebuffer(uint32_t imageIdx) const
 
 void UIManager::drawOn(uint32_t imageIdx)
 {
-	// test!!!
 	auto &surface = framebuffers_[imageIdx].surface;
 	auto canvas = surface->getCanvas();
-	SkPoint center = {200, 200};
-	SkScalar rad = 100;
-	
-	SkColor4f color = {0, 0, 0, 1};
-	SkPaint paint(color);
-	canvas->drawCircle(center, rad, paint);
-
-	std::string text("UI is here!");
-	SkFont font;
-	font.setSize(32);
-	canvas->drawSimpleText(text.data(), text.size(), SkTextEncoding::kUTF8, 100, 400, font, paint);
+	mainCanvas_->draw(canvas);
 }
 
 void UIManager::submit()

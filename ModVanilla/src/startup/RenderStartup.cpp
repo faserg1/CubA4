@@ -15,6 +15,7 @@
 #include <engine/material/IMaterialBuilder.hpp>
 #include <engine/material/ITextureImporter.hpp>
 #include <engine/model/IModelManager.hpp>
+#include <ui/IRenderUIManager.hpp>
 #include <model/IModelReader.hpp>
 #include <manager/ModManager.hpp>
 #include <ModVanillaConst.hpp>
@@ -60,6 +61,7 @@ void RenderStartup::preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> 
 	importTextures(materialManager->getTextureImporter());
 	createMaterials(materialManager->getMaterialFactory());
 	createModels(renderManager->getModelManager());
+	testUI(renderManager);
 }
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
@@ -132,4 +134,17 @@ void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::I
 	blockManager->addBlockDefinition("test2", blockModelDef2);
 
 	//auto blockModel = modelManager->registerModel(*blockModelDef);
+}
+
+void RenderStartup::testUI(std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager)
+{
+	auto materialManager = renderManager->getMaterialManager();
+	auto textureImporter = materialManager->getTextureImporter();
+	auto uiManager = renderManager->getUIManager();
+	auto mainCanvas = uiManager->getMainCanvas();
+	using namespace std::string_literals;
+	const auto resource = core_->getResourcesManager()->find("data/vanilla/assets/ui/test.png"s);
+	auto importedTexture = textureImporter->importFromPng(resource);
+	auto image = uiManager->getComponentFactory()->createImage(importedTexture);
+	mainCanvas->addComponent(image);
 }

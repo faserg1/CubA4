@@ -57,12 +57,12 @@ std::future<void> MemoryHelper::copyBufferToBuffer(VkBuffer src, VkBuffer dst, V
 }
 
 std::future<void> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
-	VkImageLayout srcLayout, VkImageSubresourceRange subresourceRange)
+	VkImageLayout srcLayout, VkImageLayout dstLayout, VkImageSubresourceRange subresourceRange)
 {
 	auto queue = getNextQueue();
 
 	tf::Taskflow flow;
-	auto record = flow.emplace([queue, src, dst, r = std::move(regions), srcLayout, subresourceRange]{
+	auto record = flow.emplace([queue, src, dst, r = std::move(regions), srcLayout, dstLayout, subresourceRange]{
 		VkImageMemoryBarrier inMemoryBarrier = {};
 		inMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		inMemoryBarrier.oldLayout = srcLayout;
@@ -74,7 +74,7 @@ std::future<void> MemoryHelper::copyBufferToImage(VkBuffer src, VkImage dst, std
 		VkImageMemoryBarrier outMemoryBarrier = {};
 		outMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		outMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		outMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; // TODO: get the layout from params
+		outMemoryBarrier.newLayout = dstLayout;
 		outMemoryBarrier.image = dst;
 		outMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		outMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;

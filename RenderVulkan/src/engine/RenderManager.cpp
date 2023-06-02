@@ -59,7 +59,7 @@ std::shared_ptr<ResourceManager> RenderManager::getResourceManager() const
 	return resourceManager_;
 }
 
-std::shared_ptr<CubA4::render::ui::IUIManager> RenderManager::getUIManager() const
+std::shared_ptr<CubA4::render::ui::IRenderUIManager> RenderManager::getUIManager() const
 {
 	return uiManager_;
 }

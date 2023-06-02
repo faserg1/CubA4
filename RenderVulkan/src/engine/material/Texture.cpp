@@ -4,8 +4,9 @@ using namespace CubA4::render::engine::material;
 using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::vulkan;
 
-Texture::Texture(std::shared_ptr<const Device> device, VkImage texture, VkImageView textureView, std::shared_ptr<const IMemoryPart> part) :
-	device_(device), texture_(texture), textureView_(textureView), memoryPart_(part)
+Texture::Texture(std::shared_ptr<const Device> device, VkImage texture, VkImageView textureView,
+	std::shared_ptr<const IMemoryPart> part, VkImageCreateInfo textureInfo) :
+	device_(device), texture_(texture), textureView_(textureView), memoryPart_(part), textureInfo_(textureInfo)
 {
 	
 }
@@ -24,4 +25,9 @@ VkImage Texture::getTexture() const
 VkImageView Texture::getTextureView() const
 {
 	return textureView_;
+}
+
+const VkImageCreateInfo &Texture::getTextureInfo() const
+{
+	return textureInfo_;
 }

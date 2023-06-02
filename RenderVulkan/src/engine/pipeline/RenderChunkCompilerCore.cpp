@@ -6,6 +6,7 @@
 #include "../memory/MemoryManager.hpp"
 #include "../model/ModelCompiler.hpp"
 #include <algorithm>
+#include <numeric> 
 #include <execution>
 #include <string>
 #include <cmath>
@@ -159,10 +160,13 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 	for (auto block : blocks)
 	{
 		auto containers = chunk->getChunkBContainers(block);
-		for (auto container : containers)
-		{
-			toReserve += container->getBlockCount();
-		}
+		toReserve += std::transform_reduce(std::execution::par_unseq,
+			containers.begin(), containers.end(), uint32_t{},
+			std::plus<uint32_t>{},
+			[](std::shared_ptr<const IChunkBBaseContainer> container) -> uint32_t
+			{
+				return container->getBlockCount();
+			});
 	}
 	collected.resize(toReserve);
 	

@@ -24,17 +24,20 @@ namespace CubA4::render
 				public virtual ITexture
 			{
 			public:
-				explicit Texture(std::shared_ptr<const vulkan::Device> device, VkImage texture, VkImageView textureView, std::shared_ptr<const memory::IMemoryPart> part);
+				explicit Texture(std::shared_ptr<const vulkan::Device> device, VkImage texture, VkImageView textureView,
+					std::shared_ptr<const memory::IMemoryPart> part, VkImageCreateInfo textureInfo);
 				~Texture();
 
 				VkImage getTexture() const;
 				VkImageView getTextureView() const;
+				const VkImageCreateInfo &getTextureInfo() const;
 			protected:
 			private:
 				const std::shared_ptr<const vulkan::Device> device_;
 				const VkImage texture_;
 				const VkImageView textureView_;
 				const std::shared_ptr<const memory::IMemoryPart> memoryPart_;
+				const VkImageCreateInfo textureInfo_;
 			};
 		}
 	}

@@ -30,7 +30,7 @@ namespace CubA4::render::engine
 		std::shared_ptr<model::ModelManager> getModelManager();
 		std::shared_ptr<world::IWorldManager> getWorldManager() const override;
 		std::shared_ptr<world::WorldManager> getWorldManager();
-		std::shared_ptr<CubA4::render::ui::IUIManager> getUIManager() const override;
+		std::shared_ptr<CubA4::render::ui::IRenderUIManager> getUIManager() const override;
 		std::shared_ptr<CubA4::render::ui::UIManager> getUIManager();
 
 		std::shared_ptr<ResourceManager> getResourceManager() const;

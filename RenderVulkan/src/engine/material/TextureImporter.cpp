@@ -224,7 +224,7 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 				{
 					if (!data[write_byte + 3])
 						data[write_byte + 3] = 1;
-					data[write_byte + 3] = -data[write_byte + 3]; //alpha channel
+					data[write_byte + 3] = data[write_byte + 3]; //alpha channel
 				}
 
 				byteIndex += bytes_per_pixel;
@@ -250,9 +250,10 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 	textureInfo.mipLevels = 1;
 	textureInfo.arrayLayers = 1;
 	textureInfo.imageType = VK_IMAGE_TYPE_2D;
-	textureInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	textureInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 	textureInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-	textureInfo.tiling = VK_IMAGE_TILING_LINEAR;
+	// textureInfo.format = VK_FORMAT_B8G8R8A8_SRGB;
+	textureInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // ???
 	textureInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	textureInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 
@@ -282,7 +283,7 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 	subResRange.levelCount = 1;
 	subResRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 
-	auto copyFucture = memoryHelper_->copyBufferToImage(tempBuffer, texture, { fullTextureRegion }, VK_IMAGE_LAYOUT_UNDEFINED, subResRange);
+	auto copyFucture = memoryHelper_->copyBufferToImage(tempBuffer, texture, { fullTextureRegion }, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subResRange);
 	copyFucture.wait();
 
 	// delete temp buffer
@@ -304,5 +305,7 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 		return {};
 	}
 
-	return std::make_shared<Texture>(device_, texture, textureView, memoryPart);
+	// return texture
+
+	return std::make_shared<Texture>(device_, texture, textureView, memoryPart, textureInfo);
 }

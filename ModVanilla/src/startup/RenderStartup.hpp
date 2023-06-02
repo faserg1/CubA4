@@ -53,6 +53,9 @@ namespace CubA4::startup
 		void importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter);
 		void createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory);
 		void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
+
+		// test!!!!!!
+		void testUI(std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager);
 	private:
 		std::map<std::string, Texture> textures_;
 		std::map<std::string, Material> materials_;

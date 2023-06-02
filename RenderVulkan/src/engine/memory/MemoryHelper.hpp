@@ -31,7 +31,7 @@ namespace CubA4::render::engine::memory
 
 		std::future<void> copyBufferToBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
 		std::future<void> copyBufferToImage(VkBuffer src, VkImage dst, std::vector<VkBufferImageCopy> regions,
-			VkImageLayout srcLayout, VkImageSubresourceRange subresourceRange);
+			VkImageLayout srcLayout, VkImageLayout dstLayout, VkImageSubresourceRange subresourceRange);
 		std::future<void> updateBuffer(const void *data, VkBuffer dst, VkDeviceSize offset, VkDeviceSize size, BufferBarrierType bufferBarrierType = BufferBarrierType::None);
 	protected:
 	private:
