@@ -17,7 +17,7 @@ namespace CubA4::render::engine::model
 		{
 			friend ModelCompiler;
 			const CubA4::model::IRenderModelDefinition *model;
-			std::vector<unsigned short> faces;
+			std::shared_ptr<std::vector<unsigned short>> faces;
 			CubA4::world::BlockInChunkPos pos;
 		private:
 			// internal

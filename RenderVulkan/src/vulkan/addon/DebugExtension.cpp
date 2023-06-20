@@ -11,31 +11,16 @@ using namespace CubA4::render::config;
 
 #define getVkFuncInstancePtr(instance, funcName) (PFN_##funcName)(vkGetInstanceProcAddr(instance, #funcName))
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	struct DebugExtensionData
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				struct DebugExtensionData
-				{
-					VkDebugUtilsMessengerEXT messeger;
-					VkDebugReportCallbackEXT callback;
+		VkDebugUtilsMessengerEXT messeger;
+		VkDebugReportCallbackEXT callback;
 
-					PFN_vkCreateDebugUtilsMessengerEXT createDebugUtils;
-					PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugUtils;
-
-					PFN_vkSetDebugUtilsObjectNameEXT setName;
-					PFN_vkSetDebugUtilsObjectTagEXT setTag;
-					PFN_vkCmdBeginDebugUtilsLabelEXT cmdBegin;
-					PFN_vkCmdEndDebugUtilsLabelEXT cmdEnd;
-					PFN_vkCmdInsertDebugUtilsLabelEXT cmdInsert;
-				};
-			}
-		}
-	}
+		PFN_vkCreateDebugUtilsMessengerEXT createDebugUtils;
+		PFN_vkDestroyDebugUtilsMessengerEXT destroyDebugUtils;
+	};
 }
 
 DebugExtension::DebugExtension(std::shared_ptr<ILogger> logger, std::shared_ptr<IRenderConfig> cfg) :
@@ -134,63 +119,9 @@ void DebugExtension::added(InstanceBuilder &builder)
 
 }
 
-void DebugExtension::name(VkDevice device, VkObjectType type, uint64_t handle, const std::string &name)
-{
-	if (data_->setName)
-	{
-		VkDebugUtilsObjectNameInfoEXT info {
-			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-			.objectType = type,
-			.objectHandle = handle,
-			.pObjectName = name.c_str()
-		};
-		data_->setName(device, &info);
-	}
-}
-
-void DebugExtension::cmdLabelBegin(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
-{
-	if (data_->cmdBegin)
-	{
-		VkDebugUtilsLabelEXT info {
-			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
-			.pLabelName = name.c_str(),
-			.color = {color[0], color[1], color[2], color[3]}
-		};
-		data_->cmdBegin(cmd, &info);
-	}
-}
-
-void DebugExtension::cmdLabelEnd(VkCommandBuffer cmd)
-{
-	if (data_->cmdEnd)
-	{
-		data_->cmdEnd(cmd);
-	}
-}
-
-void DebugExtension::cmdLabelInsert(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
-{
-	if (data_->cmdInsert)
-	{
-		VkDebugUtilsLabelEXT info {
-			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
-			.pLabelName = name.c_str(),
-			.color = {color[0], color[1], color[2], color[3]}
-		};
-		data_->cmdInsert(cmd, &info);
-	}
-}
-
 void DebugExtension::fillFunctionPointers(std::shared_ptr<const Instance> instance)
 {
 	auto vkInstance = instance->getInstance();
 	data_->createDebugUtils = getVkFuncInstancePtr(vkInstance, vkCreateDebugUtilsMessengerEXT);
 	data_->destroyDebugUtils = getVkFuncInstancePtr(vkInstance, vkDestroyDebugUtilsMessengerEXT);
-
-	data_->setName = getVkFuncInstancePtr(vkInstance, vkSetDebugUtilsObjectNameEXT);
-	data_->setTag = getVkFuncInstancePtr(vkInstance, vkSetDebugUtilsObjectTagEXT);
-	data_->cmdBegin = getVkFuncInstancePtr(vkInstance, vkCmdBeginDebugUtilsLabelEXT);
-	data_->cmdEnd = getVkFuncInstancePtr(vkInstance, vkCmdEndDebugUtilsLabelEXT);
-	data_->cmdInsert = getVkFuncInstancePtr(vkInstance, vkCmdInsertDebugUtilsLabelEXT);
 }

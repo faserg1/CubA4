@@ -10,7 +10,7 @@ void ModelCompiler::addFaces(std::vector<CollectedData> data)
 {
 	auto it = std::remove_if(std::execution::par_unseq, data.begin(), data.end(), [](const CollectedData& data) -> bool
 	{
-		return !data.model || data.faces.empty();
+		return !data.model || !data.faces || data.faces->empty();
 	});
 	if (it != data.end())
 		data.erase(it, data.end());
@@ -37,7 +37,7 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		const auto &faces = data.faces;
 		const auto &indexes = model->getFaceIndices();
 		data.faceOffset_ = faces_size;
-		faces_size += faces.size();
+		faces_size += faces->size();
 		data.vertexOffset_ = vertex_size;
 		std::clock_t m2 = std::clock();
 		if (auto it = offsetsMap.find(&indexes); it != offsetsMap.end())
@@ -50,7 +50,7 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		}
 		std::clock_t m3 = std::clock();
 		std::atomic<size_t> currentVertexSize(0);
-		std::for_each(std::execution::par_unseq, faces.begin(), faces.end(), [&indexes, &currentVertexSize](const auto faceIdx)
+		std::for_each(std::execution::par_unseq, faces->begin(), faces->end(), [&indexes, &currentVertexSize](const auto faceIdx)
 		{
 			currentVertexSize += indexes.faces[faceIdx];
 		});
@@ -86,7 +86,7 @@ std::shared_ptr<const RenderModel> ModelCompiler::compile(const std::string &id,
 		const auto &indexes = model->getFaceIndices();
 		size_t newVertexIdx = data.vertexOffset_;
 		size_t newFaceIdx = data.faceOffset_;
-		for (auto faceIdx : faces)
+		for (auto faceIdx : *faces)
 		{
 			auto faceOffset = offsets[faceIdx];
 			auto faceSize = indexes.faces[faceIdx];

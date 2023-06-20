@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <execution>
 #include <range/v3/view/map.hpp>
+#include <range/v3/view/remove_if.hpp>
 #include <range/v3/range/conversion.hpp>
 using namespace CubA4::world;
 using namespace CubA4::object;
@@ -30,50 +31,35 @@ std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers() const
 {
-	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers;
-	containers.resize(chunkBRanges_.size() + chunkBSets_.size() + chunkBMultis_.size());
-	size_t idx = 0;
-	for (auto range : chunkBRanges_)
-	{
-		containers[idx++] = range;
-	}
-	for (auto set : chunkBSets_)
-	{
-		containers[idx++] = set;
-	}
-	for (auto multi : chunkBMultis_)
-	{
-		containers[idx++] = multi;
-	}
-	return std::move(containers);
+	return containers_;
 }
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const
 {
-	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers;
-	containers.resize(chunkBRanges_.size() + chunkBSets_.size() + chunkBMultis_.size());
-	size_t idx = 0;
-	for (auto range : chunkBRanges_)
-	{
-		if (range->getBlock() != usedBlock)
-			continue;
-		containers[idx++] = range;
-	}
-	for (auto set : chunkBSets_)
-	{
-		if (set->getBlock() != usedBlock)
-			continue;
-		containers[idx++] = set;
-	}
-	for (auto multi : chunkBMultis_)
-	{
-		if (multi->getBlock() != usedBlock)
-			continue;
-		containers[idx++] = multi;
-	}
-	const auto removeFrom = containers.begin() + idx;
-	containers.erase(removeFrom, containers.end());
+	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers = containers_
+		| ranges::views::remove_if([usedBlock](auto container){ return container->getBlock() != usedBlock; })
+		| ranges::to_vector;
 	return std::move(containers);
+}
+
+bool Chunk::hasBlocksAt(world::BlockInChunkPos pos) const
+{
+	for (auto container : containers_)
+	{
+		if (container->hasBlockAt(pos))
+			return true;
+	}
+	return false;
+}
+
+bool Chunk::hasBlocksAt(uint32_t index) const
+{
+	for (auto container : containers_)
+	{
+		if (container->hasBlockAt(index))
+			return true;
+	}
+	return false;
 }
 
 std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos) const
@@ -93,9 +79,7 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 			}
 		}
 	};
-	checkContainer(chunkBRanges_);
-	checkContainer(chunkBSets_);
-	checkContainer(chunkBMultis_);
+	checkContainer(containers_);
 	std::sort(std::execution::par_unseq, blocks.begin(), blocks.end(), [](const auto &a, const auto &b) -> bool
 	{
 		return a.layer < b.layer;
@@ -122,11 +106,7 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 		}
 		return {};
 	};
-	if (auto blockAt = checkContainer(chunkBRanges_); blockAt.block)
-		return blockAt;
-	if (auto blockAt = checkContainer(chunkBSets_); blockAt.block)
-		return blockAt;
-	if (auto blockAt = checkContainer(chunkBMultis_); blockAt.block)
+	if (auto blockAt = checkContainer(containers_); blockAt.block)
 		return blockAt;
 	return {};
 }
@@ -136,15 +116,20 @@ DataProvider &Chunk::getDataProvider()
 	return dataProvider_;
 }
 
-const DataProvider &Chunk::getDataProvider() const
+const IDataProvider &Chunk::getDataProvider() const
 {
 	return dataProvider_;
 }
 
-void Chunk::addRange(std::shared_ptr<ChunkBRange> container)
+void Chunk::addContainer(std::shared_ptr<const IChunkBBaseContainer> container)
 {
-	chunkBRanges_.push_back(container);
+	containers_.push_back(container);
 	onContainerAdded(container);
+}
+
+void Chunk::removeContainer(size_t idContainer)
+{
+	// todo
 }
 
 void Chunk::onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container)

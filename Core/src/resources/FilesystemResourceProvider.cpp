@@ -13,6 +13,16 @@ FilesystemResourceProvider::~FilesystemResourceProvider()
 	
 }
 
+void FilesystemResourceProvider::onMount(Path from)
+{
+	mountedTo_ = from;
+}
+
+void FilesystemResourceProvider::onUnMount()
+{
+	mountedTo_ = Path{};
+}
+
 bool FilesystemResourceProvider::exists(Path path) const 
 {
 	const auto fullPath = getFullPath(path);
@@ -23,12 +33,12 @@ std::shared_ptr<const IResource> FilesystemResourceProvider::find(Path path) con
 {
 	if (!exists(path))
 		return {};
-	return std::make_shared<const FilesystemResource>(getFullPath(path));
+	return std::make_shared<const FilesystemResource>(getFullPath(path), mountedTo_ / path);
 }
 
 std::shared_ptr<IResource> FilesystemResourceProvider::edit(Path path) const
 {
-	return std::make_shared<FilesystemResource>(getFullPath(path));
+	return std::make_shared<FilesystemResource>(getFullPath(path), mountedTo_ / path);
 }
 
 Path FilesystemResourceProvider::getFullPath(Path path) const

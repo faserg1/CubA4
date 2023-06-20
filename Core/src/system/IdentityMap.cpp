@@ -30,7 +30,7 @@ void IdentityMap::clear()
 	map_.clear();
 }
 
-int64_t IdentityMap::add(const std::string &tag, const std::string &id)
+IdentityMap::IdType IdentityMap::add(const std::string &tag, const std::string &id)
 {
 	auto lastId = get(tag, id);
 	if (lastId >= 0)
@@ -40,12 +40,12 @@ int64_t IdentityMap::add(const std::string &tag, const std::string &id)
 	return genId;
 }
 
-int64_t IdentityMap::get(const std::string &tag, const std::string &id) const
+IdentityMap::IdType IdentityMap::get(const std::string &tag, const std::string &id) const
 {
 	return get(makeId(tag, id));
 }
 
-int64_t IdentityMap::get(const std::string &fullId) const
+IdentityMap::IdType IdentityMap::get(const std::string &fullId) const
 {
 	auto pair = map_.right.find(fullId);
 	if (pair == map_.right.end())
@@ -53,7 +53,7 @@ int64_t IdentityMap::get(const std::string &fullId) const
 	return pair->second;
 }
 
-std::string IdentityMap::get(int64_t id) const
+std::string IdentityMap::get(IdentityMap::IdType id) const
 {
 	auto pair = map_.left.find(id);
 	if (pair == map_.left.end())

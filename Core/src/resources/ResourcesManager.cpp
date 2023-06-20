@@ -23,6 +23,7 @@ void ResourcesManager::mount(ResourcesType type, Path path, std::shared_ptr<IRes
 	};
 
 	providers_.push_back(data);
+	provider->onMount(path);
 }
 
 bool ResourcesManager::exists(Path path) const

@@ -2,7 +2,7 @@
 
 #include <model/IModelDefinition.hpp>
 #include <world/Sides.hpp>
-#include <world/BlockData.hpp>
+#include <world/data/BlockData.hpp>
 #include <vector>
 #include <memory>
 

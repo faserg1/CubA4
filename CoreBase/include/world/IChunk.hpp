@@ -6,7 +6,8 @@
 #include <vector>
 #include <memory>
 #include <world/Position.hpp>
-#include <world/IChunkBBaseContainer.hpp>
+#include <world/containers/IChunkBBaseContainer.hpp>
+#include <world/data/IDataProvider.hpp>
 #include <object/IBlock.hpp>
 
 namespace CubA4::world
@@ -34,8 +35,12 @@ namespace CubA4::world
 		*/
 		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const = 0;
 		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const = 0;
+		virtual bool hasBlocksAt(world::BlockInChunkPos pos) const = 0;
+		virtual bool hasBlocksAt(uint32_t index) const = 0;
 		virtual std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const = 0;
 		virtual CubA4::world::BlockAt getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const = 0;
+
+		virtual const IDataProvider &getDataProvider() const = 0;
 	protected:
 		explicit IChunk() = default;
 		virtual ~IChunk() = default;

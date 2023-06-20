@@ -3,6 +3,7 @@
 #include <memory>
 #include <system/IStartup.hpp>
 #include <game/Game.hpp>
+#include <Core.hpp>
 
 namespace CubA4::system
 {
@@ -10,7 +11,7 @@ namespace CubA4::system
 		public virtual IStartup
 	{
 	public:
-		explicit Startup(std::weak_ptr<const ICore> core);
+		explicit Startup(std::shared_ptr<Core> core);
 		~Startup();
 
 		void load(system::IAppCallback &appCallback) override;
@@ -32,7 +33,7 @@ namespace CubA4::system
 		void initGame();
 		void destroyGame();
 	private:
-		const std::weak_ptr<const ICore> core_;
+		const std::weak_ptr<Core> core_;
 		system::IAppCallback *appCallback_;
 		std::shared_ptr<mod::IModLoader> modLoader_;
 		std::shared_ptr<CubA4::game::Game> game_;

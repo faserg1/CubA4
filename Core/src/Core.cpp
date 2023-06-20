@@ -61,9 +61,29 @@ std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() 
 	return std::const_pointer_cast<const resources::IResourcesManager>(resourceManager_);
 }
 
+std::shared_ptr<const system::IEnvironment> Core::getEnvironment() const
+{
+	return env_;
+}
+
+std::shared_ptr<const game::IGame> Core::getGame() const
+{
+	return game_;
+}
+
 std::shared_ptr<system::IRuntime> Core::getRuntime()
 {
 	return runtime_;
+}
+
+void Core::setEnvironment(std::shared_ptr<system::IEnvironment> env)
+{
+	env_ = env;
+}
+
+void Core::setGame(std::shared_ptr<game::IGame> game)
+{
+	game_ = game;
 }
 
 void Core::criticalException() const

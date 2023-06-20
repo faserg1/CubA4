@@ -2,7 +2,8 @@
 
 #include <memory>
 #include <ICore.hpp>
-#include <system/IStartup.hpp>
+#include <system/IEnvironment.hpp>
+#include <game/IGame.hpp>
 #include <CoreExportHelper.hpp>
 #include <config/CoreConfig.hpp>
 
@@ -20,7 +21,13 @@ namespace CubA4
 		std::shared_ptr<logging::ILogger> getLogger() const override;
 		std::shared_ptr<model::IModelFactory> getModelFactory() const override;
 		std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const override;
+		std::shared_ptr<const system::IEnvironment> getEnvironment() const override;
+		std::shared_ptr<const game::IGame> getGame() const override;
 		std::shared_ptr<system::IRuntime> getRuntime() override;
+
+
+		void setEnvironment(std::shared_ptr<system::IEnvironment> env);
+		void setGame(std::shared_ptr<game::IGame> game);
 
 		void criticalException() const override;
 	protected:
@@ -31,7 +38,7 @@ namespace CubA4
 		std::shared_ptr<model::IModelFactory> modelFactory_;
 		std::shared_ptr<resources::IResourcesManager> resourceManager_;
 		std::shared_ptr<system::IRuntime> runtime_;
-
-		std::shared_ptr<system::IStartup> startup_;
+		std::shared_ptr<system::IEnvironment> env_;
+		std::shared_ptr<game::IGame> game_;
 	};
 }

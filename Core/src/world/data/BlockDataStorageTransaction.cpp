@@ -1,4 +1,4 @@
-#include <world/BlockDataStorageTransaction.hpp>
+#include <world/data/BlockDataStorageTransaction.hpp>
 using namespace CubA4::world;
 
 BlockDataStorageTransaction::BlockDataStorageTransaction()

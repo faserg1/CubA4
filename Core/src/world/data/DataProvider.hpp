@@ -1,12 +1,13 @@
 #pragma once
 
-#include <world/BlockDataStorage.hpp>
+#include <world/data/IDataProvider.hpp>
+#include <world/data/BlockDataStorage.hpp>
 #include <memory>
 #include <unordered_map>
 
 namespace CubA4::world
 {
-	class DataProvider
+	class DataProvider : public virtual IDataProvider
 	{
 	public:
 		explicit DataProvider();

@@ -30,7 +30,7 @@ std::shared_ptr<CubA4::object::IBlock> ModBlockManager::getBlock(const std::stri
 	return {};
 }
 
-void ModBlockManager::addBlock(const std::string &id, std::shared_ptr<CubA4::object::IBlock> block)
+void ModBlockManager::addBlock(std::shared_ptr<CubA4::object::IBlock> block)
 {
-	blocks_.insert(std::make_pair(id, block));
+	blocks_.insert(std::make_pair(block->getId(), block));
 }

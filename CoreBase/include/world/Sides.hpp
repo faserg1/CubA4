@@ -31,4 +31,6 @@ namespace CubA4::world
 	};
 
 	CUBA4_ENUM_FLAGS_OPERATORS(BlockSide, BlockSides, uint8_t)
+
+	constexpr const BlockSides AllSides = BlockSide::Top | BlockSide::Bottom | BlockSide::Front | BlockSide::Back | BlockSide::Left | BlockSide::Right;
 }

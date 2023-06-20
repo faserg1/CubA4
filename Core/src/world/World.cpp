@@ -8,11 +8,9 @@
 #include <world/ChunkAssembler.hpp>
 
 using namespace CubA4::world;
-using namespace CubA4::world;
-using namespace CubA4::world;
 
-World::World(std::shared_ptr<const IWorldDefinition> definition) :
-	definition_(definition)
+World::World(Core &core, std::shared_ptr<const IWorldDefinition> definition) :
+	core_(core), definition_(definition)
 {
 	
 }
@@ -42,6 +40,9 @@ void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> block
 	// TODO: [OOKAMI] Test chunk range feature. Delete function later
 	/*auto chunk0 = findChunk({ 0, 0, 0 });
 	chunk0->addChunkRange(ChunkRangeBuilder::buildRange(blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));*/
+	auto env = core_.getEnvironment();
+	const auto blockId0 = env->getId(blocks[0]);
+	const auto blockId1 = env->getId(blocks[1]);
 	for (auto x = -2; x < 4; x++)
 	{
 		for (auto y = -2; y < 2; y++)
@@ -49,10 +50,15 @@ void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> block
 			for (auto z = -2; z < 4; z++)
 			{
 				auto chunk0 = findChunk({ x, y, z });
-				//chunk0->addChunkRange(ChunkRangeBuilder::buildRange(block, { 0, 0, 0 }, { 0, 0, 0 }));
-				chunk0->addRange(ChunkAssembler::buildRange(0, blocks[0], { 0, 0, 0 }, { 1, 1, 1 }));
-				chunk0->addRange(ChunkAssembler::buildRange(0, blocks[1], { 1, 2, 1 }, { 4, 4, 4 }));
-				chunk0->addRange(ChunkAssembler::buildRange(0, blocks[1], { 5, 5, 5 }, { 40, 40, 40 }));
+				// nope
+				auto bds0 = chunk0->getDataProvider().getBlockDataStorage(blockId0);
+				auto bds1 = chunk0->getDataProvider().getBlockDataStorage(blockId1);
+				auto range0 = ChunkAssembler::buildRange(0, blocks[0], { 0, 0, 0 }, { 1, 1, 1 });
+				auto range1 = ChunkAssembler::buildRange(0, blocks[1], { 1, 2, 1 }, { 4, 4, 4 });
+				auto range2 = ChunkAssembler::buildRange(0, blocks[1], { 5, 5, 5 }, { 40, 40, 40 });
+				chunk0->addContainer(range0);
+				chunk0->addContainer(range1);
+				chunk0->addContainer(range2);
 			}
 		}
 	}

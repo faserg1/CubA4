@@ -1,6 +1,6 @@
 #pragma once
 
-#include <world/ObjectData.hpp>
+#include <world/data/ObjectData.hpp>
 #include <world/Position.hpp>
 
 namespace CubA4::world

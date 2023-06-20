@@ -6,6 +6,7 @@
 #include <resources/IResourcesManager.hpp>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
+using namespace CubA4::render::vulkan::util;
 
 ResourceManager::ResourceManager(std::shared_ptr<const Device> device, std::shared_ptr<const ICore> core) :
 	device_(device), core_(core)
@@ -83,7 +84,7 @@ void ResourceManager::createBuiltInDescriptorPool()
 		vkDestroyDescriptorPool(dev->getDevice(), pool, nullptr);
 	};
 
-	builtInPool_ = util::createSharedVulkanObject(pool, deleter);
+	builtInPool_ = createSharedVulkanObject(pool, deleter);
 }
 
 sVkDescriptorSetLayout ResourceManager::createSetFromBindings(const VkDescriptorSetLayoutBinding *bindings, size_t count, const char *name)
@@ -104,5 +105,5 @@ sVkDescriptorSetLayout ResourceManager::createSetFromBindings(const VkDescriptor
 	{
 		vkDestroyDescriptorSetLayout(dev->getDevice(), layout, nullptr);
 	};
-	return util::createSharedVulkanObject(layout, deleter);
+	return createSharedVulkanObject(layout, deleter);
 }

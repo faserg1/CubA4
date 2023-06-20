@@ -5,8 +5,8 @@
 #include <world/IWorldDefinition.hpp>
 using namespace CubA4::system;
 
-EnvironmentBuilder::EnvironmentBuilder(EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
-	data_(data), context_(context)
+EnvironmentBuilder::EnvironmentBuilder(Core &core, EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
+	core_(core), data_(data), context_(context)
 {
 	
 }
@@ -45,7 +45,7 @@ std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std:
 	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), worldDef->getId());
 	if (genId < 0)
 		return {};
-	auto world = std::make_shared<CubA4::world::World>(worldDef);
+	auto world = std::make_shared<CubA4::world::World>(core_, worldDef);
 	data_.getObjects().insert(std::make_pair(genId, world));
 	return world;
 }

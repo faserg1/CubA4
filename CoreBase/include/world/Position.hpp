@@ -140,13 +140,47 @@ namespace CubA4::world
 		return (pos.z * ChunkSize * ChunkSize) + (pos.y * ChunkSize) + pos.x;
 	}
 
+	constexpr BlockInChunkPos posByIndex(size_t index)
+	{
+		using xType = decltype(CubA4::world::BlockInChunkPos::x);
+		using yType = decltype(CubA4::world::BlockInChunkPos::y);
+		using zType = decltype(CubA4::world::BlockInChunkPos::z);
+		xType x = index % ChunkSize;
+		index -= x;
+		yType y = (index % (ChunkSize * ChunkSize)) / ChunkSize;
+		index -= (y * ChunkSize);
+		zType z = static_cast<zType>(index / (ChunkSize * ChunkSize));
+		return {static_cast<xType>(x), static_cast<yType>(y), static_cast<zType>(z)};
+	}
+
 	constexpr const BasePos<int8_t> AdjancentPositions[] = {
-		{-1, 0, 0},  // left
-		{1, 0, 0},   // right
-		{0, -1, 0},  // down
-		{0, 1, 0},   // up
-		{0, 0, -1},  // back
-		{0, 0, 1}    // front
+		{-1, 0, 0},
+		{1, 0, 0},
+		{0, -1, 0},
+		{0, 1, 0},
+		{0, 0, -1},
+		{0, 0, 1}
+	};
+
+	constexpr const BasePos<int8_t> AdjancentWithCornersPositions[] = {
+		{-1, 0, 0},
+		{1, 0, 0},
+		{0, -1, 0},
+		{0, 1, 0},
+		{0, 0, -1},
+		{0, 0, 1},
+		{-1, -1, 0},
+		{-1, 1, 0},
+		{1, -1, 0},
+		{1, 1, 0},
+		{-1, 0, -1},
+		{-1, 0, 1},
+		{1, 0, -1},
+		{1, 0, 1},
+		{0, -1, -1},
+		{0, -1, 1},
+		{0, 1, -1},
+		{0, 1, 1}
 	};
 
 	template <typename TPosTypeOut, typename TPosTypeIn>

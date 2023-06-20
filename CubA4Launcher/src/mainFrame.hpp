@@ -14,6 +14,7 @@ public:
     void LaunClient(wxCommandEvent& event);
     void LaunchServer(wxCommandEvent& event);
 private:
+	// managed by window
     wxBoxSizer *buttonsBox_;
     std::unique_ptr<wxButton> buttonClient_;
     std::unique_ptr<wxButton> buttonServer_;

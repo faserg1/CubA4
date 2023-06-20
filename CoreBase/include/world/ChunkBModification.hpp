@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <world/Position.hpp>
-#include <world/BlockData.hpp>
+#include <world/data/BlockData.hpp>
 #include <object/IBlock.hpp>
 
 namespace CubA4::world

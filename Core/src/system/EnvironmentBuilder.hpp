@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <system/IEnvironmentBuilder.hpp>
+#include <Core.hpp>
 #include "EnvironmentBuilderData.hpp"
 #include "EnvironmentBuilderContext.hpp"
 
@@ -11,7 +12,7 @@ namespace CubA4::system
 		public virtual IEnvironmentBuilder
 	{
 	public:
-		explicit EnvironmentBuilder(EnvironmentBuilderData &data, const EnvironmentBuilderContext &context);
+		explicit EnvironmentBuilder(Core &core, EnvironmentBuilderData &data, const EnvironmentBuilderContext &context);
 		~EnvironmentBuilder();
 
 		const CubA4::render::IRenderInfo &getRenderInfo() const override;
@@ -22,6 +23,7 @@ namespace CubA4::system
 		std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) override;
 	protected:
 	private:
+		Core &core_;
 		EnvironmentBuilderData &data_;
 		const EnvironmentBuilderContext context_;
 	};

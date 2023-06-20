@@ -1,6 +1,6 @@
 #pragma once
 
-#include <world/IBlockDataStorage.hpp>
+#include <world/data/IBlockDataStorage.hpp>
 #include <util/ITransaction.hpp>
 
 namespace CubA4::world

@@ -2,7 +2,7 @@
 
 #include <model/IRenderModelDefinition.hpp>
 #include <world/Sides.hpp>
-#include <world/BlockData.hpp>
+#include <world/data/BlockData.hpp>
 #include <vector>
 
 namespace CubA4::model

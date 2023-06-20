@@ -7,6 +7,8 @@
 #include <logging/ILogger.hpp>
 #include <resources/IResourcesManager.hpp>
 #include <system/IRuntime.hpp>
+#include <system/IEnvironment.hpp>
+#include <game/IGame.hpp>
 
 namespace CubA4
 {
@@ -25,6 +27,8 @@ namespace CubA4
 		///Получает менеджер ресурсов
 		virtual std::shared_ptr<model::IModelFactory> getModelFactory() const = 0;
 		virtual std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const = 0;
+		virtual std::shared_ptr<const system::IEnvironment> getEnvironment() const = 0;
+		virtual std::shared_ptr<const game::IGame> getGame() const = 0;
 		///Создает сообщение о критической ошибке
 		virtual void criticalException() const = 0;
 

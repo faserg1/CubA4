@@ -21,6 +21,7 @@ namespace CubA4::mod
 		void find() override;
 		void load() override;
 		void setup(IEnvironmentBuilderFactory builderFactory) override;
+		void finished() override;
 		void shutdown() override;
 		void unload() override;
 	private:

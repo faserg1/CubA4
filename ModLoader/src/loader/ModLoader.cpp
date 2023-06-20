@@ -174,6 +174,14 @@ void ModLoader::setup(IEnvironmentBuilderFactory builderFactory)
 	setupModByChain(builderFactory, mods);
 }
 
+void ModLoader::finished()
+{
+	for (auto mod : loadedMods_)
+	{
+		mod->finish();
+	}
+}
+
 void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::vector<std::shared_ptr<IMod>> mods)
 {
 	std::map<std::string, std::shared_ptr<CubA4::system::IEnvironmentBuilder>> builders;
@@ -213,7 +221,7 @@ void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::
 	{
 		auto builder = builders.find(mod->getInfo().getIdName())->second;
 		loadedMods_.push_back(mod);
-		mod->done(builder);
+		mod->prefinish(builder);
 	}
 }
 

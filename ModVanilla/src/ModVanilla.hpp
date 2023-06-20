@@ -23,7 +23,8 @@ namespace CubA4
 			void link(std::shared_ptr<const IModLinker> linker) override;
 			void init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
 			void configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
-			void done(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
+			void prefinish(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
+			void finish() override;
 
 			void preunload() override;
 

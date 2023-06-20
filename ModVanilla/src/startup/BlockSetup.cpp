@@ -17,10 +17,12 @@ void BlockSetup::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builde
 {
 	auto blockManager = manager_->getBlockManager();
 	auto def1 = blockManager->getBlockDefinition("test1");
-	auto testBlock1 = std::make_shared<block::TestBlock>(def1);
-	blockManager->addBlock("test1", testBlock1);
+	auto testBlock1 = std::make_shared<block::TestBlock>("testBlock1", def1);
+	blockManager->addBlock(testBlock1);
+	builder->registerObject(testBlock1);
 
 	auto def2 = blockManager->getBlockDefinition("test2");
-	auto testBlock2 = std::make_shared<block::TestBlock>(def2);
-	blockManager->addBlock("test2", testBlock2);
+	auto testBlock2 = std::make_shared<block::TestBlock>("testBlock2", def2);
+	blockManager->addBlock(testBlock2);
+	builder->registerObject(testBlock2);
 }

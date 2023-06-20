@@ -23,6 +23,8 @@ void RenderEngineWorldPipeline::pushChunks(std::vector<std::shared_ptr<const Cub
 		tf::Taskflow compileChunk;
 		compileChunk.emplace([this, chunk, data = data_]{
 			auto compiledChunk = chunkCompiler_->compileChunk(chunk, data);
+			if (!compiledChunk)
+				return;
 			updateChunk(compiledChunk);
 		});
 		exec_.run(std::move(compileChunk));
@@ -35,6 +37,8 @@ void RenderEngineWorldPipeline::onFramebufferUpdated(const RenderFramebufferData
 	for (auto &[pos, chunk] : chunks_)
 	{
 		auto compiledChunk = chunkCompiler_->compileChunk(chunk, data);
+		if (!compiledChunk)
+			return; // TODO: ??
 		chunk.swap(compiledChunk);
 	}
 

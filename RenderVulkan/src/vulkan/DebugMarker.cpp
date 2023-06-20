@@ -2,11 +2,16 @@
 #include "./Device.hpp"
 using namespace CubA4::render::vulkan;
 
+#define getVkFuncDevicePtr(device, funcName) (PFN_##funcName)(vkGetDeviceProcAddr(device.getDevice(), #funcName))
+
 DebugMarker::DebugMarker(const Device &device) :
 	device_(device), setName_(nullptr), setTag_(nullptr)
 {
-	setName_ = (PFN_vkSetDebugUtilsObjectNameEXT) vkGetDeviceProcAddr(device.getDevice(), "vkSetDebugUtilsObjectNameEXT");
-	setTag_ = (PFN_vkSetDebugUtilsObjectTagEXT) vkGetDeviceProcAddr(device.getDevice(), "vkSetDebugUtilsObjectTagEXT");
+	setName_ = getVkFuncDevicePtr(device, vkSetDebugUtilsObjectNameEXT);
+	setTag_ = getVkFuncDevicePtr(device, vkSetDebugUtilsObjectTagEXT);
+	cmdBegin_ = getVkFuncDevicePtr(device, vkCmdBeginDebugUtilsLabelEXT);
+	cmdEnd_ = getVkFuncDevicePtr(device, vkCmdEndDebugUtilsLabelEXT);
+	cmdInsert_ = getVkFuncDevicePtr(device, vkCmdInsertDebugUtilsLabelEXT);
 }
 
 DebugMarker::~DebugMarker()
@@ -84,4 +89,46 @@ void DebugMarker::setName(uint64_t object, VkObjectType objectType, const char *
 	nameInfo.objectHandle = object;
 	nameInfo.pObjectName = name;
 	setName_(device_.getDevice(), &nameInfo);
+}
+
+void DebugMarker::setTag(uint64_t object, VkObjectType objectType)
+{
+	if (!setTag_)
+		return;
+	VkDebugUtilsObjectTagInfoEXT tagInfo = {};
+	tagInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT;
+	tagInfo.objectType = objectType;
+	tagInfo.objectHandle = object;
+	// TODO:
+}
+
+void DebugMarker::cmdLabelBegin(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
+{
+	if (!cmdBegin_)
+		return;
+	VkDebugUtilsLabelEXT info {
+		.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+		.pLabelName = name.c_str(),
+		.color = {color[0], color[1], color[2], color[3]}
+	};
+	cmdBegin_(cmd, &info);
+}
+
+void DebugMarker::cmdLabelEnd(VkCommandBuffer cmd)
+{
+	if (!cmdEnd_)
+		return;
+	cmdEnd_(cmd);
+}
+
+void DebugMarker::cmdLabelInsert(VkCommandBuffer cmd, const std::string &name, std::array<float, 4> color)
+{
+	if (!cmdInsert_)
+		return;
+	VkDebugUtilsLabelEXT info {
+		.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+		.pLabelName = name.c_str(),
+		.color = {color[0], color[1], color[2], color[3]}
+	};
+	cmdInsert_(cmd, &info);
 }

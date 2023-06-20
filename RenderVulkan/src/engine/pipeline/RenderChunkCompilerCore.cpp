@@ -7,6 +7,7 @@
 #include "../model/ModelCompiler.hpp"
 #include <algorithm>
 #include <numeric> 
+#include <tuple> 
 #include <execution>
 #include <string>
 #include <cmath>
@@ -17,6 +18,7 @@ using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
+using namespace CubA4::render::vulkan::util;
 using namespace CubA4::model;
 using namespace CubA4::world;
 
@@ -97,7 +99,7 @@ void RenderChunkCompilerCore::initDescriptorPools()
 		{
 			vkDestroyDescriptorPool(dev->getDevice(), pool, nullptr);
 		};
-		descriptorPools_.push_back(util::createSharedVulkanObject(pool, deleter));
+		descriptorPools_.push_back(createSharedVulkanObject(pool, deleter));
 	}
 }
 
@@ -105,7 +107,7 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 {
 	RenderModels models;
 	auto cpos = chunk->getChunkPos();
-	auto hiddenSides = compileHiddenSides(chunk);
+	auto visibleFaces = compileVisibleSides(chunk);
 	struct Def
 	{
 		std::vector<BlockPtr> blocks;
@@ -139,7 +141,7 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 
 	for (const auto &pair : materialsToDefMap)
 	{
-		auto compiledModel = compileModelByMaterial(chunk, pair.second.materialId, pair.second.blocks, hiddenSides);
+		auto compiledModel = compileModelByMaterial(chunk, pair.second.materialId, pair.second.blocks, visibleFaces);
 		if (!compiledModel)
 			continue;
 		auto material = std::dynamic_pointer_cast<const CubA4::render::engine::material::Material>(pair.first);
@@ -149,55 +151,60 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 	return std::move(models);
 }
 
-RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides)
+RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const VisibleSides &visibleFaces)
 {
 	auto cpos = chunk->getChunkPos();
 	auto start = clock();
-	auto cl = clock();
+	auto cl = start;
 	model::ModelCompiler compiler;
-	std::vector<model::ModelCompiler::CollectedData> collected;
-	size_t toReserve = 0;
-	for (auto block : blocks)
-	{
-		auto containers = chunk->getChunkBContainers(block);
-		toReserve += std::transform_reduce(std::execution::par_unseq,
-			containers.begin(), containers.end(), uint32_t{},
-			std::plus<uint32_t>{},
-			[](std::shared_ptr<const IChunkBBaseContainer> container) -> uint32_t
-			{
-				return container->getBlockCount();
-			});
-	}
-	collected.resize(toReserve);
+	auto env = core_->getEnvironment();
 	
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Models preparing {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
-	cl = clock();
-	size_t offset = 0;
 	for (auto block : blocks)
 	{
+		auto blockId = env->getId(block);
+		auto blockDataContainer = chunk->getDataProvider().getBlockDataStorage(blockId);
 		auto model = block->getRenderModelDefinition();
+		const auto usedMaterials = model->getUsedMaterials();
+		if (std::find(usedMaterials.begin(), usedMaterials.end(), material) == usedMaterials.end())
+			continue;
 		auto containers = chunk->getChunkBContainers(block);
-		for (auto container : containers)
+		std::vector<model::ModelCompiler::CollectedData> collectedData;
+		using TupleKey = std::tuple<std::string, BlockSides, uint64_t>;
+		using FacesValues = decltype(model::ModelCompiler::CollectedData::faces);
+		std::map<TupleKey, FacesValues> facesCache;
+		collectedData.reserve(containers.size());
+		for (auto &container : containers)
 		{
-			std::for_each(std::execution::par_unseq, container->begin(), container->end(), [offset, container, &collected, &model, &material, &hiddenSides](auto blockPos)
+			for (auto [index, side] : visibleFaces)
 			{
-				const BlockData &data = container->getBlockData(blockPos);
-				auto index = indexByPos(blockPos);
-				constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
-				// assume, that if we have 6 sides and all them are hidden, we have nothing to render
-				if (hiddenSides[index] == allSides)
-					return;
-				auto fakeIdx = container->getBlockIndex(blockPos);
-				auto faces = model->getFaces(material, hiddenSides[index], data);
-				auto cIndex = offset + fakeIdx;
-				collected[cIndex].model = model.get();
-				collected[cIndex].faces = std::move(faces);
-				collected[cIndex].pos = blockPos;
-			});
-			offset += container->getBlockCount();
+				if (!container->hasBlockAt(index))
+					continue;
+				const auto dataId = container->getBlockData(index);
+				const auto hiddenSides = ~side & AllSides;
+				FacesValues faces;
+				auto key = std::make_tuple(material, hiddenSides, dataId);
+				if (auto it = facesCache.find(key); it != facesCache.end())
+				{
+					faces = it->second;
+				}
+				else
+				{
+					const auto data = blockDataContainer->get(dataId);
+					faces = std::make_shared<std::vector<unsigned short>>(model->getFaces(material, hiddenSides, *data));
+					facesCache.insert(std::make_pair(key, faces));
+				}
+				
+				model::ModelCompiler::CollectedData cdata;
+				cdata.model = model.get(),
+				cdata.faces = faces,
+				cdata.pos = container->getBlockPosition(index);
+				collectedData.push_back(cdata);
+			}
 		}
+		compiler.addFaces(std::move(collectedData));
 	}
-	compiler.addFaces(std::move(collected));
+
+	
 	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model collecting {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
 	cl = clock();
 	auto model = compiler.compile(material, modelManager_);
@@ -210,17 +217,41 @@ RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides
 {
 	RenderChunkCompilerCore::HiddenSides hiddenSides;
 	hiddenSides.fill(0);
+	auto env = core_->getEnvironment();
 	for (auto container : chunk->getChunkBContainers())
 	{
 		auto block = container->getBlock();
-		std::for_each(std::execution::par_unseq, container->begin(), container->end(), [this, &container, &block, &hiddenSides](auto blockPos)
+		auto blockId = env->getId(block);
+		auto blockDataContainer = chunk->getDataProvider().getBlockDataStorage(blockId);
+		std::for_each(std::execution::par_unseq, container->begin(), container->end(), [this, &container, &block, &hiddenSides, blockDataContainer](auto blockPos)
 		{
-			const BlockData &data = container->getBlockData(blockPos);
-			auto nonOpaque = block->getRenderModelDefinition()->getNonOpaqueSide(data);
+			if (!container->hasBlockAt(blockPos))
+				return;
+			const auto dataId = container->getBlockData(blockPos);
+			const auto data = blockDataContainer->get(dataId);
+			auto nonOpaque = block->getRenderModelDefinition()->getNonOpaqueSide(*data);
 			hideFrom(hiddenSides, blockPos, nonOpaque);
 		});
 	}
 	return std::move(hiddenSides);
+}
+
+RenderChunkCompilerCore::VisibleSides RenderChunkCompilerCore::compileVisibleSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const
+{
+	auto hidden = compileHiddenSides(chunk);
+	VisibleSides visible;
+	for (uint32_t index = 0; index < ChunkCube; index++)
+	{
+		if (!chunk->hasBlocksAt(index))
+			continue;
+		if (hidden[index] == AllSides)
+			continue;	
+		auto side = ~hidden[index] & AllSides;
+		if (!side)
+			continue;
+		visible.push_back(std::make_pair(index, side));
+	}
+	return std::move(visible);
 }
 
 void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos pos, BlockSides nonOpaque) const

@@ -9,7 +9,7 @@
 #include <stdexcept>
 using namespace CubA4::system;
 
-Startup::Startup(std::weak_ptr<const ICore> core) :
+Startup::Startup(std::shared_ptr<Core> core) :
 	core_(core), appCallback_(nullptr)
 {
 	
@@ -85,19 +85,29 @@ void Startup::saveConfigs()
 void Startup::initMods()
 {
 	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo(), game_->getController()->getActions());
-	modLoader_->setup([&envBuilderData](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::system::IEnvironmentBuilder>
+	modLoader_->setup([&envBuilderData, core = core_.lock()](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::system::IEnvironmentBuilder>
 	{
 		auto envBuilderContext = EnvironmentBuilderContext(modInfo);
-		return std::make_shared<EnvironmentBuilder>(envBuilderData, envBuilderContext);
+		return std::make_shared<EnvironmentBuilder>(*core, envBuilderData, envBuilderContext);
 	});
 
 	EnvironmentContext envContext(std::move(envBuilderData.getIdentityMap()), std::move(envBuilderData.getObjects()));
 	auto env = std::make_shared<Environment>(std::move(envContext));
+	
 	game_->setupEnvironment(env);
+	if (auto core = core_.lock())
+	{
+		core->setEnvironment(env);
+	}
+	modLoader_->finished();
 }
 
 void Startup::unloadMods()
 {
+	if (auto core = core_.lock())
+	{
+		core->setEnvironment({});
+	}
 	if (!modLoader_)
 		return;
 	modLoader_->unload();
@@ -106,9 +116,17 @@ void Startup::unloadMods()
 void Startup::initGame()
 {
 	game_ = std::make_shared<CubA4::game::Game>(*appCallback_);
+	if (auto core = core_.lock())
+	{
+		core->setGame(game_);
+	}
 }
 
 void Startup::destroyGame()
 {
+	if (auto core = core_.lock())
+	{
+		core->setGame({});
+	}
 	game_.reset();
 }

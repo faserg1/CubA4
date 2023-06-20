@@ -16,7 +16,10 @@ UIManager::UIManager(std::shared_ptr<const CubA4::render::vulkan::Instance> inst
     mainCanvas_ = std::make_shared<MainCanvas>();
 }
 
-UIManager::~UIManager() = default;
+UIManager::~UIManager()
+{
+	context_->get()->abandonContext();
+}
 
 std::shared_ptr<IComponentFactory> UIManager::getComponentFactory() const
 {

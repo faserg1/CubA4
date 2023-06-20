@@ -1,6 +1,6 @@
 #pragma once
 
-#include <world/MetaData.hpp>
+#include <world/data/MetaData.hpp>
 #include <cstdint>
 #include <functional>
 

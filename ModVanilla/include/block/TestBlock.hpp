@@ -8,7 +8,7 @@ namespace CubA4::block
 		public virtual CubA4::object::IBlock
 	{
 	public:
-		explicit TestBlock(std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef);
+		explicit TestBlock(std::string id, std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef);
 		~TestBlock();
 
 		std::string getId() const override;
@@ -18,6 +18,7 @@ namespace CubA4::block
 		bool isMultilayered() const override;
 	protected:
 	private:
+		const std::string id_;
 		const std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> modelDef_;
 	};
 }

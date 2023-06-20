@@ -1,34 +1,35 @@
 #pragma once
 
-#include <world/IChunkBMulti.hpp>
-#include <map>
-#include <unordered_map>
+#include <world/containers/IChunkBBaseContainer.hpp>
+#include <array>
 #include <memory>
 
 namespace CubA4::world
 {
-	class ChunkBMutable : public virtual IChunkBMulti
+	class ChunkBMutable : public virtual IChunkBBaseContainer
 	{
-		struct BlockDataInternal
-		{
-			std::shared_ptr<BlockData> data;
-			size_t usage = 0;
-		};
 	public:
-		explicit ChunkBMutable(size_t id, std::shared_ptr<const object::IBlock> block);
+		explicit ChunkBMutable(size_t id, std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer);
 		~ChunkBMutable();
 
 		size_t getId() const override;
+		bool isIndexGlobal() const override;
 		std::shared_ptr<const object::IBlock> getBlock() const override;
 		uint32_t getBlockCount() const override;
 		CubA4::world::Layer getLayer() const override;
 		bool hasBlockAt(const world::BlockInChunkPos &pos) const override;
+		bool hasBlockAt(uint32_t index) const override;
 		uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const override;
+		uint32_t getBlockLocalIndex(const world::BlockInChunkPos &pos) const override;
 		CubA4::world::BlockInChunkPos getBlockPosition(uint32_t index) const override;
-		const BlockData &getBlockData(const world::BlockInChunkPos &pos) const override;
+		CubA4::world::BlockInChunkPos getBlockPositionLocal(uint32_t localIndex) const override;
+		decltype(BlockData::id) getBlockData(const world::BlockInChunkPos &pos) const override;
+		decltype(BlockData::id) getBlockData(uint32_t index) const override;
 
-		void addBlockAt(const world::BlockInChunkPos &pos, std::shared_ptr<BlockData> data);
+		void setBlockAt(const world::BlockInChunkPos &pos, decltype(BlockData::id) dataId);
+		void setBlockAt(uint32_t index, decltype(BlockData::id) dataId);
 		void deleteBlockAt(const world::BlockInChunkPos &pos);
+		void deleteBlockAt(uint32_t index);
 
 		Iterator begin() const override;
 		Iterator end() const override;
@@ -51,9 +52,8 @@ namespace CubA4::world
 	private:
 		const size_t id_;
 		std::shared_ptr<const object::IBlock> block_;
-		// Layer for mutable are always 0
-		CubA4::world::Layer layer_ = 0;
-		std::map<world::BlockInChunkPos, decltype(BlockData::id)> blockMap_;
-		std::unordered_map<decltype(BlockData::id), BlockDataInternal> dataMap_;
+		CubA4::world::Layer layer_;
+		std::array<decltype(BlockData::id), CubA4::world::ChunkCube> blockMap_;
+		uint32_t blockCount_ = 0;
 	};
 }

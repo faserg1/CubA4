@@ -2,20 +2,12 @@
 
 #include <memory>
 #include <world/Position.hpp>
-#include <world/BlockData.hpp>
+#include <world/data/BlockData.hpp>
 #include <object/IBlock.hpp>
-#include <world/IChunkBIterator.hpp>
+#include <world/containers/IChunkBIterator.hpp>
 
 namespace CubA4::world
 {
-	enum class ChunkBContainerType
-	{
-		None,
-		Range,
-		Set,
-		Multi
-	};
-
 	/** @brief Basic chunk block container
 	 * 
 	*/
@@ -28,7 +20,8 @@ namespace CubA4::world
 
 		/// Возвращает идентификатор контейнера (уникален для чанка)
 		virtual size_t getId() const = 0;
-		virtual ChunkBContainerType getType() const = 0;
+		/// Is container index are global (if local, index should not be used as global position index)
+		virtual bool isIndexGlobal() const = 0;
 		/// Возвращает блок, который заполняет этот диапазон
 		virtual std::shared_ptr<const object::IBlock> getBlock() const = 0;
 		/// Возвращает количество заполняемых блоков в диапазоне
@@ -36,9 +29,13 @@ namespace CubA4::world
 		/// Получает слой, на котором расположены блоки
 		virtual CubA4::world::Layer getLayer() const = 0;
 		virtual bool hasBlockAt(const world::BlockInChunkPos &pos) const = 0;
+		virtual bool hasBlockAt(uint32_t index) const = 0;
 		virtual uint32_t getBlockIndex(const world::BlockInChunkPos &pos) const = 0;
+		virtual uint32_t getBlockLocalIndex(const world::BlockInChunkPos &pos) const = 0;
 		virtual CubA4::world::BlockInChunkPos getBlockPosition(uint32_t index) const = 0;
-		virtual const BlockData &getBlockData(const world::BlockInChunkPos &pos) const = 0;
+		virtual CubA4::world::BlockInChunkPos getBlockPositionLocal(uint32_t localIndex) const = 0;
+		virtual decltype(BlockData::id) getBlockData(const world::BlockInChunkPos &pos) const = 0;
+		virtual decltype(BlockData::id) getBlockData(uint32_t index) const = 0;
 
 		virtual Iterator begin() const = 0;
 		virtual Iterator end() const = 0;

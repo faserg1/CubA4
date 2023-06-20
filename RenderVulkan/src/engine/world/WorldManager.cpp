@@ -17,6 +17,7 @@ using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::world;
 using namespace CubA4::render::vulkan;
+using namespace CubA4::render::vulkan::util;
 
 WorldManager::WorldManager(std::shared_ptr<const Device> device, std::shared_ptr<ResourceManager> resourceManager) :
 	device_(device), resourceManager_(resourceManager),
@@ -107,7 +108,7 @@ void WorldManager::allocateSets()
 		//vkFreeDescriptorSets(dev->getDevice(), p->get(), 1, &set);
 	};
 
-	worldSet_ = util::createSharedVulkanObject(set, deleter);
+	worldSet_ = createSharedVulkanObject(set, deleter);
 }
 
 void WorldManager::allocateBuffers()
@@ -139,7 +140,7 @@ void WorldManager::allocateBuffers()
 	{
 		vkDestroyBuffer(dev->getDevice(), buffer, nullptr);
 	};
-	worldBuffer_ = util::createSharedVulkanObject(worldBuffer, deleter);
+	worldBuffer_ = createSharedVulkanObject(worldBuffer, deleter);
 }
 
 void WorldManager::writeSets()

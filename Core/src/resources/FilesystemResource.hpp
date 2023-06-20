@@ -10,9 +10,10 @@ namespace CubA4::resources
 		public virtual IResource
 	{
 	public:
-		explicit FilesystemResource(std::filesystem::path fullPath);
+		explicit FilesystemResource(std::filesystem::path fullPath, Path mountedPath);
 		~FilesystemResource();
 
+		std::string path() const override;
 		bool exists() const override;
 		uint64_t size() const override;
 		std::pair<std::shared_ptr<void>, uint64_t> data() const override;
@@ -21,5 +22,6 @@ namespace CubA4::resources
 	protected:
 	private:
 		const std::filesystem::path fullPath_;
+		const Path mountedPath_;
 	};
 }

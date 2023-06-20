@@ -44,6 +44,7 @@ namespace CubA4
 				protected:
 					using BlockPtr = std::shared_ptr<const CubA4::object::IBlock>;
 					using HiddenSides = std::array<CubA4::world::BlockSides, CubA4::world::ChunkCube>;
+					using VisibleSides = std::vector<std::pair<uint32_t, CubA4::world::BlockSides>>;
 					using RenderModelPtr = std::shared_ptr<const CubA4::render::engine::model::RenderModel>;
 					using RenderModels = std::map<MaterialPtr, std::shared_ptr<const CubA4::render::engine::model::RenderModel>>;
 				public:
@@ -54,8 +55,9 @@ namespace CubA4
 					std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> lockCommandPool();
 					vulkan::sVkDescriptorPool getDescriptorPool(const std::unique_ptr<const vulkan::CommandPool::CommandPoolLock> &lock);
 					RenderModels compileBlocks(std::shared_ptr<const CubA4::world::IChunk> chunk);
-					RenderModelPtr compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const HiddenSides &hiddenSides);
+					RenderModelPtr compileModelByMaterial(std::shared_ptr<const CubA4::world::IChunk> chunk, const std::string &material, std::vector<BlockPtr> blocks, const VisibleSides &visibleFaces);
 					HiddenSides compileHiddenSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const;
+					VisibleSides compileVisibleSides(std::shared_ptr<const CubA4::world::IChunk> chunk) const;
 					void hideFrom(HiddenSides &hiddenSides, CubA4::world::BlockInChunkPos pos, CubA4::world::BlockSides nonOpaque) const;
 				protected:
 					const std::shared_ptr<const ICore> core_;

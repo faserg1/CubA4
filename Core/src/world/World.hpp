@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core.hpp>
 #include <world/IWorld.hpp>
 #include <world/Chunk.hpp>
 #include <vector>
@@ -13,7 +14,7 @@ namespace CubA4::world
 		public virtual CubA4::world::IWorld
 	{
 	public:
-		explicit World(std::shared_ptr<const CubA4::world::IWorldDefinition> definition);
+		explicit World(Core &core, std::shared_ptr<const CubA4::world::IWorldDefinition> definition);
 		~World();
 
 		std::string getId() const override;
@@ -27,6 +28,7 @@ namespace CubA4::world
 		std::vector<std::shared_ptr<const CubA4::world::IChunk>> getChunks() const override;
 	protected:
 	private:
+		Core &core_;
 		const std::shared_ptr<const CubA4::world::IWorldDefinition> definition_;
 		mutable CubA4::util::SubscriptionHelper<CubA4::world::IWorldSubscriber> subscriptionHelper_;
 		std::unordered_map<const CubA4::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::util::ChunkPosHash> loadedChunks_;

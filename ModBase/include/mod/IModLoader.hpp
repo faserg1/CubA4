@@ -17,6 +17,7 @@ namespace CubA4:: mod
 		virtual void find() = 0;
 		virtual void load() = 0;
 		virtual void setup(IEnvironmentBuilderFactory builderFactory) = 0;
+		virtual void finished() = 0;
 		virtual void shutdown() = 0;
 		virtual void unload() = 0;
 	protected:

@@ -3,8 +3,8 @@
 #include <filesystem>
 using namespace CubA4::resources;
 
-FilesystemResource::FilesystemResource(std::filesystem::path fullPath) :
-	fullPath_(fullPath)
+FilesystemResource::FilesystemResource(std::filesystem::path fullPath, Path mountedPath) :
+	fullPath_(fullPath), mountedPath_(mountedPath)
 {
 	
 }
@@ -12,6 +12,11 @@ FilesystemResource::FilesystemResource(std::filesystem::path fullPath) :
 FilesystemResource::~FilesystemResource()
 {
 	
+}
+
+std::string FilesystemResource::path() const
+{
+	return mountedPath_.string();
 }
 
 bool FilesystemResource::exists() const

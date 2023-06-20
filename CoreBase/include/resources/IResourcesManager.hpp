@@ -17,6 +17,8 @@ namespace CubA4::resources
 		explicit IResourcesManager() = default;
 		virtual ~IResourcesManager() = default;
 	private:
+		void onMount(Path from) final {}
+		void onUnMount() final {}
 	};
 }
 

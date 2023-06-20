@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <utility>
 #include <memory>
+#include <string>
 
 namespace CubA4::resources
 {
@@ -11,6 +12,7 @@ namespace CubA4::resources
 	class IResource
 	{
 	public:
+		virtual std::string path() const = 0;
 		/// Существует ли ресурс (в случае rw может отсутствовать)
 		virtual bool exists() const = 0;
 		/// Размер ресурса

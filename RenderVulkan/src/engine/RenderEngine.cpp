@@ -128,6 +128,7 @@ void VulkanRenderEngine::initRender()
 
 void VulkanRenderEngine::destroyRender()
 {
+	renderUi_.reset();
 	render_.reset();
 }
 

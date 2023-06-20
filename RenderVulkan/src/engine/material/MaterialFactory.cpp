@@ -30,10 +30,13 @@ void MaterialFactory::createSampler()
 		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
 		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
 		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.mipLodBias = 10.f,
+		// TODO: Take from ????
+		.mipLodBias = 0.2f,
 		// TODO: [OOKAMI] Take from settings & capabilities?
 		.anisotropyEnable = VK_TRUE,
 		.maxAnisotropy = 8.f,
+		.minLod = 0,
+		.maxLod = VK_LOD_CLAMP_NONE,
 	};
 	vkCreateSampler(device_->getDevice(), &info, nullptr, &sampler_);
 }

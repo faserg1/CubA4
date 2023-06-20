@@ -55,7 +55,7 @@ void MaterialBuilder::writeSet(VkDescriptorSet set)
 	writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 	writeSet.descriptorCount = static_cast<uint32_t>(textures_.size());
 	writeSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeSet.dstBinding = 2;
+	writeSet.dstBinding = 2; // TODO: Get binding from ???
 	writeSet.dstSet = set;
 	
 	std::vector<VkDescriptorImageInfo> imageInfos(textures_.size());
