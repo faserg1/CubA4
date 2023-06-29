@@ -6,6 +6,8 @@
 #include <engine/Render.hpp>
 #include <engine/RenderUI.hpp>
 
+#include <engine/framebuffer/MainFramebufferManager.hpp>
+
 #include "./RenderManager.hpp"
 #include "./RenderGameHandler.hpp"
 #include "./pipeline/RenderChunkCompiler.hpp"
@@ -14,6 +16,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <ctime>
+#include <limits>
 using namespace CubA4::logging;
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
@@ -96,7 +99,7 @@ void VulkanRenderEngine::stop()
 void VulkanRenderEngine::initManagers()
 {
 	renderPassManager_ = std::make_shared<RenderPassManager>(getDevice(), getConfig());
-	framebufferManager_ = std::make_shared<FramebufferManager>(getDevice(), getConfig());
+	framebufferManager_ = std::make_shared<MainFramebufferManager>(getDevice(), getConfig());
 	renderManager_ = std::make_shared<RenderManager>(getInstance(), getDevice(), core_, renderPassManager_, getConfig());
 }
 
@@ -134,25 +137,24 @@ void VulkanRenderEngine::destroyRender()
 
 void VulkanRenderEngine::setup()
 {
-	// Создание компонентов
-	auto [width, height] = getSwapchain()->getResolution();
-	auto data = pipeline::RenderFramebufferData {
-		.width = width,
-		.height = height
-	};
-	renderManager_->getWorldManager()->onViewportUpdate(width, height);
-	renderManager_->getUIManager()->swapchainChanged(getSwapchain());
-
 	renderPassManager_->createRenderPasses(getSwapchain()->getFormat());
-	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
+	renderManager_->onRenderPassCreated();
 
-	// TODO: [OOKAMI] Call UI and pass VkImageInfo from framebuffers
 	renderEnginePipeline_ = std::make_shared<pipeline::RenderEnginePipeline>(core_, getDevice(), renderPassManager_, renderManager_);
-	renderEnginePipeline_->onFramebufferUpdated(data);
+
+	framebufferManager_->setRenderPass(renderPassManager_->getMainRenderPass());
+
+	handleSwapChainChanged();
+
+	renderManager_->setup();
 
 	render_->setup(renderEnginePipeline_->getWorldPipeline());
 
 	renderGameHandler_ = std::make_shared<RenderGameHandler>(renderEnginePipeline_->getWorldPipeline());
+
+	mainPipelines_.push_back(this);
+	mainPipelines_.push_back(renderManager_->getDebug().get());
+	mainPipelines_.push_back(renderUi_.get());
 }
 
 void VulkanRenderEngine::shutdown()
@@ -182,24 +184,21 @@ void VulkanRenderEngine::loop()
 			framebufferManager_->onAcquireFailed();
 			continue;
 		}
-		// Take framebuffer and work with him
-		// take framebuffer from framebufferManager_?
-		// auto framebuffer = render_->onAcquire(imgIndex);
-		auto framebuffer = framebufferManager_->onAcquire(imgIndex);
-		renderManager_->getWorldManager()->onFrameUpdate();
-		render_->record(framebuffer);
-		auto renderDoneSemaphore = render_->send(framebuffer, acquireSemaphore);
-		
 
-		if (renderDoneSemaphore)
+		renderManager_->getWorldManager()->onFrameUpdate();
+
+		std::shared_ptr<const CubA4::render::vulkan::Semaphore> renderDoneSemaphore = acquireSemaphore;
+
+		for (auto &step : mainPipelines_)
 		{
-			auto uiRenderDoneSemaphore = renderUi_->render(imgIndex, renderDoneSemaphore);
-			if (uiRenderDoneSemaphore)
-				renderDoneSemaphore = uiRenderDoneSemaphore;
+			auto doneSemaphore = step->render(imgIndex, renderDoneSemaphore);
+			if (doneSemaphore)
+				renderDoneSemaphore = doneSemaphore;
 		}
-			
-			
-		if (renderDoneSemaphore)
+
+		//renderManager_->getDebug()->record(framebuffer, imgIndex);
+		
+		if (renderDoneSemaphore && renderDoneSemaphore != acquireSemaphore)
 			presetation_->send(currentSwapchain, imgIndex, { renderDoneSemaphore });
 			
 		
@@ -222,8 +221,41 @@ void VulkanRenderEngine::inFrameRebuild()
 		return;
 	rebuildSwapchain_.store(false);
 	rebuildSwapChain();
-	framebufferManager_->onSwapchainUpdate(getSwapchain(), renderPassManager_->getMainRenderPass());
+	handleSwapChainChanged();
+}
+
+void VulkanRenderEngine::handleSwapChainChanged()
+{
+	framebufferManager_->onSwapchainUpdate(getSwapchain());
+
+	
+	const auto mainAttachments = framebufferManager_->getAttachmentsCount();
+	const auto mainImages = framebufferManager_->getImageCount();
+	const auto maxIdx = std::numeric_limits<uint32_t>::max();
+	auto depthIdx = std::numeric_limits<uint32_t>::max();
+
+	std::vector<VkImage> depths(mainImages);
+
+	for (uint32_t imageIdx = 0; imageIdx < mainImages; imageIdx++)
+	{
+		if (depthIdx == maxIdx)
+		{
+			for (uint32_t aIdx = 0; aIdx < mainAttachments; aIdx++)
+			{
+				const auto &attachment = framebufferManager_->get(imageIdx)->getFrameBufferImage(aIdx);
+				if (attachment.getAspectFlags() == VK_IMAGE_ASPECT_DEPTH_BIT)
+				{
+					depthIdx = aIdx;
+					break;
+				}
+			}
+		}
+		const auto &attachment = framebufferManager_->get(imageIdx)->getFrameBufferImage(depthIdx);
+		depths[imageIdx] = attachment.getImage();
+	}
+
 	renderManager_->getUIManager()->swapchainChanged(getSwapchain());
+	renderManager_->getDebug()->swapchainChanged(getSwapchain(), std::move(depths));
 
 	// TODO: [OOKAMI] Call UI and pass VkImageInfo from framebuffers
 
@@ -235,4 +267,14 @@ void VulkanRenderEngine::inFrameRebuild()
 	
 	renderManager_->getWorldManager()->onViewportUpdate(width, height);
 	renderEnginePipeline_->onFramebufferUpdated(data);
+}
+
+std::shared_ptr<const CubA4::render::vulkan::Semaphore> VulkanRenderEngine::render(
+	uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
+{
+	auto framebuffer = framebufferManager_->onAcquire(imgIndex);
+	
+	render_->record(framebuffer);
+
+	return render_->send(framebuffer, awaitSemaphore);
 }

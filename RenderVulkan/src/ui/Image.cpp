@@ -9,5 +9,7 @@ Image::Image(std::shared_ptr<const ITexture> texture, sk_sp<SkImage> image) :
 
 void Image::draw(SkCanvas *parentCanvas)
 {
+	if (!visibility_)
+		return;
 	parentCanvas->drawImage(image_, 10, 10);
 }

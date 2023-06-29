@@ -31,7 +31,7 @@ uint32_t RenderModel::getIndexCount() const
 
 void RenderModel::bind(VkCommandBuffer cmdBuffer, uint32_t index) const
 {
-	const VkDeviceSize offset = 0;
+	static const VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers(cmdBuffer, index, 1, &data_.vertexBuffer, &offset);
 	vkCmdBindIndexBuffer(cmdBuffer, data_.indexBuffer, offset, VK_INDEX_TYPE_UINT16);
 }

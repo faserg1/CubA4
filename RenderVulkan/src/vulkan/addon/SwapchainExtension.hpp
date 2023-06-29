@@ -1,33 +1,21 @@
-#ifndef RENDERVULKAN_SWAPCHAINEXTENSION_HPP
-#define RENDERVULKAN_SWAPCHAINEXTENSION_HPP
+#pragma once
 
-#include "DeviceExtension.hpp"
+#include <vulkan/addon/DeviceExtension.hpp>
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	class SwapchainExtension :
+		public DeviceExtension
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				class SwapchainExtension :
-					public DeviceExtension
-				{
-				public:
-					explicit SwapchainExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
-					~SwapchainExtension();
+	public:
+		explicit SwapchainExtension(std::weak_ptr<PhysicalDevice> physicalDevice);
+		~SwapchainExtension();
 
-					std::vector<std::string> names() const override;
-					void init(std::shared_ptr<const Device> instance) override;
-					void destroy(std::shared_ptr<const Device> instance) override;
-					void added(DeviceBuilder &builder) override;
-				protected:
-				private:
-				};
-			}
-		}
-	}
+		std::vector<std::string> names() const override;
+		void init(std::shared_ptr<const Device> instance) override;
+		void destroy(std::shared_ptr<const Device> instance) override;
+		void added(DeviceBuilder &builder) override;
+	protected:
+	private:
+	};
 }
-
-#endif // RENDERVULKAN_SWAPCHAINEXTENSION_HPP

@@ -126,6 +126,11 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 		return {};
 	const uint8_t bits_per_pixel = bitDepth * channels_count;
 	const uint8_t bytes_per_pixel = bits_per_pixel / 8;
+
+	// http://www.libpng.org/pub/png/libpng-1.2.5-manual.html
+	// png_set_strip_16 if should convert from 16 to 8 bit depth
+	// png_set_invert_alpha if should invert opacity
+	// png_read_image just reads the fucking image! and no need to care about interlacing
 	// size_t image_size = bytes_per_pixel * width * height;
 
 	const auto isPowerOfTwo = [](uint32_t n) -> bool {return (n>0 && ((n & (n-1)) == 0)); };
@@ -186,17 +191,9 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 				size_t write_byte = (invertColumns ? ((rowOffset + ((width - 1) - colIdx)) * bytes_per_pixel) : ((rowOffset + colIdx) * bytes_per_pixel));
 				memcpy(&data[write_byte], &rowData[byteIndex], bytes_per_pixel);
 
-				if (channels_count == 4)
-				{
-					/*if (!data[write_byte + 3])
-						data[write_byte + 3] = 1;*/
-					// rewert alpha channel ???
-					// data[write_byte + 3] = -data[write_byte + 3];
-				}
-
 				byteIndex += bytes_per_pixel;
 			}
-			else if (bitDepth == 32)
+			else if (bitDepth == 16)
 			{
 				// TODO: [OOKAMI] Забить или упасть?
 			}

@@ -6,9 +6,8 @@ constexpr const size_t MemoryManagerBlockSize = 1024 * 1024 * 256; // 128MB
 // extern do not work =(
 VkSampleCountFlagBits aaSamples = VK_SAMPLE_COUNT_2_BIT;
 
-FramebuffersBuilder::FramebuffersBuilder(std::shared_ptr<const vulkan::Device> device, CubA4::render::config::VulkanConfigAdapter config) :
-    device_(device), config_(config), allocator_(device),
-    commandPool_(device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
+FramebuffersBuilder::FramebuffersBuilder(std::shared_ptr<const vulkan::Device> device, CommandPool &commandPool, CubA4::render::config::VulkanConfigAdapter config) :
+    device_(device), config_(config), commandPool_(commandPool), allocator_(device)
 {
 	
 }
@@ -16,6 +15,18 @@ FramebuffersBuilder::FramebuffersBuilder(std::shared_ptr<const vulkan::Device> d
 FramebuffersBuilder::~FramebuffersBuilder()
 {
 	
+}
+
+uint32_t FramebuffersBuilder::addAttachmentInfo(const AttachmentInfo &info)
+{
+	auto idx = attachmentInfos_.size();
+	attachmentInfos_.push_back(info);
+	return static_cast<uint32_t>(idx);
+}
+
+uint32_t FramebuffersBuilder::getAttachmentsCount() const
+{
+	return static_cast<uint32_t>(attachmentInfos_.size());
 }
 
 std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffers(std::shared_ptr<const Swapchain> swapchain, std::shared_ptr<const vulkan::RenderPass> renderPass)
@@ -31,12 +42,44 @@ std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffer
     auto vkRenderPass = renderPass->getRenderPass();
     for (size_t idx = 0; idx < imgCount; idx++)
     {
-        auto framebufferImage = createImageWithMemory(format, resolution, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_ASPECT_COLOR_BIT);
-        auto presentImage = std::make_shared<FramebufferImage>(device_, images[idx], format, resolution, VK_IMAGE_ASPECT_COLOR_BIT);
-        
-        auto depthImage = createImageWithMemory(VK_FORMAT_D32_SFLOAT_S8_UINT, resolution, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_IMAGE_ASPECT_DEPTH_BIT);
+		std::vector<std::shared_ptr<FramebufferImage>> attachments;
+		attachments.reserve(attachmentInfos_.size());
 
-        auto attachments = std::vector{framebufferImage, depthImage, presentImage};
+		for (const auto &info : attachmentInfos_)
+		{
+			if (info.type == AttachmentInfo::Type::Present) {
+				attachments.push_back(std::make_shared<FramebufferImage>(device_, images[idx], format, resolution, info.aspect));
+				continue;
+			}
+
+			std::shared_ptr<FramebufferImage> image;
+			VkFormat currentFormat;
+			VkImageUsageFlags currentUsage;
+
+			switch (info.type)
+				{
+				case AttachmentInfo::Type::Color:
+					currentFormat = format;
+					currentUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+					break;
+				case AttachmentInfo::Type::Depth:
+					currentFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
+					currentUsage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+					break;
+				default:
+					//TODO: [OOKAMI] Exception, etc
+					break;
+				}
+
+			if (info.external.size() && info.type != AttachmentInfo::Type::Present) {
+				image = std::make_shared<FramebufferImage>(device_, info.external[idx], currentFormat, resolution, info.aspect);
+			}
+			else {
+				image = createImageWithMemory(currentFormat, resolution, currentUsage | info.additionalUsage, info.aspect, info.enableAA);
+			}
+
+			attachments.push_back(image);
+		}
 
         framebuffers[idx] = std::make_shared<Framebuffer>(device_, attachments, vkRenderPass, cmdBuffers[idx]);
     }
@@ -44,7 +87,8 @@ std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffer
     return std::move(framebuffers);
 }
 
-std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkFormat format, VkExtent2D resolution, VkImageUsageFlags usage, VkImageAspectFlags aspectFlags, VkImageLayout initLayout)
+std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkFormat format, VkExtent2D resolution,
+	VkImageUsageFlags usage, VkImageAspectFlags aspectFlags, bool aa, VkImageLayout initLayout)
 {
     VkImage image;
 
@@ -53,7 +97,10 @@ std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkF
     info.format = format;
     info.imageType = VK_IMAGE_TYPE_2D;
     info.initialLayout = initLayout;
-    info.samples = config_.getAntialiasing();
+	if (aa)
+    	info.samples = config_.getAntialiasing();
+	else
+		info.samples = VK_SAMPLE_COUNT_1_BIT;
     info.usage = usage;
     // TODO: [OOKAMI] Get from capabilities
     info.tiling = VK_IMAGE_TILING_OPTIMAL;

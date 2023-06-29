@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <atomic>
+#include <mutex>
 #include <vulkan/vulkan.h>
 #include <vulkan/Device.hpp>
 
@@ -17,25 +17,28 @@ namespace CubA4::render::vulkan
 		~CommandPool();
 
 		std::unique_ptr<const CommandPoolLock> tryLock() const;
-		bool isLocked() const;
+		std::unique_ptr<CommandPoolLock> tryLock();
+		std::unique_ptr<const CommandPoolLock> lock() const;
+		std::unique_ptr<CommandPoolLock> lock();
 		VkCommandPool getPool() const;
 		bool allocate(uint32_t count, VkCommandBuffer *data, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+		void free(uint32_t count, VkCommandBuffer *data);
 		VkCommandPoolCreateFlags getFlags() const;
 	protected:
 	private:
 		const std::shared_ptr<const Device> device_;
 		const VkCommandPoolCreateFlags flags_;
 		VkCommandPool pool_;
-		mutable std::atomic_bool lock_;
+		mutable std::mutex mutex_;
 	public:
 		class CommandPoolLock
 		{
 		public:
-			CommandPoolLock(std::atomic_bool &lock, std::shared_ptr<const CommandPool> pool);
+			CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool);
 			~CommandPoolLock();
 			std::shared_ptr<const CommandPool> getPool() const;
 		private:
-			std::atomic_bool &lock_;
+			std::mutex &mutex_;
 			const std::shared_ptr<const CommandPool> pool_;
 		};
 	};

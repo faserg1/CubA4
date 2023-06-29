@@ -21,8 +21,8 @@ namespace CubA4::exceptions
 	public:
 		virtual ConfigExceptionsSourceType source() = 0;
 	protected:
-		virtual ~ICoreConfigException() {}
-		explicit ICoreConfigException() {}
+		virtual ~ICoreConfigException() = default;
+		explicit ICoreConfigException() = default;
 	private:
 	};
 }

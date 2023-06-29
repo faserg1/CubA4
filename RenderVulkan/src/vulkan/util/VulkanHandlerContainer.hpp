@@ -3,7 +3,6 @@
 #include <memory>
 #include <functional>
 #include <vulkan/vulkan.h>
-#include <iostream>
 
 namespace CubA4::render::vulkan::util
 {

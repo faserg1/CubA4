@@ -23,6 +23,8 @@ namespace CubA4
 				explicit ResourceManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<const ICore> core);
 				~ResourceManager();
 
+
+				// TODO: extract built ins in another class?
 				vulkan::sVkDescriptorSetLayout getWorldLayout() const;
 				std::vector<vulkan::sVkDescriptorSetLayout> getBuiltInLayouts() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;

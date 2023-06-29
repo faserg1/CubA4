@@ -86,6 +86,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(con
 		auto renderMaterial = materials[idx];
 		auto renderModel = renderModels[idx];
 		auto cmdBuffer = buffers[idx];
+
+		device_->getMarker().setName(cmdBuffer, "Compiled chunk");
 		
 		auto renderMaterialLayout = renderMaterial->getLayout();
 		auto pipeline = renderMaterialLayout->getPipeline();

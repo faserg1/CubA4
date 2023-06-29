@@ -20,7 +20,8 @@
 
 #include "../vulkan/addon/SDLExtension.hpp"
 #include "../vulkan/addon/DebugExtension.hpp"
-#include "../vulkan/addon/SwapchainExtension.hpp"
+#include <vulkan/addon/SwapchainExtension.hpp>
+#include <vulkan/addon/DepthStensilResolveExtension.hpp>
 #include "../vulkan/addon/StandardValidationLayer.hpp"
 
 #include "../vulkan/Swapchain.hpp"
@@ -164,7 +165,9 @@ void RenderEngineCore::initDevice()
 		deviceAddons_.push_back(ext);
 	};
 	auto vkSwapChainExt = std::make_shared<SwapchainExtension>(deviceBuilder_->getPhysicalDevice());
+	auto vkDepthStensilResolveExt = std::make_shared<DepthStensilResolveExtension>(deviceBuilder_->getPhysicalDevice());
 	addExt(vkSwapChainExt);
+	addExt(vkDepthStensilResolveExt);
 	device_ = deviceBuilder_->build();
 	std::for_each(deviceAddons_.begin(), deviceAddons_.end(),
 		[this](std::shared_ptr<DeviceAddon> addon) {addon->init(device_); });

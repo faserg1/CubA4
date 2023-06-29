@@ -11,7 +11,7 @@ RenderUI::RenderUI(std::shared_ptr<const vulkan::Device> device,
 
 }
 
-std::shared_ptr<CubA4::render::vulkan::Semaphore> RenderUI::render(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
+std::shared_ptr<const CubA4::render::vulkan::Semaphore> RenderUI::render(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
 {
 	auto uiManager = renderManager_->getUIManager();
 	auto &framebuffer = uiManager->getFramebuffer(imgIndex);

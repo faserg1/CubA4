@@ -18,6 +18,7 @@ namespace CubA4::game::controller
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void()> callbackOnce) = 0;
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
+		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
 	protected:
 		explicit IActions() = default;
 	};

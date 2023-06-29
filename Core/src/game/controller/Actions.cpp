@@ -35,6 +35,14 @@ std::unique_ptr<CubA4::util::ISubscription> Actions::addActionPositionCallback(c
 	return std::move(std::make_unique<Subscription>(shared_from_this(), action, id));
 }
 
+std::unique_ptr<CubA4::util::ISubscription> Actions::addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition)
+{
+	auto id = idCounter_++;
+	auto callback = Callback{.id = id, .callbackAxis = callbackPosition};
+	addActionCallback(action, callback);
+	return std::move(std::make_unique<Subscription>(shared_from_this(), action, id));
+}
+
 void Actions::addActionCallback(const std::string &action, Callback callback)
 {
 	auto it = callbacks_.find(action);
@@ -98,6 +106,15 @@ void Actions::onAxisAction(const std::string &action, int32_t axisX, int32_t axi
 }
 
 void Actions::onPositionAction(const std::string &action, int32_t axisX, int32_t axisY)
+{
+	const auto actionIt = callbacks_.find(action);
+	if (actionIt == callbacks_.end())
+		return;
+	for (auto &callback : actionIt->second)
+		callback(axisX, axisY);
+}
+
+void Actions::onPositionMoveAction(const std::string &action, int32_t axisX, int32_t axisY)
 {
 	const auto actionIt = callbacks_.find(action);
 	if (actionIt == callbacks_.end())

@@ -42,6 +42,7 @@ bool BlockDataStorage::remove(uint64_t id)
 	it->second.second--;
 	if (it->second.second == 0)
 		storage_.erase(it);
+	return true;
 }
 
 std::shared_ptr<BlockData> BlockDataStorage::add(BlockData data)

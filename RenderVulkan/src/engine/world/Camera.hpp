@@ -13,6 +13,7 @@ namespace CubA4::render::engine::world
 		~Camera();
 
 		void setActive(bool active);
+		CubA4::world::GlobalPosition getPosition() const override;
 		void setPosition(CubA4::world::GlobalPosition position) override;
 		void setRotation(float roll, float pitch, float yaw) override;
 		void move(float x, float y, float z, bool local) override;

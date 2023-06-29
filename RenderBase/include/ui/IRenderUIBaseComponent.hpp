@@ -10,6 +10,7 @@ namespace CubA4::render::ui
 		
 		void show() {setVisibility(true);}
 		void hide() {setVisibility(false);}
+		void toggleVisibility() {setVisibility(!isVisible());}
     protected:
         IRenderUIBaseComponent() = default;
         virtual ~IRenderUIBaseComponent() = default;

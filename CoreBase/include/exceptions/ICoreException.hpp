@@ -7,8 +7,8 @@ namespace CubA4::exceptions
 	public:
 		
 	protected:
-		virtual ~ICoreException() {}
-		explicit ICoreException() {}
+		virtual ~ICoreException() = default;
+		explicit ICoreException() = default;
 	private:
 	};
 }

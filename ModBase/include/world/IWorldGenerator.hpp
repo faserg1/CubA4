@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <world/IChunk.hpp>
+#include <world/IWorldGeneratorData.hpp>
 
 namespace CubA4::world
 {
@@ -15,6 +16,7 @@ namespace CubA4::world
 		explicit IWorldGenerator() = default;
 		virtual ~IWorldGenerator() = default;
 	private:
+		// data
 	};
 }
 

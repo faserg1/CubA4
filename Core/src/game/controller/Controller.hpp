@@ -31,5 +31,8 @@ namespace CubA4::game::controller
 		CubA4::system::IAppCallback &appCallback_;
 		std::shared_ptr<Actions> actions_;
 		std::shared_ptr<Bindings> bindings_;
+
+		int32_t x_;
+		int32_t y_;
 	};
 }

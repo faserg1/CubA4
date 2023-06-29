@@ -1,5 +1,6 @@
 #include "./MemoryPart.hpp"
 #include "./MemoryBlock.hpp"
+#include <vulkan/Memory.hpp>
 using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::vulkan;
 
@@ -31,4 +32,11 @@ VkDeviceSize MemoryPart::getSize() const
 std::shared_ptr<const IMemoryBlock> MemoryPart::getBlock() const
 {
 	return block_;
+}
+
+std::shared_ptr<void> MemoryPart::map(VkDeviceSize offset, VkDeviceSize size) const
+{
+	if (size == VK_WHOLE_SIZE)
+		size = size_ - offset;
+	return block_->getMemory()->map(offset_ + offset, size);
 }

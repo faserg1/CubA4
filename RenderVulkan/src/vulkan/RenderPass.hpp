@@ -1,31 +1,22 @@
-#ifndef RENDERVULKAN_RENDERPASS_HPP
-#define RENDERVULKAN_RENDERPASS_HPP
+#pragma once
 
 #include <vulkan/vulkan.h>
 #include <memory>
 
-namespace CubA4
+namespace CubA4::render::vulkan
 {
-	namespace render
+	class Device;
+
+	class RenderPass
 	{
-		namespace vulkan
-		{
-			class Device;
+	public:
+		explicit RenderPass(std::shared_ptr<const Device> device, VkRenderPass renderPass);
+		~RenderPass();
 
-			class RenderPass
-			{
-			public:
-				explicit RenderPass(std::shared_ptr<const Device> device, VkRenderPass renderPass);
-				~RenderPass();
-
-				VkRenderPass getRenderPass() const;
-			protected:
-			private:
-				const std::shared_ptr<const Device> device_;
-				const VkRenderPass renderPass_;
-			};
-		}
-	}
+		VkRenderPass getRenderPass() const;
+	protected:
+	private:
+		const std::shared_ptr<const Device> device_;
+		const VkRenderPass renderPass_;
+	};
 }
-
-#endif // RENDERVULKAN_RENDERPASS_HPP

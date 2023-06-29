@@ -26,6 +26,11 @@ namespace CubA4::render
 			class IWorldManager;
 		}
 
+		namespace debug
+		{
+			class IRenderDebug;
+		}
+
 		/// Класс взаимодействия с рендер миром
 		class IRenderManager
 		{
@@ -34,6 +39,7 @@ namespace CubA4::render
 			virtual std::shared_ptr<model::IModelManager> getModelManager() const = 0;
 			virtual std::shared_ptr<world::IWorldManager> getWorldManager() const = 0;
 			virtual std::shared_ptr<CubA4::render::ui::IRenderUIManager> getUIManager() const = 0;
+			virtual std::shared_ptr<debug::IRenderDebug> getDebug() const = 0;
 		protected:
 			explicit IRenderManager() = default;
 			virtual ~IRenderManager() = default;

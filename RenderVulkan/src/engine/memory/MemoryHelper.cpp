@@ -5,26 +5,32 @@
 #include <vulkan/Device.hpp>
 #include <vulkan/Fence.hpp>
 #include <thread>
+#include <atomic>
 #include <cmath>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
 struct MemoryHelper::Queue
 {
-	Queue(std::shared_ptr<const vulkan::Device> device) : executor(1)
+	Queue(std::shared_ptr<const vulkan::Device> device)
 	{
 		cmdPool = std::make_shared<CommandPool>(device, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 		fence = std::make_shared<Fence>(device, 0);
 		cmdPool->allocate(1, &transitBuffer);
+
+		device->getMarker().setName(cmdPool->getPool(), "MemoryHelper::Queue");
+		device->getMarker().setName(fence->getFence(), "MemoryHelper::Queue");
+		device->getMarker().setName(transitBuffer, "MemoryHelper::Queue Transit");
 	}
 	std::shared_ptr<CubA4::render::vulkan::CommandPool> cmdPool {};
 	std::shared_ptr<CubA4::render::vulkan::Fence> fence {};
+	std::atomic_bool inUse {false};
 	VkCommandBuffer transitBuffer = nullptr;
-	tf::Executor executor;
+	tf::Executor executor {1};
 };
 
 MemoryHelper::MemoryHelper(std::shared_ptr<const Device> device) :
-	device_(device), queueRotation_(0)
+	device_(device)
 {
 	for (size_t i = 0; i < std::max(std::thread::hardware_concurrency(), 4u); i++)
 		queues_.push_back(std::make_unique<Queue>(device_));
@@ -152,14 +158,12 @@ std::future<void> MemoryHelper::updateBuffer(const void *data, VkBuffer dst, VkD
 
 MemoryHelper::Queue *MemoryHelper::getNextQueue()
 {
-	auto idx = queueRotation_.fetch_add(1);
-	if (idx >= queues_.size())
-	{
-		auto count = static_cast<unsigned char>(queues_.size());
-		queueRotation_.fetch_sub(count);
-		idx -= count;
-	}
-	return queues_[idx].get();
+	std::unique_lock lock(queueMutex_);
+	auto queue = queues_[currentQueue_].get();
+	currentQueue_ ++;
+	if (currentQueue_ >= queues_.size())
+		currentQueue_ = 0;
+	return queue;
 }
 
 void MemoryHelper::submitCmdBuffer(Queue *queue, tf::Taskflow *flow, tf::Task *prev)
@@ -170,13 +174,17 @@ void MemoryHelper::submitCmdBuffer(Queue *queue, tf::Taskflow *flow, tf::Task *p
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &queue->transitBuffer;
 		auto q = device_->getQueue(QueueType::Transmit);
+		if (queue->inUse)
+			queue->fence->wait();
+		queue->inUse = true;
 		vkQueueSubmit(q->get(), 1, &submitInfo, queue->fence->getFence());
 	});
 	prev->precede(submit);
 	auto awaiter = flow->emplace([queue, this]{
 		auto fence = queue->fence->getFence();
-		vkWaitForFences(device_->getDevice(), 1, &fence, VK_TRUE, VK_WHOLE_SIZE);
+		queue->fence->wait();
 		queue->fence->reset();
+		queue->inUse = false;
 		vkResetCommandBuffer(queue->transitBuffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
 	});
 	submit.precede(awaiter);

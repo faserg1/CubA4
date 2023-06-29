@@ -112,6 +112,26 @@ namespace CubA4::world
 				static_cast<TPosType>(one.z - two.z),
 			};
 		}
+
+		template <typename TOtherPos>
+		friend BasePos operator*(const BasePos &one, TOtherPos mul)
+		{
+			return BasePos {
+				static_cast<TPosType>(one.x * mul),
+				static_cast<TPosType>(one.y * mul),
+				static_cast<TPosType>(one.z * mul),
+			};
+		}
+
+		template <typename TOtherPos>
+		friend BasePos operator/(const BasePos &one, TOtherPos div)
+		{
+			return BasePos {
+				static_cast<TPosType>(one.x / div),
+				static_cast<TPosType>(one.y / div),
+				static_cast<TPosType>(one.z / div),
+			};
+		}
 	};
 
 	/*Позиция блока в чанке */

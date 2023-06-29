@@ -25,6 +25,11 @@ void Camera::setActive(bool active)
     updateMatrix();
 }
 
+CubA4::world::GlobalPosition Camera::getPosition() const
+{
+	return position_;
+}
+
 void Camera::setPosition(CubA4::world::GlobalPosition position)
 {
     position_ = position;

@@ -2,9 +2,9 @@
 using namespace CubA4::render::vulkan;
 
 FramebufferImage::FramebufferImage(std::shared_ptr<const vulkan::Device> device, VkImage image, VkFormat format, VkExtent2D size, VkImageAspectFlags aspectFlags, std::shared_ptr<const Memory> memory) :
-    device_(device), image_(image), format_(format), size_(size), memory_(memory)
+    device_(device), image_(image), imageView_(createImageView(image, format, aspectFlags)),
+	format_(format), aspectFlags_(aspectFlags), size_(size), memory_(memory)
 {
-    imageView_ = createImageView(image, format, aspectFlags);
 }
 
 FramebufferImage::~FramebufferImage()
@@ -32,6 +32,11 @@ VkExtent2D FramebufferImage::getSize() const
 VkFormat FramebufferImage::getFormat() const
 {
     return format_;
+}
+
+VkImageAspectFlags FramebufferImage::getAspectFlags() const
+{
+	return aspectFlags_;
 }
 
 VkImageView FramebufferImage::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspect)

@@ -9,7 +9,7 @@
 #include <vulkan/Framebuffer.hpp>
 #include <tools/SpinLock.hpp>
 #include <engine/pipeline/IRenderEngineWorldPipelineSubscriber.hpp>
-#include <engine/FramebufferManager.hpp>
+#include <engine/framebuffer/FramebufferManager.hpp>
 #include <engine/RenderPassManager.hpp>
 
 namespace CubA4::render
@@ -46,7 +46,8 @@ namespace CubA4::render
 				std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> oldChunks;
 			};
 		public:
-			explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<RenderPassManager> rpManager, std::shared_ptr<FramebufferManager> framebufferManager,
+			explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<RenderPassManager> rpManager,
+			std::shared_ptr<FramebufferManager> framebufferManager,
 				std::shared_ptr<const config::IRenderConfig> config);
 			Render(const Render &) = delete;
 			~Render();

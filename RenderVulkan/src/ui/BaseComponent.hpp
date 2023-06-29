@@ -12,7 +12,7 @@ namespace CubA4::render::ui
 		bool isVisible() const override { return visibility_; }
 
 		virtual void draw(SkCanvas *parentCanvas) {};
-	private:
+	protected:
 		bool visibility_ = true;
 	};
 }

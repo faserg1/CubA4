@@ -8,10 +8,10 @@ namespace CubA4::world
 	class IDataProvider
 	{
 	public:
-		virtual ~IDataProvider() {}
+		virtual ~IDataProvider() = default;
 
 		virtual const IBlockDataStorage *getBlockDataStorage(int64_t blockId) const = 0;
 	protected:
-		explicit IDataProvider() {}
+		explicit IDataProvider() = default;
 	};
 }

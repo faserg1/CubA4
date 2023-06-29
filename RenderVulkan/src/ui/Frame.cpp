@@ -9,6 +9,8 @@ void Frame::addComponent(std::shared_ptr<IRenderUIBaseComponent> component)
 
 void Frame::draw(SkCanvas *parentCanvas)
 {
+	if (!visibility_)
+		return;
 	for (auto component : components_)
 	{
 		parentCanvas->save();

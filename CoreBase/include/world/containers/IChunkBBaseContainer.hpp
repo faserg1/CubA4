@@ -53,7 +53,7 @@ namespace CubA4::world
 		using iterator_category = std::forward_iterator_tag;
 		//using iterator_category = std::random_access_iterator_tag;
 
-		Iterator() {}
+		Iterator() = default;
 		explicit Iterator(std::unique_ptr<IChunkBIterator> impl) : impl_(std::move(impl)) {}
 		Iterator(const Iterator &other) : impl_(other.impl_->copy()) {}
 		bool operator==(const Iterator &other) const

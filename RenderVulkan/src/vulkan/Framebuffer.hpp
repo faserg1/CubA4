@@ -46,6 +46,8 @@ namespace CubA4::render::vulkan
 
 		VkCommandBuffer getCommandBuffer() const;
 		VkFramebuffer getFrameBuffer() const;
+		uint32_t getAttachmentsCount() const;
+		FramebufferImage &getFrameBufferImage(uint32_t attachmentIndex) const;
 		std::shared_ptr<const Semaphore> getRenderDoneSemaphore() const;
 		VkFence getFence() const;
 	private:

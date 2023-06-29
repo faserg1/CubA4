@@ -22,11 +22,22 @@ RenderManager::RenderManager(std::shared_ptr<const vulkan::Instance> instance,
 	modelManager_ = std::make_shared<ModelManager>(device);
 	worldManager_ = std::make_shared<WorldManager>(device, resourceManager_);
 	uiManager_ = std::make_shared<CubA4::render::ui::UIManager>(instance, device);
+	debug_ = std::make_shared<CubA4::render::engine::debug::RenderDebug>(device, rpManager, resourceManager_, worldManager_, config_);
 }
 
 RenderManager::~RenderManager()
 {
 	
+}
+
+void RenderManager::onRenderPassCreated()
+{
+	debug_->onRenderPassCreated();
+}
+
+void RenderManager::setup()
+{
+	debug_->setup();
 }
 
 std::shared_ptr<IMaterialManager> RenderManager::getMaterialManager() const
@@ -67,4 +78,14 @@ std::shared_ptr<CubA4::render::ui::IRenderUIManager> RenderManager::getUIManager
 std::shared_ptr<CubA4::render::ui::UIManager> RenderManager::getUIManager()
 {
 	return uiManager_;
+}
+
+std::shared_ptr<debug::IRenderDebug> RenderManager::getDebug() const
+{
+	return debug_;
+}
+
+std::shared_ptr<debug::RenderDebug> RenderManager::getDebug()
+{
+	return debug_;
 }

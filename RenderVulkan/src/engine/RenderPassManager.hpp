@@ -8,6 +8,16 @@
 
 namespace CubA4::render::engine
 {
+	struct MainRenderPassInfo
+	{
+		uint32_t worldSubpass;
+	};
+
+	struct DebugRenderPassInfo
+	{
+		uint32_t debugSubpass;
+	};
+
     class RenderPassManager
     {
     public:
@@ -15,10 +25,17 @@ namespace CubA4::render::engine
 		void createRenderPasses(VkFormat imageFormat);
 
 		std::shared_ptr<vulkan::RenderPass> getMainRenderPass() const;
-		static constexpr uint32_t getWorldSubpass() { return 0; }
+		std::shared_ptr<vulkan::RenderPass> getDebugRenderPass() const;
+		
+		const MainRenderPassInfo& getMainInfo() const;
+		const DebugRenderPassInfo& getDebugInfo() const;
 	private:
 		const std::shared_ptr<const vulkan::Device> device_;
 		const CubA4::render::config::VulkanConfigAdapter config_;
 		std::shared_ptr<vulkan::RenderPass> mainRenderPass_;
+		std::shared_ptr<vulkan::RenderPass> debugRenderPass_;
+
+		MainRenderPassInfo mainInfo_;
+		DebugRenderPassInfo debugInfo_;
     };
 }

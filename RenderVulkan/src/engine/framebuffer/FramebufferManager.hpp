@@ -21,24 +21,35 @@ namespace CubA4::render::engine
     public:
         FramebufferManager(std::shared_ptr<const vulkan::Device> device, CubA4::render::config::VulkanConfigAdapter config);
 
-		void onSwapchainUpdate(std::shared_ptr<const vulkan::Swapchain> swapchain, std::shared_ptr<const vulkan::RenderPass> renderPass);
+		void setRenderPass(std::shared_ptr<const vulkan::RenderPass> renderPass);
+
+		void onSwapchainUpdate(std::shared_ptr<const vulkan::Swapchain> swapchain);
 		std::shared_ptr<vulkan::Framebuffer> onAcquire(uint32_t imgIndex);
+		std::shared_ptr<vulkan::Framebuffer> get(uint32_t imgIndex) const;
 		void onAcquireFailed();
 		void markDirty();
 
 		VkExtent2D getExtent() const;
-	private:
-		void onCycle();
-    private:
-        const std::shared_ptr<const vulkan::Device> device_;
+		uint32_t getImageCount() const;
+		uint32_t getAttachmentsCount() const;
+	protected:
+		virtual void onSwapchainUpdateInternal(
+			std::shared_ptr<const vulkan::Swapchain> swapchain) = 0;
+	protected:
+		const std::shared_ptr<const vulkan::Device> device_;
         const CubA4::render::config::VulkanConfigAdapter config_;
+		vulkan::CommandPool commandPool_;
+		std::weak_ptr<const vulkan::RenderPass> renderPass_;
 
 		std::shared_ptr<const vulkan::Swapchain> currentSwapchain_;
 		std::vector<std::shared_ptr<vulkan::Framebuffer>> framebuffers_;
+
+		uint32_t attachmentsCount_ = 0;
+	private:
+		void onCycle();
+    private:
 		std::vector<OldFramebufferInfo> oldFramebuffers_;
 
 		CubA4::render::tools::SpinLock oldFramebuffersLock_;
-
-        CubA4::render::vulkan::FramebuffersBuilder builder_;
     };
 }

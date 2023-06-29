@@ -72,6 +72,7 @@ void MaterialLayoutBuilder::prepare(VkGraphicsPipelineCreateInfo &pipelineCreate
 {
 	pipelineCreateInfo = pipelineBuilder_.build();
 	pipelineCreateInfo.renderPass = rpManager_->getMainRenderPass()->getRenderPass();
+	pipelineCreateInfo.subpass = rpManager_->getMainInfo().worldSubpass;
 }
 
 void MaterialLayoutBuilder::fillPipelineInfo(PipelineInfo &pipelineInfo) const

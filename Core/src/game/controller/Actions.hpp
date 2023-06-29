@@ -16,10 +16,12 @@ namespace CubA4::game::controller
 		std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void()> callbackOnce) override;
 		std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) override;
 		std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
+		std::unique_ptr<util::ISubscription> addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
 
 		void onAction(const std::string &action);
 		void onAxisAction(const std::string &action, int32_t axisX, int32_t axisY);
 		void onPositionAction(const std::string &action, int32_t axisX, int32_t axisY);
+		void onPositionMoveAction(const std::string &action, int32_t axisX, int32_t axisY);
 
 		const std::unordered_map<std::string, std::vector<Callback>> &getCallbacks() const;
 	private:

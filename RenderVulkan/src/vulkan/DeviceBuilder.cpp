@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <vulkan/vulkan.h>
 #include <cstdint>
+#include <functional>
 #include <algorithm>
 using namespace CubA4::render::vulkan;
 
@@ -86,12 +87,18 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	enabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 	vkGetPhysicalDeviceFeatures2(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
 
-	// TODO: [OOKAMI] Disable this?
-	if (!availableFeatures.features.shaderInt64)
+	
+	std::vector<VkBool32> requiredFeatures = {
+		// TODO: [OOKAMI] Disable this?
+		availableFeatures.features.shaderInt64,
+		availableFeatures.features.fillModeNonSolid
+	};
+	if (std::any_of(requiredFeatures.begin(), requiredFeatures.end(), std::logical_not{}))
 	{
 		throw std::runtime_error("Cannot create device without shaderInt64 feature!");
 	}
 	enabledFeatures.features.shaderInt64 = VK_TRUE;
+	enabledFeatures.features.fillModeNonSolid = VK_TRUE;
 	enabledFeatures.features.samplerAnisotropy = availableFeatures.features.samplerAnisotropy;
 	createInfo.pEnabledFeatures = &enabledFeatures.features;
 

@@ -5,6 +5,8 @@ using namespace CubA4::render::ui;
 
 void MainCanvas::draw(SkCanvas *parentCanvas)
 {
+	if (!visibility_)
+		return;
 	Frame::draw(parentCanvas);
 	SkPoint center = {200, 200};
 	SkScalar rad = 100;

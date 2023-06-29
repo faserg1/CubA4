@@ -5,6 +5,7 @@
 #include <vector>
 #include <mutex>
 #include <vulkan/Device.hpp>
+#include <engine/memory/MemoryAllocationPrefered.hpp>
 #include "IMemoryPart.hpp"
 #include "IMemoryBlock.hpp"
 
@@ -19,7 +20,8 @@ namespace CubA4::render::engine::memory
 		~MemoryManager();
 
 		uint32_t calcAlign(uint32_t size, uint32_t align);
-		std::shared_ptr<const IMemoryPart> allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes);
+		std::shared_ptr<const IMemoryPart> allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes,
+			MemoryAllocationPrefered preference = MemoryAllocationPrefered::Device);
 	protected:
 	private:
 		std::shared_ptr<const vulkan::Device> device_;
@@ -28,7 +30,7 @@ namespace CubA4::render::engine::memory
 		std::vector<std::shared_ptr<IMemoryBlock>> memoryBlocks_;
 		std::mutex mutex_;
 	private:
-		std::shared_ptr<IMemoryBlock> allocateBlock(uint32_t supportedTypes);
+		std::shared_ptr<IMemoryBlock> allocateBlock(uint32_t supportedTypes, MemoryAllocationPrefered preference);
 	};
 }
 

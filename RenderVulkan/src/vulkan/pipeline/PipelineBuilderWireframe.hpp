@@ -24,13 +24,12 @@ namespace CubA4::render
 		class Pipeline;
 		struct PipelineInfo;
 
-		class PipelineBuilderUI : public PipelineBuilderBase
+		class PipelineBuilderWireframe : public PipelineBuilderBase
 		{
 		public:
-			explicit PipelineBuilderUI(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config);
-			~PipelineBuilderUI();
+			explicit PipelineBuilderWireframe(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config);
+			~PipelineBuilderWireframe();
 
-			sVkDescriptorSetLayout getTextureLayout();
 		protected:
 		private:
 			VkSpecializationInfo vertexShaderSpec_;
@@ -39,11 +38,7 @@ namespace CubA4::render
 
 			std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 
-			std::vector<VkViewport> viewports_;
-			std::vector<VkRect2D> scissors_;
 			std::vector<VkDynamicState> dynamicStates_;
-
-			sVkDescriptorSetLayout textureLayout_;
 		private:
 			void prepareVertexInput() override;
 			void prepareInputAssembly() override;

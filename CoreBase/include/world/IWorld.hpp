@@ -18,8 +18,6 @@ namespace CubA4::world
 		virtual ~IWorld() = default;
 
 		virtual std::unique_ptr<CubA4::util::ISubscription> subscribe(CubA4::world::IWorldSubscriber *subscriber) const = 0;
-		//virtual void addBlock(std::shared_ptr<const object::IBlock> block, CubA4::world::BlockData data) = 0;
-		//virtual void removeBlock(std::shared_ptr<const object::IBlock> block, CubA4::world::BlockData data) = 0;
 
 		// TODO: [OOKAMI] Test the chunk range feature. Delete function later
 		virtual void test(std::vector<std::shared_ptr<const object::IBlock>> blocks) = 0;

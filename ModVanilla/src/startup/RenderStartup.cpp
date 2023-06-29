@@ -85,6 +85,8 @@ void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::materi
 		"01",
 		"02",
 		"03",
+		"stone01",
+		"grass00"
 	};
 	for (auto texName : textures)
 	{
@@ -108,6 +110,8 @@ void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::mater
 		"01",
 		"02",
 		"03",
+		"stone01",
+		"grass00"
 	};
 	for (auto texName : textures)
 	{

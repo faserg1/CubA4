@@ -5,7 +5,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <vulkan/Device.hpp>
-#include <atomic>
+#include <mutex>
 
 namespace tf
 {
@@ -37,7 +37,8 @@ namespace CubA4::render::engine::memory
 	private:
 		std::shared_ptr<const vulkan::Device> device_;
 		std::vector<std::unique_ptr<Queue>> queues_;
-		std::atomic_uint8_t queueRotation_;
+		std::mutex queueMutex_;
+		size_t currentQueue_ = 0;
 	private:
 		Queue *getNextQueue();
 		void submitCmdBuffer(Queue *queue, tf::Taskflow *flow, tf::Task *prev);

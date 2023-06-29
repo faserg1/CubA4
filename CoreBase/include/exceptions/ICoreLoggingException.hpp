@@ -18,8 +18,8 @@ namespace CubA4::exceptions
 	public:
 		virtual LoggingExceptionsSourceType source() = 0;
 	protected:
-		virtual ~ICoreLoggingException() {}
-		explicit ICoreLoggingException() {}
+		virtual ~ICoreLoggingException() = default;
+		explicit ICoreLoggingException() = default;
 	private:
 	};
 }

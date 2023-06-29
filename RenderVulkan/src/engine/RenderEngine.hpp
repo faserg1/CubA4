@@ -5,6 +5,7 @@
 #include <thread>
 #include <atomic>
 #include <engine/RenderEngineCore.hpp>
+#include <engine/pipeline/IMainEnginePipelineItem.hpp>
 
 namespace CubA4::render::engine
 {
@@ -13,7 +14,7 @@ namespace CubA4::render::engine
 	class RenderUI;
 	class RenderManager;
 	class RenderPassManager;
-	class FramebufferManager;
+	class MainFramebufferManager;
 	class RenderGameHandler;
 
 	namespace pipeline
@@ -24,6 +25,7 @@ namespace CubA4::render::engine
 
 	class VulkanRenderEngine :
 		public virtual IRenderEngine,
+		public virtual CubA4::render::engine::pipeline::IMainEnginePipelineItem,
 		public RenderEngineCore
 	{
 	public:
@@ -57,6 +59,9 @@ namespace CubA4::render::engine
 		void loop();
 
 		void inFrameRebuild();
+		void handleSwapChainChanged();
+
+		std::shared_ptr<const vulkan::Semaphore> render(uint32_t imgIndex, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore) override;
 	private:
 		std::shared_ptr<Presentaion> presetation_;
 		std::shared_ptr<Render> render_;
@@ -67,7 +72,9 @@ namespace CubA4::render::engine
 		
 		std::shared_ptr<RenderManager> renderManager_;
 		std::shared_ptr<RenderPassManager> renderPassManager_;
-		std::shared_ptr<FramebufferManager> framebufferManager_;
+		std::shared_ptr<MainFramebufferManager> framebufferManager_;
+
+		std::vector<CubA4::render::engine::pipeline::IMainEnginePipelineItem*> mainPipelines_;
 
 		bool running_;
 		std::atomic_bool rebuildSwapchain_;

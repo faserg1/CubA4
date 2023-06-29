@@ -7,7 +7,9 @@
 
 //TODO: [OOKAMI] Загловки для теста
 #include <engine/IRenderManager.hpp>
+#include <ui/IRenderUIManager.hpp>
 #include <engine/world/IWorldManager.hpp>
+#include <engine/debug/IRenderDebug.hpp>
 #include <ctime>
 #include <cmath>
 #include <fmt/format.h>
@@ -53,10 +55,13 @@ bool AppStartup::setup()
 		return false;
 	/// test
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("mouse", CubA4::game::controller::Button::F1, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("uitoggle", CubA4::game::controller::Button::F2, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("forward", CubA4::game::controller::Button::W, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("back", CubA4::game::controller::Button::S, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("left", CubA4::game::controller::Button::A, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("right", CubA4::game::controller::Button::D, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("click", CubA4::game::controller::Button::LMB, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("click2", CubA4::game::controller::Button::RMB, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addAxisBinding("camera", CubA4::game::controller::AxisBinding::MOUSE);
 	/// end test
 	run();
@@ -78,14 +83,43 @@ bool AppStartup::setupGame()
 	auto wm = rm->getWorldManager();
 	camera_ = wm->createCamera();
 	wm->setActiveCamera(camera_);
+
+	// test thing
+
 	static auto sub2 = startup_->getGame()->getController()->getActions()->addActionCallback("mouse", [this]()
 	{
 		static auto request = false;
 		startup_->getGame()->getController()->requestMouseCapture(!request);
 		request = !request;
 	});
+
+	static auto sub3 = startup_->getGame()->getController()->getActions()->addActionCallback("uitoggle", [this, weakRm = std::weak_ptr(rm)]()
+	{
+		if (auto rm = weakRm.lock())
+		{
+			rm->getUIManager()->getMainCanvas()->toggleVisibility();
+		}
+	});
+
+	static auto sub4 = startup_->getGame()->getController()->getActions()->addActionPositionCallback("click", [this, weakRm = std::weak_ptr(rm)](int32_t x, int32_t y)
+	{
+		using namespace CubA4::render::engine::debug;
+		static std::vector<std::shared_ptr<IRenderDebugCollection>> collections;
+		if (auto rm = weakRm.lock())
+		{
+			auto world = rm->getWorldManager();
+			auto debug = rm->getDebug();
+
+			auto ray = world->getRayFrom(x, y);
+			auto col = debug->addCollection();
+			auto fPos = ray.position.inBlockPos() + ray.position.blockPosition();
+			auto fPosTo = ray.direction * 20 - fPos;
+			col->addLine(ray.position.chunkPos(), fPos, fPosTo);
+			collections.push_back(col);
+		}
+	});
 	
-	// test thing
+	
 	static auto sub = startup_->getGame()->getController()->getActions()->addActionAxisCallback("camera", [this](int64_t x, int64_t y){
 		float sensivity = 0.05f;
 		camera_->rotate(0, y * sensivity, x * sensivity);

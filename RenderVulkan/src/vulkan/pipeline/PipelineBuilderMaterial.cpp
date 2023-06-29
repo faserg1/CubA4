@@ -89,7 +89,6 @@ void PipelineBuilderMaterial::prepareRasterization()
 
 void PipelineBuilderMaterial::prepareMultisampling()
 {
-	// TODO: [OOKAMI] Multisampling settings
 	multisampleInfo_.rasterizationSamples = config_.getAntialiasing();
 }
 
@@ -122,13 +121,8 @@ void PipelineBuilderMaterial::prepareDynmaic()
 
 void PipelineBuilderMaterial::prepareViewport()
 {
-	viewports_.push_back({});
-	scissors_.push_back({});
-
-	viewportStateInfo_.viewportCount = static_cast<uint32_t>(viewports_.size());
-	viewportStateInfo_.scissorCount = static_cast<uint32_t>(scissors_.size());
-	viewportStateInfo_.pViewports = viewports_.data();
-	viewportStateInfo_.pScissors = scissors_.data();
+	viewportStateInfo_.viewportCount = 1;
+	viewportStateInfo_.scissorCount = 1;
 }
 
 void PipelineBuilderMaterial::prepareDescriptorSets()

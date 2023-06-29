@@ -65,7 +65,6 @@ std::unique_ptr<IQueue> Device::getQueue(QueueType type) const
 	{
 	case CubA4::render::vulkan::QueueType::Render:
 		data = &renderQueue_;
-		needLock = false;
 		break;
 	case CubA4::render::vulkan::QueueType::Transmit:
 		data = &transmitQueue_;

@@ -3,7 +3,7 @@
 using namespace CubA4::render::vulkan;
 
 CommandPool::CommandPool(std::shared_ptr<const Device> device, VkCommandPoolCreateFlags flags):
-	device_(device), flags_(flags), lock_(false)
+	device_(device), flags_(flags)
 {
 	VkCommandPoolCreateInfo info = {};
 	info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -18,15 +18,26 @@ CommandPool::~CommandPool()
 
 std::unique_ptr<const CommandPool::CommandPoolLock> CommandPool::tryLock() const
 {
-	if (lock_)
+	if (!mutex_.try_lock())
 		return {};
-	lock_ = true;
-	return std::make_unique<CommandPool::CommandPoolLock>(lock_, shared_from_this());
+	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, true, shared_from_this());
 }
 
-bool CommandPool::isLocked() const
+std::unique_ptr<CommandPool::CommandPoolLock> CommandPool::tryLock()
 {
-	return lock_;
+	if (!mutex_.try_lock())
+		return {};
+	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, true, shared_from_this());
+}
+
+std::unique_ptr<const CommandPool::CommandPoolLock> CommandPool::lock() const
+{
+	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, false, shared_from_this());
+}
+
+std::unique_ptr<CommandPool::CommandPoolLock> CommandPool::lock()
+{
+	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, false, shared_from_this());
 }
 
 VkCommandPool CommandPool::getPool() const
@@ -39,9 +50,14 @@ bool CommandPool::allocate(uint32_t count, VkCommandBuffer *data, VkCommandBuffe
 	VkCommandBufferAllocateInfo allocateInfo = {};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocateInfo.commandPool = pool_;
-	allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocateInfo.level = level;
 	allocateInfo.commandBufferCount = count;
 	return vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, data) == VK_SUCCESS;
+}
+
+void CommandPool::free(uint32_t count, VkCommandBuffer *data)
+{
+	return vkFreeCommandBuffers(device_->getDevice(), pool_, count, data);
 }
 
 VkCommandPoolCreateFlags CommandPool::getFlags() const
@@ -49,14 +65,16 @@ VkCommandPoolCreateFlags CommandPool::getFlags() const
 	return flags_;
 }
 
-CommandPool::CommandPoolLock::CommandPoolLock(std::atomic_bool &lock, std::shared_ptr<const CommandPool> pool) :
-	lock_(lock), pool_(pool)
+CommandPool::CommandPoolLock::CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool) :
+	mutex_(mutex), pool_(pool)
 {
+	if (!locked)
+		mutex.lock();
 }
 
 CommandPool::CommandPoolLock::~CommandPoolLock()
 {
-	lock_ = false;
+	mutex_.unlock();
 }
 
 std::shared_ptr<const CommandPool> CommandPool::CommandPoolLock::getPool() const

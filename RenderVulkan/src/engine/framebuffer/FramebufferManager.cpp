@@ -1,14 +1,21 @@
-#include <engine/FramebufferManager.hpp>
+#include <engine/framebuffer/FramebufferManager.hpp>
 using namespace CubA4::render::engine;
+using namespace CubA4::render::vulkan;
 
 FramebufferManager::FramebufferManager(std::shared_ptr<const vulkan::Device> device, CubA4::render::config::VulkanConfigAdapter config) :
-    device_(device), config_(config), builder_(device, config)
+    device_(device), config_(config), commandPool_(device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
 {
 
 }
 
+void FramebufferManager::setRenderPass(std::shared_ptr<const vulkan::RenderPass> renderPass)
+{
+	renderPass_ = renderPass;
+}
+
 // Create framebuffers
-void FramebufferManager::onSwapchainUpdate(std::shared_ptr<const vulkan::Swapchain> swapchain, std::shared_ptr<const vulkan::RenderPass> renderPass)
+// TODO: Make virtual
+void FramebufferManager::onSwapchainUpdate(std::shared_ptr<const vulkan::Swapchain> swapchain)
 {
 	if (currentSwapchain_)
 	{
@@ -19,7 +26,10 @@ void FramebufferManager::onSwapchainUpdate(std::shared_ptr<const vulkan::Swapcha
 		});
 	}
 	currentSwapchain_ = swapchain;
-	framebuffers_ = builder_.createFramebuffers(swapchain, renderPass);
+
+	onSwapchainUpdateInternal(swapchain);
+	
+	// TODO: assert attachmentsCount_ != 0
 }
 
 std::shared_ptr<CubA4::render::vulkan::Framebuffer> FramebufferManager::onAcquire(uint32_t imgIndex)
@@ -31,6 +41,11 @@ std::shared_ptr<CubA4::render::vulkan::Framebuffer> FramebufferManager::onAcquir
 	auto framebuffer = framebuffers_[imgIndex];
 	framebuffer->onAquired();
 	return framebuffer;
+}
+
+std::shared_ptr<CubA4::render::vulkan::Framebuffer> FramebufferManager::get(uint32_t imgIndex) const
+{
+	return framebuffers_[imgIndex];
 }
 
 void FramebufferManager::onAcquireFailed()
@@ -49,6 +64,16 @@ void FramebufferManager::markDirty()
 VkExtent2D FramebufferManager::getExtent() const
 {
 	return currentSwapchain_->getResolution();
+}
+
+uint32_t FramebufferManager::getImageCount() const
+{
+	return currentSwapchain_->getImageCount();
+}
+
+uint32_t FramebufferManager::getAttachmentsCount() const
+{
+	return attachmentsCount_;
 }
 
 void FramebufferManager::onCycle()

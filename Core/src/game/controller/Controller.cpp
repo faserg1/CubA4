@@ -22,12 +22,17 @@ void Controller::onButtonChanged(Button btn, BMods mods, bool pressed)
 	if (!actions)
 		return;
 	for (const auto &action : *actions)
+	{
 		actions_->onAction(action);
+		actions_->onPositionAction(action, x_, y_);
+	}
 }
 
 void Controller::onPosition(int32_t x, int32_t y)
 {
-	// TODO: 
+	x_ = x;
+	y_ = y;
+	// TODO:  ?
 }
 
 void Controller::onMove(AxisBinding binding, int32_t x, int32_t y)

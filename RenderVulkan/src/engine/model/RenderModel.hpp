@@ -11,6 +11,7 @@ namespace CubA4::render::engine::model
 {
 	struct RenderModelData
 	{
+		// TODO: Use memory part
 		std::shared_ptr<const vulkan::Memory> vertexBufferMemory;
 		std::shared_ptr<const vulkan::Memory> indexBufferMemory;
 		VkBuffer vertexBuffer;

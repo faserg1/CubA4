@@ -20,6 +20,19 @@ MemoryAllocator::~MemoryAllocator()
 
 }
 
+VkMemoryPropertyFlags MemoryAllocator::getPreferenceFlags(MemoryAllocationPrefered preference)
+{
+	switch (preference)
+	{
+	case MemoryAllocationPrefered::Device:
+		return VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+	case MemoryAllocationPrefered::Host:
+		return VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+	}
+	// TODO: Error?
+	return {};
+}
+
 std::shared_ptr<Memory> MemoryAllocator::allocate(size_t size, MemoryAllocationPrefered preference, uint32_t supportedTypes)
 {
 	VkDeviceMemory memory = {};
@@ -29,19 +42,7 @@ std::shared_ptr<Memory> MemoryAllocator::allocate(size_t size, MemoryAllocationP
 	//TODO: [OOKAMI] Choose index
 	VkPhysicalDeviceMemoryProperties props;
 	vkGetPhysicalDeviceMemoryProperties(device_->getPhysicalDevice(), &props);
-	VkMemoryPropertyFlags requiredFlags = {};
-	switch (preference)
-	{
-	case MemoryAllocationPrefered::Device:
-		requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-		break;
-	case MemoryAllocationPrefered::Host:
-		requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-		break;
-	default:
-		//TODO: [OOKAMI] Throw exception
-		return {};
-	}
+	VkMemoryPropertyFlags requiredFlags = getPreferenceFlags(preference);
 	/*int32_t index = findProperties(&props, supportedTypes, requiredFlags);
 	if (index < 0)
 		//TODO: [OOKAMI] Throw exception

@@ -6,7 +6,8 @@ RenderEnginePipeline::RenderEnginePipeline(std::shared_ptr<const ICore> core, st
 	std::shared_ptr<const engine::RenderPassManager> renderPassManager, std::shared_ptr<engine::RenderManager> renderManager) :
 	core_(core), device_(device), renderPassManager_(renderPassManager), renderManager_(renderManager)
 {
-	auto chunkCompiler = std::make_shared<pipeline::RenderChunkCompiler>(core_, device, renderPassManager->getMainRenderPass(), renderManager_, renderPassManager->getWorldSubpass());
+	auto chunkCompiler = std::make_shared<pipeline::RenderChunkCompiler>(core_, device,
+		renderPassManager->getMainRenderPass(), renderManager_, renderPassManager->getMainInfo().worldSubpass);
 	// TODO: ?
 	worldPipeline_ = std::make_shared<pipeline::RenderEngineWorldPipeline>(chunkCompiler, RenderFramebufferData{});
 }

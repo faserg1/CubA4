@@ -40,8 +40,6 @@ namespace CubA4::render
 
 			std::vector<VkPipelineColorBlendAttachmentState> colorAttachments_;
 
-			std::vector<VkViewport> viewports_;
-			std::vector<VkRect2D> scissors_;
 			std::vector<VkDynamicState> dynamicStates_;
 
 			uint32_t textureCount = 0;

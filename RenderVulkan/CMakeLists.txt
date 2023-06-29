@@ -23,7 +23,7 @@ set(SHADERS_OUT_FOLDER ${CMAKE_CURRENT_LIST_DIR}/irs/shaders)
 
 add_library(RenderVulkan SHARED ${RenderVulkanSources} ${irs_resources})
 target_compile_features(RenderVulkan PRIVATE ${TARGET_CXX_STD})
-target_include_directories(RenderVulkan PRIVATE src)
+target_include_directories(RenderVulkan PRIVATE src gen)
 
 #third-party library
 

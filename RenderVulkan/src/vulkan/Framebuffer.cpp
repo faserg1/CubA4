@@ -112,6 +112,16 @@ VkFramebuffer Framebuffer::getFrameBuffer() const
     return framebuffer_;
 }
 
+uint32_t Framebuffer::getAttachmentsCount() const
+{
+	return static_cast<uint32_t>(attachments_.size());
+}
+
+FramebufferImage &Framebuffer::getFrameBufferImage(uint32_t attachmentIndex) const
+{
+	return *attachments_[attachmentIndex];
+}
+
 std::shared_ptr<const Semaphore> Framebuffer::getRenderDoneSemaphore() const
 {
     return renderDoneSemaphore_;

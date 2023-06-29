@@ -205,10 +205,10 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 	}
 
 	
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model collecting {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
+	//core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model collecting {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
 	cl = clock();
 	auto model = compiler.compile(material, modelManager_);
-	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
+	//core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - cl));
 	core_->getLogger()->log(logging::LogSourceSystem::Render, "RenderChunkCompilerCore", logging::LogLevel::Debug, fmt::format("Model building total {}, {}, {} done in {} ticks", cpos.x, cpos.y, cpos.z, clock() - start));
 	return model;
 }

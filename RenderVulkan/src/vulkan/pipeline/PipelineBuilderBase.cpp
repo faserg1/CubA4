@@ -5,6 +5,7 @@
 #include <world/IChunk.hpp>
 
 #include <algorithm>
+#include <iterator>
 #include <vulkan/vulkan.h>
 #include <string.h>
 
@@ -36,6 +37,11 @@ void PipelineBuilderBase::useShader(std::shared_ptr<const IShader> shader)
 void PipelineBuilderBase::addBuiltInDescriptorSetLayout(sVkDescriptorSetLayout builtInLayout)
 {
 	descriptorSetLayouts_.push_back(builtInLayout);
+}
+
+void PipelineBuilderBase::addBuiltInDescriptorSetLayouts(const std::vector<sVkDescriptorSetLayout> &builtInLayouts)
+{
+	std::copy(builtInLayouts.begin(), builtInLayouts.end(), std::back_inserter(descriptorSetLayouts_));
 }
 
 VkGraphicsPipelineCreateInfo PipelineBuilderBase::build()
@@ -104,6 +110,7 @@ void PipelineBuilderBase::fillPipelineInfo(PipelineInfo &pipelineInfo) const
 
 void PipelineBuilderBase::prepareStages()
 {
+	// TODO: Maybe make it protected?
 	VkSpecializationMapEntry chunkSizeEntry = {};
 	chunkSizeEntry.constantID = 0;
 	chunkSizeEntry.offset = 0;

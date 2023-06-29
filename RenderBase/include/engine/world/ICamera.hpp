@@ -9,6 +9,7 @@ namespace CubA4::render::engine::world
 	public:
 		virtual ~ICamera() = default;
 
+		virtual CubA4::world::GlobalPosition getPosition() const = 0;
 		virtual void setPosition(CubA4::world::GlobalPosition position) = 0;
 		virtual void setRotation(float roll, float pitch, float yaw) = 0;
 		virtual void move(float x, float y, float z, bool local = true) = 0;

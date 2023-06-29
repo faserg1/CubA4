@@ -1,5 +1,5 @@
 #include <config/VulkanConfigAdapter.hpp>
-#include <vulkan/util/ConfigConverter.hpp>>
+#include <vulkan/util/ConfigConverter.hpp>
 using namespace CubA4::render::config;
 
 VulkanConfigAdapter::VulkanConfigAdapter(std::shared_ptr<const config::IRenderConfig> config) :

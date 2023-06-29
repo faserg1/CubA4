@@ -36,7 +36,7 @@ uint32_t MemoryManager::calcAlign(uint32_t size, uint32_t align)
 	return static_cast<uint32_t>(::calcAlign(size, align));
 }
 
-std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes)
+std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes, MemoryAllocationPrefered preference)
 {
 	if (size > blockSize_)
 		return {};
@@ -47,22 +47,25 @@ std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, ui
 		const bool isRequiredMemoryType = supportedTypes & memoryTypeBits;
 		if (!isRequiredMemoryType)
 			continue;
+		const auto requiredFlags = allocator_->getPreferenceFlags(preference);
+		if (!(block->getFlags() & requiredFlags))
+			continue;
 		auto memBlock = std::dynamic_pointer_cast<MemoryBlock>(block);
 		auto part = memBlock->allocatePart(size, alignment);
 		if (!part)
 			continue;
 		return part;
 	}
-	auto newBlock = allocateBlock(supportedTypes);
+	auto newBlock = allocateBlock(supportedTypes, preference);
 	memoryBlocks_.push_back(newBlock);
 	auto newMemBlock = std::dynamic_pointer_cast<MemoryBlock>(newBlock);
 	return newMemBlock->allocatePart(size, alignment);
 }
 
 
-std::shared_ptr<IMemoryBlock> MemoryManager::allocateBlock(uint32_t supportedTypes)
+std::shared_ptr<IMemoryBlock> MemoryManager::allocateBlock(uint32_t supportedTypes, MemoryAllocationPrefered preference)
 {
-	auto memory = allocator_->allocate(blockSize_, MemoryAllocationPrefered::Device, supportedTypes);
+	auto memory = allocator_->allocate(blockSize_, preference, supportedTypes);
 	if (!memory)
 		return {};
 	return std::make_shared<MemoryBlock>(memory);

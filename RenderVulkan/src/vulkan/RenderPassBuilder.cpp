@@ -17,8 +17,8 @@ RenderPassBuilder::~RenderPassBuilder()
 
 std::shared_ptr<RenderPass> RenderPassBuilder::build()
 {
-	VkRenderPassCreateInfo renderPassCreateInfo = {};
-	renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	VkRenderPassCreateInfo2 renderPassCreateInfo = {};
+	renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2;
 
 	renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments_.size());
 	renderPassCreateInfo.pAttachments = attachments_.data();
@@ -30,31 +30,24 @@ std::shared_ptr<RenderPass> RenderPassBuilder::build()
 
 	//////////////////////////////////////////////
 
-	// TODO: [OOKAMI] Move deps out
-
-	std::vector<VkSubpassDependency> deps
-	{
-	};
-	
-
-	renderPassCreateInfo.dependencyCount = static_cast<uint32_t>(deps.size());
-	renderPassCreateInfo.pDependencies = deps.data();
+	renderPassCreateInfo.dependencyCount = static_cast<uint32_t>(deps_.size());
+	renderPassCreateInfo.pDependencies = deps_.data();
 
 	//////////////////////////////////////////////
 
 	VkRenderPass renderPass;
-	if (vkCreateRenderPass(device_->getDevice(), &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS)
+	if (vkCreateRenderPass2(device_->getDevice(), &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
 		return {};
 	}
-	device_->getMarker().setName(renderPass, "Default Render Pass");
 	return std::make_shared<RenderPass>(device_, renderPass);
 }
 
-uint32_t RenderPassBuilder::addDescription(VkFormat format, VkImageLayout finalLayout, bool antialiasing, LoadOp loadOp, StoreOp storeOp)
+uint32_t RenderPassBuilder::addDescription(VkFormat format, VkImageLayout finalLayout, bool antialiasing, LoadOp loadOp, StoreOp storeOp, VkImageLayout initLayout)
 {
-	VkAttachmentDescription description {};
+	VkAttachmentDescription2 description {};
+	description.sType = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
 	description.format = format;
 	description.samples = antialiasing ? config_.getAntialiasing() : VK_SAMPLE_COUNT_1_BIT;
 	switch (loadOp)
@@ -80,7 +73,7 @@ uint32_t RenderPassBuilder::addDescription(VkFormat format, VkImageLayout finalL
 	}
 	description.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	description.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	description.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	description.initialLayout = initLayout;
 	description.finalLayout = finalLayout;
 	attachments_.push_back(description);
 	return static_cast<uint32_t>(attachments_.size() - 1);
@@ -92,20 +85,23 @@ void RenderPassBuilder::addColorReference(uint32_t subpassIndex, uint32_t idxCol
 
 	auto &subpassInfo = subpasses_[subpassIndex];
 
-	VkAttachmentReference color
+	VkAttachmentReference2 color
 	{
+		.sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
 		.attachment = idxColor,
 		.layout = layoutColor
 	};
 
-	VkAttachmentReference depth
+	VkAttachmentReference2 depth
 	{
+		.sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
 		.attachment = idxDepth,
 		.layout = layoutDepth
 	};
 
-	VkAttachmentReference resolve
+	VkAttachmentReference2 resolve
 	{
+		.sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
 		.attachment = idxResolve,
 		.layout = layoutResolve
 	};
@@ -121,10 +117,20 @@ void RenderPassBuilder::addColorReference(uint32_t subpassIndex, uint32_t idxCol
 	subpass.pResolveAttachments = subpassInfo.referencesColor_.resolve.data();
 }
 
+VkAttachmentReference2 *RenderPassBuilder::addExternalColorReference(uint32_t subpassTo, const VkAttachmentReference2 &reference)
+{
+	auto ptr = std::make_unique<VkAttachmentReference2>(reference);
+	auto savePtr = ptr.get();
+	subpasses_[subpassTo].referencesColor_.external.push_back(std::move(ptr));
+	return savePtr;
+}
+
 uint32_t RenderPassBuilder::addSubpass()
 {
 	subpasses_.push_back({});
-	subpassesDesc_.push_back({});
+	subpassesDesc_.push_back(VkSubpassDescription2 {
+		.sType = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
+	});
 
 	// assert(subpasses_.size() == subpassesDesc_.size());
 
@@ -134,4 +140,9 @@ uint32_t RenderPassBuilder::addSubpass()
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 
 	return idx;
+}
+
+void RenderPassBuilder::addDependency(VkSubpassDependency2 dependency)
+{
+	deps_.push_back(dependency);
 }
