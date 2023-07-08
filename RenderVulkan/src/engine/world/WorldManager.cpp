@@ -73,13 +73,15 @@ Ray WorldManager::getRayFrom(uint64_t x, uint64_t y, std::shared_ptr<const ICame
 	const auto &matrix = rcamera->getViewMatrix();
 	// TODO: ??
 
-	float ndcX = (2.0f * x) / worldData_.projectionWidth - 1.0f;
-    float ndcY = 1.0f - (2.0f * y) / worldData_.projectionHeight;
+	float ndcX = (2.f * x) / worldData_.projectionWidth - 1.f;
+    float ndcY = 1.f - (2.f * y) / worldData_.projectionHeight;
 
-	glm::mat4 inverseProj = glm::inverse(worldData_.projMatrix_);
+	auto matrixProj = worldData_.projMatrix_;
+	matrixProj[1][1] *= -1;
+	glm::mat4 inverseProj = glm::inverse(matrixProj);
 	glm::mat4 inverseView = glm::inverse(matrix);
 
-	glm::vec4 viewSpace = inverseProj * glm::vec4(ndcX, ndcY, 1.0f, 1.0f);
+	glm::vec4 viewSpace = inverseProj * glm::vec4(ndcX, ndcY, 1.f, 1.f);
 
 	glm::vec4 worldSpace = inverseView * viewSpace;
 
@@ -132,8 +134,7 @@ void WorldManager::allocateSets()
 
 	std::function<void(VkDescriptorSet)> deleter = [dev = device_, p = pool_](VkDescriptorSet set)
 	{
-		// NOTE: [OOKAMI] Отдельно освобождать сет не нужно, но сохранить пул - стоит
-		//vkResetDescriptorPool(dev->getDevice(), p->get(), 0);
+		// NOTE: [OOKAMI] Отдельно освобождать сет не нужно, но трогдать пул точно не стоит
 		//vkFreeDescriptorSets(dev->getDevice(), p->get(), 1, &set);
 	};
 
@@ -192,6 +193,7 @@ void WorldManager::updateProjectionMatrix()
 {
 	// TODO: [OOKAMI] Set normal aspect ratio
 	worldData_.projMatrix_ = glm::perspectiveFovRH(worldData_.projectionFov, worldData_.projectionWidth, worldData_.projectionHeight, 0.01f, 16.f * CubA4::world::ChunkSize);
+	worldData_.projMatrix_[1][1] *= -1;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize;
 	memoryHelper_->updateBuffer(glm::value_ptr(worldData_.projMatrix_), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();

@@ -60,6 +60,8 @@ bool AppStartup::setup()
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("back", CubA4::game::controller::Button::S, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("left", CubA4::game::controller::Button::A, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("right", CubA4::game::controller::Button::D, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("up", CubA4::game::controller::Button::Space, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("down", CubA4::game::controller::Button::CtrlLeft, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("click", CubA4::game::controller::Button::LMB, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("click2", CubA4::game::controller::Button::RMB, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addAxisBinding("camera", CubA4::game::controller::AxisBinding::MOUSE);
@@ -83,6 +85,15 @@ bool AppStartup::setupGame()
 	auto wm = rm->getWorldManager();
 	camera_ = wm->createCamera();
 	wm->setActiveCamera(camera_);
+
+	// test world lines
+	static std::vector<std::shared_ptr<CubA4::render::engine::debug::IRenderDebugCollection>> worldLines;
+	auto debug = rm->getDebug();
+	auto col = debug->addCollection();
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {20.f, 0.f, 0.f});
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 20.f, 0.f});
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 0.f, 20.f});
+	worldLines.push_back(col);
 
 	// test thing
 
@@ -113,7 +124,7 @@ bool AppStartup::setupGame()
 			auto ray = world->getRayFrom(x, y);
 			auto col = debug->addCollection();
 			auto fPos = ray.position.inBlockPos() + ray.position.blockPosition();
-			auto fPosTo = ray.direction * 20 - fPos;
+			auto fPosTo = ray.direction * 20 + fPos;
 			col->addLine(ray.position.chunkPos(), fPos, fPosTo);
 			collections.push_back(col);
 		}
@@ -122,7 +133,7 @@ bool AppStartup::setupGame()
 	
 	static auto sub = startup_->getGame()->getController()->getActions()->addActionAxisCallback("camera", [this](int64_t x, int64_t y){
 		float sensivity = 0.05f;
-		camera_->rotate(0, y * sensivity, x * sensivity);
+		camera_->rotate(0, -y * sensivity, x * sensivity);
 	});
 	return true;
 }
@@ -157,12 +168,18 @@ void AppStartup::doSomeTestThings(double delta)
 	//TODO: [OOKAMI] Убрать тестовые вещи
 	const auto speed = 0.05f;
 	const auto vel = speed * delta;
+	if (!delta)
+		return;
 	if (startup_->getGame()->getController()->getActionState("forward"))
-		camera_->move(0.f, 0.f, static_cast<float>(-vel));
-	if (startup_->getGame()->getController()->getActionState("back"))
 		camera_->move(0.f, 0.f, static_cast<float>(vel));
+	if (startup_->getGame()->getController()->getActionState("back"))
+		camera_->move(0.f, 0.f, static_cast<float>(-vel));
 	if (startup_->getGame()->getController()->getActionState("left"))
 		camera_->move(static_cast<float>(-vel), 0.f, 0.f);
 	if (startup_->getGame()->getController()->getActionState("right"))
 		camera_->move(static_cast<float>(vel), 0.f, 0.f);
+	if (startup_->getGame()->getController()->getActionState("up"))
+		camera_->move(0.f, static_cast<float>(vel), 0.f);
+	if (startup_->getGame()->getController()->getActionState("down"))
+		camera_->move(0.f, static_cast<float>(-vel), 0.f);
 }

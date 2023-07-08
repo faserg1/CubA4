@@ -23,6 +23,7 @@ namespace CubA4::render::engine::world
 		const CubA4::world::ChunkPos &getChunkPos() const;
 	protected:
 		void updateMatrix();
+		glm::vec3 calculateDirection() const;
 	private:
 		bool active_ = false;
 

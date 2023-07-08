@@ -94,17 +94,17 @@ namespace CubA4::world
 			constexpr const auto Length = Max - Min;
 			if (coord >= Max)
 			{
-				const auto count = std::trunc(std::log(Length)/std::log(coord - Min));
-				if (std::isnan(count))
-					return;
+				auto abs = std::abs(coord - Min);
+				auto rem = std::fmod(abs, Length);
+				auto count = (abs - rem) / Length;
 				coord -= static_cast<CoodTypeInside>(count * Length);
 				outside += static_cast<CoordTypeOutside>(count);
 			}
 			else if (coord <= Min)
 			{
-				const auto count = std::trunc(std::log(Length)/std::log(coord + Min));
-				if (std::isnan(count))
-					return;
+				auto abs = std::abs(coord + Min);
+				auto rem = std::fmod(abs, Length);
+				auto count = (abs - rem) / Length;
 				coord += static_cast<CoodTypeInside>(count * Length);
 				outside -= static_cast<CoordTypeOutside>(count);
 			}

@@ -9,6 +9,8 @@
 #include <fmt/format.h>
 using namespace CubA4::render::engine::world;
 
+constexpr const glm::vec3 up {0, 1, 0};
+
 Camera::Camera()
 {
 	
@@ -48,15 +50,14 @@ void Camera::move(float x, float y, float z, bool local)
 {
     if (local)
     {
-        glm::vec3 direction;
+		z *= -1;
         glm::vec3 move {x, y, z};
-        direction.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-        direction.y = sin(glm::radians(pitch_));
-        direction.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-        auto viewLook = glm::quatLookAt(glm::normalize(direction), {0, 1, 0});
+        auto direction = calculateDirection();
+        auto viewLook = glm::quatLookAtRH(direction, up);
         auto m = glm::toMat3(viewLook);
         move = m * move;
-        position_ += CubA4::world::BasePos<float>{move.x, move.y, move.z};
+		if (move.length())
+        	position_ += CubA4::world::BasePos<float>{move.x, move.y, move.z};
     }
     else
     {
@@ -92,13 +93,19 @@ void Camera::updateMatrix()
 {
     if (!active_)
         return;
-    glm::vec3 direction;
+    auto direction = calculateDirection();
+    auto &[bx, by, bz] = position_.blockPosition();
+    auto &[x, y, z] = position_.inBlockPos();
+    auto pos = glm::vec3{bx + x, by + y, bz + z};
+    viewMatrix_ = glm::lookAtRH(pos, pos + direction, up);
+}
+
+glm::vec3 Camera::calculateDirection() const
+{
+	glm::vec3 direction;
     direction.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
     direction.y = sin(glm::radians(pitch_));
     direction.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
     direction = glm::normalize(direction);
-    auto &[bx, by, bz] = position_.blockPosition();
-    auto &[x, y, z] = position_.inBlockPos();
-    auto pos = glm::vec3{bx + x, by + y, bz + z};
-    viewMatrix_ = glm::lookAt(pos, pos + direction, {0, 1, 0});
+	return direction;
 }

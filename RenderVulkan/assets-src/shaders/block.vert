@@ -9,8 +9,10 @@ layout (location = 1) out vec3 outUVW;
 layout(binding = 0/*, row_major*/) uniform Matricies
 {
 	ivec3 viewChunkPos;
-	layout(offset = 16, row_major) mat4 view;
-	layout(offset = 80, row_major) mat4 proj;
+	//layout(offset = 16, row_major) mat4 view;
+	//layout(offset = 80, row_major) mat4 proj;
+	layout(offset = 16) mat4 view;
+	layout(offset = 80) mat4 proj;
 } matricies;
 
 layout( push_constant ) uniform Constants
@@ -26,8 +28,9 @@ void main()
 	ivec3 chunkFromView = (pushConstants.chunkPos - matricies.viewChunkPos) * ChunkSize;
 	vec3 transformedVertex = inPos + chunkFromView;
 	vec4 sub = vec4(transformedVertex.x, transformedVertex.y, transformedVertex.z, 1.0);
-	sub.y *= -1.0;
+	//sub.y *= -1.0;
 	outUVW.y - 1;
-	gl_Position = sub * matricies.view * matricies.proj;
+	//gl_Position = sub * matricies.view * matricies.proj;
+	gl_Position = matricies.proj * matricies.view * sub;
 	// gl_Position.z = (gl_Position.z + gl_Position.w) / 2;
 }

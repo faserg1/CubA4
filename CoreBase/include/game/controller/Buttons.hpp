@@ -53,6 +53,8 @@ namespace CubA4::game::controller
 		ARight,
 		AUp,
 		ADown,
+		CtrlLeft,
+		CtrlRight,
 		Space,
 		Enter,
 		Backspace,

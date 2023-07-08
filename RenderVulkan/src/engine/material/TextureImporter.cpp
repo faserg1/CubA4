@@ -121,11 +121,9 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 		// TODO: Exception: unsupported format
 		return {};
 	}
-	if (interlace_type == PNG_INTERLACE_ADAM7)
-		// TODO: Exception: unsupported format
-		return {};
 	const uint8_t bits_per_pixel = bitDepth * channels_count;
 	const uint8_t bytes_per_pixel = bits_per_pixel / 8;
+	const uint32_t bytes_per_row = bytes_per_pixel * width;
 
 	// http://www.libpng.org/pub/png/libpng-1.2.5-manual.html
 	// png_set_strip_16 if should convert from 16 to 8 bit depth
@@ -169,36 +167,10 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 	png_bytep data = reinterpret_cast<png_bytep>(tempBufferMappedPtr.get());
 
 	// Load in resource
-
-	constexpr const bool invertRows = false;
-	constexpr const bool invertColumns = false;
-
-	const png_size_t bytesPerRow = png_get_rowbytes(png_ptr, info_ptr);
-	std::vector<png_byte> rowDataVector(bytesPerRow);
-	png_bytep rowData = rowDataVector.data();
-	uint64_t result_bits_per_pixel = channels_count * 8;
-	for (uint64_t rowIdx = 0; rowIdx < height; ++rowIdx)
-	{
-		png_read_row(png_ptr, (png_bytep)rowData, nullptr);
-
-		const uint64_t rowOffset = (invertRows ? (((height - 1) - rowIdx) * width) : (rowIdx * width));
-
-		uint64_t byteIndex = 0;
-		for (uint64_t colIdx = 0; colIdx < width; ++colIdx)
-		{
-			if (bitDepth == 8)
-			{
-				size_t write_byte = (invertColumns ? ((rowOffset + ((width - 1) - colIdx)) * bytes_per_pixel) : ((rowOffset + colIdx) * bytes_per_pixel));
-				memcpy(&data[write_byte], &rowData[byteIndex], bytes_per_pixel);
-
-				byteIndex += bytes_per_pixel;
-			}
-			else if (bitDepth == 16)
-			{
-				// TODO: [OOKAMI] Забить или упасть?
-			}
-		}
-	}
+	std::vector<png_bytep> rowPointers(height);
+	for (size_t row = 0; row < rowPointers.size(); row++)
+		rowPointers[row] = reinterpret_cast<png_bytep>(reinterpret_cast<size_t>(data) + row * bytes_per_row);
+	png_read_image(png_ptr, rowPointers.data());
 
 	auto regions = makeMipLevels(tempBufferMappedPtr.get(), bitDepth, channels_count, mipLevels, width, height);
 

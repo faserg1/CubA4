@@ -2,35 +2,29 @@
 #include <functional>
 using namespace CubA4::render::vulkan;
 
-namespace CubA4
+namespace CubA4::render::vulkan
 {
-	namespace render
+	class Queue :
+		public virtual IQueue
 	{
-		namespace vulkan
+	public:
+		Queue(VkQueue queue, std::function<void()> deleter) :
+			queue_(queue), deleter_(deleter)
 		{
-			class Queue :
-				public virtual IQueue
-			{
-			public:
-				Queue(VkQueue queue, std::function<void()> deleter) :
-					queue_(queue), deleter_(deleter)
-				{
 
-				}
-				~Queue()
-				{
-					deleter_();
-				}
-				VkQueue get() const override
-				{
-					return queue_;
-				}
-			private:
-				const VkQueue queue_;
-				std::function<void()> deleter_;
-			};
 		}
-	}
+		~Queue()
+		{
+			deleter_();
+		}
+		VkQueue get() const override
+		{
+			return queue_;
+		}
+	private:
+		const VkQueue queue_;
+		std::function<void()> deleter_;
+	};
 }
 
 Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue renderQueue, VkQueue transmitQueue,
