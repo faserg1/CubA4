@@ -97,14 +97,14 @@ bool AppStartup::setupGame()
 
 	// test thing
 
-	static auto sub2 = startup_->getGame()->getController()->getActions()->addActionCallback("mouse", [this]()
+	static auto sub2 = startup_->getGame()->getController()->getRootActions()->addActionCallback("mouse", [this]()
 	{
 		static auto request = false;
 		startup_->getGame()->getController()->requestMouseCapture(!request);
 		request = !request;
 	});
 
-	static auto sub3 = startup_->getGame()->getController()->getActions()->addActionCallback("uitoggle", [this, weakRm = std::weak_ptr(rm)]()
+	static auto sub3 = startup_->getGame()->getController()->getRootActions()->addActionCallback("uitoggle", [this, weakRm = std::weak_ptr(rm)]()
 	{
 		if (auto rm = weakRm.lock())
 		{
@@ -112,7 +112,7 @@ bool AppStartup::setupGame()
 		}
 	});
 
-	static auto sub4 = startup_->getGame()->getController()->getActions()->addActionPositionCallback("click", [this, weakRm = std::weak_ptr(rm)](int32_t x, int32_t y)
+	static auto sub4 = startup_->getGame()->getController()->getRootActions()->addActionPositionCallback("click", [this, weakRm = std::weak_ptr(rm)](int32_t x, int32_t y)
 	{
 		using namespace CubA4::render::engine::debug;
 		static std::vector<std::shared_ptr<IRenderDebugCollection>> collections;
@@ -131,7 +131,7 @@ bool AppStartup::setupGame()
 	});
 	
 	
-	static auto sub = startup_->getGame()->getController()->getActions()->addActionAxisCallback("camera", [this](int64_t x, int64_t y){
+	static auto sub = startup_->getGame()->getController()->getRootActions()->addActionAxisCallback("camera", [this](int64_t x, int64_t y){
 		float sensivity = 0.05f;
 		camera_->rotate(0, -y * sensivity, x * sensivity);
 	});

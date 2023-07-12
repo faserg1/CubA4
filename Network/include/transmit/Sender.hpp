@@ -1,22 +1,13 @@
-#ifndef NETWORK_SENDER_HPP
-#define NETWORK_SENDER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::network::transmit
 {
-	namespace network
+	class Sender
 	{
-		namespace transmit
-		{
-			class Sender
-			{
-			public:
-				explicit Sender();
-				~Sender();
-			protected:
-			private:
-			};
-		}
-	}
+	public:
+		explicit Sender();
+		~Sender();
+	protected:
+	private:
+	};
 }
-
-#endif // NETWORK_SENDER_HPP

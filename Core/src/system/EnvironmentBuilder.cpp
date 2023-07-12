@@ -26,7 +26,7 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilder::getRe
 	return data_.getRenderManager();
 }
 
-std::shared_ptr<CubA4::game::controller::IActions> EnvironmentBuilder::getActions() const
+std::shared_ptr<CubA4::game::controller::IRootActions> EnvironmentBuilder::getActions() const
 {
 	return data_.getActions();
 }

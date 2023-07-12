@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <util/ISubscription.hpp>
-#include <game/controller/Action.hpp>
 
 namespace CubA4::game::controller
 {

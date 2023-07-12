@@ -3,7 +3,7 @@ using namespace CubA4::system;
 
 EnvironmentBuilderData::EnvironmentBuilderData(
 	std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager,
-	const CubA4::render::IRenderInfo &renderInfo, std::shared_ptr<CubA4::game::controller::IActions> actions)
+	const CubA4::render::IRenderInfo &renderInfo, std::shared_ptr<CubA4::game::controller::IRootActions> actions)
 	: renderInfo_(renderInfo), renderManager_(renderManager), actions_(actions)
 {
 	
@@ -24,7 +24,7 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilderData::g
 	return renderManager_;
 }
 
-std::shared_ptr<CubA4::game::controller::IActions> EnvironmentBuilderData::getActions() const
+std::shared_ptr<CubA4::game::controller::IRootActions> EnvironmentBuilderData::getActions() const
 {
 	return actions_;
 }

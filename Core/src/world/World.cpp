@@ -43,11 +43,11 @@ void World::test(std::vector<std::shared_ptr<const CubA4::object::IBlock>> block
 	auto env = core_.getEnvironment();
 	const auto blockId0 = env->getId(blocks[0]);
 	const auto blockId1 = env->getId(blocks[1]);
-	for (auto x = -2; x < 2; x++)
+	for (auto x = -2; x < 4; x++)
 	{
 		for (auto y = -2; y < 2; y++)
 		{
-			for (auto z = -2; z < 2; z++)
+			for (auto z = -2; z < 4; z++)
 			{
 				auto chunk0 = findChunk({ x, y, z });
 				// nope

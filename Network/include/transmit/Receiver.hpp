@@ -1,22 +1,14 @@
-#ifndef NETWORK_RECEIVER_HPP
-#define NETWORK_RECEIVER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::network::transmit
 {
-	namespace network
+	class Receiver
 	{
-		namespace transmit
-		{
-			class Receiver
-			{
-			public:
-				explicit Receiver();
-				~Receiver();
-			protected:
-			private:
-			};
-		}
-	}
+	public:
+		explicit Receiver();
+		~Receiver();
+	protected:
+	private:
+	};
 }
 
-#endif // NETWORK_RECEIVER_HPP

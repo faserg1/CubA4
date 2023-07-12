@@ -3,7 +3,10 @@
 using namespace CubA4::game::controller;
 
 Controller::Controller(CubA4::system::IAppCallback &appCallback) :
-	appCallback_(appCallback), actions_(std::make_shared<Actions>()), bindings_(std::make_shared<Bindings>())
+	appCallback_(appCallback),
+	actions_(std::make_shared<RootActions>()),
+	bindings_(std::make_shared<Bindings>()),
+	context_(std::make_unique<Context>())
 {
 	
 }
@@ -57,7 +60,7 @@ bool Controller::getActionState(const std::string &action) const
 	});
 }
 
-std::shared_ptr<const IActions> Controller::getActions() const
+std::shared_ptr<const IRootActions> Controller::getRootActions() const
 {
 	return actions_;
 }
@@ -67,7 +70,7 @@ std::shared_ptr<const IBindings> Controller::getBindings() const
 	return bindings_;
 }
 
-std::shared_ptr<IActions> Controller::getActions()
+std::shared_ptr<IRootActions> Controller::getRootActions()
 {
 	return actions_;
 }
@@ -75,6 +78,16 @@ std::shared_ptr<IActions> Controller::getActions()
 std::shared_ptr<IBindings> Controller::getBindings()
 {
 	return bindings_;
+}
+
+const IContext &Controller::getContext() const
+{
+	return *context_.get();
+}
+
+IContext &Controller::getContext()
+{
+	return *context_.get();
 }
 
 bool Controller::requestMouseCapture(bool enable)

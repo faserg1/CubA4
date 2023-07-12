@@ -1,19 +1,12 @@
-#ifndef MODBASE_ICONTAINER_HPP
-#define MODBASE_ICONTAINER_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::container
 {
-	namespace container
+	class IContainer
 	{
-		class IContainer
-		{
-		public:
-			virtual ~IContainer() = default;
-		protected:
-			explicit IContainer() = default;
-		};
-	}
+	public:
+		virtual ~IContainer() = default;
+	protected:
+		explicit IContainer() = default;
+	};
 }
-
-
-#endif // MODBASE_ICONTAINER_HPP

@@ -84,7 +84,7 @@ void Startup::saveConfigs()
 
 void Startup::initMods()
 {
-	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo(), game_->getController()->getActions());
+	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo(), game_->getController()->getRootActions());
 	modLoader_->setup([&envBuilderData, core = core_.lock()](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::system::IEnvironmentBuilder>
 	{
 		auto envBuilderContext = EnvironmentBuilderContext(modInfo);

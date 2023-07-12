@@ -10,7 +10,7 @@ namespace CubA4::world
 	class IWorldGeneratorMap
 	{
 	public:
-		
+		virtual int16_t getScale() const = 0;
 	protected:
 		explicit IWorldGeneratorMap() = default;
 		virtual ~IWorldGeneratorMap() = default;
