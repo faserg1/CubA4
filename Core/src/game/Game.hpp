@@ -13,6 +13,7 @@ namespace CubA4::game
 	class Game :
 		public virtual IGame
 	{
+		friend class GameControl;
 	public:
 		explicit Game(CubA4::system::IAppCallback &appCallback);
 		~Game();

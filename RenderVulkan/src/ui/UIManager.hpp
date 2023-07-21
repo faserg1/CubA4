@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include <ui/MainCanvas.hpp>
+#include <ui/components/MainCanvas.hpp>
 #include <ui/ComponentFactory.hpp>
 
 namespace CubA4::render::ui

@@ -5,6 +5,7 @@
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/action/transform.hpp>
 using namespace CubA4::world;
 using namespace CubA4::object;
 
@@ -31,16 +32,34 @@ std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers() const
 {
+	auto tf = [](auto sContainer) -> std::shared_ptr<const IChunkBBaseContainer> { return sContainer; };
+	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers = containers_ | ranges::views::transform(tf) | ranges::to_vector;
+	return std::move(containers);
+}
+
+std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock)
+{
+	std::vector<std::shared_ptr<IChunkBBaseContainer>> containers = containers_
+		| ranges::views::remove_if([usedBlock](auto container){ return container->getBlock() != usedBlock; })
+		| ranges::to_vector;
+	return std::move(containers);
+}
+
+std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers()
+{
 	return containers_;
 }
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const
 {
+	auto tf = [](auto sContainer) -> std::shared_ptr<const IChunkBBaseContainer> { return sContainer; };
 	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers = containers_
 		| ranges::views::remove_if([usedBlock](auto container){ return container->getBlock() != usedBlock; })
+		| ranges::views::transform(tf)
 		| ranges::to_vector;
 	return std::move(containers);
 }
+
 
 bool Chunk::hasBlocksAt(world::BlockInChunkPos pos) const
 {
@@ -121,7 +140,7 @@ const IDataProvider &Chunk::getDataProvider() const
 	return dataProvider_;
 }
 
-void Chunk::addContainer(std::shared_ptr<const IChunkBBaseContainer> container)
+void Chunk::addContainer(std::shared_ptr<IChunkBBaseContainer> container)
 {
 	containers_.push_back(container);
 	onContainerAdded(container);

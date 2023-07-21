@@ -1,6 +1,6 @@
 #include "ModVanillaInfo.hpp"
 #include "ModVanilla.hpp"
-#include "../include/ModVanillaConst.hpp"
+#include <ModVanillaConst.hpp>
 #include <info/Version.hpp>
 #include <info/VersionDependency.hpp>
 #include <stdexcept>

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <world/IChunk.hpp>
+#include <world/IDimension.hpp>
 #include <world/IWorldDefinition.hpp>
 #include <world/IWorldSubscriber.hpp>
 #include <object/IObject.hpp>
@@ -24,6 +25,8 @@ namespace CubA4::world
 
 		virtual std::shared_ptr<const CubA4::world::IWorldDefinition> getWorldDefinition() const = 0;
 		virtual std::vector<std::shared_ptr<const IChunk>> getChunks() const = 0;
+		virtual std::vector<std::shared_ptr<const IDimension>> getDimensions() const = 0;
+		virtual std::shared_ptr<const IDimension> findDimension(std::string id) const = 0;
 	protected:
 		explicit IWorld() = default;
 	};

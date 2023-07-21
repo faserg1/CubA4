@@ -1,4 +1,4 @@
-#include <ui/Frame.hpp>
+#include <ui/components/Frame.hpp>
 using namespace CubA4::render::ui;
 
 void Frame::addComponent(std::shared_ptr<IRenderUIBaseComponent> component)

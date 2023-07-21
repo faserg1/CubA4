@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/IRenderUIBaseComponent.hpp>
+#include <ui/components/IRenderUIBaseComponent.hpp>
 
 namespace CubA4::render::ui
 {

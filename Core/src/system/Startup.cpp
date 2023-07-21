@@ -34,6 +34,7 @@ void Startup::setup()
 	initGame();
 	loadConfigs();
 	initMods();
+	startMods();
 }
 
 void Startup::shutdown()
@@ -50,6 +51,7 @@ void Startup::run()
 
 void Startup::stop()
 {
+	stopMods();
 	if (game_)
 		game_->stop();
 	saveConfigs();
@@ -129,4 +131,16 @@ void Startup::destroyGame()
 		core->setGame({});
 	}
 	game_.reset();
+}
+
+void Startup::startMods()
+{
+	gameControl_ = std::make_unique<CubA4::game::GameControl>(*core_.lock(), *game_);
+	modLoader_->start(*gameControl_.get());
+}
+
+void Startup::stopMods()
+{
+	modLoader_->stop();
+	gameControl_.reset();
 }

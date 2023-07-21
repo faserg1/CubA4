@@ -16,6 +16,8 @@ namespace CubA4::system
 		std::string getIdName(const std::shared_ptr<const CubA4::object::IObject> object) const override;
 		std::shared_ptr<const CubA4::object::IObject> getObject(int64_t id) const override;
 		std::shared_ptr<const CubA4::object::IObject> getObject(const std::string &id) const override;
+		std::shared_ptr<CubA4::object::IObject> getObject(int64_t id) override;
+		std::shared_ptr<CubA4::object::IObject> getObject(const std::string &id) override;
 	protected:
 	private:
 		const EnvironmentContext context_;

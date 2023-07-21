@@ -30,13 +30,13 @@ namespace CubA4::system
 		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
 		std::shared_ptr<CubA4::game::controller::IRootActions> getActions() const;
 		IdentityMap &getIdentityMap();
-		std::map<int64_t, const std::shared_ptr<const CubA4::object::IObject>> &getObjects();
+		std::map<int64_t, std::shared_ptr<CubA4::object::IObject>> &getObjects();
 	protected:
 	private:
 		const CubA4::render::IRenderInfo &renderInfo_;
 		const std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
 		const std::shared_ptr<CubA4::game::controller::IRootActions> actions_;
 		IdentityMap identityMap_;
-		std::map<int64_t, const std::shared_ptr<const CubA4::object::IObject>> objects_;
+		std::map<int64_t, std::shared_ptr<CubA4::object::IObject>> objects_;
 	};
 }

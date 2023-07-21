@@ -21,6 +21,9 @@ namespace CubA4::world
 		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const override;
 		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const override;
 
+		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers();
+		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock);
+
 		bool hasBlocksAt(world::BlockInChunkPos pos) const override;
 		bool hasBlocksAt(uint32_t index) const override;
 		std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const override;
@@ -29,7 +32,7 @@ namespace CubA4::world
 		DataProvider &getDataProvider();
 		const IDataProvider &getDataProvider() const override;
 
-		void addContainer(std::shared_ptr<const IChunkBBaseContainer> container);
+		void addContainer(std::shared_ptr<IChunkBBaseContainer> container);
 		void removeContainer(size_t idContainer);
 	protected:
 		void onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container);
@@ -37,7 +40,7 @@ namespace CubA4::world
 	private:
 		const CubA4::world::ChunkPos chunkPos_;
 		DataProvider dataProvider_;
-		std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers_;
+		std::vector<std::shared_ptr<IChunkBBaseContainer>> containers_;
 
 		// used blocks cache
 		std::map<std::shared_ptr<const CubA4::object::IBlock>, uint32_t> usedBlocks;

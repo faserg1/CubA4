@@ -25,6 +25,9 @@ namespace CubA4::render::config
 		AntiAliasing getAntialiasing() const override;
 		void setAntialiasing(AntiAliasing lvl) override;
 
+		uint16_t getChunkDistance() const override;
+		void setChunkDistance(uint16_t distance) override;
+
 		void reload() override;
 	protected:
 	private:

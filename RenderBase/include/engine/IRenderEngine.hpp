@@ -21,6 +21,8 @@ namespace CubA4::render::engine
 		virtual void run() = 0;
 		virtual void stop() = 0;
 
+		virtual uint16_t getCurrentFPS() const = 0;
+
 		virtual std::shared_ptr<IRenderManager> getRenderManager() const = 0;
 	protected:
 		explicit IRenderEngine() = default;

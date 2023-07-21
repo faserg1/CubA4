@@ -20,6 +20,9 @@ namespace CubA4::render::config
 		virtual AntiAliasing getAntialiasing() const = 0;
 		virtual void setAntialiasing(AntiAliasing lvl) = 0;
 
+		virtual uint16_t getChunkDistance() const = 0;
+		virtual void setChunkDistance(uint16_t distance) = 0;
+
 		virtual void reload() = 0;
 	protected:
 		explicit IRenderConfig() = default;

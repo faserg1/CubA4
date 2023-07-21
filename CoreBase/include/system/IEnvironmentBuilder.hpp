@@ -27,7 +27,7 @@ namespace CubA4::system
 		virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
 		virtual std::shared_ptr<CubA4::game::controller::IRootActions> getActions() const = 0;
 
-		virtual bool registerObject(std::shared_ptr<const CubA4::object::IObject> object) = 0;
+		virtual bool registerObject(std::shared_ptr<CubA4::object::IObject> object) = 0;
 
 		virtual std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) = 0;
 	protected:

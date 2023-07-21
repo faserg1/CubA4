@@ -3,6 +3,7 @@
 #include <memory>
 #include <system/IStartup.hpp>
 #include <game/Game.hpp>
+#include <game/GameControl.hpp>
 #include <Core.hpp>
 
 namespace CubA4::system
@@ -32,10 +33,14 @@ namespace CubA4::system
 
 		void initGame();
 		void destroyGame();
+
+		void startMods();
+		void stopMods();
 	private:
 		const std::weak_ptr<Core> core_;
 		system::IAppCallback *appCallback_;
 		std::shared_ptr<mod::IModLoader> modLoader_;
 		std::shared_ptr<CubA4::game::Game> game_;
+		std::unique_ptr<CubA4::game::GameControl> gameControl_;
 	};
 }

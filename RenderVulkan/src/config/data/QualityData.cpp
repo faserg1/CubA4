@@ -8,13 +8,16 @@ namespace CubA4::render::config
 	{
 		if (j.contains("antialiasing"))
 			j.at("antialiasing").get_to(v.antialiasing);
+		if (j.contains("chunk_distance"))
+			j.at("chunk_distance").get_to(v.chunkDistance);
 	}
 
 	void to_json(nlohmann::json& j, const QualityData& v)
 	{
 		j = nlohmann::json
 		{
-			{"antialiasing", v.antialiasing}
+			{"antialiasing", v.antialiasing},
+			{"chunk_distance", v.chunkDistance},
 		};
 	}
 }

@@ -1,8 +1,9 @@
 #include "EnvironmentBuilder.hpp"
-#include "../world/World.hpp"
 #include <IModInfo.hpp>
 #include <object/IObject.hpp>
 #include <world/IWorldDefinition.hpp>
+#include <world/World.hpp>
+#include <world/Dimension.hpp>
 using namespace CubA4::system;
 
 EnvironmentBuilder::EnvironmentBuilder(Core &core, EnvironmentBuilderData &data, const EnvironmentBuilderContext &context) :
@@ -31,7 +32,7 @@ std::shared_ptr<CubA4::game::controller::IRootActions> EnvironmentBuilder::getAc
 	return data_.getActions();
 }
 
-bool EnvironmentBuilder::registerObject(std::shared_ptr<const CubA4::object::IObject> object)
+bool EnvironmentBuilder::registerObject(std::shared_ptr<CubA4::object::IObject> object)
 {
 	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), object->getId());
 	if (genId < 0)
@@ -47,6 +48,14 @@ std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std:
 		return {};
 	auto world = std::make_shared<CubA4::world::World>(core_, worldDef);
 	data_.getObjects().insert(std::make_pair(genId, world));
+	for (auto dimDescription : worldDef->getDimensionDescriptions())
+	{
+		auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), dimDescription.get().getId());
+		if (genId < 0)
+			continue;
+		auto dim = std::make_shared<CubA4::world::Dimension>(core_, dimDescription.get());
+		world->addDimension(dim);
+	}
 	return world;
 }
 

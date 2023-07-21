@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <ApplicationFlags.hpp>
+#include <ApplicationModeFlags.hpp>
 #include <model/IModelFactory.hpp>
 #include <config/IFilePaths.hpp>
 #include <config/ICoreConfig.hpp>
@@ -15,6 +17,8 @@ namespace CubA4
 	class ICore
 	{
 	public:
+		virtual ApplicationFlags getApplicationFlags() const = 0;
+		virtual ApplicationModeFlags getApplicationModeFlags() const = 0;
 		//Функции, помеченные const, будут доступны везде.
 		//В основном ICore передается как std::shared_ptr<const ICore>, из чего следует, что будут доступны только эти функции
 
@@ -36,6 +40,7 @@ namespace CubA4
 		//К примеру, через std::shared_ptr<ICore> будут доступны эти функции
 
 		virtual std::shared_ptr<system::IRuntime> getRuntime() = 0;
+		virtual void setApplicationModeFlags(ApplicationModeFlags flags) = 0;
 	protected:
 		virtual ~ICore() = default;
 		explicit ICore() = default;

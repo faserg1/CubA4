@@ -42,6 +42,8 @@ namespace CubA4::render::engine
 		void run() override;
 		void stop() override;
 
+		uint16_t getCurrentFPS() const override;
+
 		std::shared_ptr<IRenderManager> getRenderManager() const override;
 	protected:
 		void initManagers();
@@ -79,5 +81,7 @@ namespace CubA4::render::engine
 		bool running_;
 		std::atomic_bool rebuildSwapchain_;
 		std::thread renderLoopThread_;
+
+		uint16_t fps_ = 0;
 	};
 }

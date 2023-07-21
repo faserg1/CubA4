@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/IMainCanvas.hpp>
-#include <ui/Frame.hpp>
+#include <ui/components/IMainCanvas.hpp>
+#include <ui/components/Frame.hpp>
 #include <skia/include/core/SkCanvas.h>
 
 namespace CubA4::render::ui

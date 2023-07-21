@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/IFrame.hpp>
+#include <ui/components/IFrame.hpp>
 
 namespace CubA4::render::ui
 {

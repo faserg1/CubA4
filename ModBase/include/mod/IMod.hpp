@@ -4,6 +4,7 @@
 #include <ICore.hpp>
 #include <system/IEnvironmentBuilder.hpp>
 #include <manager/IModManager.hpp>
+#include <game/IGameControl.hpp>
 
 namespace CubA4::mod
 {
@@ -35,6 +36,9 @@ namespace CubA4::mod
 		virtual void configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
 		virtual void prefinish(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) = 0;
 		virtual void finish() = 0;
+
+		virtual void start(CubA4::game::IGameControl &gameControl) = 0;
+		virtual void stop() = 0;
 
 		virtual void preunload() = 0;
 

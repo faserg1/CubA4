@@ -1,5 +1,7 @@
 #include <ui/ComponentFactory.hpp>
-#include <ui/Image.hpp>
+#include <ui/components/Image.hpp>
+#include <ui/components/Text.hpp>
+#include <ui/components/Frame.hpp>
 #include <ui/utils/ColorUtils.hpp>
 #include <engine/material/Texture.hpp>
 #include <skia/include/core/SkImage.h>
@@ -38,4 +40,14 @@ std::shared_ptr<IImage> ComponentFactory::createImage(std::shared_ptr<const ITex
 	auto colorSpace = SkColorSpace::MakeSRGB();
 	auto image = SkImage::MakeFromTexture(context_->get().get(), backendTexture, GrSurfaceOrigin::kTopLeft_GrSurfaceOrigin, colorType, alphaType, colorSpace);
 	return std::make_shared<Image>(iTexture, image);
+}
+
+std::shared_ptr<IText> ComponentFactory::createText()
+{
+	return std::make_shared<Text>();
+}
+
+std::shared_ptr<IFrame> ComponentFactory::createFrame()
+{
+	return std::make_shared<Frame>();
 }

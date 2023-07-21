@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/IRenderUIBaseComponent.hpp>
+#include <ui/components/IRenderUIBaseComponent.hpp>
 #include <skia/include/core/SkCanvas.h>
 
 namespace CubA4::render::ui

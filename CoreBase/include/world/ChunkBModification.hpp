@@ -10,6 +10,8 @@ namespace CubA4::world
 {
 	struct ChunkBModification
 	{
+		CubA4::world::ChunkPos pos;
+
 		struct AddInfo
 		{
 			std::shared_ptr<const CubA4::object::IBlock> block;

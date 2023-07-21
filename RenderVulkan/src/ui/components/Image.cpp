@@ -1,4 +1,4 @@
-#include <ui/Image.hpp>
+#include <ui/components/Image.hpp>
 using namespace CubA4::render::ui;
 
 Image::Image(std::shared_ptr<const ITexture> texture, sk_sp<SkImage> image) :

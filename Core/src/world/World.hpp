@@ -3,6 +3,7 @@
 #include <Core.hpp>
 #include <world/IWorld.hpp>
 #include <world/Chunk.hpp>
+#include <world/Dimension.hpp>
 #include <vector>
 #include <unordered_map>
 #include <util/ChunkPosHash.hpp>
@@ -26,12 +27,19 @@ namespace CubA4::world
 
 		std::shared_ptr<const CubA4::world::IWorldDefinition> getWorldDefinition() const override;
 		std::vector<std::shared_ptr<const CubA4::world::IChunk>> getChunks() const override;
+
+		void addDimension(std::shared_ptr<Dimension> dim);
+		std::vector<std::shared_ptr<const IDimension>> getDimensions() const override;
+		std::shared_ptr<const IDimension> findDimension(std::string id) const override;
+		std::shared_ptr<Dimension> findDimension(std::string id);
 	protected:
 	private:
 		Core &core_;
 		const std::shared_ptr<const CubA4::world::IWorldDefinition> definition_;
 		mutable CubA4::util::SubscriptionHelper<CubA4::world::IWorldSubscriber> subscriptionHelper_;
 		std::unordered_map<const CubA4::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::util::ChunkPosHash> loadedChunks_;
+
+		std::unordered_map<std::string, std::shared_ptr<Dimension>> dimensions_;
 	private:
 		std::shared_ptr<CubA4::world::Chunk> findChunk(const CubA4::world::ChunkPos &chunkPos);
 	};

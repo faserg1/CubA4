@@ -2,21 +2,18 @@
 
 #include <world/IWorldGenerator.hpp>
 
-namespace CubA4
+namespace CubA4::world
 {
-	namespace world
+	class TestWorldGenerator :
+		public virtual CubA4::world::IWorldGenerator
 	{
-		class TestWorldGenerator :
-			public virtual CubA4::world::IWorldGenerator
-		{
-		public:
-			explicit TestWorldGenerator();
-			~TestWorldGenerator();
+	public:
+		explicit TestWorldGenerator();
+		~TestWorldGenerator();
 
-			void generateChunk(std::shared_ptr<CubA4::world::IWorld> world, const CubA4::world::ChunkPos &chunkPos) override;
-		protected:
-		private:
-		};
-	}
+		void generateChunk(std::shared_ptr<CubA4::world::IWorld> world, const CubA4::world::ChunkPos &chunkPos) override;
+	protected:
+	private:
+	};
 }
 

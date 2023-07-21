@@ -37,7 +37,7 @@ using namespace CubA4::logging;
 using namespace CubA4::controls;
 
 AppMain::AppMain(int argc, const char *const argv[]) :
-	core_(CubA4::CommonFactory::createCore(argc, argv)),
+	core_(CubA4::CommonFactory::createCore(argc, argv, ApplicationFlag::Default | ApplicationFlag::Render)),
 	info_(std::make_shared<AppInfo>()), running_(true)
 {
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
@@ -78,6 +78,14 @@ int AppMain::exec()
 	}
 	///////////////////////////
 	AppStartup startup(*this, core_, renderLoader_->getCurrentRenderInfo()->getRenderEngine());
+
+	//// debug ui (move somewhere else)
+	static auto sub1 = startup.getSystemStartup()->getGame()->getController()->getRootActions()->addActionCallback("debuguitoggle", [this]()
+	{
+		debugOverlay_->toggleVisibility();
+	});
+	////
+
 	///////////////////////////
 	log_->log(LogLevel::Info, "CubA4 Loader start.");
 	loop(startup);
@@ -130,70 +138,76 @@ void AppMain::shutdown()
 
 void AppMain::loop(AppStartup &startup)
 {
-	SDL_Event event;
 	double time = clock();
 	while (running_)
 	{
-		if (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				running_ = false;
-				break;
-			case SDL_MOUSEMOTION:
-				{
-					const auto rel = SDL_GetRelativeMouseMode();
-					startup.mouseMove(rel ? event.motion.xrel : event.motion.x, rel ? event.motion.yrel : event.motion.y, rel);
-					break;
-				}
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-				{
-					const auto mods = ButtonAdapter::adapt(SDL_GetModState());
-					startup.keyChanged(ButtonAdapter::adaptMouse(event.button.button), mods, event.button.state == SDL_PRESSED);
-					break;
-				}
-			case SDL_KEYUP:
-				{
-					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
-					auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
-					startup.keyChanged(btn, mods, false);
-				}
-				//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
-				if (event.key.keysym.scancode == SDL_SCANCODE_F11)
-					window_->toggleFullscreen();
-				break;
-			case SDL_KEYDOWN:
-				{
-					auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
-					auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
-					startup.keyChanged(btn, mods, true);
-					break;
-				}
-			case SDL_WINDOWEVENT:
-				{
-					switch (event.window.event)
-					{
-					case SDL_WINDOWEVENT_RESIZED:
-					case SDL_WINDOWEVENT_SIZE_CHANGED:
-						{
-							auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
-							renderEngine->onWindowResized();
-							break;
-						}
-					default:
-						break;
-					}
-					
-					break;
-				}
-			}
-		}
+		sdlEventsHandle(startup);
+		if (debugOverlay_)
+			debugOverlay_->update();
 		double now = clock();
 		startup.nextMainLoopIteration(now - time);
 		time = now;
-		//std::this_thread::sleep_for(std::chrono::microseconds(10));
+	}
+}
+
+void AppMain::sdlEventsHandle(AppStartup &startup)
+{
+	SDL_Event event;
+	if (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			running_ = false;
+			break;
+		case SDL_MOUSEMOTION:
+			{
+				const auto rel = SDL_GetRelativeMouseMode();
+				startup.mouseMove(rel ? event.motion.xrel : event.motion.x, rel ? event.motion.yrel : event.motion.y, rel);
+				break;
+			}
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			{
+				const auto mods = ButtonAdapter::adapt(SDL_GetModState());
+				startup.keyChanged(ButtonAdapter::adaptMouse(event.button.button), mods, event.button.state == SDL_PRESSED);
+				break;
+			}
+		case SDL_KEYUP:
+			{
+				auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
+				auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
+				startup.keyChanged(btn, mods, false);
+			}
+			//TODO: [OOKAMI] Ничто так не вечно, как временное... Надеюсь, потом уберу
+			if (event.key.keysym.scancode == SDL_SCANCODE_F11)
+				window_->toggleFullscreen();
+			break;
+		case SDL_KEYDOWN:
+			{
+				auto btn = ButtonAdapter::adapt(event.key.keysym.scancode);
+				auto mods = ButtonAdapter::adapt(event.key.keysym.mod);
+				startup.keyChanged(btn, mods, true);
+				break;
+			}
+		case SDL_WINDOWEVENT:
+			{
+				switch (event.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					{
+						auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
+						renderEngine->onWindowResized();
+						break;
+					}
+				default:
+					break;
+				}
+				
+				break;
+			}
+		}
 	}
 }
 
@@ -270,10 +284,12 @@ void AppMain::initRenderEngine()
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->init(window_);
+	debugOverlay_ = std::make_unique<DebugOverlay>(renderEngine);
 }
 
 void AppMain::destroyRenderEngine()
 {
+	debugOverlay_.reset();
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	renderEngine->destroy();
 }

@@ -84,6 +84,37 @@ std::vector<std::shared_ptr<const CubA4::world::IChunk>> World::getChunks() cons
 	return std::move(result);
 }
 
+void World::addDimension(std::shared_ptr<Dimension> dim)
+{
+	dimensions_.insert(std::make_pair(dim->getId(), dim));
+}
+
+std::vector<std::shared_ptr<const IDimension>> World::getDimensions() const
+{
+	std::vector<std::shared_ptr<const IDimension>> result(dimensions_.size());
+	std::transform(dimensions_.begin(), dimensions_.end(), result.begin(), [](auto pair) -> std::shared_ptr<const IDimension>
+	{
+		return pair.second;
+	});
+	return std::move(result);
+}
+
+std::shared_ptr<const IDimension> World::findDimension(std::string id) const
+{
+	auto it = dimensions_.find(id);
+	if (it == dimensions_.end())
+		return {};
+	return it->second;
+}
+
+std::shared_ptr<Dimension> World::findDimension(std::string id)
+{
+	auto it = dimensions_.find(id);
+	if (it == dimensions_.end())
+		return {};
+	return it->second;
+}
+
 std::shared_ptr<CubA4::world::Chunk> World::findChunk(const ChunkPos &chunkPos)
 {
 	auto it = loadedChunks_.find(chunkPos);

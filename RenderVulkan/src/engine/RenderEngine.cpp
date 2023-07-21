@@ -96,6 +96,11 @@ void VulkanRenderEngine::stop()
 	logger_->log(LogSourceSystem::Render, loggerTag, LogLevel::Info, "Stoped.");
 }
 
+uint16_t VulkanRenderEngine::getCurrentFPS() const
+{
+	return fps_;
+}
+
 void VulkanRenderEngine::initManagers()
 {
 	renderPassManager_ = std::make_shared<RenderPassManager>(getDevice(), getConfig());
@@ -171,8 +176,8 @@ void VulkanRenderEngine::shutdown()
 void VulkanRenderEngine::loop()
 {
 	auto acquireSemaphore = presetation_->getAcquireSignalSemaphore();
-	unsigned short fps = 0;
 	auto start = clock();
+	uint16_t frame = 0;
 	while (running_)
 	{
 		inFrameRebuild();
@@ -202,12 +207,12 @@ void VulkanRenderEngine::loop()
 			presetation_->send(currentSwapchain, imgIndex, { renderDoneSemaphore });
 			
 		
-		fps++;
+		frame++;
 		auto currentClock = clock();
 		if (currentClock > start + CLOCKS_PER_SEC)
 		{
-			logger_->log(LogSourceSystem::Render, "RENDERENGINE", LogLevel::Debug, "Current framerate: " + std::to_string(fps));
-			fps = 0;
+			fps_ = frame;
+			frame = 0;
 			start = currentClock;
 		}
 		std::this_thread::yield();

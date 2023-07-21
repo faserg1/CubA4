@@ -1,12 +1,6 @@
-#ifndef MODVANILLA_MODVANILLACONST_HPP
-#define MODVANILLA_MODVANILLACONST_HPP
+#pragma once
 
-namespace CubA4
+namespace CubA4::mod
 {
-	namespace mod
-	{
-		constexpr const char *const ModVanillaId = "vanilla";
-	}
+	constexpr const char *const ModVanillaId = "vanilla";
 }
-
-#endif // MODVANILLA_MODVANILLACONST_HPP

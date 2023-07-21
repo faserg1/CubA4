@@ -24,6 +24,9 @@ namespace CubA4::mod
 		void finished() override;
 		void shutdown() override;
 		void unload() override;
+
+		void start(CubA4::game::IGameControl &gameControl) override;
+		void stop() override;
 	private:
 		const std::weak_ptr<const ICore> core_;
 		const std::shared_ptr<const info::IApplicationInfo> appInfo_;

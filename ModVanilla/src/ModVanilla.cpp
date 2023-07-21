@@ -1,6 +1,8 @@
 #include "ModVanilla.hpp"
 #include <ICore.hpp>
 #include <logging/ILogger.hpp>
+#include <ModVanillaConst.hpp>
+#include <fmt/format.h>
 using namespace CubA4::mod;
 
 ModVanilla::ModVanilla(const IModInfo &modInfo) :
@@ -53,6 +55,20 @@ void ModVanilla::finish()
 {
 	worldSetup_.done();
 	core_->getLogger()->flush();
+}
+
+void ModVanilla::start(CubA4::game::IGameControl &gameControl)
+{
+	gameControl_ = &gameControl;
+
+	auto worldName = std::format("@{}#{}", ModVanillaId, "testWorld");
+	auto dimName = std::format("@{}#{}", ModVanillaId, "testDimension");
+	gameControl_->requestWorldChange(worldName, dimName);
+}
+
+void ModVanilla::stop()
+{
+	gameControl_ = nullptr;
 }
 
 void ModVanilla::preunload()

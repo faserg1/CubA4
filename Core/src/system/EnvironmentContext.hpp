@@ -9,8 +9,8 @@ namespace CubA4::system
 	class EnvironmentContext
 	{
 	public:
-		using objectsMap_t = std::map<int64_t, const std::shared_ptr<const CubA4::object::IObject>>;
-		using reverseObjectsMap_t = std::map<const std::shared_ptr<const CubA4::object::IObject>, int64_t>;
+		using objectsMap_t = std::map<int64_t, std::shared_ptr<CubA4::object::IObject>>;
+		using reverseObjectsMap_t = std::map<std::shared_ptr<const CubA4::object::IObject>, int64_t>;
 		explicit EnvironmentContext(IdentityMap &&map, objectsMap_t &&objectsMap);
 		explicit EnvironmentContext(EnvironmentContext &&context);
 		~EnvironmentContext();

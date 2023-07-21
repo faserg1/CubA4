@@ -5,13 +5,6 @@
 #include <stdexcept>
 using namespace CubA4::render::config;
 
-constexpr const char *renderResolutionWidthKey = "render.resolution.width";
-constexpr const char *renderResolutionHeightKey = "render.resolution.height";
-
-constexpr const char *renderPresentMethodKey = "render.present.method";
-
-constexpr const char *renderLoggingLevel = "render.log.level";
-
 RenderConfig::RenderConfig(std::string configsPath)
 {
 	auto configPathsDirectory = std::filesystem::path(configsPath);
@@ -82,6 +75,16 @@ void RenderConfig::setAntialiasing(AntiAliasing lvl)
 {
 	configTree_->quality.antialiasing = static_cast<decltype(configTree_->quality.antialiasing)>(lvl);
 	flushConfig();
+}
+
+uint16_t RenderConfig::getChunkDistance() const
+{
+	return configTree_->quality.chunkDistance;
+}
+
+void RenderConfig::setChunkDistance(uint16_t distance)
+{
+	configTree_->quality.chunkDistance = distance;
 }
 
 void RenderConfig::reload()

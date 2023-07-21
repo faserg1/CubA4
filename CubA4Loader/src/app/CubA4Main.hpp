@@ -5,6 +5,7 @@
 #include <system/IAppCallback.hpp>
 #include <render/RenderLoader.hpp>
 #include <window/Window.hpp>
+#include "DebugOverlay.hpp"
 
 namespace CubA4::app
 {
@@ -36,6 +37,7 @@ namespace CubA4::app
 		void shutdown();
 
 		void loop(AppStartup &startup);
+		void sdlEventsHandle(AppStartup &startup);
 	private:
 		bool running_;
 		std::shared_ptr<CubA4::ICore> core_;
@@ -44,5 +46,7 @@ namespace CubA4::app
 		std::shared_ptr<CubA4::window::Window> window_;
 
 		std::shared_ptr<CubA4::logging::ILoggerTagged> log_;
+
+		std::unique_ptr<DebugOverlay> debugOverlay_;
 	};
 }

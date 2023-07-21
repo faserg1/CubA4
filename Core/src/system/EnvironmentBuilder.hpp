@@ -19,7 +19,7 @@ namespace CubA4::system
 		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
 		std::shared_ptr<CubA4::game::controller::IRootActions> getActions() const override;
 
-		bool registerObject(std::shared_ptr<const CubA4::object::IObject> object) override;
+		bool registerObject(std::shared_ptr<CubA4::object::IObject> object) override;
 		std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) override;
 	protected:
 	private:

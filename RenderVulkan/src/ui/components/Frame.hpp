@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include <ui/IFrame.hpp>
-#include <ui/BaseComponent.hpp>
+#include <ui/components/IFrame.hpp>
+#include <ui/components/BaseComponent.hpp>
 #include <vector>
 
 namespace CubA4::render::ui

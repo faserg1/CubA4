@@ -5,6 +5,7 @@
 #include <string>
 #include <IModInfo.hpp>
 #include <system/IEnvironmentBuilder.hpp>
+#include <game/IGameControl.hpp>
 
 namespace CubA4:: mod
 {
@@ -20,6 +21,9 @@ namespace CubA4:: mod
 		virtual void finished() = 0;
 		virtual void shutdown() = 0;
 		virtual void unload() = 0;
+
+		virtual void start(CubA4::game::IGameControl &gameControl) = 0;
+		virtual void stop() = 0;
 	protected:
 		explicit IModLoader() = default;
 	};

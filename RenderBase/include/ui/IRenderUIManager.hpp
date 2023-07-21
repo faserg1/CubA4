@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/IComponentFactory.hpp>
-#include <ui/IMainCanvas.hpp>
+#include <ui/components/IMainCanvas.hpp>
 #include <memory>
 
 namespace CubA4::render::ui

@@ -242,3 +242,19 @@ void ModLoader::unload()
 {
 	modLibs_.clear();
 }
+
+void ModLoader::start(CubA4::game::IGameControl &gameControl)
+{
+	for (auto mod : loadedMods_)
+	{
+		mod->start(gameControl);
+	}
+}
+
+void ModLoader::stop()
+{
+	for (auto mod : loadedMods_)
+	{
+		mod->stop();
+	}
+}

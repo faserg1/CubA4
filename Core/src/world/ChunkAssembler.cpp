@@ -17,6 +17,43 @@ ChunkAssembler::~ChunkAssembler()
 	
 }
 
+void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModification &mod)
+{
+	auto &dataProvider = chunk->getDataProvider();
+	for (const auto &addBlockChange : mod.add)
+	{
+		auto containers = chunk->getChunkBContainers(addBlockChange.block);
+		auto blockId = env_.getId(addBlockChange.block);
+		auto blockDataStorage = dataProvider.getBlockDataStorage(blockId);
+
+		std::shared_ptr<ChunkBMutable> choosedContainer;
+		if (containers.empty())
+		{
+			// TODO: pass right id
+			choosedContainer = std::make_shared<ChunkBMutable>(0, addBlockChange.block, 0);
+			chunk->addContainer(choosedContainer);
+			continue;
+		}
+		for (auto container : containers)
+		{
+			if (container->hasBlockAt(addBlockChange.pos))
+				continue;
+			choosedContainer = std::dynamic_pointer_cast<ChunkBMutable>(container);
+			break;
+		}
+		if (!choosedContainer)
+		{
+			// TODO: pass right id
+			choosedContainer = std::make_shared<ChunkBMutable>(0, addBlockChange.block, 0);
+			chunk->addContainer(choosedContainer);
+		}
+
+		auto data = blockDataStorage.getOrAdd(addBlockChange.data);
+		choosedContainer->setBlockAt(addBlockChange.pos, data->id);
+	}
+	// TODO: implement remove, mod
+}
+
 std::shared_ptr<IChunkBBaseContainer> ChunkAssembler::buildRange(
 	size_t id,
     std::shared_ptr<const CubA4::object::IBlock> block,

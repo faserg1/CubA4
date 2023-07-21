@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <ui/IImage.hpp>
-#include <ui/BaseComponent.hpp>
+#include <ui/components/IImage.hpp>
+#include <ui/components/BaseComponent.hpp>
 #include <engine/material/ITexture.hpp>
 #include <skia/include/core/SkImage.h>
 

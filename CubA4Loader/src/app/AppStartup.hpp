@@ -21,6 +21,8 @@ namespace CubA4::app
 		void nextMainLoopIteration(double delta);
 		void keyChanged(CubA4::game::controller::Button btn, CubA4::game::controller::BMods mods, bool pressed);
 		void mouseMove(int32_t x, int32_t y, bool relative);
+
+		std::shared_ptr<CubA4::system::IStartup> getSystemStartup();
 	protected:
 	private:
 		bool setup();

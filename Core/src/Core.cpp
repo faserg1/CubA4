@@ -14,8 +14,8 @@
 using namespace CubA4;
 using namespace CubA4::system;
 
-Core::Core(int argc, const char *const argv[]) :
-	paths_(std::make_shared<config::FilePaths>(argc, argv))
+Core::Core(int argc, const char *const argv[], ApplicationFlags flags) :
+	appFlags_(flags), paths_(std::make_shared<config::FilePaths>(argc, argv))
 {
 	runtime_ = std::make_shared<system::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
@@ -34,6 +34,16 @@ Core::Core(int argc, const char *const argv[]) :
 Core::~Core()
 {
 
+}
+
+ApplicationFlags Core::getApplicationFlags() const
+{
+	return appFlags_;
+}
+
+ApplicationModeFlags Core::getApplicationModeFlags() const
+{
+	return appModeFlags_;
 }
 
 const std::shared_ptr<const config::IFilePaths> Core::getPaths() const
@@ -61,6 +71,11 @@ std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() 
 	return std::const_pointer_cast<const resources::IResourcesManager>(resourceManager_);
 }
 
+std::shared_ptr<system::Environment> Core::getEnvironment()
+{
+	return env_;
+}
+
 std::shared_ptr<const system::IEnvironment> Core::getEnvironment() const
 {
 	return env_;
@@ -76,7 +91,12 @@ std::shared_ptr<system::IRuntime> Core::getRuntime()
 	return runtime_;
 }
 
-void Core::setEnvironment(std::shared_ptr<system::IEnvironment> env)
+void Core::setApplicationModeFlags(ApplicationModeFlags flags)
+{
+	appModeFlags_ = flags;
+}
+
+void Core::setEnvironment(std::shared_ptr<system::Environment> env)
 {
 	env_ = env;
 }

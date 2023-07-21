@@ -43,7 +43,12 @@ void AppStartup::mouseMove(int32_t x, int32_t y, bool relative)
 		startup_->getGame()->getController()->onPosition(x, y);
 }
 
-void CubA4::app::AppStartup::nextMainLoopIteration(double delta)
+std::shared_ptr<CubA4::system::IStartup> AppStartup::getSystemStartup()
+{
+	return startup_;
+}
+
+void AppStartup::nextMainLoopIteration(double delta)
 {
 	doSomeTestThings(delta);
 }
@@ -56,6 +61,7 @@ bool AppStartup::setup()
 	/// test
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("mouse", CubA4::game::controller::Button::F1, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("uitoggle", CubA4::game::controller::Button::F2, 0 | CubA4::game::controller::BMod::None);
+	startup_->getGame()->getController()->getBindings()->addKeyBinding("debuguitoggle", CubA4::game::controller::Button::F3, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("forward", CubA4::game::controller::Button::W, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("back", CubA4::game::controller::Button::S, 0 | CubA4::game::controller::BMod::None);
 	startup_->getGame()->getController()->getBindings()->addKeyBinding("left", CubA4::game::controller::Button::A, 0 | CubA4::game::controller::BMod::None);

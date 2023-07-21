@@ -1,4 +1,4 @@
-#include <ui/MainCanvas.hpp>
+#include <ui/components/MainCanvas.hpp>
 #include <skia/include/core/SkCanvas.h>
 #include <skia/include/core/SkFont.h>
 using namespace CubA4::render::ui;

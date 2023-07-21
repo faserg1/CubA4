@@ -2,9 +2,9 @@
 #include <Core.hpp>
 #include <system/Startup.hpp>
 
-std::shared_ptr<CubA4::ICore> CubA4::CommonFactory::createCore(int argc, const char * const argv[])
+std::shared_ptr<CubA4::ICore> CubA4::CommonFactory::createCore(int argc, const char * const argv[], ApplicationFlags flags)
 {
-	return std::make_shared<CubA4::Core>(argc, argv);
+	return std::make_shared<CubA4::Core>(argc, argv, flags);
 }
 
 std::shared_ptr<CubA4::system::IStartup> CubA4::CommonFactory::createStartup(std::weak_ptr<CubA4::ICore> iCore)

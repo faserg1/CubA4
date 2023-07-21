@@ -37,3 +37,16 @@ std::shared_ptr<const CubA4::object::IObject> Environment::getObject(const std::
 {
 	return getObject(context_.getMap().get(id));
 }
+
+std::shared_ptr<CubA4::object::IObject> Environment::getObject(int64_t id)
+{
+	auto iter = context_.getObjectsMap().find(id);
+	if (iter == context_.getObjectsMap().end())
+		return {};
+	return iter->second;
+}
+
+std::shared_ptr<CubA4::object::IObject> Environment::getObject(const std::string &id)
+{
+	return getObject(context_.getMap().get(id));
+}
