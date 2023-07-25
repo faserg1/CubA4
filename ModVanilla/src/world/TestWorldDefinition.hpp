@@ -3,13 +3,17 @@
 #include <world/IWorldDefinition.hpp>
 #include <world/TestDimensionDescription.hpp>
 
+namespace CubA4
+{
+	class ICore;
+}
 namespace CubA4::world
 {
 	class TestWorldDefinition :
 		public virtual CubA4::world::IWorldDefinition
 	{
 	public:
-		explicit TestWorldDefinition();
+		explicit TestWorldDefinition(const CubA4::ICore &core, const manager::ModBlockManager &blockManager);
 		~TestWorldDefinition();
 
 		std::string getId() const override;

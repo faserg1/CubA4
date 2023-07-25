@@ -9,12 +9,12 @@ namespace CubA4::world
 	class ChunkBMutable : public virtual IChunkBBaseContainer
 	{
 	public:
-		explicit ChunkBMutable(size_t id, std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer);
+		explicit ChunkBMutable(size_t id, CubA4::system::IIdentityiMap::IdType blockId, CubA4::world::Layer layer);
 		~ChunkBMutable();
 
 		size_t getId() const override;
 		bool isIndexGlobal() const override;
-		std::shared_ptr<const object::IBlock> getBlock() const override;
+		CubA4::system::IIdentityiMap::IdType getBlockId() const override;
 		uint32_t getBlockCount() const override;
 		CubA4::world::Layer getLayer() const override;
 		bool hasBlockAt(const world::BlockInChunkPos &pos) const override;
@@ -51,7 +51,7 @@ namespace CubA4::world
 		};
 	private:
 		const size_t id_;
-		std::shared_ptr<const object::IBlock> block_;
+		CubA4::system::IIdentityiMap::IdType blockId_;
 		CubA4::world::Layer layer_;
 		std::array<decltype(BlockData::id), CubA4::world::ChunkCube> blockMap_;
 		uint32_t blockCount_ = 0;

@@ -13,6 +13,7 @@ namespace CubA4::world
 {
 	class Dimension : public virtual IDimension
 	{
+		friend class WorldControl;
 	public:
 		Dimension(Core &core, const CubA4::world::IDimensionDescription &description);
 
@@ -38,6 +39,7 @@ namespace CubA4::world
 	private:
 		Core &core_;
 		const CubA4::world::IDimensionDescription &description_;
+		// remove friend and share?
 		mutable CubA4::util::SubscriptionHelper<CubA4::world::IDimensionSubscriber> subscriptionHelper_;
 
 		std::unordered_map<const CubA4::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::util::ChunkPosHash> loadedChunks_;

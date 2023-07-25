@@ -34,7 +34,6 @@ void Startup::setup()
 	initGame();
 	loadConfigs();
 	initMods();
-	startMods();
 }
 
 void Startup::shutdown()
@@ -44,6 +43,7 @@ void Startup::shutdown()
 
 void Startup::run()
 {
+	startMods();
 	if (!appCallback_)
 		throw std::runtime_error("Startup not initialized!");
 	game_->run();

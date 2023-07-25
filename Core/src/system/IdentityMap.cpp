@@ -1,4 +1,5 @@
 #include "IdentityMap.hpp"
+#include <fmt/format.h>
 using namespace CubA4::system;
 
 IdentityMap::IdentityMap() :
@@ -30,19 +31,19 @@ void IdentityMap::clear()
 	map_.clear();
 }
 
-IdentityMap::IdType IdentityMap::add(const std::string &tag, const std::string &id)
+IdentityMap::IdType IdentityMap::add(const std::string &tag, const std::string &id, const std::string &sub)
 {
-	auto lastId = get(tag, id);
+	auto lastId = get(tag, id, sub);
 	if (lastId >= 0)
 		return -1;
 	const auto genId = counter_++;
-	map_.insert(bm_value(genId, makeId(tag, id)));
+	map_.insert(bm_value(genId, makeId(tag, id, sub)));
 	return genId;
 }
 
-IdentityMap::IdType IdentityMap::get(const std::string &tag, const std::string &id) const
+IdentityMap::IdType IdentityMap::get(const std::string &tag, const std::string &id, const std::string &sub) const
 {
-	return get(makeId(tag, id));
+	return get(makeId(tag, id, sub));
 }
 
 IdentityMap::IdType IdentityMap::get(const std::string &fullId) const
@@ -61,13 +62,14 @@ std::string IdentityMap::get(IdentityMap::IdType id) const
 	return pair->second;
 }
 
-bool IdentityMap::parseId(const std::string &input, std::string &tag, std::string &id)
+bool IdentityMap::parseId(const std::string &input, std::string &tag, std::string &id, std::string &sub)
 {
-	// TODO: [OOKAMI] Распарсить идентификатор
 	return false;
 }
 
-std::string IdentityMap::makeId(const std::string &tag, const std::string &id)
+std::string IdentityMap::makeId(const std::string &tag, const std::string &id, const std::string &sub)
 {
-	return "#" + tag + "@" + id;
+	if (sub.empty())
+		return fmt::format("#{}@{}", tag, id);
+	return fmt::format("#{}@{}/{}", tag, id, sub);
 }

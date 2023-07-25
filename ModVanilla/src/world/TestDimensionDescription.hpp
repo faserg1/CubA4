@@ -3,13 +3,17 @@
 #include <world/IDimensionDescription.hpp>
 #include <world/TestWorldGenerator.hpp>
 
+namespace CubA4
+{
+	class ICore;
+}
 namespace CubA4::world
 {
 	class TestDimensionDescription :
 		public virtual IDimensionDescription
 	{
 	public:
-		TestDimensionDescription();
+		TestDimensionDescription(const CubA4::ICore &core, const manager::ModBlockManager &blockManager);
 
 		std::string getId() const override;
 		std::wstring getName() const override;

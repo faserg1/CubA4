@@ -50,11 +50,12 @@ std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std:
 	data_.getObjects().insert(std::make_pair(genId, world));
 	for (auto dimDescription : worldDef->getDimensionDescriptions())
 	{
-		auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), dimDescription.get().getId());
+		auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), worldDef->getId(), dimDescription.get().getId());
 		if (genId < 0)
 			continue;
 		auto dim = std::make_shared<CubA4::world::Dimension>(core_, dimDescription.get());
 		world->addDimension(dim);
+		data_.getObjects().insert(std::make_pair(genId, dim));
 	}
 	return world;
 }

@@ -1,8 +1,8 @@
 #include <world/TestDimensionDescription.hpp>
 using namespace CubA4::world;
 
-TestDimensionDescription::TestDimensionDescription() :
-	worldGenerator_(std::make_unique<TestWorldGenerator>())
+TestDimensionDescription::TestDimensionDescription(const CubA4::ICore &core, const manager::ModBlockManager &blockManager) :
+	worldGenerator_(std::make_unique<TestWorldGenerator>(core, blockManager))
 {
 
 }

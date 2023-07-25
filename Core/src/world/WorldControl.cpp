@@ -1,4 +1,5 @@
 #include <world/WorldControl.hpp>
+#include <world/IDimensionDescription.hpp>
 using namespace CubA4::world;
 
 WorldControl::WorldControl(Core &core) :
@@ -29,9 +30,22 @@ void WorldControl::requestChanges(const ChunkModificationCollection& modificatio
 	}
 }
 
-void WorldControl::setCurrentWorld(std::shared_ptr<World> world)
+bool WorldControl::setCurrentWorld(std::shared_ptr<World> world)
 {
+	if (currentWorld_ == world)
+		return false;
 	currentWorld_ = world;
+	return true;
+}
+
+bool WorldControl::setCurrentDimension(std::shared_ptr<Dimension> dimension)
+{
+	if (currentDimension_ == dimension)
+		return false;
+	currentDimension_ = dimension;
+	// Load or generate chunks
+	generate(dimension);
+	return true;
 }
 
 std::shared_ptr<IWorld> WorldControl::getCurrentWorld()
@@ -48,4 +62,24 @@ bool WorldControl::testLocal(std::shared_ptr<Chunk> chunk, const ChunkBModificat
 {
 	// TODO: implement
 	return true;
+}
+
+void WorldControl::generate(std::shared_ptr<Dimension> dimension)
+{
+	auto generator = dimension->getDimensionDescription().getWorldGenerator();
+	// test implementation
+	for (decltype(ChunkPos::x) x = -3; x < 4; ++x)
+	{
+		for (decltype(ChunkPos::z) z = -3; z < 4; ++z)
+		{
+			auto chunkPos = ChunkPos {x, -1, z};
+			auto genInfo = generator->generateChunk(currentWorld_, dimension, chunkPos);
+			auto chunk = chunkAssembler_->createChunk(genInfo);
+			dimension->onChunkLoaded(chunk);
+		}
+	}
+	dimension->subscriptionHelper_.apply([](auto *subscriber)
+	{
+		subscriber->onLoadedChunksUpdated();
+	});
 }

@@ -8,6 +8,7 @@
 #include <ICore.hpp>
 
 #include <world/IChunk.hpp>
+#include <object/IBlock.hpp>
 #include <world/Sides.hpp>
 #include <model/IBlockRenderModelDefinition.hpp>
 #include <engine/model/RenderModel.hpp>

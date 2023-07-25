@@ -1,8 +1,8 @@
 #include <world/TestWorldDefinition.hpp>
 using namespace CubA4::world;
 
-TestWorldDefinition::TestWorldDefinition() :
-	testDimensionDescription_(std::make_unique<TestDimensionDescription>())
+TestWorldDefinition::TestWorldDefinition(const CubA4::ICore &core, const manager::ModBlockManager &blockManager) :
+	testDimensionDescription_(std::make_unique<TestDimensionDescription>(core, blockManager))
 {
 	descriptions_.push_back(*testDimensionDescription_.get());	
 }

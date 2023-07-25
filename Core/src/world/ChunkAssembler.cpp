@@ -19,12 +19,13 @@ ChunkAssembler::~ChunkAssembler()
 
 void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModification &mod)
 {
-	auto &dataProvider = chunk->getDataProvider();
+	// TODO: Make it work with id
+	/*auto &dataProvider = chunk->getDataProvider();
 	for (const auto &addBlockChange : mod.add)
 	{
 		auto containers = chunk->getChunkBContainers(addBlockChange.block);
 		auto blockId = env_.getId(addBlockChange.block);
-		auto blockDataStorage = dataProvider.getBlockDataStorage(blockId);
+		auto &blockDataStorage = dataProvider.getBlockDataStorage(blockId);
 
 		std::shared_ptr<ChunkBMutable> choosedContainer;
 		if (containers.empty())
@@ -32,7 +33,6 @@ void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModi
 			// TODO: pass right id
 			choosedContainer = std::make_shared<ChunkBMutable>(0, addBlockChange.block, 0);
 			chunk->addContainer(choosedContainer);
-			continue;
 		}
 		for (auto container : containers)
 		{
@@ -50,37 +50,60 @@ void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModi
 
 		auto data = blockDataStorage.getOrAdd(addBlockChange.data);
 		choosedContainer->setBlockAt(addBlockChange.pos, data->id);
-	}
+	}*/
 	// TODO: implement remove, mod
 }
 
-std::shared_ptr<IChunkBBaseContainer> ChunkAssembler::buildRange(
-	size_t id,
-    std::shared_ptr<const CubA4::object::IBlock> block,
-    const CubA4::world::BlockInChunkPos &start,
-    const CubA4::world::BlockInChunkPos &end,
-    decltype(BlockData::id) dataId,
-    CubA4::world::Layer layer)
+std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
 {
-	auto minMax = minMaxBounds({start, end});
-	auto min = minMax[0];
-	auto max = minMax[1];
-	auto mutaChunk = std::make_shared<ChunkBMutable>(id, block, layer);
-
-	for (auto x = min.x; x <= max.x; x++)
+	auto chunk = std::make_shared<Chunk>(gen.pos);
+	auto &dataProvider = chunk->getDataProvider();
+	Layer layerPos = 0;
+	for (const auto &layer : gen.layers)
 	{
-		for (auto y = min.y; y <= max.y; y++)
+		std::map<CubA4::system::IIdentityiMap::IdType, std::shared_ptr<ChunkBMutable>> containerMap;
+		for (const auto &addInfo : layer.add)
 		{
-			for (auto z = min.z; z <= max.z; z++)
+			auto &info = addInfo.info;
+			if (info.blockId == std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max())
+				continue;
+			auto &blockDataStorage = dataProvider.getBlockDataStorage(info.blockId);
+			auto data = blockDataStorage.getOrAdd(*info.data);
+			std::shared_ptr<ChunkBMutable> choosedContainer;
+			if (auto it = containerMap.find(info.blockId); it != containerMap.end())
+				choosedContainer = it->second;
+			else
 			{
-				CubA4::world::BlockInChunkPos pos {x, y, z};
-				mutaChunk->setBlockAt(pos, dataId);
-			}	
-		}	
+				// Pass the right id
+				choosedContainer = std::make_shared<ChunkBMutable>(0, info.blockId, layerPos);
+				chunk->addContainer(choosedContainer);
+			}
+			for (auto pos : addInfo.positions)
+				choosedContainer->setBlockAt(pos, data->id);
+		}
+		for (const auto &fillInfo : layer.fill)
+		{
+			auto &info = fillInfo.info;
+			// TODO: Copy paste refactor
+			if (info.blockId == std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max())
+				continue;
+			auto &blockDataStorage = dataProvider.getBlockDataStorage(info.blockId);
+			auto data = blockDataStorage.getOrAdd(*info.data);
+			std::shared_ptr<ChunkBMutable> choosedContainer;
+			if (auto it = containerMap.find(info.blockId); it != containerMap.end())
+				choosedContainer = it->second;
+			else
+			{
+				// Pass the right id
+				choosedContainer = std::make_shared<ChunkBMutable>(0, info.blockId, layerPos);
+				chunk->addContainer(choosedContainer);
+			}
+			// TODO: impl
+		}
+		++layerPos;
 	}
-    return mutaChunk;
+	return chunk;
 }
-
 
 uint8_t ChunkAssembler::countAdjancentBlocks(CubA4::world::BlockInChunkPos start, std::function<bool(CubA4::world::BlockInChunkPos)> checker)
 {

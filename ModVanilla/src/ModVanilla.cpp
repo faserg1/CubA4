@@ -61,8 +61,8 @@ void ModVanilla::start(CubA4::game::IGameControl &gameControl)
 {
 	gameControl_ = &gameControl;
 
-	auto worldName = std::format("@{}#{}", ModVanillaId, "testWorld");
-	auto dimName = std::format("@{}#{}", ModVanillaId, "testDimension");
+	auto worldName = std::format("#{}@{}", ModVanillaId, "testWorld");
+	auto dimName = std::format("#{}@{}/{}", ModVanillaId, "testWorld", "testDimension");
 	gameControl_->requestWorldChange(worldName, dimName);
 }
 

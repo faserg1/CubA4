@@ -116,8 +116,12 @@ RenderChunkCompilerCore::RenderModels RenderChunkCompilerCore::compileBlocks(std
 	using Key = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
 	std::unordered_map<Key, Def> materialsToDefMap;
 
-	for (auto block : chunk->getUsedBlocks())
+	auto usedBlocks = chunk->getUsedBlocks();
+	auto env = core_->getEnvironment();
+
+	for (auto blockId : usedBlocks)
 	{
+		auto block = env->getObjectT<CubA4::object::IBlock>(blockId);
 		auto modelDef = block->getRenderModelDefinition();
 		auto usedMaterials = modelDef->getUsedMaterials();
 		for (const auto &materialId : usedMaterials)
@@ -167,7 +171,7 @@ RenderChunkCompilerCore::RenderModelPtr RenderChunkCompilerCore::compileModelByM
 		const auto usedMaterials = model->getUsedMaterials();
 		if (std::find(usedMaterials.begin(), usedMaterials.end(), material) == usedMaterials.end())
 			continue;
-		auto containers = chunk->getChunkBContainers(block);
+		auto containers = chunk->getChunkBContainers(blockId);
 		std::vector<model::ModelCompiler::CollectedData> collectedData;
 		using TupleKey = std::tuple<std::string, BlockSides, uint64_t>;
 		using FacesValues = decltype(model::ModelCompiler::CollectedData::faces);
@@ -220,8 +224,8 @@ RenderChunkCompilerCore::HiddenSides RenderChunkCompilerCore::compileHiddenSides
 	auto env = core_->getEnvironment();
 	for (auto container : chunk->getChunkBContainers())
 	{
-		auto block = container->getBlock();
-		auto blockId = env->getId(block);
+		auto blockId = container->getBlockId();
+		auto block = env->getObjectT<CubA4::object::IBlock>(blockId);
 		auto blockDataContainer = chunk->getDataProvider().getBlockDataStorage(blockId);
 		std::for_each(std::execution::par_unseq, container->begin(), container->end(), [this, &container, &block, &hiddenSides, blockDataContainer](auto blockPos)
 		{
@@ -249,8 +253,9 @@ RenderChunkCompilerCore::VisibleSides RenderChunkCompilerCore::compileVisibleSid
 		auto side = ~hidden[index] & AllSides;
 		if (!side)
 			continue;
-		visible.push_back(std::make_pair(index, side));
+		visible.push_back(std::make_pair(index, side));	
 	}
+	
 	return std::move(visible);
 }
 
@@ -263,7 +268,7 @@ void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos
 		auto index = indexByPos(posLeft);
 		hiddenSides[index] |= BlockSide::Right;
 	}
-	if (pos.x < ChunkSize && nonOpaque & BlockSide::Right)
+	if (pos.x < ChunkSize - 1 && nonOpaque & BlockSide::Right)
 	{
 		auto posRight = pos;
 		posRight.x++;
@@ -277,7 +282,7 @@ void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos
 		auto index = indexByPos(posBottom);
 		hiddenSides[index] |= BlockSide::Top;
 	}
-	if (pos.y < ChunkSize && nonOpaque & BlockSide::Top)
+	if (pos.y < ChunkSize - 1 && nonOpaque & BlockSide::Top)
 	{
 		auto posTop = pos;
 		posTop.y++;
@@ -291,7 +296,7 @@ void RenderChunkCompilerCore::hideFrom(HiddenSides &hiddenSides, BlockInChunkPos
 		auto index = indexByPos(posBack);
 		hiddenSides[index] |= BlockSide::Back;
 	}
-	if (pos.z < ChunkSize && nonOpaque & BlockSide::Back)
+	if (pos.z < ChunkSize - 1 && nonOpaque & BlockSide::Back)
 	{
 		auto posFront = pos;
 		posFront.z++;

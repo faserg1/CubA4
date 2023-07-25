@@ -13,16 +13,16 @@ namespace CubA4::world
 		public virtual CubA4::world::IChunk
 	{
 	public:
-		explicit Chunk(const CubA4::world::ChunkPos &chunkPos);
+		Chunk(const CubA4::world::ChunkPos &chunkPos);
 		~Chunk();
 		const CubA4::world::ChunkPos &getChunkPos() const override;
-		std::vector<std::shared_ptr<const CubA4::object::IBlock>> getUsedBlocks() const override;
+		std::vector<CubA4::system::IIdentityiMap::IdType> getUsedBlocks() const override;
 
 		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const override;
-		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const override;
+		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(CubA4::system::IIdentityiMap::IdType blockId) const override;
 
 		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers();
-		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock);
+		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers(CubA4::system::IIdentityiMap::IdType blockId);
 
 		bool hasBlocksAt(world::BlockInChunkPos pos) const override;
 		bool hasBlocksAt(uint32_t index) const override;
@@ -42,7 +42,7 @@ namespace CubA4::world
 		DataProvider dataProvider_;
 		std::vector<std::shared_ptr<IChunkBBaseContainer>> containers_;
 
-		// used blocks cache
-		std::map<std::shared_ptr<const CubA4::object::IBlock>, uint32_t> usedBlocks;
+		// used blocks cache (map BlockId -> use count)
+		std::map<CubA4::system::IIdentityiMap::IdType, uint32_t> usedBlocks_;
 	};
 }

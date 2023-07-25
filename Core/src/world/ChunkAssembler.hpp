@@ -4,6 +4,7 @@
 #include <world/Chunk.hpp>
 #include <world/containers/ChunkBMutable.hpp>
 #include <world/ChunkBModification.hpp>
+#include <world/ChunkBGeneration.hpp>
 #include <system/IEnvironment.hpp>
 
 namespace CubA4::world
@@ -18,14 +19,7 @@ namespace CubA4::world
 		~ChunkAssembler();
 
 		void applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModification &mod);
-
-		static std::shared_ptr<IChunkBBaseContainer> buildRange(
-			size_t id,
-			std::shared_ptr<const CubA4::object::IBlock> block,
-			const CubA4::world::BlockInChunkPos &start,
-			const CubA4::world::BlockInChunkPos &end,
-			decltype(BlockData::id) dataId = {},
-			CubA4::world::Layer layer = 0);
+		std::shared_ptr<Chunk> createChunk(const ChunkBGeneration &gen);
 	private:
 		static uint8_t countAdjancentBlocks(CubA4::world::BlockInChunkPos start, std::function<bool(CubA4::world::BlockInChunkPos)> checker);
 		static uint8_t countAdjancentWithCornersBlocks(CubA4::world::BlockInChunkPos start, std::function<bool(CubA4::world::BlockInChunkPos)> checker);

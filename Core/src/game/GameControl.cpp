@@ -13,13 +13,24 @@ GameControl::GameControl(Core &core, CubA4::game::Game &game) :
 bool GameControl::requestWorldChange(const std::string &worldId, const std::string &dimId)
 {
 	auto env = core_.getEnvironment();
-	auto world = env->getObjectT<CubA4::world::World>(worldId);
-	if (!world)
+	// If we can still exists in the same world, dimension should be changed
+	if (dimId.empty())
 		return false;
-	worldControl_->setCurrentWorld(world);
-	game_.subscriptionHelper_.apply([world](CubA4::game::IGameSubscriber *subscriber)
+	std::shared_ptr<CubA4::world::World> world;
+	if (worldId.empty())
+		world = std::dynamic_pointer_cast<CubA4::world::World>(worldControl_->getCurrentWorld());
+	else
+		world = env->getObjectT<CubA4::world::World>(worldId);
+	auto dim = env->getObjectT<CubA4::world::Dimension>(dimId);
+	if (!world || !dim)
+		return false;
+	
+	if (!worldControl_->setCurrentWorld(world) || !worldControl_->setCurrentDimension(dim))
+		return false;
+
+	game_.subscriptionHelper_.apply([world, dim](CubA4::game::IGameSubscriber *subscriber)
 	{
-		subscriber->worldChanged(world);
+		subscriber->worldChanged(world, dim);
 	});
 	return true;
 }

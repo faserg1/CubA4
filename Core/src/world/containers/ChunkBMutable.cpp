@@ -2,8 +2,8 @@
 #include <limits>
 using namespace CubA4::world;
 
-ChunkBMutable::ChunkBMutable(size_t id, std::shared_ptr<const object::IBlock> block, CubA4::world::Layer layer) :
-    id_(id), block_(block), layer_(layer)
+ChunkBMutable::ChunkBMutable(size_t id, CubA4::system::IIdentityiMap::IdType blockId, CubA4::world::Layer layer) :
+    id_(id), blockId_(blockId), layer_(layer)
 {
 	blockMap_.fill(std::numeric_limits<decltype(BlockData::id)>::max());
 }
@@ -23,9 +23,9 @@ bool ChunkBMutable::isIndexGlobal() const
 	return true;
 }
 
-std::shared_ptr<const CubA4::object::IBlock> ChunkBMutable::getBlock() const
+CubA4::system::IIdentityiMap::IdType ChunkBMutable::getBlockId() const
 {
-    return block_;
+    return blockId_;
 }
 
 uint32_t ChunkBMutable::getBlockCount() const

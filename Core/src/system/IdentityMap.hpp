@@ -15,8 +15,8 @@ namespace CubA4::system
 		~IdentityMap();
 
 		void clear() override;
-		IdType add(const std::string &tag, const std::string &id) override;
-		IdType get(const std::string &tag, const std::string &id) const override;
+		IdType add(const std::string &tag, const std::string &id, const std::string &sub = "") override;
+		IdType get(const std::string &tag, const std::string &id, const std::string &sub = "") const override;
 		IdType get(const std::string &fullId) const override;
 		std::string get(IdType id) const override;
 	protected:
@@ -25,7 +25,7 @@ namespace CubA4::system
 		boost::bimap<IdType, std::string> map_;
 		using bm_value = decltype(map_)::value_type;
 	private:
-		static bool parseId(const std::string &input, std::string &tag, std::string &id);
-		static std::string makeId(const std::string &tag, const std::string &id);
+		static bool parseId(const std::string &input, std::string &tag, std::string &id, std::string &sub);
+		static std::string makeId(const std::string &tag, const std::string &id, const std::string &sub);
 	};
 }

@@ -5,10 +5,11 @@
 
 #include <vector>
 #include <memory>
+#include <limits>
 #include <world/Position.hpp>
 #include <world/containers/IChunkBBaseContainer.hpp>
 #include <world/data/IDataProvider.hpp>
-#include <object/IBlock.hpp>
+#include <system/IIdentityiMap.hpp>
 
 namespace CubA4::world
 {
@@ -16,10 +17,12 @@ namespace CubA4::world
 
 	struct BlockAt
 	{
-		std::shared_ptr<const object::IBlock> block;
+		CubA4::system::IIdentityiMap::IdType blockId = std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max();
 		CubA4::world::BlockInChunkPos pos;
 		CubA4::world::Layer layer;
 	};
+
+	// Replace real block with id
 
 	class IChunk
 	{
@@ -30,11 +33,11 @@ namespace CubA4::world
 		virtual const world::ChunkPos &getChunkPos() const = 0;
 		/** \brief Получает используемые блоки в чанке
 		 */
-		virtual std::vector<std::shared_ptr<const object::IBlock>> getUsedBlocks() const = 0;
+		virtual std::vector<CubA4::system::IIdentityiMap::IdType> getUsedBlocks() const = 0;
 		/** \brief Получает диапазоны блоков в чанке.
 		*/
 		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const = 0;
-		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const = 0;
+		virtual std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(CubA4::system::IIdentityiMap::IdType blockId) const = 0;
 		virtual bool hasBlocksAt(world::BlockInChunkPos pos) const = 0;
 		virtual bool hasBlocksAt(uint32_t index) const = 0;
 		virtual std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const = 0;

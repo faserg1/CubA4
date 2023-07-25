@@ -12,8 +12,8 @@ namespace CubA4::system
 		using IdType = int64_t;
 	public:
 		virtual void clear() = 0;
-		virtual IdType add(const std::string &tag, const std::string &id) = 0;
-		virtual IdType get(const std::string &tag, const std::string &id) const = 0;
+		virtual IdType add(const std::string &tag, const std::string &id, const std::string &sub = "") = 0;
+		virtual IdType get(const std::string &tag, const std::string &id, const std::string &sub = "") const = 0;
 		virtual IdType get(const std::string &fullId) const = 0;
 		virtual std::string get(IdType id) const = 0;
 	protected:

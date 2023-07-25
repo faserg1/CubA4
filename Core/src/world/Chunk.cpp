@@ -25,9 +25,9 @@ const ChunkPos &Chunk::getChunkPos() const
 	return chunkPos_;
 }
 
-std::vector<std::shared_ptr<const IBlock>> Chunk::getUsedBlocks() const
+std::vector<CubA4::system::IIdentityiMap::IdType> Chunk::getUsedBlocks() const
 {
-	return usedBlocks | ranges::views::keys | ranges::to<std::vector>;
+	return usedBlocks_ | ranges::views::keys | ranges::to<std::vector>;
 }
 
 std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers() const
@@ -37,10 +37,10 @@ std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContain
 	return std::move(containers);
 }
 
-std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock)
+std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::system::IIdentityiMap::IdType usedBlockId)
 {
 	std::vector<std::shared_ptr<IChunkBBaseContainer>> containers = containers_
-		| ranges::views::remove_if([usedBlock](auto container){ return container->getBlock() != usedBlock; })
+		| ranges::views::remove_if([usedBlockId](auto container){ return container->getBlockId() != usedBlockId; })
 		| ranges::to_vector;
 	return std::move(containers);
 }
@@ -50,11 +50,11 @@ std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers()
 	return containers_;
 }
 
-std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(const std::shared_ptr<const object::IBlock> usedBlock) const
+std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::system::IIdentityiMap::IdType usedBlockId) const
 {
 	auto tf = [](auto sContainer) -> std::shared_ptr<const IChunkBBaseContainer> { return sContainer; };
 	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers = containers_
-		| ranges::views::remove_if([usedBlock](auto container){ return container->getBlock() != usedBlock; })
+		| ranges::views::remove_if([usedBlockId](auto container){ return container->getBlockId() != usedBlockId; })
 		| ranges::views::transform(tf)
 		| ranges::to_vector;
 	return std::move(containers);
@@ -91,7 +91,7 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 			if (container->hasBlockAt(pos))
 			{
 				blocks.push_back(BlockAt {
-					.block = container->getBlock(),
+					.blockId = container->getBlockId(),
 					.pos = pos,
 					.layer = container->getLayer()
 				});
@@ -117,7 +117,7 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 			if (container->hasBlockAt(pos))
 			{
 				return BlockAt {
-					.block = container->getBlock(),
+					.blockId = container->getBlockId(),
 					.pos = pos,
 					.layer = container->getLayer()
 				};
@@ -125,7 +125,7 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 		}
 		return {};
 	};
-	if (auto blockAt = checkContainer(containers_); blockAt.block)
+	if (auto blockAt = checkContainer(containers_); blockAt.blockId)
 		return blockAt;
 	return {};
 }
@@ -153,19 +153,19 @@ void Chunk::removeContainer(size_t idContainer)
 
 void Chunk::onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container)
 {
-	const auto block = container->getBlock();
-	auto it = usedBlocks.find(block);
-	if (it == usedBlocks.end())
-		usedBlocks.insert(std::make_pair(block, 1u));
+	const auto blockId = container->getBlockId();
+	auto it = usedBlocks_.find(blockId);
+	if (it == usedBlocks_.end())
+		usedBlocks_.insert(std::make_pair(blockId, 1u));
 	else
 		it->second++;
 }
 
 void Chunk::onContainerRemoved(std::shared_ptr<const IChunkBBaseContainer> container)
 {
-	const auto block = container->getBlock();
-	auto it = usedBlocks.find(block);
-	if (it == usedBlocks.end() || !it->second)
+	const auto blockId = container->getBlockId();
+	auto it = usedBlocks_.find(blockId);
+	if (it == usedBlocks_.end() || !it->second)
 	{
 		// assert!
 		return;
@@ -173,5 +173,5 @@ void Chunk::onContainerRemoved(std::shared_ptr<const IChunkBBaseContainer> conta
 	
 	it->second--;
 	if (!it->second)
-		usedBlocks.erase(it);
+		usedBlocks_.erase(it);
 }

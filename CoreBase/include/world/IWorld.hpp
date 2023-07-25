@@ -20,11 +20,7 @@ namespace CubA4::world
 
 		virtual std::unique_ptr<CubA4::util::ISubscription> subscribe(CubA4::world::IWorldSubscriber *subscriber) const = 0;
 
-		// TODO: [OOKAMI] Test the chunk range feature. Delete function later
-		virtual void test(std::vector<std::shared_ptr<const object::IBlock>> blocks) = 0;
-
 		virtual std::shared_ptr<const CubA4::world::IWorldDefinition> getWorldDefinition() const = 0;
-		virtual std::vector<std::shared_ptr<const IChunk>> getChunks() const = 0;
 		virtual std::vector<std::shared_ptr<const IDimension>> getDimensions() const = 0;
 		virtual std::shared_ptr<const IDimension> findDimension(std::string id) const = 0;
 	protected:
