@@ -23,10 +23,9 @@ PipelineBuilderLine::~PipelineBuilderLine()
 
 void PipelineBuilderLine::prepareVertexInput()
 {
-	// TODO: Use second binding with input rate instance to use vertex colors
-
 	const uint16_t posSize = sizeof(float) * 3;
-	const uint16_t vertexSize = posSize;
+	const uint16_t colorSize = sizeof(float) * 3;
+	const uint16_t vertexSize = posSize + colorSize;
 
 	// Bindings
 
@@ -46,6 +45,15 @@ void PipelineBuilderLine::prepareVertexInput()
 			0, //binding
 			VK_FORMAT_R32G32B32_SFLOAT, //format,
 			0, //offset
+		}
+	);
+
+	vertexAttrDescriptions_.push_back(
+		{
+			1, //location
+			0, //binding
+			VK_FORMAT_R32G32B32_SFLOAT, //format,
+			posSize, //offset
 		}
 	);
 

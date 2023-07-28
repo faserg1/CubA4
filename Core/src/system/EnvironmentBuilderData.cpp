@@ -1,10 +1,8 @@
 #include "EnvironmentBuilderData.hpp"
 using namespace CubA4::system;
 
-EnvironmentBuilderData::EnvironmentBuilderData(
-	std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager,
-	const CubA4::render::IRenderInfo &renderInfo, std::shared_ptr<CubA4::game::controller::IRootActions> actions)
-	: renderInfo_(renderInfo), renderManager_(renderManager), actions_(actions)
+EnvironmentBuilderData::EnvironmentBuilderData(const IAppClientCallback *appCallback, std::shared_ptr<CubA4::game::controller::IRootActions> actions)
+	: appCallback_(appCallback), actions_(actions)
 {
 	
 }
@@ -16,12 +14,16 @@ EnvironmentBuilderData::~EnvironmentBuilderData()
 
 const CubA4::render::IRenderInfo &EnvironmentBuilderData::getRenderInfo() const
 {
-	return renderInfo_;
+	if (!appCallback_)
+		return *static_cast<CubA4::render::IRenderInfo*>(nullptr);
+	return appCallback_->getRenderInfo();
 }
 
 std::shared_ptr<CubA4::render::engine::IRenderManager> EnvironmentBuilderData::getRenderManager() const
 {
-	return renderManager_;
+	if (!appCallback_)
+		return {};
+	return appCallback_->getRenderManager();
 }
 
 std::shared_ptr<CubA4::game::controller::IRootActions> EnvironmentBuilderData::getActions() const

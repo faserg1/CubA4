@@ -1,6 +1,7 @@
 find_package(Threads REQUIRED)
 
 include (${CMAKE_CURRENT_LIST_DIR}/boost/boost.cmake)
+include (${CMAKE_CURRENT_LIST_DIR}/bullet/bullet.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/fmt/fmt.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/logguru/logguru.cmake)
 include (${CMAKE_CURRENT_LIST_DIR}/SDL/sdl.cmake)

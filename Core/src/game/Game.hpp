@@ -36,6 +36,7 @@ namespace CubA4::game
 		mutable CubA4::util::SubscriptionHelper<CubA4::game::IGameSubscriber> subscriptionHelper_;
 	private:
 		void loop();
+		std::shared_ptr<controller::Controller> createController();
 	};
 }
 

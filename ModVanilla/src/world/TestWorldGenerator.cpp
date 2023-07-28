@@ -46,6 +46,8 @@ ChunkBGeneration TestWorldGenerator::generateChunk(std::shared_ptr<IWorld> world
 			addInfo2.positions.push_back({x, ChunkSize - 3, z});
 			if (rand() % 3 == 0)
 				addInfo2.positions.push_back({x, ChunkSize - 2, z});
+			if (rand() % 5 == 0)
+				addInfo2.positions.push_back({x, ChunkSize - 1, z});
 		}
 	}
 	return gen;

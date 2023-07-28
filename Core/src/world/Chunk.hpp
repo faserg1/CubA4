@@ -34,6 +34,8 @@ namespace CubA4::world
 
 		void addContainer(std::shared_ptr<IChunkBBaseContainer> container);
 		void removeContainer(size_t idContainer);
+
+		size_t allocateIdContainer();
 	protected:
 		void onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container);
 		void onContainerRemoved(std::shared_ptr<const IChunkBBaseContainer> container);
@@ -44,5 +46,7 @@ namespace CubA4::world
 
 		// used blocks cache (map BlockId -> use count)
 		std::map<CubA4::system::IIdentityiMap::IdType, uint32_t> usedBlocks_;
+
+		size_t genId_ = 0;
 	};
 }

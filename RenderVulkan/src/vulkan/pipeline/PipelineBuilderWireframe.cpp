@@ -24,7 +24,8 @@ PipelineBuilderWireframe::~PipelineBuilderWireframe()
 void PipelineBuilderWireframe::prepareVertexInput()
 {
 	const uint16_t posSize = sizeof(float) * 3;
-	const uint16_t vertexSize = posSize;
+	const uint16_t colorSize = sizeof(float) * 3;
+	const uint16_t vertexSize = posSize + colorSize;
 
 	// Bindings
 
@@ -44,6 +45,15 @@ void PipelineBuilderWireframe::prepareVertexInput()
 			0, //binding
 			VK_FORMAT_R32G32B32_SFLOAT, //format,
 			0, //offset
+		}
+	);
+
+	vertexAttrDescriptions_.push_back(
+		{
+			1, //location
+			0, //binding
+			VK_FORMAT_R32G32B32_SFLOAT, //format,
+			posSize, //offset
 		}
 	);
 

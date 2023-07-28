@@ -60,3 +60,13 @@ std::shared_ptr<const CubA4::world::IWorld> EnvironmentBuilder::createWorld(std:
 	return world;
 }
 
+std::shared_ptr<const CubA4::object::IEntityFactory> EnvironmentBuilder::registerEntity(std::unique_ptr<const CubA4::object::IEntityDefinition> &&entityDef)
+{
+	auto genId = data_.getIdentityMap().add(context_.modInfo_.getIdName(), entityDef->getId());
+	if (genId < 0)
+		return {};
+	auto em = core_.getEntityManager();
+	auto factory = em->registerEntity(genId, std::move(entityDef));
+	data_.getObjects().insert(std::make_pair(genId, factory));
+	return factory;
+}

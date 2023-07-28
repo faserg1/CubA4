@@ -96,9 +96,9 @@ bool AppStartup::setupGame()
 	static std::vector<std::shared_ptr<CubA4::render::engine::debug::IRenderDebugCollection>> worldLines;
 	auto debug = rm->getDebug();
 	auto col = debug->addCollection();
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {20.f, 0.f, 0.f});
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 20.f, 0.f});
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 0.f, 20.f});
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {20.f, 0.f, 0.f}, {1, 0, 0});
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 20.f, 0.f}, {0, 1, 0});
+	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 0.f, 20.f}, {0, 0, 1});
 	worldLines.push_back(col);
 
 	// test thing

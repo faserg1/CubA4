@@ -1,6 +1,8 @@
 #version 450
 
 layout (location = 0) in vec3 inPos;
+layout (location = 1) in vec3 inColor;
+layout (location = 1) out vec3 outColor;
 //layout (binding = 1, location = 1) in vec3 inColor;
 
 layout(binding = 0/*, row_major*/) uniform Matricies
@@ -27,4 +29,5 @@ void main()
 	//sub.y *= -1.0;
 	// gl_Position = sub * matricies.view * matricies.proj;
 	gl_Position = matricies.proj * matricies.view * sub;
+	outColor = inColor;
 }

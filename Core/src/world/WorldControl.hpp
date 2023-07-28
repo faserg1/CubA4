@@ -26,6 +26,8 @@ namespace CubA4::world
 	private:
 		Core &core_;
 		std::unique_ptr<ChunkAssembler> chunkAssembler_;
+
+		// local
 		std::shared_ptr<World> currentWorld_;
 		std::shared_ptr<Dimension> currentDimension_;
 	};

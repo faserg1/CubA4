@@ -33,6 +33,7 @@ target_link_libraries(Core PRIVATE Boost::boost Boost::filesystem ${boost_stackt
 target_link_libraries(Core PRIVATE fmt::fmt)
 target_link_libraries(Core PRIVATE logguru_win_lib)
 target_link_libraries(Core PRIVATE tl::generator)
+target_link_libraries(Core PRIVATE ${BULLET_LIBRARIES})
 
 if (UNIX)
     target_link_libraries(Core PRIVATE loguru)

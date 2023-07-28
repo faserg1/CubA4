@@ -148,7 +148,14 @@ void Chunk::addContainer(std::shared_ptr<IChunkBBaseContainer> container)
 
 void Chunk::removeContainer(size_t idContainer)
 {
-	// todo
+	auto pred = [idContainer](auto container) -> bool { return container->getId() == idContainer; };
+	if (auto it = std::find_if(containers_.begin(), containers_.end(), pred); it != containers_.end())
+		containers_.erase(it);
+}
+
+size_t Chunk::allocateIdContainer()
+{
+	return genId_++;
 }
 
 void Chunk::onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container)

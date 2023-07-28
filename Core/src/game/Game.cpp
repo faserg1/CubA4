@@ -3,7 +3,7 @@
 using namespace CubA4::game;
 
 Game::Game(CubA4::system::IAppCallback &appCallback) :
-	appCallback_(appCallback), runGameLoop_(false), controller_(std::make_shared<CubA4::game::controller::Controller>(appCallback))
+	appCallback_(appCallback), runGameLoop_(false), controller_(createController())
 {
 	
 }
@@ -52,4 +52,11 @@ void Game::loop()
 	{
 		std::this_thread::yield();
 	}
+}
+
+std::shared_ptr<controller::Controller> Game::createController()
+{
+	if (auto appClientCallback = dynamic_cast<CubA4::system::IAppClientCallback*>(&appCallback_))
+		return std::make_shared<CubA4::game::controller::Controller>(*appClientCallback);
+	return {};
 }

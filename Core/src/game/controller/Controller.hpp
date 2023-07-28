@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/IAppCallback.hpp>
+#include <system/IAppClientCallback.hpp>
 #include <game/controller/IController.hpp>
 #include <game/controller/Bindings.hpp>
 #include <game/controller/RootActions.hpp>
@@ -14,7 +14,7 @@ namespace CubA4::game::controller
 	{
 		
 	public:
-		explicit Controller(CubA4::system::IAppCallback &appCallback);
+		explicit Controller(CubA4::system::IAppClientCallback &appCallback);
 		~Controller();
 
 		void onButtonChanged(Button btn, BMods mods, bool pressed) override;
@@ -31,7 +31,7 @@ namespace CubA4::game::controller
 		IContext &getContext() override;
 		bool requestMouseCapture(bool enable) override;
 	private:
-		CubA4::system::IAppCallback &appCallback_;
+		CubA4::system::IAppClientCallback &appCallback_;
 		std::shared_ptr<RootActions> actions_;
 		std::shared_ptr<Bindings> bindings_;
 		std::unique_ptr<Context> context_;

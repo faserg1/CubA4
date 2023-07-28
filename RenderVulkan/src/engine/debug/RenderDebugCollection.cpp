@@ -11,20 +11,30 @@ RenderDebugCollection::RenderDebugCollection(vulkan::CommandPool &cmdPool,
 
 RenderDebugCollection::~RenderDebugCollection() = default;
 
-void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to)
+void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to, CubA4::ColorRGB color)
 {
 	auto i = internal_.lock();
 	if (!i)
 		return;
 
-	std::vector<CubA4::model::Vertex> vertices(2);
+	std::vector<VertexColor> vertices(2);
 	vertices[0].x = from.x;
 	vertices[0].y = from.y;
 	vertices[0].z = from.z;
 
+	vertices[0].r = color.r;
+	vertices[0].g = color.g;
+	vertices[0].b = color.b;
+
+
+
 	vertices[1].x = to.x;
 	vertices[1].y = to.y;
 	vertices[1].z = to.z;
+
+	vertices[1].r = color.r;
+	vertices[1].g = color.g;
+	vertices[1].b = color.b;
 
 	DebugModel model;
 	model.type = PipelineType::Line;

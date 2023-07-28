@@ -15,6 +15,17 @@ namespace CubA4::render::engine::debug
 		Wireframe
 	};
 
+	struct VertexColor
+	{
+		float x;
+		float y;
+		float z;
+
+		float r;
+		float g;
+		float b;
+	};
+
 	struct DebugRenderModel
 	{
 		std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart> memoryPart;
@@ -29,7 +40,7 @@ namespace CubA4::render::engine::debug
 
 		virtual void onCommandsDirty() = 0;
 		virtual std::shared_ptr<CubA4::render::vulkan::Pipeline> getPipeline(PipelineType type) const = 0;
-		virtual DebugRenderModel createBuffer(std::vector<CubA4::model::Vertex> vertices) = 0;
+		virtual DebugRenderModel createBuffer(std::vector<VertexColor> vertices) = 0;
 		virtual CubA4::render::vulkan::sVkDescriptorSet getWorldDescriptorSet() = 0;
 	protected:
 		IRenderDebugInternal() = default;

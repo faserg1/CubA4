@@ -49,7 +49,7 @@ namespace CubA4::render::engine::debug
 	private:
 		void onCommandsDirty() override;
 		std::shared_ptr<CubA4::render::vulkan::Pipeline> getPipeline(PipelineType type) const override;
-		DebugRenderModel createBuffer(std::vector<CubA4::model::Vertex> vertices) override;
+		DebugRenderModel createBuffer(std::vector<VertexColor> vertices) override;
 		CubA4::render::vulkan::sVkDescriptorSet getWorldDescriptorSet() override;
 
 		void record(uint32_t frame);

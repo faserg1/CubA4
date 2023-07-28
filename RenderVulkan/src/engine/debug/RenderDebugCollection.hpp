@@ -26,7 +26,7 @@ namespace CubA4::render::engine::debug
 			std::shared_ptr<IRenderDebugInternal> internalEvents);
 		~RenderDebugCollection();
 
-		void addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to) override;
+		void addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to, CubA4::ColorRGB color) override;
 		void hide() override;
 		void show() override;
 		bool isVisible() const override;

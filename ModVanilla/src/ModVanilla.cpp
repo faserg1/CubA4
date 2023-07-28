@@ -20,14 +20,16 @@ void ModVanilla::load(std::shared_ptr<const ICore> core)
 {
 	core_ = core;
 	manager_ = std::make_shared<manager::ModManager>();
-	renderStartup_.load(core, manager_);
+	if (core_->getApplicationFlags() & ApplicationFlag::Render)
+		renderStartup_.load(core, manager_);
 	blockSetup_.load(core, manager_);
 	worldSetup_.load(core, manager_);
 }
 
 void ModVanilla::preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
 {
-	renderStartup_.preinit(builder);
+	if (core_->getApplicationFlags() & ApplicationFlag::Render)
+		renderStartup_.preinit(builder);
 }
 
 void ModVanilla::link(std::shared_ptr<const IModLinker> linker)

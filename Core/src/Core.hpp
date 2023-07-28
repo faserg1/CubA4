@@ -3,6 +3,7 @@
 #include <memory>
 #include <ICore.hpp>
 #include <system/Environment.hpp>
+#include <object/EntityManager.hpp>
 #include <game/IGame.hpp>
 #include <CoreExportHelper.hpp>
 #include <config/CoreConfig.hpp>
@@ -28,6 +29,8 @@ namespace CubA4
 		std::shared_ptr<const game::IGame> getGame() const override;
 		std::shared_ptr<system::IRuntime> getRuntime() override;
 
+		std::shared_ptr<object::EntityManager> getEntityManager();
+
 		void setApplicationModeFlags(ApplicationModeFlags flags) override;
 
 		void setEnvironment(std::shared_ptr<system::Environment> env);
@@ -45,6 +48,7 @@ namespace CubA4
 		std::shared_ptr<system::IRuntime> runtime_;
 		std::shared_ptr<system::Environment> env_;
 		std::shared_ptr<game::IGame> game_;
+		std::shared_ptr<object::EntityManager> entityManager_;
 
 		ApplicationModeFlags appModeFlags_ = {};
 	};

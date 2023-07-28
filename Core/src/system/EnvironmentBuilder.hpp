@@ -21,6 +21,7 @@ namespace CubA4::system
 
 		bool registerObject(std::shared_ptr<CubA4::object::IObject> object) override;
 		std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) override;
+		std::shared_ptr<const CubA4::object::IEntityFactory> registerEntity(std::unique_ptr<const CubA4::object::IEntityDefinition> &&entityDef) override;
 	protected:
 	private:
 		Core &core_;

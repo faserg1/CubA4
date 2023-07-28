@@ -18,13 +18,18 @@ source_group(TREE ${CubA4ServerSourceDir} FILES ${CubA4ServerSources})
 
 add_executable(CubA4Server ${CubA4ServerSources})
 target_compile_features(CubA4Server PRIVATE ${TARGET_CXX_STD})
+target_include_directories(CubA4Server PRIVATE src)
 
 #libs
+use_base_library(CubA4Server CoreBase)
+use_base_library(CubA4Server ModBase)
+
+use_library(CubA4Server Core)
 use_library(CubA4Server ModLoader)
 use_library(CubA4Server Network)
 
 #thridparty link libraries
-target_link_libraries(CubA4Server PRIVATE Boost::boost)
+target_link_libraries(CubA4Server PRIVATE Boost::boost Boost::filesystem fmt::fmt)
 
 #system libraries
 use_thread_library(CubA4Server)

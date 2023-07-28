@@ -1,4 +1,7 @@
+#include <app/ServerMain.hpp>
+
 int main(int argc, char *argv[])
 {
-	return 0;
+	CubA4::app::ServerMain serverMain(argc, argv);
+	return serverMain.exec();
 }

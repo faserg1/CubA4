@@ -1,16 +1,6 @@
 #include "./AppVersion.hpp"
 using namespace CubA4::app;
 
-AppVersion::AppVersion()
-{
-	
-}
-
-AppVersion::~AppVersion()
-{
-	
-}
-
 unsigned short AppVersion::major() const
 {
 	return 0;

@@ -4,17 +4,18 @@
 #include <memory>
 #include <world/Position.hpp>
 #include <world/data/BlockData.hpp>
-#include <object/IBlock.hpp>
+#include <system/IIdentityiMap.hpp>
 
 namespace CubA4::world
 {
 	struct ChunkBModification
 	{
+		using IdType = CubA4::system::IIdentityiMap::IdType;
 		CubA4::world::ChunkPos pos;
 
 		struct AddInfo
 		{
-			std::shared_ptr<const CubA4::object::IBlock> block;
+			IdType blockId;
 			CubA4::world::BlockData data;
 			CubA4::world::BlockInChunkPos pos;
 		};

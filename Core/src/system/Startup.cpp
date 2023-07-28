@@ -68,9 +68,13 @@ void Startup::loadConfigs()
 	if (auto core = core_.lock())
 	{
 		auto resourceManager = core->getResourcesManager();
-		auto bindings = resourceManager->find("config/bindings.json");
-		if (bindings)
-			game_->getController()->getBindings()->load(bindings);
+		if (auto controller = game_->getController())
+		{
+			auto bindings = resourceManager->find("config/bindings.json");
+			if (bindings)
+				controller->getBindings()->load(bindings);
+		}
+		
 	}
 }
 
@@ -79,14 +83,21 @@ void Startup::saveConfigs()
 	if (auto core = core_.lock())
 	{
 		auto resourceManager = core->getResourcesManager();
-		auto bindings = resourceManager->edit("config/bindings.json");
-		game_->getController()->getBindings()->save(bindings);
+		if (auto controller = game_->getController())
+		{
+			auto bindings = resourceManager->edit("config/bindings.json");
+			controller->getBindings()->save(bindings);
+		}
 	}
 }
 
 void Startup::initMods()
 {
-	EnvironmentBuilderData envBuilderData(appCallback_->getRenderManager(), appCallback_->getRenderInfo(), game_->getController()->getRootActions());
+	auto appClientCallback = dynamic_cast<IAppClientCallback*>(appCallback_);
+	std::shared_ptr<CubA4::game::controller::IRootActions> rootActions;
+	if (auto controller = game_->getController())
+		rootActions = controller->getRootActions();
+	EnvironmentBuilderData envBuilderData(appClientCallback, rootActions);
 	modLoader_->setup([&envBuilderData, core = core_.lock()](const CubA4::mod::IModInfo &modInfo) -> std::shared_ptr<CubA4::system::IEnvironmentBuilder>
 	{
 		auto envBuilderContext = EnvironmentBuilderContext(modInfo);

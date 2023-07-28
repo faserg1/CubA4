@@ -5,6 +5,8 @@
 
 #include <object/IObject.hpp>
 #include <world/IWorld.hpp>
+#include <object/IEntityDefinition.hpp>
+#include <object/IEntityFactory.hpp>
 #include <world/IWorldDefinition.hpp>
 #include <game/controller/IRootActions.hpp>
 
@@ -30,6 +32,7 @@ namespace CubA4::system
 		virtual bool registerObject(std::shared_ptr<CubA4::object::IObject> object) = 0;
 
 		virtual std::shared_ptr<const CubA4::world::IWorld> createWorld(std::shared_ptr<const CubA4::world::IWorldDefinition> worldDef) = 0;
+		virtual std::shared_ptr<const CubA4::object::IEntityFactory> registerEntity(std::unique_ptr<const CubA4::object::IEntityDefinition> &&entityDef) = 0;
 	protected:
 		explicit IEnvironmentBuilder() = default;
 		virtual ~IEnvironmentBuilder() = default;

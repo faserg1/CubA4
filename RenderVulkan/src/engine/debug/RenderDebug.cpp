@@ -248,14 +248,14 @@ void RenderDebug::createPipelines()
 	wireframe_ = std::make_shared<vulkan::Pipeline>(device_, info);
 }
 
-DebugRenderModel RenderDebug::createBuffer(std::vector<CubA4::model::Vertex> vertices)
+DebugRenderModel RenderDebug::createBuffer(std::vector<VertexColor> vertices)
 {
 	// TODO: move to template class?
 
 	VkBuffer vertexBuffer, vertexTransitBuffer;
 
 	uint64_t verticesSize = ///< Размер буфера вершин, в байтах
-		vertices.size() * sizeof(CubA4::model::Vertex); 
+		vertices.size() * sizeof(VertexColor); 
 
 	const unsigned char bufferCount = 2;
 	VkBufferCreateInfo bufferInfos[bufferCount] = {};

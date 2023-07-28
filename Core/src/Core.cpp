@@ -22,6 +22,7 @@ Core::Core(int argc, const char *const argv[], ApplicationFlags flags) :
 	logger_ = logging::Logger::create(paths_->logsPath());
 	modelFactory_ = std::make_shared<model::ModelFactory>();
 	resourceManager_ = std::make_shared<resources::ResourcesManager>();
+	entityManager_ = std::make_shared<object::EntityManager>();
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
 	auto cacheProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->cachePath());
@@ -89,6 +90,11 @@ std::shared_ptr<const game::IGame> Core::getGame() const
 std::shared_ptr<system::IRuntime> Core::getRuntime()
 {
 	return runtime_;
+}
+
+std::shared_ptr<object::EntityManager> Core::getEntityManager()
+{
+	return entityManager_;
 }
 
 void Core::setApplicationModeFlags(ApplicationModeFlags flags)

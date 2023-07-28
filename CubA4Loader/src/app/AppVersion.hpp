@@ -1,31 +1,22 @@
-#ifndef CUBA4LOADER_APPVERSION_HPP
-#define CUBA4LOADER_APPVERSION_HPP
+#pragma once
 
 #include <info/IVersion.hpp>
 
-namespace CubA4
+namespace CubA4::app
 {
-	namespace app
+	class AppVersion :
+		public virtual CubA4::info::IVersion
 	{
-		class AppVersion :
-			public virtual CubA4::info::IVersion
-		{
-		public:
-			explicit AppVersion();
-			~AppVersion();
-			
-			unsigned short major() const override;
-			unsigned short minor() const override;
-			unsigned short patch() const override;
-			
-			int build() const override;
-			int revision() const override;
-			
-			std::string to_string() const override;
-		protected:
-		private:
-		};
-	}
+	public:
+		unsigned short major() const override;
+		unsigned short minor() const override;
+		unsigned short patch() const override;
+		
+		int build() const override;
+		int revision() const override;
+		
+		std::string to_string() const override;
+	protected:
+	private:
+	};
 }
-
-#endif // CUBA4LOADER_APPVERSION_HPP

@@ -189,7 +189,7 @@ std::shared_ptr<ITexture> TextureImporter::internalImportFromPng(void *pngStruct
 	textureInfo.arrayLayers = 1;
 	textureInfo.imageType = VK_IMAGE_TYPE_2D;
 	textureInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-	textureInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	textureInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
 	textureInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // ???
 	textureInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	textureInfo.samples = VK_SAMPLE_COUNT_1_BIT;

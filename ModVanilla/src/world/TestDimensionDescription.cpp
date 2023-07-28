@@ -21,3 +21,8 @@ std::shared_ptr<IWorldGenerator> TestDimensionDescription::getWorldGenerator() c
 {
 	return worldGenerator_;
 }
+
+const CubA4::physics::IPhysicsDefinition &TestDimensionDescription::getPhysicsDefinition() const
+{
+	return physics_;
+}
