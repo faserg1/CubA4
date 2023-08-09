@@ -4,7 +4,7 @@
 
 namespace CubA4::object
 {
-	class IEntityBuilder;
+	class IEntityFactoryBuilder;
 	class IEntityRenderBuilder;
 
 	class IEntityDefinition : public virtual IObject
@@ -12,8 +12,8 @@ namespace CubA4::object
 	public:
 		virtual ~IEntityDefinition() = default;
 
-		virtual void onComponentStage(IEntityBuilder &builder) = 0;
-		virtual void onRenderPrepareStage(IEntityRenderBuilder &builder) = 0;
+		virtual void onComponentStage(IEntityFactoryBuilder &builder) const = 0;
+		virtual void onRenderPrepareStage(IEntityRenderBuilder &builder) const = 0;
 	protected:
 		explicit IEntityDefinition() = default;
 	};

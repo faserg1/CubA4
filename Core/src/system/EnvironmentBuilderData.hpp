@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <system/IAppClientCallback.hpp>
 #include <system/IdentityMap.hpp>
 #include <object/IObject.hpp>
@@ -29,12 +29,12 @@ namespace CubA4::system
 		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
 		std::shared_ptr<CubA4::game::controller::IRootActions> getActions() const;
 		IdentityMap &getIdentityMap();
-		std::map<int64_t, std::shared_ptr<CubA4::object::IObject>> &getObjects();
+		std::unordered_map<int64_t, std::shared_ptr<CubA4::object::IObject>> &getObjects();
 	protected:
 	private:
 		const IAppClientCallback *appCallback_;
 		const std::shared_ptr<CubA4::game::controller::IRootActions> actions_;
 		IdentityMap identityMap_;
-		std::map<int64_t, std::shared_ptr<CubA4::object::IObject>> objects_;
+		std::unordered_map<int64_t, std::shared_ptr<CubA4::object::IObject>> objects_;
 	};
 }

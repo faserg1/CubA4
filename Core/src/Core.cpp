@@ -2,11 +2,13 @@
 #include "config/CoreConfig.hpp"
 #include "config/FilePaths.hpp"
 #include "logging/Logger.hpp"
-#include "system/Startup.hpp"
+#include <system/Startup.hpp>
 #include "model/ModelFactory.hpp"
 #include "resources/ResourcesManager.hpp"
 #include "resources/FilesystemResourceProvider.hpp"
 #include "system/Runtime.hpp"
+#include <physics/PhysicsManager.hpp>
+#include <object/EntityManager.hpp>
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
 #include <sstream>
@@ -22,7 +24,8 @@ Core::Core(int argc, const char *const argv[], ApplicationFlags flags) :
 	logger_ = logging::Logger::create(paths_->logsPath());
 	modelFactory_ = std::make_shared<model::ModelFactory>();
 	resourceManager_ = std::make_shared<resources::ResourcesManager>();
-	entityManager_ = std::make_shared<object::EntityManager>();
+	entityManager_ = std::make_shared<object::EntityManager>(*this);
+	physicsManager_ = std::make_shared<physics::PhysicsManager>(*this);
 
 	auto fsProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->resourcesPath());
 	auto cacheProvider = std::make_shared<resources::FilesystemResourceProvider>(paths_->cachePath());
@@ -97,6 +100,31 @@ std::shared_ptr<object::EntityManager> Core::getEntityManager()
 	return entityManager_;
 }
 
+std::shared_ptr<physics::PhysicsManager> Core::getPhysicsManager()
+{
+	return physicsManager_;
+}
+
+std::shared_ptr<render::engine::IRenderManager> Core::getRenderManager() const
+{
+	if (!(appFlags_ & ApplicationFlag::Render))
+		return {};
+	auto appClientCallback = dynamic_cast<IAppClientCallback*>(startup_->getAppCallbacks());
+	if (appClientCallback)
+		return appClientCallback->getRenderManager();
+	return {};
+}
+
+const render::IRenderInfo *Core::getRenderInfo() const
+{
+	if (!(appFlags_ & ApplicationFlag::Render))
+		return {};
+	auto appClientCallback = dynamic_cast<IAppClientCallback*>(startup_->getAppCallbacks());
+	if (appClientCallback)
+		return &appClientCallback->getRenderInfo();
+	return {};
+}
+
 void Core::setApplicationModeFlags(ApplicationModeFlags flags)
 {
 	appModeFlags_ = flags;
@@ -110,6 +138,11 @@ void Core::setEnvironment(std::shared_ptr<system::Environment> env)
 void Core::setGame(std::shared_ptr<game::IGame> game)
 {
 	game_ = game;
+}
+
+void Core::setStartup(CubA4::system::Startup *startup)
+{
+	startup_ = startup;
 }
 
 void Core::criticalException() const

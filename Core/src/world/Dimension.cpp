@@ -1,8 +1,9 @@
 #include <world/Dimension.hpp>
+#include <world/World.hpp>
 using namespace CubA4::world;
 
-Dimension::Dimension(Core &core, const CubA4::world::IDimensionDescription &description) :
-	core_(core), description_(description)
+Dimension::Dimension(Core &core, World &world, const CubA4::world::IDimensionDescription &description, std::unique_ptr<physics::IPhysicsWorld> &&physicalWorld) :
+	core_(core), world_(world), description_(description), physicalWorld_(std::move(physicalWorld))
 {
 
 }
@@ -57,6 +58,16 @@ std::vector<CubA4::world::ChunkPos> Dimension::getActiveChunks()
 	return std::move(result);
 }
 
+const IWorld &Dimension::getWorld() const
+{
+	return world_;
+}
+
+World &Dimension::getWorld()
+{
+	return world_;
+}
+
 void Dimension::onChunkLoaded(std::shared_ptr<Chunk> chunk)
 {
 	loadedChunks_.insert(std::make_pair(chunk->getChunkPos(), chunk));
@@ -94,4 +105,15 @@ std::shared_ptr<Chunk> Dimension::findChunk(CubA4::world::ChunkPos pos)
 	if (it == loadedChunks_.end())
 		return {};
 	return it->second;
+}
+
+void Dimension::addEntity(std::shared_ptr<CubA4::object::Entity> entity)
+{
+	entites_.insert(std::make_pair(entity->getEntityId(), entity));
+}
+
+void Dimension::removeEntity(CubA4::object::Entity::IdType id)
+{
+	if (auto it = entites_.find(id); it != entites_.end())
+		entites_.erase(it);
 }

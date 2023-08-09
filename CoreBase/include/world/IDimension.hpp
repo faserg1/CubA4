@@ -11,6 +11,8 @@
 
 namespace CubA4::world
 {
+	class IWorld;
+
 	class IDimension :
 		public virtual CubA4::object::IObject
 	{
@@ -24,6 +26,8 @@ namespace CubA4::world
 
 		virtual std::vector<CubA4::world::ChunkPos> getLoadedChunks() = 0;
 		virtual std::vector<CubA4::world::ChunkPos> getActiveChunks() = 0;
+
+		virtual const IWorld &getWorld() const = 0;
 
 		virtual std::shared_ptr<const IChunk> findChunk(CubA4::world::ChunkPos pos) const = 0;
 	protected:

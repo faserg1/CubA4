@@ -14,6 +14,143 @@ using namespace CubA4::render::engine::material;
 PipelineBuilderMaterial::PipelineBuilderMaterial(std::shared_ptr<const Device> device, CubA4::render::config::VulkanConfigAdapter config) :
 	PipelineBuilderBase(device, config)
 {
+	auto blockFunc = [this]()
+	{
+		const uint16_t posSize = sizeof(float) * 3;
+		const uint16_t uvwSize = sizeof(float) * 3;
+		const uint16_t vertexSize = posSize + uvwSize;
+
+		// Bindings
+
+		vertexBindingDescriptions_.push_back(
+			{
+				0, //binding
+				vertexSize, //stride
+				VK_VERTEX_INPUT_RATE_VERTEX //input rate
+			}
+		);
+
+		//Attributes
+
+		vertexAttrDescriptions_.push_back(
+			{
+				0, //location
+				0, //binding
+				VK_FORMAT_R32G32B32_SFLOAT, //format,
+				0, //offset
+			}
+		);
+
+		vertexAttrDescriptions_.push_back(
+			{
+				1, //location
+				0, //binding
+				VK_FORMAT_R32G32B32_SFLOAT, //format,
+				posSize, //offset
+			}
+		);
+
+		vertexInputInfo_.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexBindingDescriptions_.size());
+		vertexInputInfo_.pVertexBindingDescriptions = vertexBindingDescriptions_.data();
+		vertexInputInfo_.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttrDescriptions_.size());
+		vertexInputInfo_.pVertexAttributeDescriptions = vertexAttrDescriptions_.data();
+	};
+	auto entityFunc = [this]()
+	{
+		const uint16_t posSize = sizeof(float) * 3;
+		const uint16_t uvwSize = sizeof(float) * 3;
+		const uint16_t vertexSize = posSize + uvwSize;
+		const uint16_t matrixSize = sizeof(float) * 16;
+
+		//////// Bindings
+
+		vertexBindingDescriptions_.push_back(
+			{
+				0, //binding
+				vertexSize, //stride
+				VK_VERTEX_INPUT_RATE_VERTEX //input rate
+			}
+		);
+
+		vertexBindingDescriptions_.push_back(
+			{
+				1, //binding
+				matrixSize, //stride
+				VK_VERTEX_INPUT_RATE_INSTANCE //input rate
+			}
+		);
+
+		//////// Attributes
+
+		// vertex
+
+		vertexAttrDescriptions_.push_back(
+			{
+				0, //location
+				0, //binding
+				VK_FORMAT_R32G32B32_SFLOAT, //format,
+				0, //offset
+			}
+		);
+
+		// uv
+
+		vertexAttrDescriptions_.push_back(
+			{
+				1, //location
+				0, //binding
+				VK_FORMAT_R32G32B32_SFLOAT, //format,
+				posSize, //offset
+			}
+		);
+
+		// . Matrix
+
+		// TODO: https://www.reddit.com/r/vulkan/comments/8zx1hn/matrix_as_vertex_input/
+
+		vertexAttrDescriptions_.push_back(
+			{
+				2, //location
+				1, //binding
+				VK_FORMAT_R32G32B32A32_SFLOAT, //format,
+				0, //offset
+			}
+		);
+
+		vertexAttrDescriptions_.push_back(
+			{
+				3, //location
+				1, //binding
+				VK_FORMAT_R32G32B32A32_SFLOAT, //format,
+				sizeof(float) * 4, //offset
+			}
+		);
+
+		vertexAttrDescriptions_.push_back(
+			{
+				4, //location
+				1, //binding
+				VK_FORMAT_R32G32B32A32_SFLOAT, //format,
+				sizeof(float) * 4 * 2, //offset
+			}
+		);
+
+		vertexAttrDescriptions_.push_back(
+			{
+				5, //location
+				1, //binding
+				VK_FORMAT_R32G32B32A32_SFLOAT, //format,
+				sizeof(float) * 4 * 3, //offset
+			}
+		);
+
+		vertexInputInfo_.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexBindingDescriptions_.size());
+		vertexInputInfo_.pVertexBindingDescriptions = vertexBindingDescriptions_.data();
+		vertexInputInfo_.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttrDescriptions_.size());
+		vertexInputInfo_.pVertexAttributeDescriptions = vertexAttrDescriptions_.data();
+	};
+	vertexInputSpecialization_.insert(std::make_pair(MaterialType::Block, blockFunc));
+	vertexInputSpecialization_.insert(std::make_pair(MaterialType::Entity, entityFunc));
 }
 
 PipelineBuilderMaterial::~PipelineBuilderMaterial()
@@ -26,6 +163,11 @@ void PipelineBuilderMaterial::addTexture()
 	textureCount++;
 }
 
+void PipelineBuilderMaterial::setType(MaterialType type)
+{
+	type_ = type;
+}
+
 sVkDescriptorSetLayout PipelineBuilderMaterial::getTextureLayout()
 {
 	return textureLayout_;
@@ -33,45 +175,8 @@ sVkDescriptorSetLayout PipelineBuilderMaterial::getTextureLayout()
 
 void PipelineBuilderMaterial::prepareVertexInput()
 {
-	const uint16_t posSize = sizeof(float) * 3;
-	const uint16_t uvwSize = sizeof(float) * 3;
-	const uint16_t vertexSize = posSize + uvwSize;
-
-	// Bindings
-
-	vertexBindingDescriptions_.push_back(
-		{
-			0, //binding
-			vertexSize, //stride
-			VK_VERTEX_INPUT_RATE_VERTEX //input rate
-		}
-	);
-
-	//Attributes
-
-	vertexAttrDescriptions_.push_back(
-		{
-			0, //location
-			0, //binding
-			VK_FORMAT_R32G32B32_SFLOAT, //format,
-			0, //offset
-		}
-	);
-
-	vertexAttrDescriptions_.push_back(
-		{
-			1, //location
-			0, //binding
-			VK_FORMAT_R32G32B32_SFLOAT, //format,
-			posSize, //offset
-		}
-	);
-
-	vertexInputInfo_.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexBindingDescriptions_.size());
-	vertexInputInfo_.pVertexBindingDescriptions = vertexBindingDescriptions_.data();
-	vertexInputInfo_.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttrDescriptions_.size());
-	vertexInputInfo_.pVertexAttributeDescriptions = vertexAttrDescriptions_.data();
-
+	if (auto it = vertexInputSpecialization_.find(type_); it != vertexInputSpecialization_.end())
+		it->second();
 }
 
 void PipelineBuilderMaterial::prepareInputAssembly()
@@ -82,8 +187,8 @@ void PipelineBuilderMaterial::prepareInputAssembly()
 void PipelineBuilderMaterial::prepareRasterization()
 {
 	rasterizationInfo_.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterizationInfo_.cullMode = VK_CULL_MODE_NONE;
-	rasterizationInfo_.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+	rasterizationInfo_.cullMode = VK_CULL_MODE_BACK_BIT;
+	rasterizationInfo_.frontFace = VK_FRONT_FACE_CLOCKWISE;
 	rasterizationInfo_.lineWidth = 1.f;
 }
 

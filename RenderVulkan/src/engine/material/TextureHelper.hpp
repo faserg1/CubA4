@@ -8,4 +8,5 @@ namespace CubA4::render::engine::material
 	uint8_t LineartoSRGB(double color);
 
 	uint8_t blendNoAlpha(std::initializer_list<uint8_t> toBlend);
+	uint8_t blendLinear(std::initializer_list<uint8_t> toBlend);
 }

@@ -14,6 +14,8 @@ namespace CubA4::game
 		GameControl(Core &core, CubA4::game::Game &game);
 		bool requestWorldChange(const std::string &worldId, const std::string &dimId);
 		CubA4::world::IWorldControl &getWorldControl() override;
+		std::shared_ptr<object::IEntity> requestSpawn(std::shared_ptr<const object::IEntityFactory> factory, IdType dimensionId,
+			const CubA4::world::GlobalPosition &pos) override;
 	private:
 		CubA4::Core &core_;
 		CubA4::game::Game &game_;

@@ -2,6 +2,8 @@
 
 #include <resources/IResource.hpp>
 
+// TODO: make walk/list functions
+
 namespace CubA4::resources
 {
 	class IResourceProvider

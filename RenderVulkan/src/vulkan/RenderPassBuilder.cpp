@@ -142,6 +142,11 @@ uint32_t RenderPassBuilder::addSubpass()
 	return idx;
 }
 
+uint32_t RenderPassBuilder::subpassCount() const
+{
+	return static_cast<uint32_t>(subpasses_.size());
+}
+
 void RenderPassBuilder::addDependency(VkSubpassDependency2 dependency)
 {
 	deps_.push_back(dependency);

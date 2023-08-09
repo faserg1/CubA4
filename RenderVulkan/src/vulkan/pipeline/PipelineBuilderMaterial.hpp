@@ -3,9 +3,12 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 #include <vector>
+#include <map>
+#include <functional>
 #include <vulkan/pipeline/PipelineBuilderBase.hpp>
 #include <config/VulkanConfigAdapter.hpp>
 #include <vulkan/util/VulkanHandlerContainer.hpp>
+#include <engine/material/MaterialType.hpp>
 
 namespace CubA4::render
 {
@@ -31,6 +34,7 @@ namespace CubA4::render
 			~PipelineBuilderMaterial();
 
 			void addTexture();
+			void setType(CubA4::render::engine::material::MaterialType type);
 			sVkDescriptorSetLayout getTextureLayout();
 		protected:
 		private:
@@ -44,6 +48,10 @@ namespace CubA4::render
 
 			uint32_t textureCount = 0;
 			sVkDescriptorSetLayout textureLayout_;
+
+			CubA4::render::engine::material::MaterialType type_ = {};
+
+			std::map<CubA4::render::engine::material::MaterialType, std::function<void()>> vertexInputSpecialization_;
 		private:
 			void prepareVertexInput() override;
 			void prepareInputAssembly() override;

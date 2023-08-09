@@ -10,7 +10,7 @@ namespace CubA4::world
 	{
 	public:
 		GlobalPosition() = default;
-		explicit GlobalPosition(BasePos<long double> globalPos)
+		GlobalPosition(BasePos<long double> globalPos)
 		{
 			clampGlobal(globalPos);
 		}
@@ -82,6 +82,15 @@ namespace CubA4::world
 		const BasePos<float> &inBlockPos() const
 		{
 			return inBlockPos_;
+		}
+		template <typename Type>
+		BasePos<Type> globalPos() const
+		{
+			BasePos<Type> pos;
+			pos.x = static_cast<Type>(static_cast<long double>(chunkPos_.x * ChunkSize) + blockPosition_.x + inBlockPos_.x);
+			pos.y = static_cast<Type>(static_cast<long double>(chunkPos_.y * ChunkSize) + blockPosition_.y + inBlockPos_.y);
+			pos.z = static_cast<Type>(static_cast<long double>(chunkPos_.z * ChunkSize) + blockPosition_.z + inBlockPos_.z);
+			return pos;
 		}
 		std::tuple<ChunkPos, BlockInChunkPos, BasePos<float>> position() const
 		{

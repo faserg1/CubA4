@@ -46,8 +46,24 @@ void CubA4::model::from_json(const nlohmann::json& j, RenderModelData::Face& v)
 	j.at("indexes").get_to(v.indexes);
 }
 
-
 void CubA4::model::to_json(nlohmann::json& j, const RenderModelData& v)
+{
+	j = nlohmann::json
+	{
+		{"vertices", v.vertices},
+		{"faces", v.faces},
+		{"materials", v.materials}
+	};
+}
+
+void CubA4::model::from_json(const nlohmann::json& j, RenderModelData& v)
+{
+	j.at("vertices").get_to(v.vertices);
+	j.at("faces").get_to(v.faces);
+	j.at("materials").get_to(v.materials);
+}
+
+void CubA4::model::to_json(nlohmann::json& j, const BlockRenderModelData& v)
 {
 	j = nlohmann::json
 	{
@@ -59,7 +75,7 @@ void CubA4::model::to_json(nlohmann::json& j, const RenderModelData& v)
 	};
 }
 
-void CubA4::model::from_json(const nlohmann::json& j, RenderModelData& v)
+void CubA4::model::from_json(const nlohmann::json& j, BlockRenderModelData& v)
 {
 	j.at("vertices").get_to(v.vertices);
 	j.at("faces").get_to(v.faces);

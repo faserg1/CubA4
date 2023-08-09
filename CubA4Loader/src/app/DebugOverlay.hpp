@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 namespace CubA4
 {
@@ -9,6 +10,11 @@ namespace CubA4
 		namespace engine
 		{
 			class IRenderEngine;
+
+			namespace debug
+			{
+				class IRenderDebugCollection;
+			}
 		}
 
 		namespace ui
@@ -35,6 +41,8 @@ namespace CubA4
 
 			std::shared_ptr<CubA4::render::ui::IFrame> debugOverlay_;
 			std::shared_ptr<CubA4::render::ui::IText> fpsLabel_;
+
+			std::vector<std::shared_ptr<CubA4::render::engine::debug::IRenderDebugCollection>> worldLines_;
 		};
 	}
 }

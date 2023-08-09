@@ -48,3 +48,14 @@ std::shared_ptr<void> Memory::map(VkDeviceSize offset, VkDeviceSize size) const
 		vkUnmapMemory(mem->device_->getDevice(), mem->getMemory());
 	});
 }
+
+void Memory::flush(VkDeviceSize offset, VkDeviceSize size) const
+{
+	VkMappedMemoryRange range {
+		.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+		.memory = memory_,
+		.offset = offset,
+		.size = size,
+	};
+	vkFlushMappedMemoryRanges(device_->getDevice(), 1, &range);
+}

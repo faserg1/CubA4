@@ -36,7 +36,7 @@ IdentityMap &EnvironmentBuilderData::getIdentityMap()
 	return identityMap_;
 }
 
-std::map<int64_t, std::shared_ptr<CubA4::object::IObject>> &EnvironmentBuilderData::getObjects()
+std::unordered_map<int64_t, std::shared_ptr<CubA4::object::IObject>> &EnvironmentBuilderData::getObjects()
 {
 	return objects_;
 }

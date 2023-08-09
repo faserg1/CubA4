@@ -7,7 +7,7 @@
 #include <future>
 #include <cstddef>
 #include <tuple>
-#include <engine/pipeline/RenderChunkCompilerCore.hpp>
+#include <engine/compilers/RenderChunkCompilerCore.hpp>
 #include <engine/pipeline/RenderFramebufferData.hpp>
 
 namespace CubA4
@@ -47,6 +47,8 @@ namespace CubA4
 						 std::shared_ptr<RenderManager> renderManager, uint32_t subpassNumber);
 					explicit RenderChunkCompiler(const RenderChunkCompiler &) = delete;
 					~RenderChunkCompiler();
+
+					uint32_t getSubpassNumber() const;
 
 					std::shared_ptr<const world::RenderChunk> compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk, const RenderFramebufferData &data);
 					std::shared_ptr<const world::RenderChunk> compileChunk(std::shared_ptr<const world::RenderChunk> chunk, const RenderFramebufferData &data);

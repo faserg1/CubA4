@@ -11,6 +11,7 @@ namespace CubA4::system
 	{
 	public:
 		virtual int64_t getId(const std::shared_ptr<const CubA4::object::IObject> object) const = 0;
+		virtual int64_t getId(const CubA4::object::IObject *object) const = 0;
 		virtual std::string getIdName(const std::shared_ptr<const CubA4::object::IObject> object) const = 0;
 		
 		virtual std::shared_ptr<const CubA4::object::IObject> getObject(int64_t id) const = 0;

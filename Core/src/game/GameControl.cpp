@@ -1,6 +1,7 @@
 #include <game/GameControl.hpp>
 #include <system/Environment.hpp>
 #include <game/IGameSubscriber.hpp>
+#include <object/EntityFactory.hpp>
 
 using namespace CubA4::game;
 
@@ -38,4 +39,17 @@ bool GameControl::requestWorldChange(const std::string &worldId, const std::stri
 CubA4::world::IWorldControl &GameControl::getWorldControl()
 {
 	return *worldControl_.get();
+}
+
+std::shared_ptr<CubA4::object::IEntity> GameControl::requestSpawn(std::shared_ptr<const CubA4::object::IEntityFactory> iFactory, IdType dimensionId,
+	const CubA4::world::GlobalPosition &pos)
+{
+	auto dim = core_.getEnvironment()->getObjectT<CubA4::world::Dimension>(dimensionId);
+	auto &world = dim->getWorld();
+	auto worldId = core_.getEnvironment()->getId(&world);
+	
+	auto factory = std::dynamic_pointer_cast<const object::EntityFactory>(iFactory);
+	auto entity = factory->create(worldId, dimensionId, pos);
+	dim->addEntity(entity);
+	return entity;
 }

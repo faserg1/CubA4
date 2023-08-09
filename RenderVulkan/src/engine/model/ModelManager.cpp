@@ -1,5 +1,6 @@
 #include "./ModelManager.hpp"
-#include "./RenderModel.hpp"
+#include <engine/model/RenderModel.hpp>
+#include <engine/model/EntityRenderModel.hpp>
 #include "../memory/MemoryAllocator.hpp"
 #include "../memory/MemoryHelper.hpp"
 #include "../../vulkan/Memory.hpp"
@@ -21,9 +22,22 @@ ModelManager::~ModelManager()
 	
 }
 
-std::shared_ptr<const IRenderModel> ModelManager::registerModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
+std::shared_ptr<const IRenderModel> ModelManager::registerEntityModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
 {
-	return createModel(renderModelDef);
+	auto &vertices = renderModelDef.getVertices();
+	auto &uvws = renderModelDef.getUVWCoords();
+	auto &faces = renderModelDef.getFaceIndices();
+
+	RenderModelData data {};
+
+	createModel(data, renderModelDef.getId(), vertices, uvws, faces);
+
+	auto usedMaterials = renderModelDef.getUsedMaterials();
+	std::shared_ptr<const CubA4::render::engine::material::IMaterial> material;
+	if (!usedMaterials.empty())
+		material = renderModelDef.getMaterial(usedMaterials.front());
+
+	return std::make_shared<EntityRenderModel>(device_, data, material);
 }
 
 std::shared_ptr<const RenderModel> ModelManager::createModel(const CubA4::model::IRenderModelDefinition &renderModelDef)
@@ -31,15 +45,20 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(const CubA4::model:
 	auto &vertices = renderModelDef.getVertices();
 	auto &uvws = renderModelDef.getUVWCoords();
 	auto &faces = renderModelDef.getFaceIndices();
-	return createModel(renderModelDef.getId(), vertices, uvws, faces);
+
+	RenderModelData data {};
+
+	createModel(data, renderModelDef.getId(), vertices, uvws, faces);
+
+	return std::make_shared<RenderModel>(device_, data);
 }
 
-std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const FaceIndices &faces)
+void ModelManager::createModel(RenderModelData &rmData, std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const FaceIndices &faces)
 {
 	if (vertices.size() != uvws.size())
 	{
 		//TODO: [OOKAMI] Exception — count must be same
-		return {};
+		return;
 	}
 
 	VkBuffer vertexBuffer, vertexTransitBuffer;
@@ -69,12 +88,12 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	if (vkCreateBuffer(device_->getDevice(), &vertexTransitBufferInfo, nullptr, &vertexTransitBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
-		return {};
+		return;
 	}
 	if (vkCreateBuffer(device_->getDevice(), &vertexBufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
-		return {};
+		return;
 	}
 
 	device_->getMarker().setName(vertexTransitBuffer, "vertex transit buffer");
@@ -138,12 +157,12 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	if (vkCreateBuffer(device_->getDevice(), &indexTransitBufferInfo, nullptr, &indexTransitBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
-		return {};
+		return;
 	}
 	if (vkCreateBuffer(device_->getDevice(), &indexBufferInfo, nullptr, &indexBuffer) != VK_SUCCESS)
 	{
 		// TODO: [OOKAMI] Exception, etc
-		return {};
+		return;
 	}
 
 	device_->getMarker().setName(indexTransitBuffer, "index transit buffer");
@@ -209,7 +228,6 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 
 	vkDestroyBuffer(device_->getDevice(), indexTransitBuffer, nullptr);
 
-	RenderModelData rmData = {};
 	rmData.vertexBufferMemory = memoryVertexBuffer;
 	rmData.indexBufferMemory = memoryIndexBuffer;
 	rmData.vertexBuffer = vertexBuffer;
@@ -217,6 +235,4 @@ std::shared_ptr<const RenderModel> ModelManager::createModel(std::string id, con
 	rmData.id = id;
 	rmData.vertexCount = static_cast<uint32_t>(vertices.size());
 	rmData.indexCount = static_cast<uint32_t>(indexCount);
-
-	return std::make_shared<RenderModel>(device_, rmData);
 }

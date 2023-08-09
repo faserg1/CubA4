@@ -28,8 +28,10 @@ namespace CubA4::render::engine
 		{
 		public:
 			using sRenderChunk = std::shared_ptr<const world::RenderChunk>;
-			explicit RenderEngineWorldPipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler, RenderFramebufferData data);
+			explicit RenderEngineWorldPipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler);
 			~RenderEngineWorldPipeline();
+
+			uint32_t getSubpassNumber() const;
 
 			void pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks) override;
 			void onFramebufferUpdated(const RenderFramebufferData &data) override;
@@ -43,7 +45,8 @@ namespace CubA4::render::engine
 			const std::shared_ptr<RenderChunkCompiler> chunkCompiler_;
 			tf::Executor exec_;
 			CubA4::util::SubscriptionHelper<IRenderEngineWorldPipelineSubscriber> subHelper_;
-			RenderFramebufferData data_;
+			RenderFramebufferData data_ = {};
+			// TODO: use chunk hash
 			std::map<CubA4::world::ChunkPos, sRenderChunk> chunks_;
 		};
 	}

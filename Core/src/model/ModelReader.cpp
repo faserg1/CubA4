@@ -15,6 +15,23 @@ ModelReader::~ModelReader()
 	
 }
 
+BlockRenderModelData ModelReader::readBlockRenderModel(std::shared_ptr<const resources::IResource> resource) const
+{
+	std::string str;
+	const auto size = resource->size();
+	str.resize(size);
+	resource->copyIn(str.data(), size, 0);
+	auto json = nlohmann::json::parse(str);
+	return json.get<BlockRenderModelData>();
+}
+
+void ModelReader::writeBlockRenderModel(std::shared_ptr<resources::IResource> resource, const BlockRenderModelData &model)
+{
+	nlohmann::json j = model;
+	const auto data = j.dump();
+	resource->save(data.data(), data.size());
+}
+
 RenderModelData ModelReader::readRenderModel(std::shared_ptr<const resources::IResource> resource) const
 {
 	std::string str;

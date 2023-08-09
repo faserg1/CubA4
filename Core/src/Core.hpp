@@ -3,13 +3,39 @@
 #include <memory>
 #include <ICore.hpp>
 #include <system/Environment.hpp>
-#include <object/EntityManager.hpp>
 #include <game/IGame.hpp>
 #include <CoreExportHelper.hpp>
 #include <config/CoreConfig.hpp>
 
 namespace CubA4
 {
+
+	namespace physics
+	{
+		class PhysicsManager;
+	}
+
+	namespace object
+	{
+		class EntityManager;
+	}
+
+	namespace system
+	{
+		class Startup;
+	}
+
+	namespace render
+	{
+		class IRenderInfo;
+
+		namespace engine
+		{
+			class IRenderManager;
+		}
+	}
+
+	
 	class Core final :
 		public virtual ICore, public std::enable_shared_from_this<Core>
 	{
@@ -30,11 +56,17 @@ namespace CubA4
 		std::shared_ptr<system::IRuntime> getRuntime() override;
 
 		std::shared_ptr<object::EntityManager> getEntityManager();
+		std::shared_ptr<physics::PhysicsManager> getPhysicsManager();
+
+		std::shared_ptr<render::engine::IRenderManager> getRenderManager() const;
+		const render::IRenderInfo *getRenderInfo() const;
 
 		void setApplicationModeFlags(ApplicationModeFlags flags) override;
 
 		void setEnvironment(std::shared_ptr<system::Environment> env);
 		void setGame(std::shared_ptr<game::IGame> game);
+
+		void setStartup(CubA4::system::Startup *startup);
 
 		void criticalException() const override;
 	protected:
@@ -49,6 +81,10 @@ namespace CubA4
 		std::shared_ptr<system::Environment> env_;
 		std::shared_ptr<game::IGame> game_;
 		std::shared_ptr<object::EntityManager> entityManager_;
+		std::shared_ptr<physics::PhysicsManager> physicsManager_;
+
+		CubA4::system::Startup *startup_;
+
 
 		ApplicationModeFlags appModeFlags_ = {};
 	};

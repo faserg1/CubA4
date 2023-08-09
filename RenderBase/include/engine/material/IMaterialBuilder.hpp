@@ -1,32 +1,20 @@
-#ifndef RENDERBASE_IMATERIALBUILDER_HPP
-#define RENDERBASE_IMATERIALBUILDER_HPP
+#pragma once
 
 #include <memory>
 
-namespace CubA4
+namespace CubA4::render::engine::material
 {
-	namespace render
+	class IMaterial;
+	class ITexture;
+
+	class IMaterialBuilder
 	{
-		namespace engine
-		{
-			namespace material
-			{
-				class IMaterial;
-				class ITexture;
-
-				class IMaterialBuilder
-				{
-				public:
-					virtual std::shared_ptr<const IMaterial> build() = 0;
-					virtual void addTexture(std::shared_ptr<const ITexture> texture) = 0;
-				protected:
-					explicit IMaterialBuilder() = default;
-					virtual ~IMaterialBuilder() = default;
-				private:
-				};
-			}
-		}
-	}
+	public:
+		virtual std::shared_ptr<const IMaterial> build() = 0;
+		virtual void addTexture(std::shared_ptr<const ITexture> texture) = 0;
+	protected:
+		explicit IMaterialBuilder() = default;
+		virtual ~IMaterialBuilder() = default;
+	private:
+	};
 }
-
-#endif // RENDERBASE_IMATERIALBUILDER_HPP

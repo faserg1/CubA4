@@ -1,4 +1,4 @@
-#include "./SimpleRenderModelDefinition.hpp"
+#include <model/SimpleRenderModelDefinition.hpp>
 #include <algorithm>
 #include <ranges>
 #include <set>
@@ -36,8 +36,6 @@ SimpleRenderModelDefinition::SimpleRenderModelDefinition(const std::string &id, 
 		indexOffset += face.indexes.size();
 	}
 
-	nonOpaque_ = data.nonOpaque;
-	hiddenFaces_ = data.hidden | ranges::to<std::unordered_map>;
 	materialToFaces_ = data.materials | ranges::to<std::unordered_map>;
 }
 
@@ -77,37 +75,4 @@ SimpleRenderModelDefinition::RMaterial SimpleRenderModelDefinition::getMaterial(
 	if (auto result = materialsMap_.find(materialId); result != materialsMap_.end())
 		return result->second;
 	return {};
-}
-
-std::vector<unsigned short> SimpleRenderModelDefinition::getFaces(const std::string &materialId, BlockSides hiddenSides, const BlockData& data) const
-{
-	constexpr const auto allSides = BlockSide::Back | BlockSide::Front | BlockSide::Left | BlockSide::Right | BlockSide::Top | BlockSide::Bottom;
-	// assume, that if we have 6 sides and all them are hidden, we have nothing to render
-	if (hiddenSides == allSides)
-		return {};
-	auto allFacesIt = materialToFaces_.find(materialId);
-	if (allFacesIt == materialToFaces_.end())
-		return {};
-	std::vector<unsigned short> totalFaces;
-	totalFaces.reserve(allFacesIt->second.size());
-	std::set<unsigned short> hidden;
-	for (const auto &pair : hiddenFaces_)
-	{
-		if (hiddenSides & pair.first)
-		{
-			for (auto idx : pair.second)
-				hidden.insert(idx);
-		}
-	}
-	for (auto idx : allFacesIt->second)
-	{
-		if (hidden.find(idx) == hidden.end())
-			totalFaces.push_back(idx);
-	}
-	return std::move(totalFaces);
-}
-
-BlockSides SimpleRenderModelDefinition::getNonOpaqueSide(const BlockData& data) const
-{
-	return nonOpaque_;
 }

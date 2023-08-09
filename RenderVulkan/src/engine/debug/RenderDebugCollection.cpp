@@ -1,18 +1,24 @@
 #include <engine/debug/RenderDebugCollection.hpp>
 using namespace CubA4::render::engine::debug;
+using namespace CubA4::render::engine::memory;
 
-RenderDebugCollection::RenderDebugCollection(vulkan::CommandPool &cmdPool,
+RenderDebugCollection::RenderDebugCollection(
+	std::shared_ptr<const vulkan::Device> device,
+	vulkan::CommandPool &cmdPool,
 	std::shared_ptr<vulkan::RenderPass> renderPass,
 	std::shared_ptr<IRenderDebugInternal> internal) :
-	cmdPool_(cmdPool), renderPass_(renderPass), internal_(internal)
+	cmdPool_(cmdPool), renderPass_(renderPass), internal_(internal),
+	memoryManager_(std::make_shared<MemoryManager>(device))
 {
 
 }
 
 RenderDebugCollection::~RenderDebugCollection() = default;
 
-void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to, CubA4::ColorRGB color)
+void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to,
+	CubA4::ColorRGB colorFrom, CubA4::ColorRGB colorTo)
 {
+	// TODO: move as addLines
 	auto i = internal_.lock();
 	if (!i)
 		return;
@@ -22,9 +28,9 @@ void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::
 	vertices[0].y = from.y;
 	vertices[0].z = from.z;
 
-	vertices[0].r = color.r;
-	vertices[0].g = color.g;
-	vertices[0].b = color.b;
+	vertices[0].r = colorFrom.r;
+	vertices[0].g = colorFrom.g;
+	vertices[0].b = colorFrom.b;
 
 
 
@@ -32,17 +38,94 @@ void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::
 	vertices[1].y = to.y;
 	vertices[1].z = to.z;
 
-	vertices[1].r = color.r;
-	vertices[1].g = color.g;
-	vertices[1].b = color.b;
+	vertices[1].r = colorTo.r;
+	vertices[1].g = colorTo.g;
+	vertices[1].b = colorTo.b;
 
 	DebugModel model;
 	model.type = PipelineType::Line;
 	model.renderModel = i->createBuffer(std::move(vertices));
 	model.chunkPos = chPos;
 
-	models_.push_back(model);
+	{
+		auto modelsLock = std::unique_lock(modelsMutex_);
 
+		if (model.renderModel.vertexCount)
+			models_.push_back(model);
+		else
+		{
+			// TODO: Log, error?
+		}
+	}
+	
+
+	i->onCommandsDirty();
+	dirty_ = true;
+}
+
+void RenderDebugCollection::addLines(CubA4::world::ChunkPos chPos, const std::vector<LineInfo> &lines)
+{
+	auto i = internal_.lock();
+	if (!i)
+		return;
+	if (!lines.size())
+		return;
+
+	std::vector<VertexColor> vertices(lines.size() * 2);
+
+	for (size_t idx = 0; idx < lines.size(); ++idx)
+	{
+		auto &lineInfo = lines[idx];
+
+		vertices[idx * 2 + 0].x = lineInfo.from.x;
+		vertices[idx * 2 + 0].y = lineInfo.from.y;
+		vertices[idx * 2 + 0].z = lineInfo.from.z;
+
+		vertices[idx * 2 + 0].r = lineInfo.colorFrom.r;
+		vertices[idx * 2 + 0].g = lineInfo.colorFrom.g;
+		vertices[idx * 2 + 0].b = lineInfo.colorFrom.b;
+
+
+
+		vertices[idx * 2 + 1].x = lineInfo.to.x;
+		vertices[idx * 2 + 1].y = lineInfo.to.y;
+		vertices[idx * 2 + 1].z = lineInfo.to.z;
+
+		vertices[idx * 2 + 1].r = lineInfo.colorTo.r;
+		vertices[idx * 2 + 1].g = lineInfo.colorTo.g;
+		vertices[idx * 2 + 1].b = lineInfo.colorTo.b;
+	}
+
+	
+
+	DebugModel model;
+	model.type = PipelineType::Line;
+	model.renderModel = i->createBuffer(std::move(vertices));
+	model.chunkPos = chPos;
+
+	{
+		auto modelsLock = std::unique_lock(modelsMutex_);
+
+		if (model.renderModel.vertexCount)
+			models_.push_back(model);
+		else
+		{
+			// TODO: Log, error?
+		}
+	}
+	
+
+	i->onCommandsDirty();
+	dirty_ = true;
+}
+
+void RenderDebugCollection::clear()
+{
+	auto i = internal_.lock();
+	if (!i)
+		return;
+	auto modelsLock = std::unique_lock(modelsMutex_);
+	models_.clear();
 	i->onCommandsDirty();
 	dirty_ = true;
 }
@@ -75,6 +158,9 @@ void RenderDebugCollection::record(VkCommandBuffer primaryBuffer, uint32_t subpa
 		// TODO: LOG ERROR!!
 		return;
 	}
+
+	if (models_.empty())
+		return;
 
 	if (!buffer_)
 	{
@@ -122,26 +208,33 @@ void RenderDebugCollection::record(VkCommandBuffer primaryBuffer, uint32_t subpa
 	vkCmdSetViewport(buffer_, 0, 1, &viewport);
 	vkCmdSetScissor(buffer_, 0, 1, &scissor);
 
-	for (const auto &model : models_)
 	{
-		auto pipeline = internal->getPipeline(model.type);
-		if (!pipeline)
-			continue;
-	
-		pipeline->bind(buffer_);
+		auto modelsLock = std::unique_lock(modelsMutex_);
+		for (const auto &model : models_)
+		{
+			if (!model.renderModel.vertexCount || !model.renderModel.vertexBuffer)
+				continue;
 
-		constexpr const uint16_t descriptorSetCount = 1;
-		VkDescriptorSet sets[descriptorSetCount] = { worldSet->get()};
+			auto pipeline = internal->getPipeline(model.type);
+			if (!pipeline)
+				continue;
+		
+			pipeline->bind(buffer_);
 
-		vkCmdPushConstants(buffer_, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(model.chunkPos), &model.chunkPos);
-		vkCmdBindDescriptorSets(buffer_, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, descriptorSetCount, sets, 0, nullptr);
+			constexpr const uint16_t descriptorSetCount = 1;
+			VkDescriptorSet sets[descriptorSetCount] = { worldSet->get()};
 
-		auto vBuffer = model.renderModel.vertexBuffer->get();
-		static const VkDeviceSize offset = 0;
-		vkCmdBindVertexBuffers(buffer_, 0, 1, &vBuffer, &offset);
+			vkCmdPushConstants(buffer_, pipeline->getLayout(), VK_SHADER_STAGE_ALL, 0, sizeof(model.chunkPos), &model.chunkPos);
+			vkCmdBindDescriptorSets(buffer_, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getLayout(), 0, descriptorSetCount, sets, 0, nullptr);
 
-		vkCmdDraw(buffer_, model.renderModel.vertexCount, 1, 0, 0);
+			auto vBuffer = model.renderModel.vertexBuffer->get();
+			static const VkDeviceSize offset = 0;
+			vkCmdBindVertexBuffers(buffer_, 0, 1, &vBuffer, &offset);
+
+			vkCmdDraw(buffer_, model.renderModel.vertexCount, 1, 0, 0);
+		}
 	}
+
 
 	/////////////////////////////////////////////////
 	vkEndCommandBuffer(buffer_);

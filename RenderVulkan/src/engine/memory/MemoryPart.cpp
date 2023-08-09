@@ -40,3 +40,10 @@ std::shared_ptr<void> MemoryPart::map(VkDeviceSize offset, VkDeviceSize size) co
 		size = size_ - offset;
 	return block_->getMemory()->map(offset_ + offset, size);
 }
+
+void MemoryPart::flush(VkDeviceSize offset, VkDeviceSize size) const
+{
+	if (size == VK_WHOLE_SIZE)
+		size = size_ - offset;
+	block_->getMemory()->flush(offset_ + offset, size);
+}

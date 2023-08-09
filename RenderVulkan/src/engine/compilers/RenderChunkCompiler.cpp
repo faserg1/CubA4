@@ -27,12 +27,17 @@ using namespace CubA4::render::vulkan;
 RenderChunkCompiler::RenderChunkCompiler(std::shared_ptr<const ICore> core, std::shared_ptr<const Device> device, std::shared_ptr<const RenderPass> renderPass,
 	std::shared_ptr<RenderManager> renderManager, uint32_t subpassNumber) :
 	RenderChunkCompilerCore(core, device, renderManager->getModelManager()), subpassNumber_(subpassNumber), renderPass_(renderPass), 
-	resourceManager_(renderManager->getResourceManager()), worldManager_(std::dynamic_pointer_cast<const WorldManager>(renderManager->getWorldManager()))
+	resourceManager_(renderManager->getResourceManager()), worldManager_(renderManager->getWorldManager())
 {
 }
 
 RenderChunkCompiler::~RenderChunkCompiler()
 {
+}
+
+uint32_t RenderChunkCompiler::getSubpassNumber() const
+{
+	return subpassNumber_;
 }
 
 std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunk(std::shared_ptr<const CubA4::world::IChunk> chunk, const RenderFramebufferData &data)
@@ -48,13 +53,12 @@ std::shared_ptr<const world::RenderChunk> RenderChunkCompiler::compileChunk(std:
 	return RenderChunkCompiler::compileChunkInternal(chunk->getBlockData(), chunk->getChunkPos(), data);
 }
 
-// TODO: [OOKAMI] Отрефакторить это всё! 
-
 std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(const RenderModels &compiledBlockData, const CubA4::world::ChunkPos &chunkPos, const RenderFramebufferData &pipelineData)
 {
 	auto materials = compiledBlockData | ranges::views::keys | ranges::to<std::vector>;
 	auto renderModels = compiledBlockData | ranges::views::values | ranges::to<std::vector>;
 	auto poolWrapper = lockCommandPool();
+	// TODO: remove descriptor pool from chunk compiler?
 	auto descriptorPool = getDescriptorPool(poolWrapper);
 
 	std::vector<VkCommandBuffer> buffers(compiledBlockData.size());
@@ -77,9 +81,6 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(con
 	beginInfo.pInheritanceInfo = &inheritanceInfo;
 
 	auto worldSet = worldManager_->getWorldDescriptorSet();
-	
-	std::vector<VkBuffer> instanceInfos;
-	std::vector<std::shared_ptr<const IMemoryPart>> memoryParts;
 
 	for (std::size_t idx = 0; idx < compiledBlockData.size(); idx++)
 	{
@@ -126,11 +127,8 @@ std::shared_ptr<const RenderChunk> RenderChunkCompiler::compileChunkInternal(con
 		vkEndCommandBuffer(cmdBuffer);
 	}
 
-	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, buffers, instanceInfos, memoryParts]()
+	std::function<void()> deleter = [dev = device_, neededPool = poolWrapper->getPool(), dPool = descriptorPool, buffers]()
 	{
-		for (auto instanceInfo : instanceInfos)
-			vkDestroyBuffer(dev->getDevice(), instanceInfo, nullptr);
-
 		decltype(poolWrapper) lock;
 		do
 		{

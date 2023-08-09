@@ -35,7 +35,8 @@ namespace CubA4::render::vulkan
 		uint32_t addDescription(VkFormat format, VkImageLayout finalLayout, bool antialiasing, LoadOp loadOp, StoreOp storeOp, VkImageLayout initLayout = VK_IMAGE_LAYOUT_UNDEFINED);
 		void addColorReference(uint32_t subpassIndex, uint32_t idxColor, VkImageLayout layoutColor, uint32_t idxDepth, VkImageLayout layoutDepth, uint32_t idxResolve, VkImageLayout layoutResolve);
 		VkAttachmentReference2 *addExternalColorReference(uint32_t subpassTo, const VkAttachmentReference2 &reference);
-		uint32_t addSubpass();		
+		uint32_t addSubpass();
+		uint32_t subpassCount() const;	
 		void addDependency(VkSubpassDependency2 dependency);
 
 		template <class TypeNext>

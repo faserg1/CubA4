@@ -10,8 +10,11 @@
 
 #include "./RenderManager.hpp"
 #include "./RenderGameHandler.hpp"
-#include "./pipeline/RenderChunkCompiler.hpp"
+#include <engine/compilers/RenderChunkCompiler.hpp>
 #include "./pipeline/RenderEnginePipeline.hpp"
+
+#include <engine/render/ChunkSubRenderPipeline.hpp>
+#include <engine/render/EntitySubRenderPipeline.hpp>
 
 #include <algorithm>
 #include <stdexcept>
@@ -153,9 +156,12 @@ void VulkanRenderEngine::setup()
 
 	renderManager_->setup();
 
-	render_->setup(renderEnginePipeline_->getWorldPipeline());
+	auto chunkRender = std::make_unique<pipeline::ChunkSubRenderPipeline>(renderEnginePipeline_->getWorldPipeline(), framebufferManager_->getImageCount());
+	auto entityRender = std::make_unique<pipeline::EntitySubRenderPipeline>(renderEnginePipeline_->getEntityPipeline(), framebufferManager_->getImageCount());
+	render_->addSubPipeline(std::move(chunkRender));
+	render_->addSubPipeline(std::move(entityRender));
 
-	renderGameHandler_ = std::make_shared<RenderGameHandler>(renderEnginePipeline_->getWorldPipeline());
+	renderGameHandler_ = std::make_shared<RenderGameHandler>(core_, renderEnginePipeline_->getWorldPipeline(), renderEnginePipeline_->getEntityPipeline());
 
 	mainPipelines_.push_back(this);
 	mainPipelines_.push_back(renderManager_->getDebug().get());
@@ -189,7 +195,7 @@ void VulkanRenderEngine::loop()
 			framebufferManager_->onAcquireFailed();
 			continue;
 		}
-
+		render_->onAcquire(imgIndex);
 		renderManager_->getWorldManager()->onFrameUpdate();
 
 		std::shared_ptr<const CubA4::render::vulkan::Semaphore> renderDoneSemaphore = acquireSemaphore;
@@ -200,8 +206,6 @@ void VulkanRenderEngine::loop()
 			if (doneSemaphore)
 				renderDoneSemaphore = doneSemaphore;
 		}
-
-		//renderManager_->getDebug()->record(framebuffer, imgIndex);
 		
 		if (renderDoneSemaphore && renderDoneSemaphore != acquireSemaphore)
 			presetation_->send(currentSwapchain, imgIndex, { renderDoneSemaphore });

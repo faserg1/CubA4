@@ -1,5 +1,7 @@
 #pragma once
 
+#include <world/Position.hpp>
+
 namespace CubA4::world
 {
 	class IDimensionSubscriber
@@ -7,6 +9,7 @@ namespace CubA4::world
 	public:
 		virtual void onActiveChunksUpdated() {}
 		virtual void onLoadedChunksUpdated() {}
+		virtual void onChunkUpdated(const CubA4::world::ChunkPos &chunk) {}
 	protected:
 		explicit IDimensionSubscriber() = default;
 		virtual ~IDimensionSubscriber() = default;

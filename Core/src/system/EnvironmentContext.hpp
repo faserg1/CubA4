@@ -2,15 +2,15 @@
 
 #include <system/IdentityMap.hpp>
 #include <object/IObject.hpp>
-#include <map>
+#include <unordered_map>
 
 namespace CubA4::system
 {
 	class EnvironmentContext
 	{
 	public:
-		using objectsMap_t = std::map<int64_t, std::shared_ptr<CubA4::object::IObject>>;
-		using reverseObjectsMap_t = std::map<std::shared_ptr<const CubA4::object::IObject>, int64_t>;
+		using objectsMap_t = std::unordered_map<int64_t, std::shared_ptr<CubA4::object::IObject>>;
+		using reverseObjectsMap_t = std::unordered_map<const CubA4::object::IObject*, int64_t>;
 		explicit EnvironmentContext(IdentityMap &&map, objectsMap_t &&objectsMap);
 		explicit EnvironmentContext(EnvironmentContext &&context);
 		~EnvironmentContext();

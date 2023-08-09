@@ -1,12 +1,12 @@
 #pragma once
 
-#include <model/IBlockRenderModelDefinition.hpp>
+#include <model/IRenderModelDefinition.hpp>
 #include <model/RenderModelData.hpp>
 #include <unordered_map>
 
 namespace CubA4::model
 {
-	class SimpleRenderModelDefinition : public virtual IBlockRenderModelDefinition
+	class SimpleRenderModelDefinition : public virtual IRenderModelDefinition
 	{
 	public:
 		using RMaterialsMap = std::unordered_map<std::string, RMaterial>;
@@ -19,8 +19,6 @@ namespace CubA4::model
 		const std::vector<Vertex> &getVertices() const override;
 		const std::vector<UVWCoords> &getUVWCoords() const override;
 		RMaterial getMaterial(const std::string &materialId) const override;
-		std::vector<unsigned short> getFaces(const std::string &materialId, world::BlockSides hiddenSides, const world::BlockData& data) const override;
-		world::BlockSides getNonOpaqueSide(const world::BlockData& data) const override;
 	private:
 		const std::string id_;
 		FaceIndices faces_;

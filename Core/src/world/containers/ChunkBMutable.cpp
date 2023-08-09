@@ -2,10 +2,12 @@
 #include <limits>
 using namespace CubA4::world;
 
+constexpr const auto BlockDataIDNone = std::numeric_limits<decltype(BlockData::id)>::max();
+
 ChunkBMutable::ChunkBMutable(size_t id, CubA4::system::IIdentityiMap::IdType blockId, CubA4::world::Layer layer) :
     id_(id), blockId_(blockId), layer_(layer)
 {
-	blockMap_.fill(std::numeric_limits<decltype(BlockData::id)>::max());
+	blockMap_.fill(BlockDataIDNone);
 }
 
 ChunkBMutable::~ChunkBMutable()
@@ -40,12 +42,12 @@ CubA4::world::Layer ChunkBMutable::getLayer() const
 
 bool ChunkBMutable::hasBlockAt(const world::BlockInChunkPos &pos) const
 {
-    return blockMap_[getBlockIndex(pos)] != std::numeric_limits<decltype(BlockData::id)>::max();
+    return blockMap_[getBlockIndex(pos)] != BlockDataIDNone;
 }
 
 bool ChunkBMutable::hasBlockAt(uint32_t index) const
 {
-	return blockMap_[index] != std::numeric_limits<decltype(BlockData::id)>::max();
+	return blockMap_[index] != BlockDataIDNone;
 }
 
 uint32_t ChunkBMutable::getBlockIndex(const world::BlockInChunkPos &pos) const
@@ -55,7 +57,7 @@ uint32_t ChunkBMutable::getBlockIndex(const world::BlockInChunkPos &pos) const
 
 uint32_t ChunkBMutable::getBlockLocalIndex(const world::BlockInChunkPos &pos) const
 {
-	const auto max = std::numeric_limits<decltype(BlockData::id)>::max();
+	const auto max = BlockDataIDNone;
 	const auto giMax = indexByPos(pos);
 	uint32_t li = 0;
 	for (uint32_t gi = 0; gi < giMax; gi++)
@@ -74,7 +76,7 @@ CubA4::world::BlockInChunkPos ChunkBMutable::getBlockPosition(uint32_t index) co
 CubA4::world::BlockInChunkPos ChunkBMutable::getBlockPositionLocal(uint32_t localIndex) const
 {
 	uint32_t gi = 0;
-	const auto max = std::numeric_limits<decltype(BlockData::id)>::max();
+	const auto max = BlockDataIDNone;
 	for (uint32_t li = 0; li < localIndex; gi++)
 	{
 		if (blockMap_[gi] != max)
@@ -100,7 +102,7 @@ void ChunkBMutable::setBlockAt(const world::BlockInChunkPos &pos, decltype(Block
 
 void ChunkBMutable::setBlockAt(uint32_t index, decltype(BlockData::id) dataId)
 {
-	const auto max = std::numeric_limits<decltype(BlockData::id)>::max();
+	const auto max = BlockDataIDNone;
 	if (blockMap_[index] == max && dataId != max)
 		blockCount_++;
 	else if (blockMap_[index] != max && dataId == max)

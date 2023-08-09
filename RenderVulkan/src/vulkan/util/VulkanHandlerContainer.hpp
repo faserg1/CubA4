@@ -23,7 +23,7 @@ namespace CubA4::render::vulkan::util
 			return vulkanObject_;
 		}
 	private:
-		const TVulkanObject vulkanObject_;
+		const TVulkanObject vulkanObject_ = VK_NULL_HANDLE;
 		const std::function<void(TVulkanObject)> deleter_;
 	};
 
@@ -31,7 +31,7 @@ namespace CubA4::render::vulkan::util
 	std::shared_ptr<VulkanHandlerContainer<TVulkanObject>>
 		createSharedVulkanObject(TVulkanObject object, std::function<void(TVulkanObject)> deleter)
 	{
-			return std::make_shared<VulkanHandlerContainer<TVulkanObject>>(object, deleter);
+		return std::make_shared<VulkanHandlerContainer<TVulkanObject>>(object, deleter);
 	}
 }
 

@@ -18,6 +18,7 @@ namespace CubA4::world
 	struct BlockAt
 	{
 		CubA4::system::IIdentityiMap::IdType blockId = std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max();
+		decltype(CubA4::world::BlockData::id) dataId = std::numeric_limits<decltype(CubA4::world::BlockData::id)>::max();
 		CubA4::world::BlockInChunkPos pos;
 		CubA4::world::Layer layer;
 	};
@@ -42,6 +43,9 @@ namespace CubA4::world
 		virtual bool hasBlocksAt(uint32_t index) const = 0;
 		virtual std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const = 0;
 		virtual CubA4::world::BlockAt getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const = 0;
+
+		virtual std::vector<CubA4::world::BlockAt> getBlocksAt(uint32_t index) const = 0;
+		virtual CubA4::world::BlockAt getBlockAt(uint32_t index, world::Layer layer) const = 0;
 
 		virtual const IDataProvider &getDataProvider() const = 0;
 	protected:

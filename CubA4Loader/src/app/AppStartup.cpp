@@ -92,17 +92,6 @@ bool AppStartup::setupGame()
 	camera_ = wm->createCamera();
 	wm->setActiveCamera(camera_);
 
-	// test world lines
-	static std::vector<std::shared_ptr<CubA4::render::engine::debug::IRenderDebugCollection>> worldLines;
-	auto debug = rm->getDebug();
-	auto col = debug->addCollection();
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {20.f, 0.f, 0.f}, {1, 0, 0});
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 20.f, 0.f}, {0, 1, 0});
-	col->addLine({0, 0, 0}, {0.f, 0.f, 0.f}, {0.f, 0.f, 20.f}, {0, 0, 1});
-	worldLines.push_back(col);
-
-	// test thing
-
 	static auto sub2 = startup_->getGame()->getController()->getRootActions()->addActionCallback("mouse", [this]()
 	{
 		static auto request = false;
@@ -130,7 +119,7 @@ bool AppStartup::setupGame()
 			auto ray = world->getRayFrom(x, y);
 			auto col = debug->addCollection();
 			auto fPos = ray.position.inBlockPos() + ray.position.blockPosition();
-			auto fPosTo = ray.direction * 20 + fPos;
+			auto fPosTo = ray.direction * CubA4::world::ChunkSize + fPos;
 			col->addLine(ray.position.chunkPos(), fPos, fPosTo);
 			collections.push_back(col);
 		}

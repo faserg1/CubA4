@@ -22,6 +22,8 @@ namespace CubA4::render::engine::memory
 		Uniform,
 	};
 
+	// TODO: batch copy commands
+
 	class MemoryHelper
 	{
 		struct Queue;

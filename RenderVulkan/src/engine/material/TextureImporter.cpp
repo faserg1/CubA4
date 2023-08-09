@@ -336,9 +336,9 @@ void TextureImporter::makeNextLevel(void *src, void *dst, int bitDepth, uint8_t 
 				srcPixels[px] = getSourcePixelData(sx, sy);
 			}
 
-			dstPixel->r = blendNoAlpha({srcPixels[0]->r, srcPixels[1]->r, srcPixels[2]->r, srcPixels[3]->r});
-			dstPixel->g = blendNoAlpha({srcPixels[0]->g, srcPixels[1]->g, srcPixels[2]->g, srcPixels[3]->g});
-			dstPixel->b = blendNoAlpha({srcPixels[0]->b, srcPixels[1]->b, srcPixels[2]->b, srcPixels[3]->b});
+			dstPixel->r = blendLinear({srcPixels[0]->r, srcPixels[1]->r, srcPixels[2]->r, srcPixels[3]->r});
+			dstPixel->g = blendLinear({srcPixels[0]->g, srcPixels[1]->g, srcPixels[2]->g, srcPixels[3]->g});
+			dstPixel->b = blendLinear({srcPixels[0]->b, srcPixels[1]->b, srcPixels[2]->b, srcPixels[3]->b});
 			dstPixel->a = srcPixels[0]->a; // TODO
 		}
 	}

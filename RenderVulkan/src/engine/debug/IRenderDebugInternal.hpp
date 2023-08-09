@@ -30,7 +30,7 @@ namespace CubA4::render::engine::debug
 	{
 		std::shared_ptr<const CubA4::render::engine::memory::IMemoryPart> memoryPart;
 		CubA4::render::vulkan::sVkBuffer vertexBuffer;
-		uint32_t vertexCount;
+		uint32_t vertexCount = 0;
 	};
 
 	class IRenderDebugInternal

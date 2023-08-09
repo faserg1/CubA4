@@ -17,7 +17,9 @@ namespace CubA4::model
 		public virtual IModelDefinition
 	{
 	public:
-		using RMaterial = std::shared_ptr<const CubA4::render::engine::material::IMaterial> ;
+		using RMaterial = std::shared_ptr<const CubA4::render::engine::material::IMaterial>;
+
+		// TODO: for entity create separete interface with meshes -> materials
 
 		virtual std::vector<std::string> getUsedMaterials() const = 0;
 		virtual const FaceIndices &getFaceIndices() const = 0;

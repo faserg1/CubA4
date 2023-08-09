@@ -8,7 +8,7 @@
 #include <vulkan/FramebuffersBuilder.hpp>
 #include <vulkan/Framebuffer.hpp>
 #include <tools/SpinLock.hpp>
-#include <engine/pipeline/IRenderEngineWorldPipelineSubscriber.hpp>
+#include <engine/render/ISubRenderPipeline.hpp>
 #include <engine/framebuffer/FramebufferManager.hpp>
 #include <engine/RenderPassManager.hpp>
 
@@ -33,18 +33,20 @@ namespace CubA4::render
 		namespace pipeline
 		{
 			class RenderEngineWorldPipeline;
+			class RenderEntityPipeline;
 		}
 
-		class Render :
-			public virtual pipeline::IRenderEngineWorldPipelineSubscriber
+		class Render
 		{
-			struct OldChunksInfo
+			struct OldFramebuffersInfo
 			{
 				uint32_t cyclesLeft;
 				std::shared_ptr<const vulkan::Swapchain> oldSwapchain;
 				std::vector<std::shared_ptr<vulkan::Framebuffer>> oldFramebuffers;
-				std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> oldChunks;
 			};
+
+			using ISubpipeline = CubA4::render::engine::pipeline::ISubRenderPipeline;
+			using SubpipelineVersion = ISubpipeline::SubpipelineVersion;
 		public:
 			explicit Render(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<RenderPassManager> rpManager,
 			std::shared_ptr<FramebufferManager> framebufferManager,
@@ -52,7 +54,7 @@ namespace CubA4::render
 			Render(const Render &) = delete;
 			~Render();
 
-			void setup(std::shared_ptr<pipeline::RenderEngineWorldPipeline> pipeline);
+			void addSubPipeline(std::unique_ptr<ISubpipeline> &&subPipeline);
 			void shutdown();
 
 			void onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
@@ -62,22 +64,17 @@ namespace CubA4::render
 
 			std::shared_ptr<const config::IRenderConfig> getConfig() const;
 		protected:
-		private:
-			void onCycle();
-
-			void chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks) override;
+			void onIterate();
 		private:
 			const std::shared_ptr<const vulkan::Device> device_;
 			const std::shared_ptr<RenderPassManager> renderPassManager_;
 			const std::shared_ptr<FramebufferManager> framebufferManager_;
 			const std::shared_ptr<const config::IRenderConfig> config_;
 
-			std::vector<OldChunksInfo> olChunks_;
+			std::vector<std::pair<std::unique_ptr<ISubpipeline>, SubpipelineVersion>> subPipelines_;
 
-			std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> chunks_;
-			CubA4::render::tools::SpinLock chunkLock_;
-			CubA4::render::tools::SpinLock oldChunksLock_;
-			std::unique_ptr<CubA4::util::ISubscription> chunkUpdateSubscription_;
+			std::vector<OldFramebuffersInfo> oldFramebuffers_;
+			CubA4::render::tools::SpinLock oldFramebuffersLock_;
 		};
 	}
 }

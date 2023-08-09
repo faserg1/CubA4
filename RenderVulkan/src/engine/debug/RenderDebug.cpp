@@ -25,7 +25,7 @@ RenderDebug::RenderDebug(std::shared_ptr<const vulkan::Device> device,
 std::shared_ptr<IRenderDebugCollection> RenderDebug::addCollection()
 {
 	auto collection = std::make_shared<RenderDebugCollection>(
-		cmdPool_, rpManager_->getDebugRenderPass(), shared_from_this());
+		device_, cmdPool_, rpManager_->getDebugRenderPass(), shared_from_this());
 	collections_.push_back(collection);
 	return collection;
 }
@@ -250,9 +250,11 @@ void RenderDebug::createPipelines()
 
 DebugRenderModel RenderDebug::createBuffer(std::vector<VertexColor> vertices)
 {
+	auto lock = std::unique_lock(deviceLock_);
+
 	// TODO: move to template class?
 
-	VkBuffer vertexBuffer, vertexTransitBuffer;
+	VkBuffer vertexBuffer = VK_NULL_HANDLE, vertexTransitBuffer = VK_NULL_HANDLE;
 
 	uint64_t verticesSize = ///< Размер буфера вершин, в байтах
 		vertices.size() * sizeof(VertexColor); 

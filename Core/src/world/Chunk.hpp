@@ -26,8 +26,12 @@ namespace CubA4::world
 
 		bool hasBlocksAt(world::BlockInChunkPos pos) const override;
 		bool hasBlocksAt(uint32_t index) const override;
+
 		std::vector<CubA4::world::BlockAt> getBlocksAt(world::BlockInChunkPos pos) const override;
 		CubA4::world::BlockAt getBlockAt(world::BlockInChunkPos pos, world::Layer layer) const override;
+
+		std::vector<CubA4::world::BlockAt> getBlocksAt(uint32_t index) const override;
+		CubA4::world::BlockAt getBlockAt(uint32_t index, world::Layer layer) const override;
 
 		DataProvider &getDataProvider();
 		const IDataProvider &getDataProvider() const override;

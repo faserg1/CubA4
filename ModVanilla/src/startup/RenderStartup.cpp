@@ -74,8 +74,17 @@ void RenderStartup::createMaterialLayouts(std::shared_ptr<CubA4::render::engine:
 	auto defaultLayoutBuilder = layoutFactory->createMaterialLayout();
 	defaultLayoutBuilder->setType(CubA4::render::engine::material::MaterialType::Block);
 	defaultLayoutBuilder->addTexture();
+	
+
+
+	auto entityLayoutBuilder = layoutFactory->createMaterialLayout();
+	entityLayoutBuilder->setType(CubA4::render::engine::material::MaterialType::Entity);
+	entityLayoutBuilder->addTexture();
+
 	auto layouts = layoutFactory->build();
+
 	materialLayouts_.insert(std::make_pair("default", layouts[0]));
+	materialLayouts_.insert(std::make_pair("entity", layouts[1]));
 }
 
 void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::material::ITextureImporter> textureImporter)
@@ -103,11 +112,19 @@ void RenderStartup::importTextures(std::shared_ptr<CubA4::render::engine::materi
 void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::material::IMaterialFactory> materialFactory)
 {
 	auto texture = textures_.find("NewTexture")->second;
-	auto layout = materialLayouts_.find("default")->second;
-	auto defaultMaterialBuilder = materialFactory->createMaterial(layout);
+	
+	auto layoutDefault = materialLayouts_.find("default")->second;
+	auto layoutEntity = materialLayouts_.find("entity")->second;
+
+	auto defaultMaterialBuilder = materialFactory->createMaterial(layoutDefault);
 	defaultMaterialBuilder->addTexture(texture);
 	auto defaultMaterial = defaultMaterialBuilder->build();
 	materials_.insert(std::make_pair("default", defaultMaterial));
+
+	auto entityMaterialBuilder = materialFactory->createMaterial(layoutEntity);
+	entityMaterialBuilder->addTexture(texture);
+	auto entityMaterial = entityMaterialBuilder->build();
+	materials_.insert(std::make_pair("entity", entityMaterial));
 
 	std::vector<std::string> textures = {
 		"01",
@@ -122,7 +139,7 @@ void RenderStartup::createMaterials(std::shared_ptr<CubA4::render::engine::mater
 	for (auto texName : textures)
 	{
 		auto texture = textures_.find(texName)->second;
-		auto materialBuilder = materialFactory->createMaterial(layout);
+		auto materialBuilder = materialFactory->createMaterial(layoutDefault);
 		materialBuilder->addTexture(texture);
 		auto material = materialBuilder->build();
 		materials_.insert(std::make_pair(texName, material));
@@ -136,12 +153,18 @@ void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::I
 	auto resources = core_->getResourcesManager();
 	auto resource1 = resources->find("data/vanilla/assets/models/test.json");
 	auto resource2 = resources->find("data/vanilla/assets/models/test2.json");
+	auto resource3 = resources->find("data/vanilla/assets/models/test-cube-player.json");
 	auto blockModelDef1 = modelFactory->createSimpleBlockRenderModelDefinition("block", resource1, materials_);
 	auto blockModelDef2 = modelFactory->createSimpleBlockRenderModelDefinition("block2", resource2, materials_);
+	auto entityModelDef1 = modelFactory->createSimpleRenderModelDefinition("player", resource3, materials_);
 	
 	auto blockManager = manager_->getBlockManager();
 	blockManager->addBlockDefinition("test1", blockModelDef1);
 	blockManager->addBlockDefinition("test2", blockModelDef2);
+
+	auto renderManager = manager_->getRenderManager();
+	auto model3 = modelManager->registerEntityModel(*entityModelDef1);
+	renderManager->addModel("test-cube-player", model3);
 
 	//auto blockModel = modelManager->registerModel(*blockModelDef);
 }

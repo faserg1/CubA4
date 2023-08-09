@@ -31,14 +31,18 @@ Render::~Render()
 	vkQueueWaitIdle(device_->getQueue()->get());
 }
 
-void Render::setup(std::shared_ptr<RenderEngineWorldPipeline> pipeline)
+void Render::addSubPipeline(std::unique_ptr<ISubRenderPipeline> &&subPipeline)
 {
-	chunkUpdateSubscription_ = pipeline->subscribe(this);
+	subPipelines_.emplace_back(std::make_pair(std::move(subPipeline), 0));
+	std::sort(subPipelines_.begin(), subPipelines_.end(), [](auto &a, auto &b) -> bool
+	{
+		return a.first->getSubpass() < b.first->getSubpass();
+	});
 }
 
 void Render::shutdown()
 {
-	chunkUpdateSubscription_->unsubscribe();
+	subPipelines_.clear();
 }
 
 void Render::onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore)
@@ -56,13 +60,14 @@ void Render::onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemap
 
 	auto q = device_->getQueue();
 	vkQueueSubmit(q->get(), 1, &submitInfo, VK_NULL_HANDLE );
-	onCycle();
+	onIterate();
 }
 
 void Render::onAcquire(uint32_t imgIndex)
 {
-	if (imgIndex == 0)
-		onCycle();
+	if (imgIndex != 0)
+		return;
+	onIterate();
 }
 
 void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
@@ -76,6 +81,8 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 
 	auto vkCmdBuffer = framebuffer->getCommandBuffer();
 	auto vkFramebuffer = framebuffer->getFrameBuffer();
+
+	auto &mainInfo = renderPassManager_->getMainInfo();
 
 	VkCommandBufferBeginInfo cmdBeginInfo = {};
 	cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -106,20 +113,24 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 
 	vkBeginCommandBuffer(vkCmdBuffer, &cmdBeginInfo);
 	vkCmdBeginRenderPass(vkCmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+	uint32_t currentSubpass = 0;
+
 	////////////////////////////////////////////////////////////
-	decltype(chunks_) chunks;
 
+	for (auto &subPipeline : subPipelines_)
 	{
-		auto locker = chunkLock_.lock();
-		chunks = chunks_;
+		while (subPipeline.first->getSubpass() > currentSubpass)
+		{
+			++currentSubpass;
+			vkCmdNextSubpass(vkCmdBuffer, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		}
+		subPipeline.first->executeFrom(vkCmdBuffer);
+		if (subPipeline.first->getVersion() > subPipeline.second)
+			subPipeline.second++;
 	}
 
-	for (auto chunk : chunks)
-	{
-		if (!chunk)
-			continue;
-		chunk->executeFrom(vkCmdBuffer);
-	}
+	
 	////////////////////////////////////////////////////////////
 	vkCmdEndRenderPass(vkCmdBuffer);
 	vkEndCommandBuffer(vkCmdBuffer);
@@ -164,28 +175,16 @@ std::shared_ptr<const CubA4::render::config::IRenderConfig> Render::getConfig() 
 	return config_;
 }
 
-void Render::onCycle()
+void Render::onIterate()
 {
-	auto locker = oldChunksLock_.lock();
-	auto it = std::remove_if(olChunks_.begin(), olChunks_.end(), [](OldChunksInfo &oldInfo) -> bool
+	bool isDirty = false;
+	for (auto &subPipeline : subPipelines_)
 	{
-		if (oldInfo.cyclesLeft > 0)
-			oldInfo.cyclesLeft--;
-		return !oldInfo.cyclesLeft;
-	});
-	olChunks_.erase(it, olChunks_.end());
-}
-
-void Render::chunksUpdated(std::vector<std::shared_ptr<const CubA4::render::engine::world::RenderChunk>> renderChunks)
-{
-	{
-		auto locker = chunkLock_.lock();
-		auto locker2 = oldChunksLock_.lock();
-		olChunks_.push_back(OldChunksInfo {
-			.cyclesLeft = 10,
-			.oldChunks = chunks_
-		});
-		chunks_ = renderChunks;
+		subPipeline.first->onIterate();
+		auto version = subPipeline.first->getVersion();
+		if (version != subPipeline.second)
+			isDirty = true;
 	}
-	framebufferManager_->markDirty();
+	if (isDirty)
+		framebufferManager_->markDirty();
 }

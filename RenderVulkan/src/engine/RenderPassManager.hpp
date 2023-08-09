@@ -11,6 +11,7 @@ namespace CubA4::render::engine
 	struct MainRenderPassInfo
 	{
 		uint32_t worldSubpass;
+		uint32_t subpassCount = 0;
 	};
 
 	struct DebugRenderPassInfo

@@ -24,6 +24,8 @@ namespace CubA4::system
 		void stop() override;
 
 		std::shared_ptr<CubA4::game::IGame> getGame() const override;
+
+		CubA4::system::IAppCallback *getAppCallbacks();
 	protected:
 		void loadConfigs();
 		void saveConfigs();

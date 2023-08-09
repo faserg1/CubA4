@@ -27,6 +27,11 @@ std::shared_ptr<const CubA4::model::IBlockRenderModelDefinition> TestBlock::getR
 	return modelDef_;
 }
 
+const CubA4::physics::IBlockPhysicsDefinition &TestBlock::getPhysicsDefinition() const
+{
+	return blockPhysics_;
+}
+
 bool TestBlock::isMultilayered() const
 {
 	return false;

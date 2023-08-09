@@ -12,11 +12,15 @@ using namespace CubA4::system;
 Startup::Startup(std::shared_ptr<Core> core) :
 	core_(core), appCallback_(nullptr)
 {
-	
+	core->setStartup(this);
 }
 
 Startup::~Startup()
 {
+	if (auto core = core_.lock())
+	{
+		core->setStartup(nullptr);
+	}
 	unloadMods();
 }
 
@@ -43,9 +47,9 @@ void Startup::shutdown()
 
 void Startup::run()
 {
-	startMods();
 	if (!appCallback_)
 		throw std::runtime_error("Startup not initialized!");
+	startMods();
 	game_->run();
 }
 
@@ -61,6 +65,11 @@ void Startup::stop()
 std::shared_ptr<CubA4::game::IGame> Startup::getGame() const
 {
 	return game_;
+}
+
+CubA4::system::IAppCallback *Startup::getAppCallbacks()
+{
+	return appCallback_;
 }
 
 void Startup::loadConfigs()
@@ -128,9 +137,9 @@ void Startup::unloadMods()
 
 void Startup::initGame()
 {
-	game_ = std::make_shared<CubA4::game::Game>(*appCallback_);
 	if (auto core = core_.lock())
 	{
+		game_ = std::make_shared<CubA4::game::Game>(*core, *appCallback_);
 		core->setGame(game_);
 	}
 }

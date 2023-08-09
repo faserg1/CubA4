@@ -2,8 +2,8 @@
 
 #include <engine/model/IRenderModel.hpp>
 #include <vulkan/vulkan.h>
-#include "../../vulkan/Device.hpp"
-#include "../../vulkan/Memory.hpp"
+#include <vulkan/Device.hpp>
+#include <vulkan/Memory.hpp>
 #include <memory>
 #include <string>
 
@@ -33,9 +33,9 @@ namespace CubA4::render::engine::model
 		uint32_t getIndexCount() const;
 		void bind(VkCommandBuffer cmdBuffer, uint32_t index = 0) const;
 	protected:
-	private:
 		std::shared_ptr<const vulkan::Device> device_;
 		const RenderModelData data_;
+	private:
 	};
 }
 

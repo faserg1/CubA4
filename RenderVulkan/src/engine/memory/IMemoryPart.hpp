@@ -23,6 +23,7 @@ namespace CubA4::render
 			virtual VkDeviceSize getSize() const = 0;
 			virtual std::shared_ptr<const IMemoryBlock> getBlock() const = 0;
 			virtual std::shared_ptr<void> map(VkDeviceSize offset, VkDeviceSize size) const = 0;
+			virtual void flush(VkDeviceSize offset, VkDeviceSize size) const = 0;
 		protected:
 			IMemoryPart() = default;
 			virtual ~IMemoryPart() = default;

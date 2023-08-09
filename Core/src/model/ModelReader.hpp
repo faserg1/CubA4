@@ -11,6 +11,9 @@ namespace CubA4::model
 		explicit ModelReader();
 		~ModelReader();
 
+		BlockRenderModelData readBlockRenderModel(std::shared_ptr<const resources::IResource> resource) const override;
+		void writeBlockRenderModel(std::shared_ptr<resources::IResource> resource, const BlockRenderModelData &model) override;
+
 		RenderModelData readRenderModel(std::shared_ptr<const resources::IResource> resource) const override;
 		void writeRenderModel(std::shared_ptr<resources::IResource> resource, const RenderModelData &model) override;
 	};

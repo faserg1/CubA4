@@ -14,6 +14,14 @@ Environment::~Environment()
 
 int64_t Environment::getId(const std::shared_ptr<const CubA4::object::IObject> object) const
 {
+	auto iter = context_.getReverseObjectsMap().find(object.get());
+	if (iter == context_.getReverseObjectsMap().end())
+		return -1;
+	return iter->second;
+}
+
+int64_t Environment::getId(const CubA4::object::IObject *object) const
+{
 	auto iter = context_.getReverseObjectsMap().find(object);
 	if (iter == context_.getReverseObjectsMap().end())
 		return -1;

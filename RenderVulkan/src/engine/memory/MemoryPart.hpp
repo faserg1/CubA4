@@ -19,6 +19,7 @@ namespace CubA4::render::engine::memory
 		VkDeviceSize getSize() const override;
 		std::shared_ptr<const IMemoryBlock> getBlock() const override;
 		std::shared_ptr<void> map(VkDeviceSize offset, VkDeviceSize size) const override;
+		void flush(VkDeviceSize offset, VkDeviceSize size) const override;
 	private:
 		const std::shared_ptr<MemoryBlock> block_;
 		const VkDeviceSize offset_;

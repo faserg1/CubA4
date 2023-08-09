@@ -41,6 +41,6 @@ EnvironmentContext::reverseObjectsMap_t EnvironmentContext::generateReverseMap(c
 {
 	reverseObjectsMap_t reverseMap;
 	for (auto &pair : objects)
-		reverseMap.insert(std::make_pair(pair.second, pair.first));
+		reverseMap.insert(std::make_pair(pair.second.get(), pair.first));
 	return std::move(reverseMap);
 }

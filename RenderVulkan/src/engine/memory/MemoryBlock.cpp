@@ -40,6 +40,8 @@ std::shared_ptr<Memory> MemoryBlock::getMemory() const
 
 std::shared_ptr<MemoryPart> MemoryBlock::allocatePart(uint64_t size, uint64_t alignment)
 {
+	if (size > memory_->getSize())
+		return {};
 	if (!parts_.size())
 	{
 		auto part = std::make_shared<MemoryPart>(shared_from_this(), 0, size);
@@ -51,6 +53,8 @@ std::shared_ptr<MemoryPart> MemoryBlock::allocatePart(uint64_t size, uint64_t al
 	for (auto part : parts_)
 	{
 		auto locked = part.lock();
+		if (!locked)
+			continue;
 		auto partOffset = locked->getOffset();
 		auto lastOffsetTemp = lastOffset;
 		lastOffset = locked->getOffset() + locked->getSize();

@@ -22,7 +22,10 @@ namespace CubA4::model
 		std::vector<VertexUVW> vertices;
 		std::vector<Face> faces;
 		std::map<std::string, std::vector<uint16_t>> materials;
+	};
 
+	struct BlockRenderModelData : RenderModelData
+	{
 		world::BlockSides nonOpaque;
 		std::map<world::BlockSide, std::vector<uint16_t>> hidden;
 	};

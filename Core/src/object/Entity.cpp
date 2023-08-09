@@ -22,3 +22,8 @@ Entity::IdType Entity::getFactoryId() const
 {
 	return registry_.get<WorldInfo>(entity_).factoryId;
 }
+
+entt::entity Entity::getEntity() const
+{
+	return entity_;
+}

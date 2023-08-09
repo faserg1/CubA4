@@ -20,6 +20,7 @@ namespace CubA4::render::vulkan
 		VkMemoryPropertyFlags getFlags() const;
 		uint32_t getMemoryTypeIndex() const;
 		std::shared_ptr<void> map(VkDeviceSize offset, VkDeviceSize size) const;
+		void flush(VkDeviceSize offset, VkDeviceSize size) const;
 	protected:
 		
 	private:

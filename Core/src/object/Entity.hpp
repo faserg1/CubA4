@@ -13,6 +13,8 @@ namespace CubA4::object
 
 		IdType getEntityId() const override;
 		IdType getFactoryId() const override;
+
+		entt::entity getEntity() const;
 	private:
 		entt::registry &registry_;
 		entt::entity entity_;

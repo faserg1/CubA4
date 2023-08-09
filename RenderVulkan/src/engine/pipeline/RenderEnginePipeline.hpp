@@ -4,6 +4,7 @@
 #include <vulkan/Device.hpp>
 #include <engine/pipeline/IRenderEnginePipeline.hpp>
 #include <engine/pipeline/RenderEngineWorldPipeline.hpp>
+#include <engine/pipeline/RenderEntityPipeline.hpp>
 #include <engine/RenderPassManager.hpp>
 #include <engine/RenderManager.hpp>
 #include <memory>
@@ -17,10 +18,9 @@ namespace CubA4::render::engine::pipeline
 			std::shared_ptr<const engine::RenderPassManager> renderPassManager, std::shared_ptr<engine::RenderManager> renderManager);
 		~RenderEnginePipeline() = default;
 
-		void setup(const RenderFramebufferData &data); // todo
-
 		void onFramebufferUpdated(const RenderFramebufferData &data) override;
 		std::shared_ptr<RenderEngineWorldPipeline> getWorldPipeline() const;
+		std::shared_ptr<RenderEntityPipeline> getEntityPipeline() const;
 	private:
 		const std::shared_ptr<const ICore> core_;
 		const std::shared_ptr<const vulkan::Device> device_;
@@ -28,5 +28,6 @@ namespace CubA4::render::engine::pipeline
 		const std::shared_ptr<RenderManager> renderManager_;
 		
 		std::shared_ptr<RenderEngineWorldPipeline> worldPipeline_;
+		std::shared_ptr<RenderEntityPipeline> entityPipeline_;
 	};
 }

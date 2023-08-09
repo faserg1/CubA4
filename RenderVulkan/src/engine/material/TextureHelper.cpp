@@ -23,3 +23,11 @@ uint8_t CubA4::render::engine::material::blendNoAlpha(std::initializer_list<uint
 		total += SRGBtoLinear(color);
 	return LineartoSRGB(total / toBlend.size());
 }
+
+uint8_t CubA4::render::engine::material::blendLinear(std::initializer_list<uint8_t> toBlend)
+{
+	uint16_t total = 0;
+	for (auto color : toBlend)
+		total += color;
+	return static_cast<uint8_t>(total / toBlend.size());
+}

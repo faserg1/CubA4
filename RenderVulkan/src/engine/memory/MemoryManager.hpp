@@ -22,6 +22,9 @@ namespace CubA4::render::engine::memory
 		uint32_t calcAlign(uint32_t size, uint32_t align);
 		std::shared_ptr<const IMemoryPart> allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes,
 			MemoryAllocationPrefered preference = MemoryAllocationPrefered::Device);
+
+		std::shared_ptr<const IMemoryPart> allocateAndBindPart(VkBuffer buffer, MemoryAllocationPrefered preference);
+		std::shared_ptr<const IMemoryPart> allocateAndBindPart(VkImage image, MemoryAllocationPrefered preference);
 	protected:
 	private:
 		std::shared_ptr<const vulkan::Device> device_;
@@ -31,6 +34,7 @@ namespace CubA4::render::engine::memory
 		std::mutex mutex_;
 	private:
 		std::shared_ptr<IMemoryBlock> allocateBlock(uint32_t supportedTypes, MemoryAllocationPrefered preference);
+		std::shared_ptr<IMemoryBlock> allocateBlockSize(size_t size, uint32_t supportedTypes, MemoryAllocationPrefered preference);
 	};
 }
 

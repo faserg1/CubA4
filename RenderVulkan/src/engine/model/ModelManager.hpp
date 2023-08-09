@@ -33,10 +33,10 @@ namespace CubA4
 					explicit ModelManager(std::shared_ptr<const vulkan::Device> device);
 					~ModelManager();
 
-					std::shared_ptr<const IRenderModel> registerModel(const CubA4::model::IRenderModelDefinition &renderModelDef) override;
+					std::shared_ptr<const IRenderModel> registerEntityModel(const CubA4::model::IRenderModelDefinition &renderModelDef) override;
 					std::shared_ptr<const RenderModel> createModel(const CubA4::model::IRenderModelDefinition &renderModelDef);
 				protected:
-					std::shared_ptr<const RenderModel> createModel(std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const FaceIndices &faces);
+					void createModel(RenderModelData &rmData, std::string id, const std::vector<Vertex> &vertices, const std::vector<UVWCoords> &uvws, const FaceIndices &faces);
 				private:
 					const std::shared_ptr<const vulkan::Device> device_;
 					const std::shared_ptr<memory::MemoryAllocator> allocator_;

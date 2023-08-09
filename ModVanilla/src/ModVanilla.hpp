@@ -5,6 +5,7 @@
 #include <startup/RenderStartup.hpp>
 #include <startup/BlockSetup.hpp>
 #include <startup/WorldSetup.hpp>
+#include <startup/EntitySetup.hpp>
 #include <manager/IModManager.hpp>
 #include <functional>
 
@@ -41,6 +42,7 @@ namespace CubA4
 			CubA4::game::IGameControl *gameControl_ = nullptr;
 
 			startup::RenderStartup renderStartup_;
+			startup::EntitySetup entitySetup_;
 			startup::BlockSetup blockSetup_;
 			startup::WorldSetup worldSetup_;
 			std::shared_ptr<CubA4::manager::ModManager> manager_;

@@ -1,8 +1,10 @@
 #include <physics/PhysicsManager.hpp>
 #include <physics/PhysicsWorld.hpp>
+#include <object/Entity.hpp>
 using namespace CubA4::physics;
 
-PhysicsManager::PhysicsManager() :
+PhysicsManager::PhysicsManager(Core &core) :
+	core_(core),
 	collisionConfig_(std::make_shared<btDefaultCollisionConfiguration>()),
 	collisionDispatcher_(std::make_shared<btCollisionDispatcher>(collisionConfig_.get())),
 	broadphase_(std::make_shared<btDbvtBroadphase>()),
@@ -16,13 +18,19 @@ PhysicsManager::~PhysicsManager()
 
 }
 
-std::unique_ptr<IPhysicsWorld> PhysicsManager::addPhysicsWorld(const IPhysicsDefinition &definition)
+std::unique_ptr<PhysicsWorld> PhysicsManager::addPhysicsWorld(const IPhysicsDefinition &definition)
 {
 	auto physicsWorld = std::make_unique<btDiscreteDynamicsWorld>(
 		collisionDispatcher_.get(), broadphase_.get(), contraintsSolver_.get(), collisionConfig_.get());
 	auto defaultGravity = definition.getDefaultGravity();
 	physicsWorld->setGravity({defaultGravity.x, defaultGravity.y, defaultGravity.z});
-	return std::make_unique<PhysicsWorld>(*this, std::move(physicsWorld));
+	return std::make_unique<PhysicsWorld>(core_, *this, std::move(physicsWorld));
+}
+
+void PhysicsManager::requestApplyForce(CubA4::object::IEntity &iEntity)
+{
+	auto *entity = dynamic_cast<CubA4::object::Entity*>(&iEntity);
+
 }
 
 void PhysicsManager::iterate(float delta)

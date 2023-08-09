@@ -38,9 +38,14 @@ uint32_t MemoryManager::calcAlign(uint32_t size, uint32_t align)
 
 std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, uint64_t alignment, uint32_t supportedTypes, MemoryAllocationPrefered preference)
 {
-	if (size > blockSize_)
-		return {};
 	std::lock_guard<std::mutex> lockGuard(mutex_);
+	if (size > blockSize_)
+	{
+		auto newBlock = allocateBlockSize(size, supportedTypes, preference);
+		memoryBlocks_.push_back(newBlock);
+		auto newMemBlock = std::dynamic_pointer_cast<MemoryBlock>(newBlock);
+		return newMemBlock->allocatePart(size, alignment);
+	}
 	for (auto block : memoryBlocks_)
 	{
 		const uint32_t memoryTypeBits = (1 << block->getMemoryTypeIndex());
@@ -62,10 +67,46 @@ std::shared_ptr<const IMemoryPart> MemoryManager::allocatePart(uint64_t size, ui
 	return newMemBlock->allocatePart(size, alignment);
 }
 
+std::shared_ptr<const IMemoryPart> MemoryManager::allocateAndBindPart(VkBuffer buffer, MemoryAllocationPrefered preference)
+{
+	VkBufferMemoryRequirementsInfo2 info {
+		.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
+		.buffer = buffer
+	};
+	VkMemoryRequirements2 memReq = {};
+	memReq.sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2;
+	vkGetBufferMemoryRequirements2(device_->getDevice(), &info, &memReq);
+
+	auto part = allocatePart(memReq.memoryRequirements.size, memReq.memoryRequirements.alignment, memReq.memoryRequirements.memoryTypeBits, preference);
+	vkBindBufferMemory(device_->getDevice(), buffer, part->getMemory()->getMemory(), part->getOffset());
+	return part;
+}
+
+std::shared_ptr<const IMemoryPart> MemoryManager::allocateAndBindPart(VkImage image, MemoryAllocationPrefered preference)
+{
+	VkImageMemoryRequirementsInfo2 info {
+		.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+		.image = image
+	};
+	VkMemoryRequirements2 memReq = {};
+	vkGetImageMemoryRequirements2(device_->getDevice(), &info, &memReq);
+
+	auto part = allocatePart(memReq.memoryRequirements.size, memReq.memoryRequirements.alignment, memReq.memoryRequirements.memoryTypeBits, preference);
+	vkBindImageMemory(device_->getDevice(), image, part->getMemory()->getMemory(), part->getOffset());
+	return part;
+}
 
 std::shared_ptr<IMemoryBlock> MemoryManager::allocateBlock(uint32_t supportedTypes, MemoryAllocationPrefered preference)
 {
 	auto memory = allocator_->allocate(blockSize_, preference, supportedTypes);
+	if (!memory)
+		return {};
+	return std::make_shared<MemoryBlock>(memory);
+}
+
+std::shared_ptr<IMemoryBlock> MemoryManager::allocateBlockSize(size_t size, uint32_t supportedTypes, MemoryAllocationPrefered preference)
+{
+	auto memory = allocator_->allocate(size, preference, supportedTypes);
 	if (!memory)
 		return {};
 	return std::make_shared<MemoryBlock>(memory);

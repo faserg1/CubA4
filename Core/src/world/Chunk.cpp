@@ -92,6 +92,7 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 			{
 				blocks.push_back(BlockAt {
 					.blockId = container->getBlockId(),
+					.dataId = container->getBlockData(pos),
 					.pos = pos,
 					.layer = container->getLayer()
 				});
@@ -118,7 +119,59 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 			{
 				return BlockAt {
 					.blockId = container->getBlockId(),
+					.dataId = container->getBlockData(pos),
 					.pos = pos,
+					.layer = container->getLayer()
+				};
+			}
+		}
+		return {};
+	};
+	if (auto blockAt = checkContainer(containers_); blockAt.blockId)
+		return blockAt;
+	return {};
+}
+
+std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(uint32_t index) const
+{
+	std::vector<BlockAt> blocks;
+	auto checkContainer = [&blocks, index](const auto &containers)
+	{
+		for (auto container : containers)
+		{
+			if (container->hasBlockAt(index))
+			{
+				blocks.push_back(BlockAt {
+					.blockId = container->getBlockId(),
+					.dataId = container->getBlockData(index),
+					.pos = posByIndex(index),
+					.layer = container->getLayer()
+				});
+			}
+		}
+	};
+	checkContainer(containers_);
+	std::sort(std::execution::par_unseq, blocks.begin(), blocks.end(), [](const auto &a, const auto &b) -> bool
+	{
+		return a.layer < b.layer;
+	});
+	return std::move(blocks);
+}
+
+CubA4::world::BlockAt Chunk::getBlockAt(uint32_t index, world::Layer layer) const
+{
+	auto checkContainer = [index, layer](const auto &containers) -> BlockAt
+	{
+		for (auto container : containers)
+		{
+			if (container->getLayer() != layer)
+				continue;
+			if (container->hasBlockAt(index))
+			{
+				return BlockAt {
+					.blockId = container->getBlockId(),
+					.dataId = container->getBlockData(index),
+					.pos = posByIndex(index),
 					.layer = container->getLayer()
 				};
 			}

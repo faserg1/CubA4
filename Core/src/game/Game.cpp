@@ -1,9 +1,14 @@
-#include "Game.hpp"
+#include <game/Game.hpp>
 #include <game/IGameSubscriber.hpp>
+#include <object/EntityManager.hpp>
+#include <object/EntityRenderManager.hpp>
+#include <Core.hpp>
+#include <physics/PhysicsManager.hpp>
+#include <chrono>
 using namespace CubA4::game;
 
-Game::Game(CubA4::system::IAppCallback &appCallback) :
-	appCallback_(appCallback), runGameLoop_(false), controller_(createController())
+Game::Game(CubA4::Core &core, CubA4::system::IAppCallback &appCallback) :
+	core_(core), appCallback_(appCallback), runGameLoop_(false), controller_(createController())
 {
 	
 }
@@ -28,6 +33,12 @@ std::shared_ptr<CubA4::game::controller::IController> Game::getController()
 	return controller_;
 }
 
+CubA4::object::IEntityRenderManager *Game::getEntityRenderManager() const
+{
+	if (!core_.getRenderManager() || !core_.getEntityManager())
+		return nullptr;
+	return &core_.getEntityManager()->getEntityRenderManager();
+}
 
 void Game::run()
 {
@@ -48,10 +59,25 @@ void Game::setupEnvironment(std::shared_ptr<CubA4::system::Environment> env)
 
 void Game::loop()
 {
+	using namespace std::chrono_literals;
+	using Clock = std::chrono::steady_clock;
+	using FloatSeconds = std::chrono::duration<float>;
+	auto last = Clock::now();
 	while (runGameLoop_)
 	{
-		std::this_thread::yield();
+		std::this_thread::sleep_until(last + 1s / 20);
+		auto current = Clock::now();
+		auto interval = current - last;
+		last = current;
+		iterate(std::chrono::duration_cast<FloatSeconds>(interval).count());
 	}
+}
+
+void Game::iterate(float seconds)
+{
+	auto physicsManager = core_.getPhysicsManager();
+	auto entityManager = core_.getEntityManager();
+	physicsManager->iterate(seconds);
 }
 
 std::shared_ptr<controller::Controller> Game::createController()

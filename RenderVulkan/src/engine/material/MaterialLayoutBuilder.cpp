@@ -41,9 +41,15 @@ void MaterialLayoutBuilder::setType(MaterialType type)
 		vertexShaderData = irs::findFile("shaders/block.vert.spv", vertexShaderSize);
 		fragmentShaderData = irs::findFile("shaders/block.frag.spv", fragmentShaderSize);
 		break;
+	case CubA4::render::engine::material::MaterialType::Entity:
+		vertexShaderData = irs::findFile("shaders/entity.vert.spv", vertexShaderSize);
+		fragmentShaderData = irs::findFile("shaders/entity.frag.spv", fragmentShaderSize);
+		break;
 	default:
 		break;
 	}
+
+	pipelineBuilder_.setType(type);
 
 	if (!vertexShaderData || !fragmentShaderData)
 	{

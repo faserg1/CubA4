@@ -31,6 +31,8 @@ std::shared_ptr<IMaterialLayoutBuilder> MaterialLayoutSetFactory::createMaterial
 	return builder;
 }
 
+// TODO: Should not work as singleton
+
 std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::build()
 {
 	std::vector<std::shared_ptr<const IMaterialLayout>> layouts;
@@ -76,5 +78,6 @@ std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::bu
 		pipelinePtr++;
 		pipelineCreateInfoPtr++;
 	});
+	builders_.clear();
 	return layouts;
 }

@@ -1,12 +1,12 @@
 #include <engine/pipeline/RenderEngineWorldPipeline.hpp>
-#include <engine/pipeline/RenderChunkCompiler.hpp>
+#include <engine/compilers/RenderChunkCompiler.hpp>
 #include <range/v3/range/conversion.hpp>
 #include <range/v3/view/map.hpp>
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::world;
 
-RenderEngineWorldPipeline::RenderEngineWorldPipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler, RenderFramebufferData data) :
-	chunkCompiler_(chunkCompiler), data_(data)
+RenderEngineWorldPipeline::RenderEngineWorldPipeline(std::shared_ptr<RenderChunkCompiler> chunkCompiler) :
+	chunkCompiler_(chunkCompiler)
 {
 	
 }
@@ -14,6 +14,11 @@ RenderEngineWorldPipeline::RenderEngineWorldPipeline(std::shared_ptr<RenderChunk
 RenderEngineWorldPipeline::~RenderEngineWorldPipeline()
 {
 	
+}
+
+uint32_t RenderEngineWorldPipeline::getSubpassNumber() const
+{
+	return chunkCompiler_->getSubpassNumber();
 }
 
 void RenderEngineWorldPipeline::pushChunks(std::vector<std::shared_ptr<const CubA4::world::IChunk>> chunks)

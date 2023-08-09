@@ -16,6 +16,7 @@
 #include <config/VulkanConfigAdapter.hpp>
 #include <engine/memory/MemoryManager.hpp>
 #include <engine/memory/MemoryHelper.hpp>
+#include <mutex>
 
 namespace CubA4::render::engine
 {
@@ -71,5 +72,7 @@ namespace CubA4::render::engine::debug
 
 		std::shared_ptr<vulkan::Pipeline> line_;
 		std::shared_ptr<vulkan::Pipeline> wireframe_;
+
+		std::mutex deviceLock_;
 	};
 }

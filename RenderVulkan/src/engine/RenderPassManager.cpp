@@ -31,6 +31,7 @@ void RenderPassManager::createRenderPasses(VkFormat imageFormat)
 		);
 
 		mainInfo_.worldSubpass = worldSubpassIndex;
+		mainInfo_.subpassCount = builder.subpassCount();
 
 		mainRenderPass_ = builder.build();
 		device_->getMarker().setName(mainRenderPass_->getRenderPass(), "Default Render Pass");
