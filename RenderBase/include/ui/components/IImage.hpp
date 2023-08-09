@@ -12,7 +12,7 @@ namespace CubA4::render::ui
 		virtual void setMode(ImageMode mode) = 0;
 		virtual ImageMode getMode() const = 0;
 
-		virtual void setImageOffsets(float x, float y) = 0;
+		virtual void setImageOffsets(const Expression &x, const Expression &y) = 0;
 		virtual void setImageSize(const Rect &sizeRect) = 0;
 		virtual void setImageRect(const Rect &srcRect, const Rect &dstRect) = 0;
 		virtual void setImageNinePath(const RectI &centerRect, const Rect &dstRect) = 0;

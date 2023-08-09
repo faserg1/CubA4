@@ -31,8 +31,6 @@ std::shared_ptr<IMaterialLayoutBuilder> MaterialLayoutSetFactory::createMaterial
 	return builder;
 }
 
-// TODO: Should not work as singleton
-
 std::vector<std::shared_ptr<const IMaterialLayout>> MaterialLayoutSetFactory::build()
 {
 	std::vector<std::shared_ptr<const IMaterialLayout>> layouts;

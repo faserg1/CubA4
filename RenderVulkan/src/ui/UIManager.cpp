@@ -35,9 +35,9 @@ void UIManager::swapchainChanged(std::shared_ptr<const CubA4::render::vulkan::Sw
 {
 	framebuffers_.clear(); // TODO: [OOKAMI] Make old as in framebuffer manager?
 	auto images = swapchain->getImages();
+	auto [width, height] = swapchain->getResolution();
 	for (auto &image : images)
 	{
-		auto [width, height] = swapchain->getResolution();
 		GrVkImageInfo imageInfo {
 			.fImage = image,
 			.fImageLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
@@ -58,6 +58,15 @@ void UIManager::swapchainChanged(std::shared_ptr<const CubA4::render::vulkan::Sw
 
 		framebuffers_.push_back(framebuffer);
 	}
+
+	Context ctx {
+		.viewportWidth = static_cast<long double>(width),
+		.viewportHeight = static_cast<long double>(height),
+		.parentWidth = static_cast<long double>(width),
+		.parentHeight = static_cast<long double>(height)
+	};
+
+	mainCanvas_->updateContext(ctx);
 }
 
 const UIFramebuffer &UIManager::getFramebuffer(uint32_t imageIdx) const

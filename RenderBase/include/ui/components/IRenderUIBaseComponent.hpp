@@ -1,5 +1,9 @@
 #pragma once
 
+#include <ui/expressions/Expressions.hpp>
+#include <ui/expressions/Operation.hpp>
+#include <ui/expressions/OperationOperators.hpp>
+
 namespace CubA4::render::ui
 {
     class IRenderUIBaseComponent

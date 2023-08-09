@@ -32,8 +32,7 @@ void MaterialFactory::createSampler()
 		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
 		// TODO: Take from ????
 		.mipLodBias = 0.2f,
-		// TODO: [OOKAMI] Take from settings & capabilities?
-		.anisotropyEnable = VK_TRUE,
+		.anisotropyEnable = device_->getEnabledFeatures().features.samplerAnisotropy,
 		.maxAnisotropy = 8.f,
 		.minLod = 0,
 		.maxLod = VK_LOD_CLAMP_NONE,

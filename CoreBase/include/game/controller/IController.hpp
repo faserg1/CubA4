@@ -19,8 +19,6 @@ namespace CubA4::game::controller
 		virtual std::pair<bool, BMods> getButtonState(Button btn) const = 0;
 		virtual bool getActionState(const std::string &action) const = 0;
 
-		// TODO: Change shared_ptr to simple &
-
 		virtual std::shared_ptr<const IRootActions> getRootActions() const = 0;
 		virtual std::shared_ptr<const IBindings> getBindings() const = 0;
 		virtual std::shared_ptr<IRootActions> getRootActions() = 0;

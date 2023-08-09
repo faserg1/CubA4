@@ -176,10 +176,11 @@ void RenderStartup::testUI(std::shared_ptr<CubA4::render::engine::IRenderManager
 	auto uiManager = renderManager->getUIManager();
 	auto mainCanvas = uiManager->getMainCanvas();
 	using namespace std::string_literals;
+	using namespace CubA4::render::ui_literals;
 	const auto resource = core_->getResourcesManager()->find("data/vanilla/assets/ui/button.png"s);
 	auto importedTexture = textureImporter->importFromPng(resource);
 	auto image = uiManager->getComponentFactory()->createImage(importedTexture);
-	image->setImageNinePath({4, 4, 24, 24}, {10, 50, 500, 100});
+	image->setImageNinePath({4, 4, 24, 24}, {10_px, 50_px, 50_vw + 10_px, 5_vh + 50_px});
 	image->setMode(CubA4::render::ui::ImageMode::NinePath);
 	mainCanvas->addComponent(image);
 }

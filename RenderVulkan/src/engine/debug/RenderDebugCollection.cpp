@@ -18,49 +18,14 @@ RenderDebugCollection::~RenderDebugCollection() = default;
 void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to,
 	CubA4::ColorRGB colorFrom, CubA4::ColorRGB colorTo)
 {
-	// TODO: move as addLines
-	auto i = internal_.lock();
-	if (!i)
-		return;
-
-	std::vector<VertexColor> vertices(2);
-	vertices[0].x = from.x;
-	vertices[0].y = from.y;
-	vertices[0].z = from.z;
-
-	vertices[0].r = colorFrom.r;
-	vertices[0].g = colorFrom.g;
-	vertices[0].b = colorFrom.b;
-
-
-
-	vertices[1].x = to.x;
-	vertices[1].y = to.y;
-	vertices[1].z = to.z;
-
-	vertices[1].r = colorTo.r;
-	vertices[1].g = colorTo.g;
-	vertices[1].b = colorTo.b;
-
-	DebugModel model;
-	model.type = PipelineType::Line;
-	model.renderModel = i->createBuffer(std::move(vertices));
-	model.chunkPos = chPos;
-
-	{
-		auto modelsLock = std::unique_lock(modelsMutex_);
-
-		if (model.renderModel.vertexCount)
-			models_.push_back(model);
-		else
-		{
-			// TODO: Log, error?
-		}
-	}
-	
-
-	i->onCommandsDirty();
-	dirty_ = true;
+	std::vector<LineInfo> lines;
+	lines.push_back(LineInfo{
+		.from = from,
+		.to = to,
+		.colorFrom = colorFrom,
+		.colorTo = colorTo
+	});
+	addLines(chPos, lines);
 }
 
 void RenderDebugCollection::addLines(CubA4::world::ChunkPos chPos, const std::vector<LineInfo> &lines)

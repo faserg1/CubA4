@@ -13,8 +13,6 @@ void FramebufferManager::setRenderPass(std::shared_ptr<const vulkan::RenderPass>
 	renderPass_ = renderPass;
 }
 
-// Create framebuffers
-// TODO: Make virtual
 void FramebufferManager::onSwapchainUpdate(std::shared_ptr<const vulkan::Swapchain> swapchain)
 {
 	if (currentSwapchain_)

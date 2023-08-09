@@ -5,7 +5,17 @@
 
 namespace CubA4::render::ui
 {
-	constexpr SkRect toSkia(const Rect &rect)
+	constexpr SkIRect toSkia(const RectI &rect)
+	{
+		return SkIRect {
+			.fLeft = rect.left,
+			.fTop = rect.top,
+			.fRight = rect.right,
+			.fBottom = rect.bottom,
+		};
+	};
+
+	constexpr SkRect toSkia(const RectF &rect)
 	{
 		return SkRect {
 			.fLeft = rect.left,
@@ -15,13 +25,13 @@ namespace CubA4::render::ui
 		};
 	};
 
-	constexpr SkIRect toSkia(const RectI &rect)
+	constexpr SkRect toSkia(const RectLD &rect)
 	{
-		return SkIRect {
-			.fLeft = rect.left,
-			.fTop = rect.top,
-			.fRight = rect.right,
-			.fBottom = rect.bottom,
+		return SkRect {
+			.fLeft = static_cast<float>(rect.left),
+			.fTop = static_cast<float>(rect.top),
+			.fRight = static_cast<float>(rect.right),
+			.fBottom = static_cast<float>(rect.bottom),
 		};
 	};
 }

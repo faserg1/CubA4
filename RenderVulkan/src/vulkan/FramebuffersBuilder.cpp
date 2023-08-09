@@ -102,7 +102,6 @@ std::shared_ptr<FramebufferImage> FramebuffersBuilder::createImageWithMemory(VkF
 	else
 		info.samples = VK_SAMPLE_COUNT_1_BIT;
     info.usage = usage;
-    // TODO: [OOKAMI] Get from capabilities
     info.tiling = VK_IMAGE_TILING_OPTIMAL;
     info.extent.width = resolution.width;
     info.extent.height = resolution.height;
