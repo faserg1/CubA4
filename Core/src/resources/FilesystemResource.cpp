@@ -41,12 +41,17 @@ std::pair<std::shared_ptr<void>, uint64_t> FilesystemResource::data() const
 
 size_t FilesystemResource::copyIn(void *data, size_t maxSize, size_t offset) const
 {
+	const auto fileSize = std::filesystem::file_size(fullPath_);
 	std::ifstream inFile(fullPath_, std::ios::binary);
 	if (!inFile.is_open())
 		return 0; // TODO: [OOKAMI] Log?
 	inFile.seekg(offset, std::ios_base::beg);
 	inFile.read(reinterpret_cast<char*>(data), maxSize);
-	return static_cast<size_t>(inFile.tellg()) - offset;
+	auto streamPos = inFile.tellg();
+	// think that we reached end
+	if (streamPos == static_cast<std::ifstream::pos_type>(-1))
+		return fileSize - offset;
+	return static_cast<size_t>(streamPos) - offset;
 }
 
 void FilesystemResource::save(const void *data, size_t size)

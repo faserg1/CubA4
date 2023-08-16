@@ -11,6 +11,14 @@
 
 namespace CubA4
 {
+	namespace audio
+	{
+		class IAudioTrack;
+	};
+}
+
+namespace CubA4
+{
 	namespace mod
 	{
 		class ModVanilla :
@@ -46,6 +54,8 @@ namespace CubA4
 			startup::BlockSetup blockSetup_;
 			startup::WorldSetup worldSetup_;
 			std::shared_ptr<CubA4::manager::ModManager> manager_;
+
+			std::shared_ptr<CubA4::audio::IAudioTrack> audioTrack_;
 		};
 	}
 }

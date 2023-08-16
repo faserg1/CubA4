@@ -46,6 +46,8 @@
       ]
     },
     "libpng",
+	"libogg",
+	"libvorbis",
     "taskflow",
     "tl-generator",
     "range-v3",

@@ -9,6 +9,7 @@
 #include "system/Runtime.hpp"
 #include <physics/PhysicsManager.hpp>
 #include <object/EntityManager.hpp>
+#include <audio/AudioManager.hpp>
 #include <stdexcept>
 #include <boost/stacktrace.hpp>
 #include <sstream>
@@ -83,6 +84,11 @@ std::shared_ptr<system::Environment> Core::getEnvironment()
 std::shared_ptr<const system::IEnvironment> Core::getEnvironment() const
 {
 	return env_;
+}
+
+std::shared_ptr<audio::IAudioManager> Core::getAudioManager() const
+{
+	return audioManager_;
 }
 
 std::shared_ptr<const game::IGame> Core::getGame() const
@@ -160,4 +166,22 @@ void Core::criticalException() const
 		print(frame.name() + " at " + frame.source_file() + ":" + std::to_string(frame.source_line()));
 	}
 	logger_->flush();
+}
+
+void Core::onLoad()
+{
+	std::shared_ptr<CubA4::audio::IAudioPlayer> player;
+	if (appFlags_ & ApplicationFlag::Render)
+	{
+		auto appClientCallback = dynamic_cast<IAppClientCallback*>(startup_->getAppCallbacks());
+		if (appClientCallback)
+			player = appClientCallback->getAudioPlayer();
+	}
+
+	audioManager_ = std::make_shared<audio::AudioManager>(player);
+}
+
+void Core::onUnload()
+{
+	audioManager_.reset();
 }

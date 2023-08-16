@@ -44,6 +44,12 @@ void ModVanilla::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builde
 	entitySetup_.init(builder);
 	blockSetup_.init(builder);
 	worldSetup_.init(builder);
+
+	// test
+	auto am = core_->getAudioManager();
+	auto rm = core_->getResourcesManager();
+	auto resource = rm->find("data/vanilla/assets/audio/gunshot.ogg");
+	audioTrack_ = am->createTrack(resource);
 }
 
 void ModVanilla::configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
@@ -79,6 +85,10 @@ void ModVanilla::start(CubA4::game::IGameControl &gameControl)
 
 	auto player = gameControl_->requestSpawn(playerFactory, dimId, pos1);
 	auto player2 = gameControl_->requestSpawn(playerFactory, dimId, pos2);
+
+	auto am = core_->getAudioManager();
+	CubA4::world::GlobalPosition pos;
+	am->play(audioTrack_, pos);
 }
 
 void ModVanilla::stop()

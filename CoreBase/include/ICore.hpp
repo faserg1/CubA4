@@ -4,6 +4,7 @@
 #include <ApplicationFlags.hpp>
 #include <ApplicationModeFlags.hpp>
 #include <model/IModelFactory.hpp>
+#include <audio/IAudioManager.hpp>
 #include <config/IFilePaths.hpp>
 #include <config/ICoreConfig.hpp>
 #include <logging/ILogger.hpp>
@@ -32,6 +33,8 @@ namespace CubA4
 		virtual std::shared_ptr<model::IModelFactory> getModelFactory() const = 0;
 		virtual std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const = 0;
 		virtual std::shared_ptr<const system::IEnvironment> getEnvironment() const = 0;
+		// TODO: make const, move import to builder
+		virtual std::shared_ptr<audio::IAudioManager> getAudioManager() const = 0;
 		virtual std::shared_ptr<const game::IGame> getGame() const = 0;
 		///Создает сообщение о критической ошибке
 		virtual void criticalException() const = 0;

@@ -23,6 +23,7 @@ namespace CubA4::app
 		std::function<std::shared_ptr<mod::IModLoader>()> getModLoaderFactory() const override;
 		std::shared_ptr<const CubA4::info::IApplicationInfo> getApplicationInfo() const override;
 		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const override;
+		std::shared_ptr<audio::IAudioPlayer> getAudioPlayer() const override;
 		const CubA4::render::IRenderInfo &getRenderInfo() const override;
 		std::pair<bool, CubA4::game::controller::BMods> getButtonState(CubA4::game::controller::Button btn) const override;
 		bool requestMouseCapture(bool enable) override;
@@ -44,6 +45,7 @@ namespace CubA4::app
 		std::shared_ptr<CubA4::info::IApplicationInfo> info_;
 		std::shared_ptr<CubA4::render::RenderLoader> renderLoader_;
 		std::shared_ptr<CubA4::window::Window> window_;
+		std::shared_ptr<audio::IAudioPlayer> audioPlayer_;
 
 		std::shared_ptr<CubA4::logging::ILoggerTagged> log_;
 

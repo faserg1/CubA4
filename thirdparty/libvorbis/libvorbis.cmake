@@ -1,0 +1,1 @@
+find_package(Vorbis CONFIG REQUIRED)

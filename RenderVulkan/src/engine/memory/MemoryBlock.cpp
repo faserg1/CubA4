@@ -88,3 +88,19 @@ void MemoryBlock::freePart(const MemoryPart *part)
 		return locked->getOffset() == part->getOffset() && locked->getSize() == part->getSize();
 	});
 }
+
+std::shared_ptr<void> MemoryBlock::map(VkDeviceSize offset, VkDeviceSize size)
+{
+	std::unique_lock l(mapMutex_);
+	if (!mappedMemory_)
+		mappedMemory_ = memory_->map(0, VK_WHOLE_SIZE);
+	mappedCounter_++;
+	auto *ptr = reinterpret_cast<std::byte*>(mappedMemory_.get()) + offset;
+	return std::shared_ptr<void>(ptr, [this](void *ptr)
+	{
+		std::unique_lock l(mapMutex_);
+		mappedCounter_--;
+		if (!mappedCounter_)
+			mappedMemory_.reset();
+	});
+}

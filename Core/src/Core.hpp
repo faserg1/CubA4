@@ -15,6 +15,11 @@ namespace CubA4
 		class PhysicsManager;
 	}
 
+	namespace audio
+	{
+		class AudioManager;
+	}
+
 	namespace object
 	{
 		class EntityManager;
@@ -52,6 +57,7 @@ namespace CubA4
 		std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const override;
 		std::shared_ptr<system::Environment> getEnvironment();
 		std::shared_ptr<const system::IEnvironment> getEnvironment() const override;
+		std::shared_ptr<audio::IAudioManager> getAudioManager() const override;
 		std::shared_ptr<const game::IGame> getGame() const override;
 		std::shared_ptr<system::IRuntime> getRuntime() override;
 
@@ -69,7 +75,9 @@ namespace CubA4
 		void setStartup(CubA4::system::Startup *startup);
 
 		void criticalException() const override;
-	protected:
+
+		void onLoad();
+		void onUnload();
 	private:
 		const ApplicationFlags appFlags_;
 		const std::shared_ptr<const config::IFilePaths> paths_;
@@ -79,6 +87,7 @@ namespace CubA4
 		std::shared_ptr<resources::IResourcesManager> resourceManager_;
 		std::shared_ptr<system::IRuntime> runtime_;
 		std::shared_ptr<system::Environment> env_;
+		std::shared_ptr<audio::AudioManager> audioManager_;
 		std::shared_ptr<game::IGame> game_;
 		std::shared_ptr<object::EntityManager> entityManager_;
 		std::shared_ptr<physics::PhysicsManager> physicsManager_;

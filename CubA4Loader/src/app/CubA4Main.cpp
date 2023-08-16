@@ -25,6 +25,7 @@
 
 #include <system/IStartup.hpp>
 
+#include <audio/AudioPlayer.hpp>
 
 //TODO: [OOKAMI] Загловки для теста
 #include <engine/IRenderManager.hpp>
@@ -43,6 +44,7 @@ AppMain::AppMain(int argc, const char *const argv[]) :
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::App, "MAIN");
 	log_->log(LogLevel::Info, "CubA4 Loader created.");
 	renderLoader_ = std::make_shared<CubA4::render::RenderLoader>(core_->getPaths()->renderPath(), core_->getRuntime());
+	audioPlayer_ = std::make_shared<CubA4::audio::AudioPlayer>();
 }
 
 AppMain::~AppMain()
@@ -111,6 +113,11 @@ std::shared_ptr<CubA4::render::engine::IRenderManager> AppMain::getRenderManager
 {
 	auto renderEngine = renderLoader_->getCurrentRenderInfo()->getRenderEngine();
 	return renderEngine->getRenderManager();
+}
+
+std::shared_ptr<CubA4::audio::IAudioPlayer> AppMain::getAudioPlayer() const
+{
+	return audioPlayer_;
 }
 
 const CubA4::render::IRenderInfo &AppMain::getRenderInfo() const

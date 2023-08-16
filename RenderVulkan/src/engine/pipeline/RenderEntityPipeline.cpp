@@ -16,6 +16,7 @@ RenderEntityPipeline::RenderEntityPipeline(std::shared_ptr<RenderEntityCompiler>
 void RenderEntityPipeline::onFramebufferUpdated(const RenderFramebufferData &data)
 {
 	framebufferData = data;
+	// TODO: recompile entites
 }
 
 uint32_t RenderEntityPipeline::getSubpassNumber() const

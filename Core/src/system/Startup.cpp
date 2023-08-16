@@ -19,6 +19,7 @@ Startup::~Startup()
 {
 	if (auto core = core_.lock())
 	{
+		core->onUnload();
 		core->setStartup(nullptr);
 	}
 	unloadMods();
@@ -31,6 +32,10 @@ void Startup::load(system::IAppCallback &appCallback)
 	modLoader_ = modLoaderFactory();
 	modLoader_->find();
 	modLoader_->load();
+	if (auto core = core_.lock())
+	{
+		core->onLoad();
+	}
 }
 
 void Startup::setup()
