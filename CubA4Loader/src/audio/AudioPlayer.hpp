@@ -12,8 +12,9 @@ namespace CubA4::audio
 		AudioPlayer();
 		~AudioPlayer();
 
-		void play(std::shared_ptr<const IAudioTrack> track, const CubA4::world::GlobalPosition &pos) override;
-		void setListenerPosition(const CubA4::world::GlobalPosition &pos) override;
+		IAudioListener &getListener() override;
+		IAudioBufferPool &getBufferPool() override;
+		IAudioSourcePool &getSourcePool() override;
 	private:
 		std::unique_ptr<Data> data_;
 	};

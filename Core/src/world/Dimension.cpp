@@ -58,6 +58,11 @@ std::vector<CubA4::world::ChunkPos> Dimension::getActiveChunks()
 	return std::move(result);
 }
 
+void Dimension::rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const
+{
+	physicalWorld_->rayTest(from, to);
+}
+
 const IWorld &Dimension::getWorld() const
 {
 	return world_;

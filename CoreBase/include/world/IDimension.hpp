@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <world/IChunk.hpp>
+#include <world/GlobalPosition.hpp>
 #include <world/IDimensionDescription.hpp>
 #include <world/IDimensionSubscriber.hpp>
 #include <object/IObject.hpp>
@@ -26,6 +27,8 @@ namespace CubA4::world
 
 		virtual std::vector<CubA4::world::ChunkPos> getLoadedChunks() = 0;
 		virtual std::vector<CubA4::world::ChunkPos> getActiveChunks() = 0;
+
+		virtual void rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const = 0;
 
 		virtual const IWorld &getWorld() const = 0;
 

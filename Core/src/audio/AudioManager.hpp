@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <audio/IAudioManager.hpp>
+#include <audio/AudioImporter.hpp>
+#include <audio/AudioTrackManager.hpp>
 #include <world/GlobalPosition.hpp>
 
 namespace CubA4::audio
@@ -13,13 +15,13 @@ namespace CubA4::audio
 	{
 	public:
 		AudioManager(std::shared_ptr<IAudioPlayer> player);
-		std::shared_ptr<IAudioTrack> createTrack(std::shared_ptr<const CubA4::resources::IResource> resource) override;
 
-		void play(std::shared_ptr<IAudioTrack> track, const CubA4::world::GlobalPosition &pos) override;
-	private:
-		std::shared_ptr<AudioTrack> createFromOgg(std::shared_ptr<const CubA4::resources::IResource> resource);
-
+		IAudioImporter &getImporter() override;
+		IAudioListener &getListener() override;
+		IAudioTrackManager &getTrackManager() override;
 	private:
 		const std::shared_ptr<IAudioPlayer> player_;
+		AudioImporter importer_;
+		AudioTrackManager trackManager_;
 	};
 }

@@ -1,18 +1,31 @@
 #include <audio/AudioTrack.hpp>
+#include <audio/IAudioSource.hpp>
 using namespace CubA4::audio;
 
-AudioTrack::AudioTrack(std::vector<int16_t> samples, uint32_t rate) :
-	samples_(samples), rate_(rate)
+AudioTrack::AudioTrack(std::unique_ptr<IAudioSource> source) :
+	source_(std::move(source))
 {
 
 }
 
-const std::vector<int16_t> &AudioTrack::getSamples() const
+AudioTrack::~AudioTrack() = default;
+
+void AudioTrack::attachBuffer(std::shared_ptr<IAudioBuffer> buffer)
 {
-	return samples_;
+	source_->attachBuffer(buffer);
 }
 
-uint32_t AudioTrack::getRate() const
+void AudioTrack::play()
 {
-	return rate_;
+	source_->play();
+}
+
+void AudioTrack::stop()
+{
+	source_->stop();
+}
+
+void AudioTrack::setPosition(const CubA4::world::GlobalPosition &pos)
+{
+	source_->setPosition(pos);
 }

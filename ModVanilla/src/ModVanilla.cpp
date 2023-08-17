@@ -3,6 +3,9 @@
 #include <logging/ILogger.hpp>
 #include <ModVanillaConst.hpp>
 #include <fmt/format.h>
+#include <audio/IAudioImporter.hpp>
+#include <audio/IAudioBuffer.hpp>
+#include <audio/IAudioTrackManager.hpp>
 using namespace CubA4::mod;
 
 ModVanilla::ModVanilla(const IModInfo &modInfo) :
@@ -47,9 +50,13 @@ void ModVanilla::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builde
 
 	// test
 	auto am = core_->getAudioManager();
+	auto &amImporter = am->getImporter();
+	auto &amTrackManager = am->getTrackManager();
 	auto rm = core_->getResourcesManager();
-	auto resource = rm->find("data/vanilla/assets/audio/gunshot.ogg");
-	audioTrack_ = am->createTrack(resource);
+	auto resource = rm->find("data/vanilla/assets/audio/meow.ogg");
+	auto buffer = amImporter.importTrack(resource);
+	audioTrack_ = amTrackManager.createTrack();
+	audioTrack_->attachBuffer(buffer);
 }
 
 void ModVanilla::configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
@@ -86,9 +93,8 @@ void ModVanilla::start(CubA4::game::IGameControl &gameControl)
 	auto player = gameControl_->requestSpawn(playerFactory, dimId, pos1);
 	auto player2 = gameControl_->requestSpawn(playerFactory, dimId, pos2);
 
-	auto am = core_->getAudioManager();
 	CubA4::world::GlobalPosition pos;
-	am->play(audioTrack_, pos);
+	audioTrack_->play();
 }
 
 void ModVanilla::stop()

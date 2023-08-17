@@ -1,17 +1,19 @@
 #pragma once
 
 #include <memory>
-#include <audio/IAudioTrack.hpp>
-#include <resources/IResource.hpp>
-#include <world/GlobalPosition.hpp>
 
 namespace CubA4::audio
 {
+	class IAudioImporter;
+	class IAudioListener;
+	class IAudioTrackManager;
+
 	class IAudioManager
 	{
 	public:
-		virtual std::shared_ptr<IAudioTrack> createTrack(std::shared_ptr<const CubA4::resources::IResource> resource) = 0;
-		virtual void play(std::shared_ptr<IAudioTrack> track, const CubA4::world::GlobalPosition &pos) = 0;
+		virtual IAudioImporter &getImporter() = 0;
+		virtual IAudioListener &getListener() = 0;
+		virtual IAudioTrackManager &getTrackManager() = 0;
 	protected:
 		IAudioManager() = default;
 	};

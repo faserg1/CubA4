@@ -7,10 +7,10 @@ namespace CubA4::audio
 {
 	class IAudioBuffer;
 
-	class IAudioTrack
+	class IAudioSource
 	{
 	public:
-		virtual ~IAudioTrack() = default;
+		virtual ~IAudioSource() = default;
 
 		virtual void attachBuffer(std::shared_ptr<IAudioBuffer> buffer) = 0;
 		virtual void play() = 0;
@@ -18,6 +18,7 @@ namespace CubA4::audio
 
 		virtual void setPosition(const CubA4::world::GlobalPosition &pos) = 0;
 	protected:
-		IAudioTrack() = default;
+		IAudioSource() = default;
+		
 	};
 }

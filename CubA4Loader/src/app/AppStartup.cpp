@@ -13,6 +13,7 @@
 #include <ctime>
 #include <cmath>
 #include <fmt/format.h>
+#include <world/IDimension.hpp>
 
 using namespace CubA4::app;
 
@@ -117,9 +118,18 @@ bool AppStartup::setupGame()
 			auto debug = rm->getDebug();
 
 			auto ray = world->getRayFrom(x, y);
-			auto col = debug->addCollection();
 			auto fPos = ray.position.inBlockPos() + ray.position.blockPosition();
 			auto fPosTo = ray.direction * CubA4::world::ChunkSize + fPos;
+
+			if (auto core = core_.lock())
+			{
+				auto dimName = std::format("#{}@{}/{}", "vanilla", "testWorld", "testDimension");
+				auto dim = core->getEnvironment()->getObjectT<CubA4::world::IDimension>(dimName);
+				dim->rayTest(ray.position, CubA4::world::GlobalPosition(fPosTo));
+			}
+
+			auto col = debug->addCollection();
+			
 			col->addLine(ray.position.chunkPos(), fPos, fPosTo);
 			collections.push_back(col);
 		}

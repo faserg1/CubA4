@@ -29,6 +29,7 @@ namespace CubA4::physics
 		~PhysicsWorld();
 
 		void init(CubA4::world::Dimension &dimension);
+		void rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const override;
 
 		btDiscreteDynamicsWorld *getWorld();
 	protected:

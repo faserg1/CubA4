@@ -1,20 +1,27 @@
 #pragma once
 
+#include <memory>
 #include <audio/IAudioTrack.hpp>
 #include <vector>
 #include <cstdint>
 
 namespace CubA4::audio
 {
-	class AudioTrack : public virtual IAudioTrack
+	class IAudioSource;
+
+	class AudioTrack :
+		public virtual IAudioTrack
 	{
 	public:
-		AudioTrack(std::vector<int16_t> samples, uint32_t rate);
+		AudioTrack(std::unique_ptr<IAudioSource> source);
+		~AudioTrack();
 
-		const std::vector<int16_t> &getSamples() const override;
-		uint32_t getRate() const override;
+		void attachBuffer(std::shared_ptr<IAudioBuffer> buffer) override;
+		void play() override;
+		void stop() override;
+
+		void setPosition(const CubA4::world::GlobalPosition &pos) override;
 	private:
-		const std::vector<int16_t> samples_;
-		const uint32_t rate_;
+		std::unique_ptr<IAudioSource> source_;
 	};
 }

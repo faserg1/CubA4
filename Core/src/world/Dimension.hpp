@@ -32,6 +32,8 @@ namespace CubA4::world
 		std::vector<CubA4::world::ChunkPos> getLoadedChunks() override;
 		std::vector<CubA4::world::ChunkPos> getActiveChunks() override;
 
+		void rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const override;
+
 		const IWorld &getWorld() const override;
 		World &getWorld();
 

@@ -49,6 +49,17 @@ void PhysicsWorld::init(CubA4::world::Dimension &dimension)
 	dimension_ = &dimension;
 }
 
+void PhysicsWorld::rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const
+{
+	auto floatFrom = from.globalPos<float>();
+	auto floatTo = to.globalPos<float>();
+	btVector3 btFrom(floatFrom.x, floatFrom.y, floatFrom.z);
+	btVector3 btTo(floatTo.x, floatTo.y, floatTo.z);
+	btDiscreteDynamicsWorld::ClosestRayResultCallback result(btFrom, btTo);
+	dynamicWorld_->rayTest(btFrom, btTo, result);
+	int i = 0;
+}
+
 btDiscreteDynamicsWorld *PhysicsWorld::getWorld()
 {
 	return dynamicWorld_.get();

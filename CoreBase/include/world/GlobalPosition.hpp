@@ -10,9 +10,10 @@ namespace CubA4::world
 	{
 	public:
 		GlobalPosition() = default;
-		GlobalPosition(BasePos<long double> globalPos)
+		template<class Type>
+		GlobalPosition(BasePos<Type> globalPos)
 		{
-			clampGlobal(globalPos);
+			clampGlobal(convertPos<long double>(globalPos));
 		}
 		explicit GlobalPosition(ChunkPos chunkPos, BlockInChunkPos blockPos, BasePos<float> inBlockPos) :
 			chunkPos_(chunkPos), blockPosition_(blockPos), inBlockPos_(inBlockPos)
@@ -70,6 +71,26 @@ namespace CubA4::world
 			inBlockPos_ -= pos;
 			clampPos();
 			return *this;
+		}
+		template <class Type>
+		friend GlobalPosition operator+(const GlobalPosition &pos, const BasePos<Type> &otherPos)
+		{
+			auto newPos = pos;
+			newPos.inBlockPos_.x += otherPos.x;
+			newPos.inBlockPos_.y += otherPos.y;
+			newPos.inBlockPos_.z += otherPos.z;
+			newPos.clampPos();
+			return newPos;
+		}
+		template <class Type>
+		friend GlobalPosition operator-(const GlobalPosition &pos, const BasePos<Type> &otherPos)
+		{
+			auto newPos = pos;
+			newPos.inBlockPos_.x -= otherPos.x;
+			newPos.inBlockPos_.y -= otherPos.y;
+			newPos.inBlockPos_.z -= otherPos.z;
+			newPos.clampPos();
+			return newPos;
 		}
 		const ChunkPos &chunkPos() const
 		{
