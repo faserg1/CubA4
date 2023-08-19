@@ -4,7 +4,7 @@
 #include <logging/ILoggerTagged.hpp>
 #include <resources/IResourcesManager.hpp>
 #include <resources/IResource.hpp>
-#include <system/IEnvironmentBuilder.hpp>
+#include <core/IEnvironmentBuilder.hpp>
 #include <IRenderInfo.hpp>
 #include <engine/IRenderManager.hpp>
 #include <engine/material/IMaterialManager.hpp>
@@ -46,7 +46,7 @@ void RenderStartup::load(std::shared_ptr<const CubA4::ICore> core, std::shared_p
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::Mod, "ModVanilla/RenderStartup");
 }
 
-void RenderStartup::preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void RenderStartup::preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	auto &renderInfo = builder->getRenderInfo();
 	if (renderInfo.getRenderEngineId() != "vulkan")

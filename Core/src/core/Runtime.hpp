@@ -1,8 +1,8 @@
 #pragma once
 
-#include <system/IRuntime.hpp>
+#include <core/IRuntime.hpp>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class Runtime : public virtual IRuntime
 	{

@@ -4,7 +4,7 @@ using namespace CubA4::world;
 
 constexpr const auto BlockDataIDNone = std::numeric_limits<decltype(BlockData::id)>::max();
 
-ChunkBMutable::ChunkBMutable(size_t id, CubA4::system::IIdentityiMap::IdType blockId, CubA4::world::Layer layer) :
+ChunkBMutable::ChunkBMutable(size_t id, CubA4::core::IIdentityiMap::IdType blockId, CubA4::world::Layer layer) :
     id_(id), blockId_(blockId), layer_(layer)
 {
 	blockMap_.fill(BlockDataIDNone);
@@ -25,7 +25,7 @@ bool ChunkBMutable::isIndexGlobal() const
 	return true;
 }
 
-CubA4::system::IIdentityiMap::IdType ChunkBMutable::getBlockId() const
+CubA4::core::IIdentityiMap::IdType ChunkBMutable::getBlockId() const
 {
     return blockId_;
 }

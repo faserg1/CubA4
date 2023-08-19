@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IRuntime
 	{

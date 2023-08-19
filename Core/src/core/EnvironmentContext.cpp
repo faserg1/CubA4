@@ -1,5 +1,5 @@
-#include <system/EnvironmentContext.hpp>
-using namespace CubA4::system;
+#include <core/EnvironmentContext.hpp>
+using namespace CubA4::core;
 
 EnvironmentContext::EnvironmentContext(IdentityMap &&map, objectsMap_t &&objectsMap) :
 	map_(std::move(map)),

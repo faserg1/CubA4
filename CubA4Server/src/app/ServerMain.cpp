@@ -17,7 +17,7 @@
 
 #include <loader/ModLoader.hpp>
 
-#include <system/IStartup.hpp>
+#include <core/IStartup.hpp>
 
 
 using namespace CubA4::app;

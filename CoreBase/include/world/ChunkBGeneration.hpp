@@ -7,7 +7,7 @@
 #include <world/Position.hpp>
 #include <world/data/BlockData.hpp>
 #include <object/IBlock.hpp>
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 
 namespace CubA4::world
 {
@@ -17,7 +17,7 @@ namespace CubA4::world
 
 		struct BlockInfo
 		{
-			CubA4::system::IIdentityiMap::IdType blockId = std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max();
+			CubA4::core::IIdentityiMap::IdType blockId = std::numeric_limits<CubA4::core::IIdentityiMap::IdType>::max();
 			std::shared_ptr<CubA4::world::BlockData> data;
 		};
 

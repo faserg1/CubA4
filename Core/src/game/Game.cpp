@@ -7,7 +7,7 @@
 #include <chrono>
 using namespace CubA4::game;
 
-Game::Game(CubA4::Core &core, CubA4::system::IAppCallback &appCallback) :
+Game::Game(CubA4::Core &core, CubA4::core::IAppCallback &appCallback) :
 	core_(core), appCallback_(appCallback), runGameLoop_(false), controller_(createController())
 {
 	
@@ -52,7 +52,7 @@ void Game::stop()
 	gameThread_.join();
 }
 
-void Game::setupEnvironment(std::shared_ptr<CubA4::system::Environment> env)
+void Game::setupEnvironment(std::shared_ptr<CubA4::core::Environment> env)
 {
 	env_ = env;
 }
@@ -82,7 +82,7 @@ void Game::iterate(float seconds)
 
 std::shared_ptr<controller::Controller> Game::createController()
 {
-	if (auto appClientCallback = dynamic_cast<CubA4::system::IAppClientCallback*>(&appCallback_))
+	if (auto appClientCallback = dynamic_cast<CubA4::core::IAppClientCallback*>(&appCallback_))
 		return std::make_shared<CubA4::game::controller::Controller>(*appClientCallback);
 	return {};
 }

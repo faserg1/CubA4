@@ -6,7 +6,7 @@
 
 namespace CubA4
 {
-	namespace system
+	namespace core
 	{
 		class IRuntime;
 	}
@@ -17,7 +17,7 @@ namespace CubA4
 		{
 			struct Private;
 		public:
-			RenderLoader(std::string renderPath, std::shared_ptr<system::IRuntime> runtime);
+			RenderLoader(std::string renderPath, std::shared_ptr<core::IRuntime> runtime);
 			~RenderLoader();
 
 			std::vector<IRenderInfo *> getRenderInfoCollection();
@@ -27,7 +27,7 @@ namespace CubA4
 			const char *const importSymbolName_;
 			std::shared_ptr<Private> data_;
 			IRenderInfo *currentRenderInfo_;
-			const std::shared_ptr<system::IRuntime> runtime_;
+			const std::shared_ptr<core::IRuntime> runtime_;
 		};
 	}
 }

@@ -12,7 +12,7 @@ namespace CubA4::physics
 
 	class BlockAndBlockDataIdHash
 	{
-		using BlockId = CubA4::system::IIdentityiMap::IdType;
+		using BlockId = CubA4::core::IIdentityiMap::IdType;
 		using BlockDataId = decltype(CubA4::world::BlockData::id);
 	public:
 		size_t operator()(const std::pair<BlockId, BlockDataId> &pair) const
@@ -31,7 +31,7 @@ namespace CubA4::physics
 
 	class ChunkCollision
 	{
-		using BlockId = CubA4::system::IIdentityiMap::IdType;
+		using BlockId = CubA4::core::IIdentityiMap::IdType;
 		using BlockDataId = decltype(CubA4::world::BlockData::id);
 		using IdPair = std::pair<BlockId, BlockDataId>;
 	public:

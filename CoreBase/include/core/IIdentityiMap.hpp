@@ -4,7 +4,7 @@
 #include <functional>
 #include <cstdint>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IIdentityiMap
 	{

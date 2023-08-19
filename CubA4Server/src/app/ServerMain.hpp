@@ -2,14 +2,14 @@
 
 #include <functional>
 #include <memory>
-#include <system/IAppCallback.hpp>
+#include <core/IAppCallback.hpp>
 
 namespace CubA4::app
 {
 	class ServerStartup;
 
 	class ServerMain final :
-		public virtual CubA4::system::IAppCallback
+		public virtual CubA4::core::IAppCallback
 	{
 	public:
 		explicit ServerMain(int argc, const char *const argv[]);

@@ -31,6 +31,7 @@
     "nlohmann-json",
     "openssl",
     "openal-soft",
+	"opus",
     "vulkan",
     {
       "name": "skia",

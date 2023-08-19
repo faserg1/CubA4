@@ -3,7 +3,7 @@
 #include <memory>
 #include <world/Position.hpp>
 #include <world/data/BlockData.hpp>
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 #include <world/containers/IChunkBIterator.hpp>
 
 namespace CubA4::world
@@ -23,7 +23,7 @@ namespace CubA4::world
 		/// Is container index are global (if local, index should not be used as global position index)
 		virtual bool isIndexGlobal() const = 0;
 		/// Возвращает блок, который заполняет этот диапазон
-		virtual CubA4::system::IIdentityiMap::IdType getBlockId() const = 0;
+		virtual CubA4::core::IIdentityiMap::IdType getBlockId() const = 0;
 		/// Возвращает количество заполняемых блоков в диапазоне
 		virtual uint32_t getBlockCount() const = 0;
 		/// Получает слой, на котором расположены блоки

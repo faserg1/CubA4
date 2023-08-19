@@ -184,7 +184,7 @@ void ModLoader::finished()
 
 void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::vector<std::shared_ptr<IMod>> mods)
 {
-	std::map<std::string, std::shared_ptr<CubA4::system::IEnvironmentBuilder>> builders;
+	std::map<std::string, std::shared_ptr<CubA4::core::IEnvironmentBuilder>> builders;
 	auto core = core_.lock();
 	log_->log(LogLevel::Info, "Loading mods.");
 	for (auto mod : mods)

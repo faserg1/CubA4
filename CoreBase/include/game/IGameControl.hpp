@@ -5,7 +5,7 @@
 #include <world/IWorldControl.hpp>
 #include <object/IEntity.hpp>
 #include <object/IEntityFactory.hpp>
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 #include <world/GlobalPosition.hpp>
 
 namespace CubA4::game
@@ -13,7 +13,7 @@ namespace CubA4::game
 	class IGameControl
 	{
 	public:
-		using IdType = CubA4::system::IIdentityiMap::IdType;
+		using IdType = CubA4::core::IIdentityiMap::IdType;
 
 		virtual ~IGameControl() = default;
 		virtual bool requestWorldChange(const std::string &worldId, const std::string &dimId) = 0;

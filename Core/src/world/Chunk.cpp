@@ -25,7 +25,7 @@ const ChunkPos &Chunk::getChunkPos() const
 	return chunkPos_;
 }
 
-std::vector<CubA4::system::IIdentityiMap::IdType> Chunk::getUsedBlocks() const
+std::vector<CubA4::core::IIdentityiMap::IdType> Chunk::getUsedBlocks() const
 {
 	return usedBlocks_ | ranges::views::keys | ranges::to<std::vector>;
 }
@@ -37,7 +37,7 @@ std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContain
 	return std::move(containers);
 }
 
-std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::system::IIdentityiMap::IdType usedBlockId)
+std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::core::IIdentityiMap::IdType usedBlockId)
 {
 	std::vector<std::shared_ptr<IChunkBBaseContainer>> containers = containers_
 		| ranges::views::remove_if([usedBlockId](auto container){ return container->getBlockId() != usedBlockId; })
@@ -50,7 +50,7 @@ std::vector<std::shared_ptr<IChunkBBaseContainer>> Chunk::getChunkBContainers()
 	return containers_;
 }
 
-std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::system::IIdentityiMap::IdType usedBlockId) const
+std::vector<std::shared_ptr<const IChunkBBaseContainer>> Chunk::getChunkBContainers(CubA4::core::IIdentityiMap::IdType usedBlockId) const
 {
 	auto tf = [](auto sContainer) -> std::shared_ptr<const IChunkBBaseContainer> { return sContainer; };
 	std::vector<std::shared_ptr<const IChunkBBaseContainer>> containers = containers_

@@ -1,6 +1,6 @@
 #include "./AppStartup.hpp"
-#include <system/IAppCallback.hpp>
-#include <system/IStartup.hpp>
+#include <core/IAppCallback.hpp>
+#include <core/IStartup.hpp>
 #include <engine/IRenderEngine.hpp>
 #include <CommonFactory.hpp>
 
@@ -17,7 +17,7 @@
 
 using namespace CubA4::app;
 
-AppStartup::AppStartup(CubA4::system::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core,
+AppStartup::AppStartup(CubA4::core::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core,
 	std::weak_ptr<CubA4::render::engine::IRenderEngine> renderEngine) :
 	appCallback_(appCallback), core_(core), renderEngine_(renderEngine),
 	startup_(CubA4::CommonFactory::createStartup(core))
@@ -44,7 +44,7 @@ void AppStartup::mouseMove(int32_t x, int32_t y, bool relative)
 		startup_->getGame()->getController()->onPosition(x, y);
 }
 
-std::shared_ptr<CubA4::system::IStartup> AppStartup::getSystemStartup()
+std::shared_ptr<CubA4::core::IStartup> AppStartup::getSystemStartup()
 {
 	return startup_;
 }

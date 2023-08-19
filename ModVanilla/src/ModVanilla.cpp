@@ -30,7 +30,7 @@ void ModVanilla::load(std::shared_ptr<const ICore> core)
 	worldSetup_.load(core, manager_);
 }
 
-void ModVanilla::preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void ModVanilla::preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	if (core_->getApplicationFlags() & ApplicationFlag::Render)
 		renderStartup_.preinit(builder);
@@ -42,7 +42,7 @@ void ModVanilla::link(std::shared_ptr<const IModLinker> linker)
 
 }
 
-void ModVanilla::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void ModVanilla::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	entitySetup_.init(builder);
 	blockSetup_.init(builder);
@@ -59,12 +59,12 @@ void ModVanilla::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builde
 	audioTrack_->attachBuffer(buffer);
 }
 
-void ModVanilla::configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void ModVanilla::configure(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 
 }
 
-void ModVanilla::prefinish(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void ModVanilla::prefinish(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	core_->getLogger()->flush();
 }

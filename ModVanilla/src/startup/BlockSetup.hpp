@@ -6,7 +6,7 @@
 
 #include <ICore.hpp>
 #include <manager/ModManager.hpp>
-#include <system/IEnvironmentBuilder.hpp>
+#include <core/IEnvironmentBuilder.hpp>
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 
@@ -19,7 +19,7 @@ namespace CubA4::startup
 		~BlockSetup();
 
 		void load(std::shared_ptr<const ICore> core, std::shared_ptr<manager::ModManager> manager);
-		void init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder);
+		void init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder);
 	private:
 		std::shared_ptr<const ICore> core_;
 		std::shared_ptr<manager::ModManager> manager_;

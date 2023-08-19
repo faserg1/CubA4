@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <unordered_map>
-#include <system/IAppClientCallback.hpp>
-#include <system/IdentityMap.hpp>
+#include <core/IAppClientCallback.hpp>
+#include <core/IdentityMap.hpp>
 #include <object/IObject.hpp>
 #include <game/controller/IRootActions.hpp>
 
@@ -17,7 +17,7 @@ namespace CubA4::render::engine
 	class IRenderManager;
 }
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class EnvironmentBuilderData
 	{

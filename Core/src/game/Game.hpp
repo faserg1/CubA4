@@ -6,7 +6,7 @@
 #include <memory>
 #include <util/SubscriptionHelper.hpp>
 #include <game/controller/Controller.hpp>
-#include <system/Environment.hpp>
+#include <core/Environment.hpp>
 
 namespace CubA4
 {
@@ -20,7 +20,7 @@ namespace CubA4::game
 	{
 		friend class GameControl;
 	public:
-		explicit Game(CubA4::Core &core, CubA4::system::IAppCallback &appCallback);
+		explicit Game(CubA4::Core &core, CubA4::core::IAppCallback &appCallback);
 		~Game();
 
 		std::unique_ptr<CubA4::util::ISubscription> subscribe(IGameSubscriber *subscriber) const override;
@@ -30,15 +30,15 @@ namespace CubA4::game
 
 		void run();
 		void stop();
-		void setupEnvironment(std::shared_ptr<system::Environment> env);
+		void setupEnvironment(std::shared_ptr<core::Environment> env);
 	protected:
 	private:
 		CubA4::Core &core_;
-		CubA4::system::IAppCallback &appCallback_;
+		CubA4::core::IAppCallback &appCallback_;
 		std::atomic_bool runGameLoop_;
 		const std::shared_ptr<controller::Controller> controller_;
 		std::thread gameThread_;
-		std::shared_ptr<system::Environment> env_;
+		std::shared_ptr<core::Environment> env_;
 		
 		mutable CubA4::util::SubscriptionHelper<CubA4::game::IGameSubscriber> subscriptionHelper_;
 	private:

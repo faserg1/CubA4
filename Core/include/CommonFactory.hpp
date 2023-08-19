@@ -3,7 +3,7 @@
 #include <memory>
 #include <ICore.hpp>
 #include <CoreExportHelper.hpp>
-#include <system/IStartup.hpp>
+#include <core/IStartup.hpp>
 
 namespace CubA4
 {
@@ -11,7 +11,7 @@ namespace CubA4
 	{
 	public:
 		static std::shared_ptr<ICore> createCore(int argc, const char *const argv[], ApplicationFlags flags);
-		static std::shared_ptr<system::IStartup> createStartup(std::weak_ptr<ICore> core);
+		static std::shared_ptr<core::IStartup> createStartup(std::weak_ptr<ICore> core);
 	protected:
 	private:
 		CommonFactory() = delete;

@@ -3,7 +3,7 @@
 #include <memory>
 #include <IModInfo.hpp>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class EnvironmentBuilderContext
 	{

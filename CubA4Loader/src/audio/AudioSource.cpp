@@ -52,6 +52,11 @@ void AudioSource::setPosition(const CubA4::world::GlobalPosition &pos)
 	alSource3f(sourceId_, AL_POSITION, floatPos.x, floatPos.y, floatPos.z);
 }
 
+void AudioSource::setVelocity(const CubA4::Vector3 &velocity)
+{
+	alSource3f(sourceId_, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+}
+
 AudioSource::IdType AudioSource::getSourceId() const
 {
 	return sourceId_;

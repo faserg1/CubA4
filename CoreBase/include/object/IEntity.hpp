@@ -1,13 +1,13 @@
 #pragma once
 
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 
 namespace CubA4::object
 {
 	class IEntity
 	{
 	public:
-		using IdType = CubA4::system::IIdentityiMap::IdType;
+		using IdType = CubA4::core::IIdentityiMap::IdType;
 
 		virtual ~IEntity() = default;
 		virtual IdType getEntityId() const = 0;

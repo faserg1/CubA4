@@ -2,7 +2,7 @@
 #include <game/IGame.hpp>
 #include <world/IWorld.hpp>
 #include <ICore.hpp>
-#include <system/IEnvironment.hpp>
+#include <core/IEnvironment.hpp>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::object;

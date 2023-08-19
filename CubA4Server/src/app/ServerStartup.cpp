@@ -1,6 +1,6 @@
 #include <app/ServerStartup.hpp>
-#include <system/IAppCallback.hpp>
-#include <system/IStartup.hpp>
+#include <core/IAppCallback.hpp>
+#include <core/IStartup.hpp>
 #include <CommonFactory.hpp>
 
 #include <ctime>
@@ -9,7 +9,7 @@
 
 using namespace CubA4::app;
 
-ServerStartup::ServerStartup(CubA4::system::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core) :
+ServerStartup::ServerStartup(CubA4::core::IAppCallback &appCallback, std::weak_ptr<CubA4::ICore> core) :
 	appCallback_(appCallback), core_(core),
 	startup_(CubA4::CommonFactory::createStartup(core))
 {
@@ -23,7 +23,7 @@ ServerStartup::~ServerStartup()
 }
 
 
-std::shared_ptr<CubA4::system::IStartup> ServerStartup::getSystemStartup()
+std::shared_ptr<CubA4::core::IStartup> ServerStartup::getSystemStartup()
 {
 	return startup_;
 }

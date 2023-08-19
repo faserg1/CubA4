@@ -23,7 +23,7 @@
 
 #include <loader/ModLoader.hpp>
 
-#include <system/IStartup.hpp>
+#include <core/IStartup.hpp>
 
 #include <audio/AudioPlayer.hpp>
 

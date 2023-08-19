@@ -1,5 +1,5 @@
 #include "EnvironmentBuilderData.hpp"
-using namespace CubA4::system;
+using namespace CubA4::core;
 
 EnvironmentBuilderData::EnvironmentBuilderData(const IAppClientCallback *appCallback, std::shared_ptr<CubA4::game::controller::IRootActions> actions)
 	: appCallback_(appCallback), actions_(actions)

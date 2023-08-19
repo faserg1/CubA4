@@ -13,7 +13,7 @@ void BlockSetup::load(std::shared_ptr<const ICore> core, std::shared_ptr<manager
 	log_ = core->getLogger()->createTaggedLog(LogSourceSystem::Mod, "ModVanilla/BlockSetup");
 }
 
-void BlockSetup::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void BlockSetup::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	auto blockManager = manager_->getBlockManager();
 	auto def1 = blockManager->getBlockDefinition("test1");

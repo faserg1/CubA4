@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 #include <boost/bimap.hpp>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IdentityMap :
 		public virtual IIdentityiMap

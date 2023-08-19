@@ -1,5 +1,5 @@
-#include <system/Environment.hpp>
-using namespace CubA4::system;
+#include <core/Environment.hpp>
+using namespace CubA4::core;
 
 Environment::Environment(EnvironmentContext &&context) :
 	context_(std::move(context))

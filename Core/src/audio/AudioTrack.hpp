@@ -21,6 +21,7 @@ namespace CubA4::audio
 		void stop() override;
 
 		void setPosition(const CubA4::world::GlobalPosition &pos) override;
+		void setVelocity(const CubA4::Vector3 &velocity) override;
 	private:
 		std::unique_ptr<IAudioSource> source_;
 	};

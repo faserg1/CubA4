@@ -1,5 +1,5 @@
 #include "RenderLoader.hpp"
-#include <system/IRuntime.hpp>
+#include <core/IRuntime.hpp>
 #include <boost/dll.hpp>
 #include <map>
 #include <filesystem>
@@ -13,7 +13,7 @@ struct RenderLoader::Private
 	boost::dll::shared_library currentLibrary;
 };
 
-RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<system::IRuntime> runtime) :
+RenderLoader::RenderLoader(std::string renderPath, std::shared_ptr<core::IRuntime> runtime) :
 	importSymbolName_("getRenderInfo"),
 	currentRenderInfo_(nullptr),
 	runtime_(runtime)

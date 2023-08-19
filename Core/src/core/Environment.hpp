@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system/IEnvironment.hpp>
-#include <system/EnvironmentContext.hpp>
+#include <core/IEnvironment.hpp>
+#include <core/EnvironmentContext.hpp>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class Environment :
 		public virtual IEnvironment

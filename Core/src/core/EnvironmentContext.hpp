@@ -1,10 +1,10 @@
 #pragma once
 
-#include <system/IdentityMap.hpp>
+#include <core/IdentityMap.hpp>
 #include <object/IObject.hpp>
 #include <unordered_map>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class EnvironmentContext
 	{

@@ -28,3 +28,8 @@ void AudioListener::setPosition(const CubA4::world::GlobalPosition &pos)
 	auto floatPos = pos.globalPos<float>();
 	alListener3f(AL_POSITION, floatPos.x, floatPos.y, floatPos.z);
 }
+
+void AudioListener::setVelocity(const CubA4::Vector3 &velocity)
+{
+	alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+}

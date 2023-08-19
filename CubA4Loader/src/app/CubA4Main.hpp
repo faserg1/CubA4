@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <memory>
-#include <system/IAppClientCallback.hpp>
+#include <core/IAppClientCallback.hpp>
 #include <render/RenderLoader.hpp>
 #include <window/Window.hpp>
 #include "DebugOverlay.hpp"
@@ -12,7 +12,7 @@ namespace CubA4::app
 	class AppStartup;
 
 	class AppMain final :
-		public virtual CubA4::system::IAppClientCallback
+		public virtual CubA4::core::IAppClientCallback
 	{
 	public:
 		explicit AppMain(int argc, const char *const argv[]);

@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 #include <IModInfo.hpp>
-#include <system/IEnvironmentBuilder.hpp>
+#include <core/IEnvironmentBuilder.hpp>
 #include <game/IGameControl.hpp>
 
 namespace CubA4:: mod
@@ -13,7 +13,7 @@ namespace CubA4:: mod
 	{
 	public:
 		virtual ~IModLoader() = default;
-		using IEnvironmentBuilderFactory = std::function<std::shared_ptr<CubA4::system::IEnvironmentBuilder>(const CubA4::mod::IModInfo &modInfo)>;
+		using IEnvironmentBuilderFactory = std::function<std::shared_ptr<CubA4::core::IEnvironmentBuilder>(const CubA4::mod::IModInfo &modInfo)>;
 
 		virtual void find() = 0;
 		virtual void load() = 0;

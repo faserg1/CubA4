@@ -5,7 +5,7 @@
 #include <world/containers/ChunkBMutable.hpp>
 #include <world/ChunkBModification.hpp>
 #include <world/ChunkBGeneration.hpp>
-#include <system/IEnvironment.hpp>
+#include <core/IEnvironment.hpp>
 
 namespace CubA4::world
 {
@@ -15,7 +15,7 @@ namespace CubA4::world
 	class ChunkAssembler
 	{
 	public:
-		explicit ChunkAssembler(CubA4::system::IEnvironment &env);
+		explicit ChunkAssembler(CubA4::core::IEnvironment &env);
 		~ChunkAssembler();
 
 		void applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModification &mod);
@@ -30,6 +30,6 @@ namespace CubA4::world
 	private:
 		// cache?
 
-		CubA4::system::IEnvironment &env_;
+		CubA4::core::IEnvironment &env_;
 	};
 }

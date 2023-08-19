@@ -5,7 +5,7 @@
 #include <string>
 #include <object/IObject.hpp>
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IEnvironment
 	{

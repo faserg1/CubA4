@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 #include <game/controller/Buttons.hpp>
-#include <system/IAppCallback.hpp>
+#include <core/IAppCallback.hpp>
 #include <audio/IAudioPlayer.hpp>
 
 namespace CubA4::render
@@ -16,7 +16,7 @@ namespace CubA4::render
 	}
 }
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IAppClientCallback : public virtual IAppCallback
 	{

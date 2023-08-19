@@ -1,12 +1,12 @@
 #pragma once
 
 #include <memory>
-#include <system/IEnvironmentBuilder.hpp>
+#include <core/IEnvironmentBuilder.hpp>
 #include <Core.hpp>
 #include "EnvironmentBuilderData.hpp"
 #include "EnvironmentBuilderContext.hpp"
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class EnvironmentBuilder :
 		public virtual IEnvironmentBuilder

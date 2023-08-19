@@ -3,7 +3,7 @@
 #include <object/IEntityFactory.hpp>
 #include <object/Entity.hpp>
 #include <object/IEntityDefinition.hpp>
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 #include <object/EntityBuilderData.hpp>
 #include <entt/entt.hpp>
 #include <world/GlobalPosition.hpp>
@@ -15,8 +15,8 @@ namespace CubA4::object
 	class EntityFactory : public virtual IEntityFactory
 	{
 	public:
-		using IdFactoryType = CubA4::system::IIdentityiMap::IdType;
-		using IdWorldType = CubA4::system::IIdentityiMap::IdType;
+		using IdFactoryType = CubA4::core::IIdentityiMap::IdType;
+		using IdWorldType = CubA4::core::IIdentityiMap::IdType;
 		EntityFactory(IdFactoryType id, std::unique_ptr<const IEntityDefinition> &&def, entt::registry &registry, const EntityBuilderData &data);
 
 		IdType getId() const override;

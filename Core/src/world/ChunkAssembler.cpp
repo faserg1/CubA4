@@ -6,7 +6,7 @@
 #include <limits>
 using namespace CubA4::world;
 
-ChunkAssembler::ChunkAssembler(CubA4::system::IEnvironment &env) :
+ChunkAssembler::ChunkAssembler(CubA4::core::IEnvironment &env) :
 	env_(env)
 {
 	
@@ -57,11 +57,11 @@ std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
 	Layer layerPos = 0;
 	for (const auto &layer : gen.layers)
 	{
-		std::map<CubA4::system::IIdentityiMap::IdType, std::shared_ptr<ChunkBMutable>> containerMap;
+		std::map<CubA4::core::IIdentityiMap::IdType, std::shared_ptr<ChunkBMutable>> containerMap;
 		for (const auto &addInfo : layer.add)
 		{
 			auto &info = addInfo.info;
-			if (info.blockId == std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max())
+			if (info.blockId == std::numeric_limits<CubA4::core::IIdentityiMap::IdType>::max())
 				continue;
 			auto &blockDataStorage = dataProvider.getBlockDataStorage(info.blockId);
 			auto data = blockDataStorage.getOrAdd(*info.data);
@@ -81,7 +81,7 @@ std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
 		{
 			auto &info = fillInfo.info;
 			// TODO: Copy paste refactor
-			if (info.blockId == std::numeric_limits<CubA4::system::IIdentityiMap::IdType>::max())
+			if (info.blockId == std::numeric_limits<CubA4::core::IIdentityiMap::IdType>::max())
 				continue;
 			auto &blockDataStorage = dataProvider.getBlockDataStorage(info.blockId);
 			auto data = blockDataStorage.getOrAdd(*info.data);

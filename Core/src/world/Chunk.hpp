@@ -16,13 +16,13 @@ namespace CubA4::world
 		Chunk(const CubA4::world::ChunkPos &chunkPos);
 		~Chunk();
 		const CubA4::world::ChunkPos &getChunkPos() const override;
-		std::vector<CubA4::system::IIdentityiMap::IdType> getUsedBlocks() const override;
+		std::vector<CubA4::core::IIdentityiMap::IdType> getUsedBlocks() const override;
 
 		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers() const override;
-		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(CubA4::system::IIdentityiMap::IdType blockId) const override;
+		std::vector<std::shared_ptr<const IChunkBBaseContainer>> getChunkBContainers(CubA4::core::IIdentityiMap::IdType blockId) const override;
 
 		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers();
-		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers(CubA4::system::IIdentityiMap::IdType blockId);
+		std::vector<std::shared_ptr<IChunkBBaseContainer>> getChunkBContainers(CubA4::core::IIdentityiMap::IdType blockId);
 
 		bool hasBlocksAt(world::BlockInChunkPos pos) const override;
 		bool hasBlocksAt(uint32_t index) const override;
@@ -49,7 +49,7 @@ namespace CubA4::world
 		std::vector<std::shared_ptr<IChunkBBaseContainer>> containers_;
 
 		// used blocks cache (map BlockId -> use count)
-		std::map<CubA4::system::IIdentityiMap::IdType, uint32_t> usedBlocks_;
+		std::map<CubA4::core::IIdentityiMap::IdType, uint32_t> usedBlocks_;
 
 		size_t genId_ = 0;
 	};

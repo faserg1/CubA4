@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <ICore.hpp>
-#include <system/Environment.hpp>
+#include <core/Environment.hpp>
 #include <game/IGame.hpp>
 #include <CoreExportHelper.hpp>
 #include <config/CoreConfig.hpp>
@@ -25,7 +25,7 @@ namespace CubA4
 		class EntityManager;
 	}
 
-	namespace system
+	namespace core
 	{
 		class Startup;
 	}
@@ -55,11 +55,11 @@ namespace CubA4
 		std::shared_ptr<logging::ILogger> getLogger() const override;
 		std::shared_ptr<model::IModelFactory> getModelFactory() const override;
 		std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const override;
-		std::shared_ptr<system::Environment> getEnvironment();
-		std::shared_ptr<const system::IEnvironment> getEnvironment() const override;
+		std::shared_ptr<core::Environment> getEnvironment();
+		std::shared_ptr<const core::IEnvironment> getEnvironment() const override;
 		std::shared_ptr<audio::IAudioManager> getAudioManager() const override;
 		std::shared_ptr<const game::IGame> getGame() const override;
-		std::shared_ptr<system::IRuntime> getRuntime() override;
+		std::shared_ptr<core::IRuntime> getRuntime() override;
 
 		std::shared_ptr<object::EntityManager> getEntityManager();
 		std::shared_ptr<physics::PhysicsManager> getPhysicsManager();
@@ -69,10 +69,10 @@ namespace CubA4
 
 		void setApplicationModeFlags(ApplicationModeFlags flags) override;
 
-		void setEnvironment(std::shared_ptr<system::Environment> env);
+		void setEnvironment(std::shared_ptr<core::Environment> env);
 		void setGame(std::shared_ptr<game::IGame> game);
 
-		void setStartup(CubA4::system::Startup *startup);
+		void setStartup(CubA4::core::Startup *startup);
 
 		void criticalException() const override;
 
@@ -85,14 +85,14 @@ namespace CubA4
 		std::shared_ptr<logging::ILogger> logger_;
 		std::shared_ptr<model::IModelFactory> modelFactory_;
 		std::shared_ptr<resources::IResourcesManager> resourceManager_;
-		std::shared_ptr<system::IRuntime> runtime_;
-		std::shared_ptr<system::Environment> env_;
+		std::shared_ptr<core::IRuntime> runtime_;
+		std::shared_ptr<core::Environment> env_;
 		std::shared_ptr<audio::AudioManager> audioManager_;
 		std::shared_ptr<game::IGame> game_;
 		std::shared_ptr<object::EntityManager> entityManager_;
 		std::shared_ptr<physics::PhysicsManager> physicsManager_;
 
-		CubA4::system::Startup *startup_;
+		CubA4::core::Startup *startup_;
 
 
 		ApplicationModeFlags appModeFlags_ = {};

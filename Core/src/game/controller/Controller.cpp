@@ -2,7 +2,7 @@
 #include <algorithm>
 using namespace CubA4::game::controller;
 
-Controller::Controller(CubA4::system::IAppClientCallback &appCallback) :
+Controller::Controller(CubA4::core::IAppClientCallback &appCallback) :
 	appCallback_(appCallback),
 	actions_(std::make_shared<RootActions>()),
 	bindings_(std::make_shared<Bindings>()),

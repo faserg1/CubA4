@@ -11,3 +11,5 @@ endif ()
 find_package(Boost 1.78.0 REQUIRED
 	COMPONENTS ${boost_stacktrace_name} filesystem
 )
+
+find_path(BEXT_SML_INCLUDE_DIRS "boost/sml.hpp")

@@ -26,7 +26,7 @@ namespace CubA4::render::engine
 		public virtual CubA4::world::IDimensionSubscriber,
 		public virtual CubA4::render::engine::pipeline::IRenderEntitySubscriber
 	{
-		using IdType = CubA4::system::IIdentityiMap::IdType;
+		using IdType = CubA4::core::IIdentityiMap::IdType;
 	public:
 		explicit RenderGameHandler(std::shared_ptr<const CubA4::ICore> core,
 			std::shared_ptr<pipeline::IRenderEngineWorldPipeline> worldUpdater,

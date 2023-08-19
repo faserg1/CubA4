@@ -1,12 +1,12 @@
 #include "Core.hpp"
-#include "config/CoreConfig.hpp"
-#include "config/FilePaths.hpp"
-#include "logging/Logger.hpp"
-#include <system/Startup.hpp>
-#include "model/ModelFactory.hpp"
-#include "resources/ResourcesManager.hpp"
-#include "resources/FilesystemResourceProvider.hpp"
-#include "system/Runtime.hpp"
+#include <config/CoreConfig.hpp>
+#include <config/FilePaths.hpp>
+#include <logging/Logger.hpp>
+#include <core/Startup.hpp>
+#include <model/ModelFactory.hpp>
+#include <resources/ResourcesManager.hpp>
+#include <resources/FilesystemResourceProvider.hpp>
+#include <core/Runtime.hpp>
 #include <physics/PhysicsManager.hpp>
 #include <object/EntityManager.hpp>
 #include <audio/AudioManager.hpp>
@@ -15,12 +15,12 @@
 #include <sstream>
 
 using namespace CubA4;
-using namespace CubA4::system;
+using namespace CubA4::core;
 
 Core::Core(int argc, const char *const argv[], ApplicationFlags flags) :
 	appFlags_(flags), paths_(std::make_shared<config::FilePaths>(argc, argv))
 {
-	runtime_ = std::make_shared<system::Runtime>();
+	runtime_ = std::make_shared<core::Runtime>();
 	config_ = std::make_shared<config::CoreConfig>(paths_->configPath());
 	logger_ = logging::Logger::create(paths_->logsPath());
 	modelFactory_ = std::make_shared<model::ModelFactory>();
@@ -76,12 +76,12 @@ std::shared_ptr<const resources::IResourcesManager> Core::getResourcesManager() 
 	return std::const_pointer_cast<const resources::IResourcesManager>(resourceManager_);
 }
 
-std::shared_ptr<system::Environment> Core::getEnvironment()
+std::shared_ptr<core::Environment> Core::getEnvironment()
 {
 	return env_;
 }
 
-std::shared_ptr<const system::IEnvironment> Core::getEnvironment() const
+std::shared_ptr<const core::IEnvironment> Core::getEnvironment() const
 {
 	return env_;
 }
@@ -96,7 +96,7 @@ std::shared_ptr<const game::IGame> Core::getGame() const
 	return game_;
 }
 
-std::shared_ptr<system::IRuntime> Core::getRuntime()
+std::shared_ptr<core::IRuntime> Core::getRuntime()
 {
 	return runtime_;
 }
@@ -136,7 +136,7 @@ void Core::setApplicationModeFlags(ApplicationModeFlags flags)
 	appModeFlags_ = flags;
 }
 
-void Core::setEnvironment(std::shared_ptr<system::Environment> env)
+void Core::setEnvironment(std::shared_ptr<core::Environment> env)
 {
 	env_ = env;
 }
@@ -146,7 +146,7 @@ void Core::setGame(std::shared_ptr<game::IGame> game)
 	game_ = game;
 }
 
-void Core::setStartup(CubA4::system::Startup *startup)
+void Core::setStartup(CubA4::core::Startup *startup)
 {
 	startup_ = startup;
 }

@@ -1,6 +1,6 @@
 #include "IdentityMap.hpp"
 #include <fmt/format.h>
-using namespace CubA4::system;
+using namespace CubA4::core;
 
 IdentityMap::IdentityMap() :
 	counter_(0)

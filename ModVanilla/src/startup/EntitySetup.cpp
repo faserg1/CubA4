@@ -24,12 +24,12 @@ void EntitySetup::load(std::shared_ptr<const CubA4::ICore> core, std::shared_ptr
 	log_ = core_->getLogger()->createTaggedLog(LogSourceSystem::Mod, "ModVanilla/RenderStartup");
 }
 
-void EntitySetup::preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void EntitySetup::preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 
 }
 
-void EntitySetup::init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder)
+void EntitySetup::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	auto renderManager = manager_->getRenderManager();
 	auto entityManager = manager_->getEntityManager();

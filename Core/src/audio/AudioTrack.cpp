@@ -29,3 +29,8 @@ void AudioTrack::setPosition(const CubA4::world::GlobalPosition &pos)
 {
 	source_->setPosition(pos);
 }
+
+void AudioTrack::setVelocity(const CubA4::Vector3 &velocity)
+{
+	source_->setVelocity(velocity);
+}

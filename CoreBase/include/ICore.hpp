@@ -9,8 +9,8 @@
 #include <config/ICoreConfig.hpp>
 #include <logging/ILogger.hpp>
 #include <resources/IResourcesManager.hpp>
-#include <system/IRuntime.hpp>
-#include <system/IEnvironment.hpp>
+#include <core/IRuntime.hpp>
+#include <core/IEnvironment.hpp>
 #include <game/IGame.hpp>
 
 namespace CubA4
@@ -32,7 +32,7 @@ namespace CubA4
 		///Получает менеджер ресурсов
 		virtual std::shared_ptr<model::IModelFactory> getModelFactory() const = 0;
 		virtual std::shared_ptr<const resources::IResourcesManager> getResourcesManager() const = 0;
-		virtual std::shared_ptr<const system::IEnvironment> getEnvironment() const = 0;
+		virtual std::shared_ptr<const core::IEnvironment> getEnvironment() const = 0;
 		// TODO: make const, move import to builder
 		virtual std::shared_ptr<audio::IAudioManager> getAudioManager() const = 0;
 		virtual std::shared_ptr<const game::IGame> getGame() const = 0;
@@ -42,7 +42,7 @@ namespace CubA4
 		//Функции, не помеченные const будут доступны только основному приложению, или там, где ICore не передается по константному указателю.
 		//К примеру, через std::shared_ptr<ICore> будут доступны эти функции
 
-		virtual std::shared_ptr<system::IRuntime> getRuntime() = 0;
+		virtual std::shared_ptr<core::IRuntime> getRuntime() = 0;
 		virtual void setApplicationModeFlags(ApplicationModeFlags flags) = 0;
 	protected:
 		virtual ~ICore() = default;

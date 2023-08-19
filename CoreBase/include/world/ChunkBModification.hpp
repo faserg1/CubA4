@@ -4,13 +4,13 @@
 #include <memory>
 #include <world/Position.hpp>
 #include <world/data/BlockData.hpp>
-#include <system/IIdentityiMap.hpp>
+#include <core/IIdentityiMap.hpp>
 
 namespace CubA4::world
 {
 	struct ChunkBModification
 	{
-		using IdType = CubA4::system::IIdentityiMap::IdType;
+		using IdType = CubA4::core::IIdentityiMap::IdType;
 		CubA4::world::ChunkPos pos;
 
 		struct AddInfo

@@ -1,5 +1,5 @@
 #include <game/GameControl.hpp>
-#include <system/Environment.hpp>
+#include <core/Environment.hpp>
 #include <game/IGameSubscriber.hpp>
 #include <object/EntityFactory.hpp>
 

@@ -12,5 +12,6 @@ namespace CubA4::audio
 
 		void init();
 		void setPosition(const CubA4::world::GlobalPosition &pos) override;
+		void setVelocity(const CubA4::Vector3 &velocity) override;
 	};
 }

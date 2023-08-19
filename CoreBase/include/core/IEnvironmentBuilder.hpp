@@ -20,7 +20,7 @@ namespace CubA4::render::engine
 	class IRenderManager;
 }
 
-namespace CubA4::system
+namespace CubA4::core
 {
 	class IEnvironmentBuilder
 	{

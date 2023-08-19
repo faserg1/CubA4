@@ -2,13 +2,13 @@
 #include <logging/ILogger.hpp>
 #include <logging/ILoggerTagged.hpp>
 #include <ICore.hpp>
-#include <system/IEnvironmentBuilder.hpp>
+#include <core/IEnvironmentBuilder.hpp>
 #include <resources/IResourcesManager.hpp>
 #include <world/TestWorldDefinition.hpp>
 
 using namespace CubA4::startup;
 using namespace CubA4::manager;
-using namespace CubA4::system;
+using namespace CubA4::core;
 using namespace CubA4::logging;
 
 WorldSetup::WorldSetup()

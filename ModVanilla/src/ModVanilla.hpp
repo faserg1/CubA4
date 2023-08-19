@@ -29,11 +29,11 @@ namespace CubA4
 			~ModVanilla();
 
 			void load(std::shared_ptr<const ICore> core) override;
-			void preinit(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
+			void preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) override;
 			void link(std::shared_ptr<const IModLinker> linker) override;
-			void init(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
-			void configure(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
-			void prefinish(std::shared_ptr<CubA4::system::IEnvironmentBuilder> builder) override;
+			void init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) override;
+			void configure(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) override;
+			void prefinish(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) override;
 			void finish() override;
 
 			void start(CubA4::game::IGameControl &gameControl) override;

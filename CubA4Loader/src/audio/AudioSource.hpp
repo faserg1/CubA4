@@ -20,6 +20,7 @@ namespace CubA4::audio
 		void stop() override;
 
 		void setPosition(const CubA4::world::GlobalPosition &pos) override;
+		void setVelocity(const CubA4::Vector3 &velocity) override;
 
 		IdType getSourceId() const;
 	private:
