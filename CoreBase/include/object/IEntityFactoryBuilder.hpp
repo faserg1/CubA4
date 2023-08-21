@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <base/Vector.hpp>
 
 namespace CubA4::physics
 {
@@ -14,7 +15,7 @@ namespace CubA4::object
 	public:
 		virtual ~IEntityFactoryBuilder() = default;
 
-		void applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def);
+		virtual void applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def) = 0;
 	protected:
 		explicit IEntityFactoryBuilder() = default;
 	};

@@ -111,6 +111,11 @@ std::shared_ptr<physics::PhysicsManager> Core::getPhysicsManager()
 	return physicsManager_;
 }
 
+std::shared_ptr<const physics::IPhysicsManager> Core::getPhysicsManager() const
+{
+	return physicsManager_;
+}
+
 std::shared_ptr<render::engine::IRenderManager> Core::getRenderManager() const
 {
 	if (!(appFlags_ & ApplicationFlag::Render))

@@ -56,6 +56,7 @@ namespace CubA4::render::engine::debug
 		void record(uint32_t frame);
 		void send(uint32_t frame, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 		void createPipelines();
+		void rewriteCommandBuffersCollections();
 	private:
 		const std::shared_ptr<const vulkan::Device> device_;
 		const std::shared_ptr<const RenderPassManager> rpManager_;

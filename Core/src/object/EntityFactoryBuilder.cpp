@@ -1,4 +1,5 @@
 #include <object/EntityFactoryBuilder.hpp>
+#include <object/EntityBuilderData.hpp>
 using namespace CubA4::object;
 
 EntityFactoryBuilder::EntityFactoryBuilder(EntityBuilderData &data) :
@@ -9,5 +10,5 @@ EntityFactoryBuilder::EntityFactoryBuilder(EntityBuilderData &data) :
 
 void EntityFactoryBuilder::applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def)
 {
-	
+	data_.physicsDefinition = &def;
 }

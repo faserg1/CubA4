@@ -1,5 +1,9 @@
 #include <startup/EntitySetup.hpp>
 #include <entities/PlayerDefinition.hpp>
+#include <physics/PlayerPhysicsDefinition.hpp>
+#include <ICore.hpp>
+#include <physics/IPhysicsManager.hpp>
+#include <physics/IPhysicsFactory.hpp>
 
 using namespace CubA4::startup;
 using namespace CubA4::logging;
@@ -33,9 +37,14 @@ void EntitySetup::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder
 {
 	auto renderManager = manager_->getRenderManager();
 	auto entityManager = manager_->getEntityManager();
+	auto &physicsFactory = core_->getPhysicsManager()->getPhysicsFactory();
 
 	auto model = renderManager->getModel("test-cube-player");
-	auto playerDef = std::make_unique<object::PlayerDefinition>(model);
+
+	auto physBody = physicsFactory.createBoxCollisionBody({0.5, 0.5, 0.5}, {0.5, 0.5, 0.5});
+	auto physDef = std::make_shared<CubA4::physics::PlayerPhysicsDefinition>(physBody);
+
+	auto playerDef = std::make_unique<object::PlayerDefinition>(model, physDef);
 	
 	auto entityFactoryPlayer = builder->registerEntity(std::move(playerDef));
 	entityManager->addEntityFactory("player", entityFactoryPlayer);

@@ -48,6 +48,8 @@ namespace CubA4::render::engine::pipeline
 			const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &data);
 
 		void updateEntity(const CubA4::object::Transform &tr, const CubA4::object::WorldInfo &wi, RenderEntity &entity);
+
+		std::shared_ptr<RenderEntity> recompileEntity(std::shared_ptr<RenderEntity> entity, const RenderFramebufferData &data);
 	private:
 		void recordCmdBuffer(Data &data, const RenderFramebufferData &framebufferData);
 		void createIntancesBuffer(Data &data, size_t entityCount);

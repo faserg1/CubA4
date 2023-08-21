@@ -14,6 +14,7 @@ namespace CubA4
 namespace CubA4::physics
 {
 	class PhysicsWorld;
+	class PhysicsFactory;
 
 	class PhysicsManager : public virtual IPhysicsManager
 	{
@@ -21,9 +22,10 @@ namespace CubA4::physics
 		PhysicsManager(CubA4::Core &core);
 		~PhysicsManager();
 
-		std::unique_ptr<PhysicsWorld> addPhysicsWorld(const IPhysicsDefinition &definition);
+		std::unique_ptr<PhysicsWorld> addPhysicsWorld(const IWorldPhysicsDefinition &definition);
 
 		void requestApplyForce(CubA4::object::IEntity &entity) override;
+		IPhysicsFactory &getPhysicsFactory() const override;
 
 		void iterate(float delta);
 		
@@ -37,5 +39,7 @@ namespace CubA4::physics
 		std::shared_ptr<btConstraintSolver> contraintsSolver_;
 
 		std::vector<PhysicsWorld*> worlds_;
+
+		std::unique_ptr<PhysicsFactory> factory_;
 	};
 }

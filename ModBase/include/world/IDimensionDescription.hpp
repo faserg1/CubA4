@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 #include <world/IWorldGenerator.hpp>
-#include <physics/IPhysicsDefinition.hpp>
+#include <physics/IWorldPhysicsDefinition.hpp>
 
 namespace CubA4::world
 {
@@ -14,7 +14,7 @@ namespace CubA4::world
 		virtual std::wstring getName() const = 0;
 
 		virtual std::shared_ptr<IWorldGenerator> getWorldGenerator() const = 0;
-		virtual const CubA4::physics::IPhysicsDefinition &getPhysicsDefinition() const = 0;
+		virtual const CubA4::physics::IWorldPhysicsDefinition &getPhysicsDefinition() const = 0;
 	protected:
 		explicit IDimensionDescription() = default;
 		virtual ~IDimensionDescription() = default;

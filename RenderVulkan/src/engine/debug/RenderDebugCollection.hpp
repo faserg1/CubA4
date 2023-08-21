@@ -39,6 +39,7 @@ namespace CubA4::render::engine::debug
 		void toggleVisibility() override;
 
 		void record(VkCommandBuffer primaryBuffer, uint32_t subpass, VkExtent2D extent);
+		void markAsDirty();
 	protected:
 		bool visible_ = true;
 	private:

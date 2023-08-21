@@ -13,6 +13,8 @@ Framebuffer::Framebuffer(std::shared_ptr<const Device> device,
 {
     std::vector<VkImageView> viewAttachments(attachments_.size());
 
+	device_->getMarker().setName(renderDoneSemaphore_->getSemaphore(), "[Framebuffer] renderDoneSemaphore");
+
     std::transform(attachments_.begin(), attachments_.end(), viewAttachments.begin(), [](std::shared_ptr<FramebufferImage> framebufferImage) -> VkImageView
     {
         return framebufferImage->getImageView();

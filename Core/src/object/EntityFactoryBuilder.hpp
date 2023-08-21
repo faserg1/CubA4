@@ -10,7 +10,8 @@ namespace CubA4::object
 	{
 	public:
 		EntityFactoryBuilder(EntityBuilderData &data);
-		void applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def);
+
+		void applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def) override;
 	private:
 		EntityBuilderData &data_;
 	};

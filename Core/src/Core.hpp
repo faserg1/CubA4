@@ -62,6 +62,7 @@ namespace CubA4
 		std::shared_ptr<core::IRuntime> getRuntime() override;
 
 		std::shared_ptr<object::EntityManager> getEntityManager();
+		std::shared_ptr<const physics::IPhysicsManager> getPhysicsManager() const override;
 		std::shared_ptr<physics::PhysicsManager> getPhysicsManager();
 
 		std::shared_ptr<render::engine::IRenderManager> getRenderManager() const;

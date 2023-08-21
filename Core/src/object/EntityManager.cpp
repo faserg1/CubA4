@@ -1,6 +1,7 @@
 #include <Core.hpp>
 #include <object/EntityManager.hpp>
 #include <object/EntityFactory.hpp>
+#include <object/EntityFactoryBuilder.hpp>
 #include <object/EntityRenderBuilder.hpp>
 #include <object/EntityBuilderData.hpp>
 
@@ -15,6 +16,12 @@ EntityManager::EntityManager(CubA4::Core &core) :
 std::shared_ptr<IEntityFactory> EntityManager::registerEntity(IdType factoryId, std::unique_ptr<const IEntityDefinition> &&def)
 {
 	EntityBuilderData data;
+
+	{
+		auto factoryBuilder = std::make_unique<EntityFactoryBuilder>(data);
+		def->onComponentStage(*factoryBuilder);
+	}
+	
 
 	if (core_.getApplicationFlags() & CubA4::ApplicationFlag::Render)
 	{

@@ -55,8 +55,10 @@ std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::create
 	memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
 
 
-	// TODO: pass deleter with command free
-	std::function<void()> del;
+	std::function<void()> del = [cmdBuffer = data.cmdBuffer, pool = commandPool_]()
+	{
+		pool->free(1, &cmdBuffer);
+	};
 
 	return std::make_shared<RenderEntity>(data, del);
 }
@@ -104,8 +106,10 @@ std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::extend
 	memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
 
 
-	// TODO: pass deleter with command free
-	std::function<void()> del;
+	std::function<void()> del = [cmdBuffer = data.cmdBuffer, pool = commandPool_]()
+	{
+		pool->free(1, &cmdBuffer);
+	};
 
 	return std::make_shared<RenderEntity>(data, del);
 }
@@ -135,6 +139,22 @@ void RenderEntityCompiler::updateEntity(const CubA4::object::Transform &tr, cons
 
 	// TODO: maybe do it outside?
 	memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
+}
+
+std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::recompileEntity(std::shared_ptr<RenderEntity> entity,
+	const RenderFramebufferData &framebufferData)
+{
+	Data data = entity->getData();
+	commandPool_->allocate(1, &data.cmdBuffer, VK_COMMAND_BUFFER_LEVEL_SECONDARY);
+
+	recordCmdBuffer(data, framebufferData);
+
+	std::function<void()> del = [cmdBuffer = data.cmdBuffer, pool = commandPool_]()
+	{
+		pool->free(1, &cmdBuffer);
+	};
+
+	return std::make_shared<RenderEntity>(data, del);
 }
 
 void RenderEntityCompiler::recordCmdBuffer(Data &data, const RenderFramebufferData &framebufferData)

@@ -16,7 +16,19 @@ RenderEntityPipeline::RenderEntityPipeline(std::shared_ptr<RenderEntityCompiler>
 void RenderEntityPipeline::onFramebufferUpdated(const RenderFramebufferData &data)
 {
 	framebufferData = data;
-	// TODO: recompile entites
+
+	for (auto &entity : entities_)
+	{
+		entity.second = entityCompiler_->recompileEntity(entity.second, data);
+	}
+
+	auto tf = [](auto sContainer) -> std::shared_ptr<const RenderEntity> { return sContainer; };
+	std::vector entities = entities_ | ranges::views::values | ranges::views::transform(tf) | ranges::to<std::vector>;
+
+	subHelper_.apply([&entities](IRenderEngineEntityPipelineSubscriber *sub)
+	{
+		sub->onRenderEntitiesUpdated(entities);
+	});
 }
 
 uint32_t RenderEntityPipeline::getSubpassNumber() const

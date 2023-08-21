@@ -22,7 +22,7 @@ namespace CubA4::render::vulkan
 		std::unique_ptr<CommandPoolLock> lock();
 		VkCommandPool getPool() const;
 		bool allocate(uint32_t count, VkCommandBuffer *data, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
-		void free(uint32_t count, VkCommandBuffer *data);
+		void free(uint32_t count, const VkCommandBuffer *data);
 		VkCommandPoolCreateFlags getFlags() const;
 	protected:
 	private:

@@ -20,7 +20,7 @@ namespace CubA4::world
 		std::wstring getName() const override;
 
 		std::shared_ptr<IWorldGenerator> getWorldGenerator() const override;
-		const CubA4::physics::IPhysicsDefinition &getPhysicsDefinition() const override;
+		const CubA4::physics::IWorldPhysicsDefinition &getPhysicsDefinition() const override;
 	private:
 		std::shared_ptr<TestWorldGenerator> worldGenerator_;
 		const CubA4::physics::DefaultPhysicsDefinition physics_;

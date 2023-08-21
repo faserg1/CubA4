@@ -207,3 +207,8 @@ void RenderDebugCollection::record(VkCommandBuffer primaryBuffer, uint32_t subpa
 	vkCmdExecuteCommands(primaryBuffer, 1, &buffer_);
 	dirty_ = false;
 }
+
+void RenderDebugCollection::markAsDirty()
+{
+	dirty_ = true;
+}

@@ -1,5 +1,6 @@
 #include <physics/PhysicsManager.hpp>
 #include <physics/PhysicsWorld.hpp>
+#include <physics/PhysicsFactory.hpp>
 #include <object/Entity.hpp>
 using namespace CubA4::physics;
 
@@ -8,7 +9,8 @@ PhysicsManager::PhysicsManager(Core &core) :
 	collisionConfig_(std::make_shared<btDefaultCollisionConfiguration>()),
 	collisionDispatcher_(std::make_shared<btCollisionDispatcher>(collisionConfig_.get())),
 	broadphase_(std::make_shared<btDbvtBroadphase>()),
-	contraintsSolver_(std::make_shared<btSequentialImpulseConstraintSolver>())
+	contraintsSolver_(std::make_shared<btSequentialImpulseConstraintSolver>()),
+	factory_(std::move(std::make_unique<PhysicsFactory>()))
 {
 
 }
@@ -18,7 +20,7 @@ PhysicsManager::~PhysicsManager()
 
 }
 
-std::unique_ptr<PhysicsWorld> PhysicsManager::addPhysicsWorld(const IPhysicsDefinition &definition)
+std::unique_ptr<PhysicsWorld> PhysicsManager::addPhysicsWorld(const IWorldPhysicsDefinition &definition)
 {
 	auto physicsWorld = std::make_unique<btDiscreteDynamicsWorld>(
 		collisionDispatcher_.get(), broadphase_.get(), contraintsSolver_.get(), collisionConfig_.get());
@@ -31,6 +33,11 @@ void PhysicsManager::requestApplyForce(CubA4::object::IEntity &iEntity)
 {
 	auto *entity = dynamic_cast<CubA4::object::Entity*>(&iEntity);
 
+}
+
+IPhysicsFactory &PhysicsManager::getPhysicsFactory() const
+{
+	return *factory_;
 }
 
 void PhysicsManager::iterate(float delta)

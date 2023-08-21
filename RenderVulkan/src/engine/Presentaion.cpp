@@ -8,6 +8,7 @@ Presentaion::Presentaion(std::shared_ptr<const Device> device) :
 	device_(device), timeout_(50)
 {
 	acquireSignalSemaphore_ = Semaphore::create(device);
+	device_->getMarker().setName(acquireSignalSemaphore_->getSemaphore(), "[Presentaion] Acquire semaphore");
 }
 
 Presentaion::~Presentaion()

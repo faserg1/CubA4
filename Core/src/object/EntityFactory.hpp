@@ -8,6 +8,11 @@
 #include <entt/entt.hpp>
 #include <world/GlobalPosition.hpp>
 
+namespace CubA4::physics
+{
+	class IPhysicsEntityDefinition; 
+}
+
 namespace CubA4::object
 {
 	struct EntityBuilderData;
@@ -24,6 +29,8 @@ namespace CubA4::object
 
 		std::shared_ptr<Entity> create(IdWorldType idWorld, IdWorldType idDimension,
 			const CubA4::world::GlobalPosition &pos) const;
+	private:
+		void preparePhysics(entt::entity handle, const CubA4::physics::IPhysicsEntityDefinition &def) const;
 	private:
 		const IdFactoryType id_;
 		entt::registry &registry_;

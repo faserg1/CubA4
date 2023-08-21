@@ -4,11 +4,11 @@
 
 namespace CubA4::physics
 {
-	class IPhysicsDefinition
+	class IWorldPhysicsDefinition
 	{
 	public:
 		virtual Vector3 getDefaultGravity() const = 0;
 	protected:
-		IPhysicsDefinition() = default;
+		IWorldPhysicsDefinition() = default;
 	};
 }

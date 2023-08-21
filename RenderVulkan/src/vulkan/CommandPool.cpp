@@ -55,7 +55,7 @@ bool CommandPool::allocate(uint32_t count, VkCommandBuffer *data, VkCommandBuffe
 	return vkAllocateCommandBuffers(device_->getDevice(), &allocateInfo, data) == VK_SUCCESS;
 }
 
-void CommandPool::free(uint32_t count, VkCommandBuffer *data)
+void CommandPool::free(uint32_t count, const VkCommandBuffer *data)
 {
 	return vkFreeCommandBuffers(device_->getDevice(), pool_, count, data);
 }

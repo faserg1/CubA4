@@ -44,6 +44,7 @@ void RenderDebug::swapchainChanged(std::shared_ptr<const Swapchain> swapchain, s
 {
 	framebufferManager_->setMainDepths(std::move(mainDepths));
 	framebufferManager_->onSwapchainUpdate(swapchain);
+	rewriteCommandBuffersCollections();
 }
 
 void RenderDebug::onRenderPassCreated()
@@ -246,6 +247,18 @@ void RenderDebug::createPipelines()
 	wireframePipelineBuilder.fillPipelineInfo(info);
 	info.pipeline = pipelines[1];
 	wireframe_ = std::make_shared<vulkan::Pipeline>(device_, info);
+}
+
+void RenderDebug::rewriteCommandBuffersCollections()
+{
+	for (auto collectionWeak : collections_)
+	{
+		if (auto collection = collectionWeak.lock())
+		{
+			collection->markAsDirty();
+		}
+	}
+	onCommandsDirty();
 }
 
 DebugRenderModel RenderDebug::createBuffer(std::vector<VertexColor> vertices)

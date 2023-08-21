@@ -9,6 +9,7 @@
 #include <config/ICoreConfig.hpp>
 #include <logging/ILogger.hpp>
 #include <resources/IResourcesManager.hpp>
+#include <physics/IPhysicsManager.hpp>
 #include <core/IRuntime.hpp>
 #include <core/IEnvironment.hpp>
 #include <game/IGame.hpp>
@@ -36,6 +37,7 @@ namespace CubA4
 		// TODO: make const, move import to builder
 		virtual std::shared_ptr<audio::IAudioManager> getAudioManager() const = 0;
 		virtual std::shared_ptr<const game::IGame> getGame() const = 0;
+		virtual std::shared_ptr<const physics::IPhysicsManager> getPhysicsManager() const = 0;
 		///Создает сообщение о критической ошибке
 		virtual void criticalException() const = 0;
 
