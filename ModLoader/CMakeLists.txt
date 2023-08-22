@@ -20,7 +20,7 @@ add_library(ModLoader SHARED ${ModLoaderSources})
 target_compile_features(ModLoader PRIVATE ${TARGET_CXX_STD})
 
 #self include directories
-target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath})
+target_include_directories(ModLoader PUBLIC ${ModLoaderHeadersPath} ${ModLoaderSourcesPath})
 
 #libs
 use_base_library(ModLoader CoreBase)

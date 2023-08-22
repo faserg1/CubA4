@@ -10,9 +10,9 @@ namespace CubA4::mod
 	class IModLinker
 	{
 	public:
-		virtual std::shared_ptr<const IMod> getMod(std::string modId) = 0;
+		virtual std::shared_ptr<const IMod> getMod(const std::string &modId) const = 0;
 	protected:
-		explicit IModLinker() = default;
+		IModLinker() = default;
 		virtual ~IModLinker() = default;
 	private:
 	};

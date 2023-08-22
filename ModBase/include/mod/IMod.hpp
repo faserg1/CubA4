@@ -31,7 +31,7 @@ namespace CubA4::mod
 
 		virtual void load(std::shared_ptr<const ICore> core) = 0;
 		virtual void preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) = 0;
-		virtual void link(std::shared_ptr<const IModLinker> linker) = 0;
+		virtual void link(const IModLinker &linker) = 0;
 		virtual void init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) = 0;
 		virtual void configure(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) = 0;
 		virtual void prefinish(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder) = 0;

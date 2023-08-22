@@ -1,0 +1,1 @@
+constexpr unsigned char *data = nullptr;

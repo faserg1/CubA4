@@ -1,5 +1,5 @@
 #include <loader/ModLoader.hpp>
-#include "ModLibrary.hpp"
+#include <loader/ModLibrary.hpp>
 
 #include <ICore.hpp>
 #include <config/IFilePaths.hpp>
@@ -12,6 +12,8 @@
 #include <info/IApplicationInfo.hpp>
 #include <info/IVersionDependency.hpp>
 #include <info/IVersion.hpp>
+
+#include <mod/ModLinker.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -199,11 +201,14 @@ void ModLoader::setupModByChain(IEnvironmentBuilderFactory builderFactory, std::
 		mod->preinit(builder);
 	}
 	log_->log(LogLevel::Info, "Linking mods.");
-	for (auto mod : mods)
 	{
-		//TODO:: Place linker
-		mod->link(nullptr);
+		auto linker = ModLinker(mods);
+		for (auto mod : mods)
+		{
+			mod->link(linker);
+		}
 	}
+	
 	log_->log(LogLevel::Info, "Initing mods.");
 	for (auto mod : mods)
 	{

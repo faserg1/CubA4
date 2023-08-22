@@ -31,7 +31,7 @@ add_subdirectory (Core)
 add_subdirectory (Network)
 
 #Standard mods
-add_subdirectory (ModVanilla)
+add_subdirectory (Mods)
 
 #prepare mod loader
 add_subdirectory (ModLoader)

@@ -68,6 +68,11 @@ void EntityFactory::preparePhysics(entt::entity handle, const CubA4::physics::IP
 			body.shape = std::make_unique<btBoxShape>(btVector3{halfExtents.x, halfExtents.y, halfExtents.z});
 			break;
 		}
+		default:
+		{
+			// TODO: log
+			return;
+		}
 	}
 
 	
