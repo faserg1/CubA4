@@ -10,6 +10,16 @@ ChunkSubRenderPipeline::ChunkSubRenderPipeline(std::shared_ptr<pipeline::RenderE
 
 ChunkSubRenderPipeline::~ChunkSubRenderPipeline() = default;
 
+std::string ChunkSubRenderPipeline::debugName() const
+{
+	return "ChunkSubRenderPipeline";
+}
+
+std::array<float, 4> ChunkSubRenderPipeline::debugColor() const
+{
+	return {.5f, 0.f, 0.f, 1.f};
+}
+
 void ChunkSubRenderPipeline::onIterate()
 {
 	auto locker = oldChunksLock_.lock();

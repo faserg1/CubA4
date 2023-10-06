@@ -6,11 +6,7 @@
 namespace CubA4::physics
 {
 	class ICollistionBodyDefinition;
-}
 
-
-namespace CubA4::physics
-{
 	class IPhysicsFactory
 	{
 	public:

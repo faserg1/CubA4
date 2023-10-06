@@ -16,7 +16,12 @@
     "entt",
     "fmt",
     "glm",
-    "glslang",
+    {
+		"name": "glslang",
+		"features": [
+			"tools"
+		]
+	},
     {
       "name": "loguru",
       "features": [
@@ -52,7 +57,12 @@
     "taskflow",
     "tl-generator",
     "range-v3",
-    "wxwidgets"
+    {
+		"name": "wxwidgets",
+		"features": [
+			"webview"
+		]
+	}
   ]
 }
 

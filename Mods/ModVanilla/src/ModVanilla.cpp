@@ -6,6 +6,11 @@
 #include <audio/IAudioImporter.hpp>
 #include <audio/IAudioBuffer.hpp>
 #include <audio/IAudioTrackManager.hpp>
+#include <physics/IPhysicsEntityControllerWrapper.hpp>
+#include <object/components/CameraComponent.hpp>
+#include <engine/world/ICamera.hpp>
+#include <engine/world/IWorldManager.hpp>
+#include <engine/IRenderManager.hpp>
 using namespace CubA4::mod;
 
 ModVanilla::ModVanilla(const IModInfo &modInfo) :
@@ -33,7 +38,10 @@ void ModVanilla::load(std::shared_ptr<const ICore> core)
 void ModVanilla::preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	if (core_->getApplicationFlags() & ApplicationFlag::Render)
+	{
 		renderStartup_.preinit(builder);
+	}
+		
 	entitySetup_.preinit(builder);
 }
 
@@ -79,19 +87,34 @@ void ModVanilla::start(CubA4::game::IGameControl &gameControl)
 {
 	gameControl_ = &gameControl;
 
+	auto &physEntityControl = gameControl.getPhysicsEntityControl();
+
 	auto worldName = std::format("#{}@{}", ModVanillaId, "testWorld");
 	auto dimName = std::format("#{}@{}/{}", ModVanillaId, "testWorld", "testDimension");
 	gameControl_->requestWorldChange(worldName, dimName);
 
 	auto dimId = worldSetup_.getTestDimensionId();
 
+	auto cubeFactory = manager_->getEntityManager()->getEntityFactory("cube");
 	auto playerFactory = manager_->getEntityManager()->getEntityFactory("player");
 
-	CubA4::world::GlobalPosition pos1 = CubA4::world::BasePos<long double>(0, 80, 10);
-	CubA4::world::GlobalPosition pos2 = CubA4::world::BasePos<long double>(0, 80, 20);
+	CubA4::world::GlobalPosition cubePos = CubA4::world::BasePos<long double>(0, 80, 10);
+	CubA4::world::GlobalPosition playerPos = CubA4::world::BasePos<long double>(0, 80, 20);
 
-	auto player = gameControl_->requestSpawn(playerFactory, dimId, pos1);
-	auto player2 = gameControl_->requestSpawn(playerFactory, dimId, pos2);
+	auto cube = gameControl_->requestSpawn(cubeFactory, dimId, cubePos);
+	auto player = gameControl_->requestSpawn(playerFactory, dimId, playerPos);
+	player->enableControls();
+	//core_->getGame()->getController()->getContext().
+
+	if (auto cameraComponent = player->getCameraComponent(); cameraComponent && core_->getApplicationFlags() & ApplicationFlag::Render)
+	{
+		renderStartup_.getRenderManager()->getWorldManager()->setActiveCamera(cameraComponent->camera);
+	}
+	
+	//
+
+	auto playerPhysController = physEntityControl.createController(*player);
+	playerPhysController->addVelocity({0.f, 0.f, 5.5f});
 
 	CubA4::world::GlobalPosition pos;
 	audioTrack_->play();

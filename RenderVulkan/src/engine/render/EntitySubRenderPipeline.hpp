@@ -23,6 +23,8 @@ namespace CubA4::render::engine::pipeline
 		explicit EntitySubRenderPipeline(std::shared_ptr<RenderEntityPipeline> renderEntityPipeline, SubpipelineVersion incrementCount);
 		~EntitySubRenderPipeline();
 
+		std::string debugName() const override;
+		std::array<float, 4> debugColor() const override;
 		void onIterate() override;
 		void executeFrom(VkCommandBuffer primaryCmdBuffer) override;
 

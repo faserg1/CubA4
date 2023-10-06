@@ -120,6 +120,7 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 
 	for (auto &subPipeline : subPipelines_)
 	{
+		device_->getMarker().cmdLabelBegin(vkCmdBuffer, subPipeline.first->debugName(), subPipeline.first->debugColor());
 		while (subPipeline.first->getSubpass() > currentSubpass)
 		{
 			++currentSubpass;
@@ -128,6 +129,7 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 		subPipeline.first->executeFrom(vkCmdBuffer);
 		if (subPipeline.first->getVersion() > subPipeline.second)
 			subPipeline.second++;
+		device_->getMarker().cmdLabelEnd(vkCmdBuffer);
 	}
 
 	

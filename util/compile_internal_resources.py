@@ -2,7 +2,7 @@
 
 from .resource_generator import ResourceGenerator
 
-projects = ["RenderVulkan", "ModVanilla"]
+projects = ["RenderVulkan", "Mods/ModVanilla"]
 
 for project in projects:
 	rg = ResourceGenerator(project)

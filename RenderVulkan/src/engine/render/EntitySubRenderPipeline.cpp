@@ -11,6 +11,16 @@ EntitySubRenderPipeline::EntitySubRenderPipeline(std::shared_ptr<RenderEntityPip
 
 EntitySubRenderPipeline::~EntitySubRenderPipeline() = default;
 
+std::string EntitySubRenderPipeline::debugName() const
+{
+	return "EntitySubRenderPipeline";
+}
+
+std::array<float, 4> EntitySubRenderPipeline::debugColor() const
+{
+	return {0.f, 0.f, 0.5f, 1.f};
+}
+
 void EntitySubRenderPipeline::onIterate()
 {
 	auto locker = oldEntitiesLock_.lock();

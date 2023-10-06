@@ -5,12 +5,15 @@
 #include <game/controller/Bindings.hpp>
 #include <game/controller/RootActions.hpp>
 #include <game/controller/Context.hpp>
+#include <game/controller/IContextCallback.hpp>
 #include <unordered_map>
 #include <vector>
 
 namespace CubA4::game::controller
 {
-	class Controller : public virtual IController
+	class Controller :
+		public virtual IController,
+		public virtual IContextCallback
 	{
 		
 	public:
@@ -30,6 +33,8 @@ namespace CubA4::game::controller
 		const IContext &getContext() const override;
 		IContext &getContext() override;
 		bool requestMouseCapture(bool enable) override;
+
+		void onContextChanged() override;
 	private:
 		CubA4::core::IAppClientCallback &appCallback_;
 		std::shared_ptr<RootActions> actions_;

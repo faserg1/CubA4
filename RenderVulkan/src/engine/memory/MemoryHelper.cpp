@@ -111,6 +111,9 @@ std::future<void> MemoryHelper::updateBuffer(const void *data, VkBuffer dst, VkD
 {
 	auto queue = getNextQueue();
 
+	// TODO: assert buffer is multiple of 4
+	// TODO: assert buffer is less or equal 65536 bytes
+
 	tf::Taskflow flow;
 	auto record = flow.emplace([queue, data, dst, offset, size, bufferBarrierType]{
 		VkBufferMemoryBarrier bufferBarier = {};

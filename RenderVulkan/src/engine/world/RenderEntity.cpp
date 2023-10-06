@@ -18,6 +18,11 @@ bool RenderEntity::exists(IdFactoryType factoryId, IdEntityType entityId) const
 	return data_.transforms_.find(std::make_pair(factoryId, entityId)) != data_.transforms_.end();
 }
 
+size_t RenderEntity::instanceCount() const
+{
+	return data_.transforms_.size();
+}
+
 void RenderEntity::executeFrom(VkCommandBuffer primaryCmdBuffer) const
 {
 	vkCmdExecuteCommands(primaryCmdBuffer, 1, &data_.cmdBuffer);

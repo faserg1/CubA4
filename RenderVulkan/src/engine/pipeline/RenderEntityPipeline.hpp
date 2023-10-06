@@ -6,7 +6,7 @@
 #include <engine/pipeline/IRenderEngineEntityPipeline.hpp>
 #include <engine/pipeline/IRenderEngineEntityPipelineSubscriber.hpp>
 #include <engine/RenderManager.hpp>
-#include <engine/utils/EntityKeyHash.hpp>
+#include <util/EntityKeyHash.hpp>
 #include <util/SubscriptionHelper.hpp>
 #include <memory>
 
@@ -47,17 +47,5 @@ namespace CubA4::render::engine::pipeline
 		
 		RenderFramebufferData framebufferData;
 		CubA4::util::SubscriptionHelper<IRenderEngineEntityPipelineSubscriber> subHelper_;
-		/*
-			renderEntities 
-			  -- models (material)
-			  -- map<id, transformation>
-
-			builder (all renderEntities, new tr, wi, ric)
-				-- find same or create render entts
-				-- add id->tr
-				-- record command buffer with instancing
-				-- input rate instance (create new pipeline)
-				-- new vertex buffer (instance rate) <= copy all transformation
-		*/
 	};
 }

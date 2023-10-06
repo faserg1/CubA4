@@ -49,19 +49,24 @@ void RenderStartup::load(std::shared_ptr<const CubA4::ICore> core, std::shared_p
 void RenderStartup::preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder)
 {
 	auto &renderInfo = builder->getRenderInfo();
-	if (renderInfo.getRenderEngineId() != "vulkan")
+	/*if (renderInfo.getRenderEngineId() != "vulkan")
 	{
 		log_->log(LogLevel::Error, "Unsupported Render Engine: " + renderInfo.getRenderEngineId());
 		throw std::runtime_error("Unsopported render engine");
-	}
-	auto renderManager = builder->getRenderManager();
-	auto materialManager = renderManager->getMaterialManager();
+	}*/
+	renderManager_ = builder->getRenderManager();
+	auto materialManager = renderManager_->getMaterialManager();
 	loadShaders(materialManager->getShaderFactory());
 	createMaterialLayouts(materialManager->getMaterialLayoutSetFactory());
 	importTextures(materialManager->getTextureImporter());
 	createMaterials(materialManager->getMaterialFactory());
-	createModels(renderManager->getModelManager());
-	testUI(renderManager);
+	createModels(renderManager_->getModelManager());
+	testUI();
+}
+
+std::shared_ptr<CubA4::render::engine::IRenderManager> RenderStartup::getRenderManager() const
+{
+	return renderManager_;
 }
 
 void RenderStartup::loadShaders(std::shared_ptr<CubA4::render::engine::material::IShaderFactory> shaderFactory)
@@ -162,18 +167,18 @@ void RenderStartup::createModels(std::shared_ptr<CubA4::render::engine::model::I
 	blockManager->addBlockDefinition("test1", blockModelDef1);
 	blockManager->addBlockDefinition("test2", blockModelDef2);
 
-	auto renderManager = manager_->getRenderManager();
+	auto modRenderManager = manager_->getRenderManager();
 	auto model3 = modelManager->registerEntityModel(*entityModelDef1);
-	renderManager->addModel("test-cube-player", model3);
+	modRenderManager->addModel("test-cube-player", model3);
 
 	//auto blockModel = modelManager->registerModel(*blockModelDef);
 }
 
-void RenderStartup::testUI(std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager)
+void RenderStartup::testUI()
 {
-	auto materialManager = renderManager->getMaterialManager();
+	auto materialManager = renderManager_->getMaterialManager();
 	auto textureImporter = materialManager->getTextureImporter();
-	auto uiManager = renderManager->getUIManager();
+	auto uiManager = renderManager_->getUIManager();
 	auto mainCanvas = uiManager->getMainCanvas();
 	using namespace std::string_literals;
 	using namespace CubA4::render::ui_literals;

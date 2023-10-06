@@ -25,9 +25,13 @@ namespace CubA4::object
 		entt::registry &getRegistry();
 	private:
 		std::unique_ptr<EntityRenderManager> createRenderManager();
+		void registerSignals();
+
+		void onEntityUpdated(entt::registry &registry, entt::entity entity);
 	private:
 		CubA4::Core &core_;
 		entt::registry registry_;
+		entt::connection onEntityUpdated_;
 		std::unique_ptr<EntityRenderManager> entityRenderManager_;
 	};
 }

@@ -35,6 +35,7 @@ target_link_libraries(RenderVulkan PRIVATE
     Taskflow::Taskflow
     nlohmann_json nlohmann_json::nlohmann_json fmt::fmt
     SDL2::SDL2 SDL2::SDL2main glm::glm png unofficial::skia::skia)
+target_compile_definitions(RenderVulkan PRIVATE GLM_FORCE_DEPTH_ZERO_TO_ONE)
 #use_library(RenderVulkan zlib)
 #use_library(RenderVulkan pnglib)
 

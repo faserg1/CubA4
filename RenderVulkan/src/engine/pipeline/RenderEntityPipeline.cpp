@@ -89,7 +89,33 @@ void RenderEntityPipeline::onEntityUpdated(const CubA4::object::Transform &tr, c
 
 void RenderEntityPipeline::onEntityRemoved(const CubA4::object::Transform &tr, const CubA4::object::WorldInfo &wi, const CubA4::object::RenderInfoComponent &render)
 {
+	if (!render.renderModel)
+		return;
+	auto id = render.renderModel->getId();
+	auto it = entities_.find(id);
+	if (it == entities_.end())
+		return;
+	auto &entity = *it->second;
 
+	std::vector<EntityInfo> infos;
+	infos.emplace_back(
+		tr,
+		wi.factoryId,
+		wi.entityId
+	);
+	auto renderEntity = entityCompiler_->shrinkEntity(entity, infos, render, framebufferData);
+	if (!renderEntity)
+		entities_.erase(it);
+	else
+		entities_.insert_or_assign(id, renderEntity);
+	
+	auto tf = [](auto sContainer) -> std::shared_ptr<const RenderEntity> { return sContainer; };
+	std::vector entities = entities_ | ranges::views::values | ranges::views::transform(tf) | ranges::to<std::vector>;
+
+	subHelper_.apply([&entities](IRenderEngineEntityPipelineSubscriber *sub)
+	{
+		sub->onRenderEntitiesUpdated(entities);
+	});
 }
 
 std::unique_ptr<CubA4::util::ISubscription> RenderEntityPipeline::subscribe(IRenderEngineEntityPipelineSubscriber *subscriber)

@@ -5,6 +5,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <fmt/format.h>
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::engine::memory;
 
@@ -114,14 +115,73 @@ std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::extend
 	return std::make_shared<RenderEntity>(data, del);
 }
 
-std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::shrinkEntity(std::vector<EntityInfo> infos,
-	const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &framebufferData)
+std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::shrinkEntity(RenderEntity &entity,
+	std::vector<EntityInfo> infos, const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &framebufferData)
 {
-	// TODO: shrink entity?
+	Data data {};
+	Data &oldData = entity.getData();
 
-	// as an idea, just remove transform from memory, and then, when entity added again, add transform in place of removed
+	constexpr const uint32_t TranformMatrixSize = sizeof(float) * 16;
+	
+	commandPool_->allocate(1, &data.cmdBuffer, VK_COMMAND_BUFFER_LEVEL_SECONDARY);
+	data.renderModel = std::dynamic_pointer_cast<const CubA4::render::engine::model::EntityRenderModel>(render.renderModel);
 
-	return {};
+	struct TempData
+	{
+		decltype(CubA4::object::WorldInfo::factoryId) factoryId;
+		decltype(CubA4::object::WorldInfo::entityId) entityId;
+		float matrix[16];
+	};
+
+	std::vector<TempData> infoCopy;
+	infoCopy.reserve(oldData.transforms_.size());
+	for (const auto [key, ptr] : oldData.transforms_)
+	{
+		TempData data
+		{
+			.factoryId = key.first,
+			.entityId = key.second
+		};
+		memcpy(data.matrix, ptr, TranformMatrixSize);
+		infoCopy.push_back(data);
+	}
+
+	auto removeIt = std::remove_if(infoCopy.begin(), infoCopy.end(), [&infos](const TempData &data)
+	{
+		return std::any_of(infos.begin(), infos.end(), [&data](const EntityInfo &info)
+		{
+			return info.factoryId == data.factoryId && info.entityId == data.entityId;
+		});
+	});
+
+	infoCopy.erase(removeIt, infoCopy.end());
+
+	const size_t instanceCount = infoCopy.size();
+	createIntancesBuffer(data, instanceCount);
+
+	for (size_t idx = 0; idx < infoCopy.size(); ++idx)
+	{
+		auto &info = infoCopy[idx];
+		auto key = std::make_pair(info.factoryId, info.entityId);
+		float *memory = reinterpret_cast<float*>(data.intanceHostMemory.get());
+		memory += 16 * idx;
+		data.transforms_.insert(std::make_pair(key, memory));
+		memcpy(memory, info.matrix, TranformMatrixSize);
+	}
+
+	data.memoryHost->flush(0, VK_WHOLE_SIZE);
+
+	// TODO: maybe do it outside?
+	memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
+
+	recordCmdBuffer(data, framebufferData);
+
+	std::function<void()> del = [cmdBuffer = data.cmdBuffer, pool = commandPool_]()
+	{
+		pool->free(1, &cmdBuffer);
+	};
+
+	return std::make_shared<RenderEntity>(data, del);
 }
 
 void RenderEntityCompiler::updateEntity(const CubA4::object::Transform &tr, const CubA4::object::WorldInfo &wi, RenderEntity &entity)
@@ -210,6 +270,10 @@ void RenderEntityCompiler::recordCmdBuffer(Data &data, const RenderFramebufferDa
 	data.renderModel->bind(cmd);
 	static const VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers(cmd, 1, 1, &instanceDeviceBuffer, &offset);
+
+	auto labelText = fmt::format("Drawing entity {} with instance count of {}", data.renderModel->getId(), instanceCount);
+
+	device_->getMarker().cmdLabelInsert(cmd, labelText, {0.f, 0.f, 0.5, 1.f});
 	
 	vkCmdDrawIndexed(cmd, data.renderModel->getIndexCount(), instanceCount, 0, 0, 0);
 

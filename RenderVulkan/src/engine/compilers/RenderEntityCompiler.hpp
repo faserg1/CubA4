@@ -44,7 +44,7 @@ namespace CubA4::render::engine::pipeline
 			const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &data);
 		std::shared_ptr<RenderEntity> extendEntity(std::shared_ptr<RenderEntity> entity, std::vector<EntityInfo> infos,
 			const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &data);
-		std::shared_ptr<RenderEntity> shrinkEntity(std::vector<EntityInfo> infos,
+		std::shared_ptr<RenderEntityCompiler::RenderEntity> shrinkEntity(RenderEntity &entity, std::vector<EntityInfo> infos,
 			const CubA4::object::RenderInfoComponent &render, const RenderFramebufferData &data);
 
 		void updateEntity(const CubA4::object::Transform &tr, const CubA4::object::WorldInfo &wi, RenderEntity &entity);

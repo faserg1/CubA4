@@ -6,7 +6,9 @@
 using namespace CubA4::game;
 
 GameControl::GameControl(Core &core, CubA4::game::Game &game) :
-	core_(core), game_(game), worldControl_(std::make_unique<world::WorldControl>(core))
+	core_(core), game_(game),
+	worldControl_(std::make_unique<world::WorldControl>(core)),
+	physicsEntityControl_(std::make_unique<CubA4::physics::PhysicsEntityControl>())
 {
 
 }
@@ -38,7 +40,12 @@ bool GameControl::requestWorldChange(const std::string &worldId, const std::stri
 
 CubA4::world::IWorldControl &GameControl::getWorldControl()
 {
-	return *worldControl_.get();
+	return *worldControl_;
+}
+
+CubA4::physics::IPhysicsEntityControl &GameControl::getPhysicsEntityControl()
+{
+	return *physicsEntityControl_;
 }
 
 std::shared_ptr<CubA4::object::IEntity> GameControl::requestSpawn(std::shared_ptr<const CubA4::object::IEntityFactory> iFactory, IdType dimensionId,
@@ -50,6 +57,17 @@ std::shared_ptr<CubA4::object::IEntity> GameControl::requestSpawn(std::shared_pt
 	
 	auto factory = std::dynamic_pointer_cast<const object::EntityFactory>(iFactory);
 	auto entity = factory->create(worldId, dimensionId, pos);
+
 	dim->addEntity(entity);
 	return entity;
+}
+
+bool GameControl::requestDespawn(const CubA4::object::IEntity &iEntity)
+{
+	auto *entity = dynamic_cast<const CubA4::object::Entity*>(&iEntity);
+	auto dimensionId = entity->getWorldInfoComponent()->dimensionId;
+	auto dim = core_.getEnvironment()->getObjectT<CubA4::world::Dimension>(dimensionId);
+	dim->removeEntity(iEntity);
+	
+	return true;
 }

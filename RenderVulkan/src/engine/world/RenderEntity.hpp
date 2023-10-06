@@ -10,7 +10,7 @@
 #include <vulkan/vulkan.h>
 #include <engine/memory/IMemoryPart.hpp>
 #include <vulkan/util/VulkanHandlerContainer.hpp>
-#include <engine/utils/EntityKeyHash.hpp>
+#include <util/EntityKeyHash.hpp>
 
 namespace CubA4::render::engine::world
 {
@@ -33,7 +33,7 @@ namespace CubA4::render::engine::world
 			vulkan::sVkBuffer instanceHostBuffer;
 			VkDeviceSize bufferSize;
 			
-			std::unordered_map<PairKey, float*, CubA4::render::engine::utils::FactoryAndEntityIdHash> transforms_;
+			std::unordered_map<PairKey, float*, CubA4::util::FactoryAndEntityIdHash> transforms_;
 
 			CubA4::render::engine::pipeline::RenderFramebufferData data;
 		};
@@ -42,6 +42,7 @@ namespace CubA4::render::engine::world
 		~RenderEntity();
 
 		bool exists(IdFactoryType factoryId, IdEntityType entityId) const;
+		size_t instanceCount() const;
 		void executeFrom(VkCommandBuffer primaryCmdBuffer) const;
 
 		const Data &getData() const;

@@ -1,6 +1,8 @@
 #include <startup/EntitySetup.hpp>
 #include <entities/PlayerDefinition.hpp>
+#include <entities/CubeEntityDefinition.hpp>
 #include <physics/PlayerPhysicsDefinition.hpp>
+#include <physics/CubeEntityPhysicsDefinition.hpp>
 #include <ICore.hpp>
 #include <physics/IPhysicsManager.hpp>
 #include <physics/IPhysicsFactory.hpp>
@@ -42,10 +44,14 @@ void EntitySetup::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder
 	auto model = renderManager->getModel("test-cube-player");
 
 	auto physBody = physicsFactory.createBoxCollisionBody({0.5, 0.5, 0.5}, {0.5, 0.5, 0.5});
-	auto physDef = std::make_shared<CubA4::physics::PlayerPhysicsDefinition>(physBody);
+	auto playerPhysDef = std::make_shared<CubA4::physics::PlayerPhysicsDefinition>(physBody);
+	auto cubePhysDef = std::make_shared<CubA4::physics::CubeEntityPhysicsDefinition>(physBody);
 
-	auto playerDef = std::make_unique<object::PlayerDefinition>(model, physDef);
+	auto playerDef = std::make_unique<object::PlayerDefinition>(model, playerPhysDef);
+	auto cubeDef = std::make_unique<object::CubeEntityDefinition>(model, cubePhysDef);
 	
 	auto entityFactoryPlayer = builder->registerEntity(std::move(playerDef));
+	auto entityFactoryCube = builder->registerEntity(std::move(cubeDef));
 	entityManager->addEntityFactory("player", entityFactoryPlayer);
+	entityManager->addEntityFactory("cube", entityFactoryCube);
 }

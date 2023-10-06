@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <util/ISubscription.hpp>
+#include <game/controller/IActionsHandler.hpp>
 
 namespace CubA4::game::controller
 {
@@ -18,6 +19,9 @@ namespace CubA4::game::controller
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
 		virtual [[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) = 0;
+		virtual void addHandler(std::weak_ptr<IActionsHandler> handler) = 0;
+		virtual bool getActionState(const std::string &action) const = 0;
+		virtual void requestContextCheck() = 0;
 	protected:
 		explicit IActions() = default;
 	};

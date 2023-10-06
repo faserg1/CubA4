@@ -114,11 +114,15 @@ std::shared_ptr<Chunk> Dimension::findChunk(CubA4::world::ChunkPos pos)
 
 void Dimension::addEntity(std::shared_ptr<CubA4::object::Entity> entity)
 {
-	entites_.insert(std::make_pair(entity->getEntityId(), entity));
+	entites_.insert(std::make_pair(std::make_pair(entity->getFactoryId(), entity->getEntityId()), entity));
 }
 
-void Dimension::removeEntity(CubA4::object::Entity::IdType id)
+void Dimension::removeEntity(const CubA4::object::IEntity &entity)
 {
-	if (auto it = entites_.find(id); it != entites_.end())
+	const auto key = std::make_pair(entity.getFactoryId(), entity.getEntityId());
+	if (auto it = entites_.find(key); it != entites_.end())
+	{
+		it->second->forceDestroy();
 		entites_.erase(it);
+	}
 }

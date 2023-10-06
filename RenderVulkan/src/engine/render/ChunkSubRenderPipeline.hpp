@@ -40,6 +40,8 @@ namespace CubA4::render::engine::pipeline
 		explicit ChunkSubRenderPipeline(std::shared_ptr<pipeline::RenderEngineWorldPipeline> worldPipeline, SubpipelineVersion incrementCount);
 		~ChunkSubRenderPipeline();
 
+		std::string debugName() const override;
+		std::array<float, 4> debugColor() const override;
 		void onIterate() override;
 		void executeFrom(VkCommandBuffer primaryCmdBuffer) override;
 

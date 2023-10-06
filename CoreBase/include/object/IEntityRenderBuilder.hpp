@@ -14,7 +14,7 @@ namespace CubA4::object
 	public:
 		virtual ~IEntityRenderBuilder() = default;
 
-		virtual void addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model) = 0;
+		virtual IEntityRenderBuilder &addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model) = 0;
 	protected:
 		explicit IEntityRenderBuilder() = default;
 	};

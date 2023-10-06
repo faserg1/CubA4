@@ -4,9 +4,9 @@ using namespace CubA4::game::controller;
 
 Controller::Controller(CubA4::core::IAppClientCallback &appCallback) :
 	appCallback_(appCallback),
-	actions_(std::make_shared<RootActions>()),
+	actions_(std::make_shared<RootActions>(this)),
 	bindings_(std::make_shared<Bindings>()),
-	context_(std::make_unique<Context>())
+	context_(std::make_unique<Context>(*this))
 {
 	
 }
@@ -27,7 +27,7 @@ void Controller::onButtonChanged(Button btn, BMods mods, bool pressed)
 	for (const auto &action : *actions)
 	{
 		actions_->onAction(action);
-		actions_->onPositionAction(action, x_, y_);
+		actions_->onActionPosition(action, x_, y_);
 	}
 }
 
@@ -44,7 +44,7 @@ void Controller::onMove(AxisBinding binding, int32_t x, int32_t y)
 	if (!actions)
 		return;
 	for (const auto &action : *actions)
-		actions_->onAxisAction(action, x, y);
+		actions_->onActionAxis(action, x, y);
 }
 
 std::pair<bool, BMods> Controller::getButtonState(Button btn) const
@@ -93,4 +93,9 @@ IContext &Controller::getContext()
 bool Controller::requestMouseCapture(bool enable)
 {
 	return appCallback_.requestMouseCapture(enable);
+}
+
+void Controller::onContextChanged()
+{
+	actions_->onContextChanged(*context_);
 }

@@ -15,6 +15,11 @@ namespace CubA4::world
 		{
 			clampGlobal(convertPos<long double>(globalPos));
 		}
+		template<class Type>
+		GlobalPosition(Type x, Type y, Type z)
+		{
+			clampGlobal(convertPos<long double>(BasePos<Type>(x, y, z)));
+		}
 		explicit GlobalPosition(ChunkPos chunkPos, BlockInChunkPos blockPos, BasePos<float> inBlockPos) :
 			chunkPos_(chunkPos), blockPosition_(blockPos), inBlockPos_(inBlockPos)
 		{
@@ -89,6 +94,24 @@ namespace CubA4::world
 			newPos.inBlockPos_.x -= otherPos.x;
 			newPos.inBlockPos_.y -= otherPos.y;
 			newPos.inBlockPos_.z -= otherPos.z;
+			newPos.clampPos();
+			return newPos;
+		}
+		friend GlobalPosition operator+(const GlobalPosition &pos, const GlobalPosition &otherPos)
+		{
+			auto newPos = pos;
+			newPos.inBlockPos_ += otherPos.inBlockPos_;
+			newPos.blockPosition_ += otherPos.blockPosition_;
+			newPos.chunkPos_ += otherPos.chunkPos_;
+			newPos.clampPos();
+			return newPos;
+		}
+		friend GlobalPosition operator-(const GlobalPosition &pos, const GlobalPosition &otherPos)
+		{
+			auto newPos = pos;
+			newPos.inBlockPos_ -= otherPos.inBlockPos_;
+			newPos.blockPosition_ -= otherPos.blockPosition_;
+			newPos.chunkPos_ -= otherPos.chunkPos_;
 			newPos.clampPos();
 			return newPos;
 		}

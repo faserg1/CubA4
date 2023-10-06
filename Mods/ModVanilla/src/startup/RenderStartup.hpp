@@ -41,6 +41,8 @@ namespace CubA4::startup
 
 		void load(std::shared_ptr<const ICore> core, std::shared_ptr<manager::ModManager> manager);
 		void preinit(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder);
+
+		std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const;
 	protected:
 	private:
 		std::shared_ptr<const CubA4::ICore> core_;
@@ -55,10 +57,11 @@ namespace CubA4::startup
 		void createModels(std::shared_ptr<CubA4::render::engine::model::IModelManager> modelManager);
 
 		// test!!!!!!
-		void testUI(std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager);
+		void testUI();
 	private:
 		std::map<std::string, Texture> textures_;
 		std::map<std::string, Material> materials_;
 		std::map<std::string, MaterialLayout> materialLayouts_;
+		std::shared_ptr<CubA4::render::engine::IRenderManager> renderManager_;
 	};
 }

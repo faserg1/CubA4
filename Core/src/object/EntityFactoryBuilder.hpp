@@ -11,7 +11,11 @@ namespace CubA4::object
 	public:
 		EntityFactoryBuilder(EntityBuilderData &data);
 
-		void applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def) override;
+		IEntityFactoryBuilder &applyPhysicsDefinition(const CubA4::physics::IPhysicsEntityDefinition &def) override;
+		IEntityFactoryBuilder &setEntityHandler(std::shared_ptr<IEntityHandler> handler) override;
+		IEntityFactoryBuilder &attachCamera() override;
+		IEntityFactoryBuilder &attachController(ControllerRules rules, ControllerFactory controllerSetup) override;
+		IEntityFactoryBuilder &attachChunkAnchor(bool render) override;
 	private:
 		EntityBuilderData &data_;
 	};

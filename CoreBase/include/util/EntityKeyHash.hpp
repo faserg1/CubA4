@@ -3,7 +3,7 @@
 #include <object/components/WorldInfo.hpp>
 #include <functional>
 
-namespace CubA4::render::engine::utils
+namespace CubA4::util
 {
 
 	// TODO: make as std::hash

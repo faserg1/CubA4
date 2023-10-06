@@ -11,7 +11,7 @@ PlayerPhysicsDefinition::~PlayerPhysicsDefinition() = default;
 
 float PlayerPhysicsDefinition::getMass() const
 {
-	return 1.f;
+	return 0.5f;
 }
 
 std::shared_ptr<const ICollistionBodyDefinition> PlayerPhysicsDefinition::getCollisonBody() const

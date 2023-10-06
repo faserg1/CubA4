@@ -11,7 +11,7 @@ namespace CubA4::object
 	{
 	public:
 		EntityRenderBuilder(EntityBuilderData &data);
-		void addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model) override;
+		IEntityRenderBuilder &addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model) override;
 	private:
 		EntityBuilderData &data_;
 	};

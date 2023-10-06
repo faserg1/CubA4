@@ -5,27 +5,38 @@
 
 namespace CubA4::game::controller
 {
-	class Actions : public virtual IActions, public std::enable_shared_from_this<Actions>
+	class IController;
+
+	class Actions :
+		public virtual IActions,
+		public std::enable_shared_from_this<Actions>,
+		public virtual IActionsHandler
 	{
-		friend class Subscription;
+		friend class SubscriptionSingle;
+		friend class SubscriptionMulti;
 		struct Callback;
 	public:
-		explicit Actions();
+		explicit Actions(IController *controller);
 		~Actions();
 
-		std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void()> callbackOnce) override;
-		std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) override;
-		std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
-		std::unique_ptr<util::ISubscription> addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
+		[[nodiscard]] std::unique_ptr<util::ISubscription> addActionCallback(const std::string &action, std::function<void()> callbackOnce) override;
+		[[nodiscard]] std::unique_ptr<util::ISubscription> addActionAxisCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackAxis) override;
+		[[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
+		[[nodiscard]] std::unique_ptr<util::ISubscription> addActionPositionMoveCallback(const std::string &action, std::function<void(int32_t, int32_t)> callbackPosition) override;
+		void addHandler(std::weak_ptr<IActionsHandler> handler) override;
+		bool getActionState(const std::string &action) const override;
+		void requestContextCheck() override;
 
-		void onAction(const std::string &action);
-		void onAxisAction(const std::string &action, int32_t axisX, int32_t axisY);
-		void onPositionAction(const std::string &action, int32_t axisX, int32_t axisY);
-		void onPositionMoveAction(const std::string &action, int32_t axisX, int32_t axisY);
+		void onAction(const std::string &action) override;
+		void onActionAxis(const std::string &action, int32_t x, int32_t y) override;
+		void onActionPosition(const std::string &action, int32_t x, int32_t y) override;
+		void onActionPositionMove(const std::string &action, int32_t x, int32_t y) override;
 
 		const std::unordered_map<std::string, std::vector<Callback>> &getCallbacks() const;
 	private:
 		void addActionCallback(const std::string &action, Callback callback);
+	protected:
+		IController * const controller_;
 	private:
 		struct Callback
 		{
@@ -36,11 +47,11 @@ namespace CubA4::game::controller
 			void operator()() const { if (callbackOnce) callbackOnce(); }
 			void operator()(int32_t axisX, int32_t axisY) const {if (callbackAxis) callbackAxis(axisX, axisY); }
 		};
-		class Subscription : public virtual util::ISubscription
+		class SubscriptionSingle : public virtual util::ISubscription
 		{
 		public:
-			Subscription(std::shared_ptr<Actions> actions, const std::string &action, uint64_t id);
-			~Subscription();
+			SubscriptionSingle(std::weak_ptr<Actions> actions, const std::string &action, uint64_t id);
+			~SubscriptionSingle();
 			void unsubscribe() override;
 		private:
 			const std::weak_ptr<Actions> actions_;
@@ -48,6 +59,7 @@ namespace CubA4::game::controller
 			const uint64_t id_;
 		};
 		std::unordered_map<std::string, std::vector<Callback>> callbacks_;
+		std::unordered_map<uint64_t, std::weak_ptr<IActionsHandler>> actionHandlers_;
 		uint64_t idCounter_ = 0;
 	};
 }

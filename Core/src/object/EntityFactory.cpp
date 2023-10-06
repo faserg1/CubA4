@@ -1,14 +1,24 @@
 #include <object/EntityFactory.hpp>
+#include <object/EntityControllerRules.hpp>
 #include <object/components/Transform.hpp>
+#include <object/components/InternalEntityInfo.hpp>
 #include <object/components/WorldInfo.hpp>
 #include <object/components/RenderInfoComponent.hpp>
 #include <object/components/PhysicalBody.hpp>
+#include <object/components/CameraComponent.hpp>
+#include <object/components/ControllerComponent.hpp>
 #include <physics/IPhysicsEntityDefinition.hpp>
 #include <physics/BoxCollisionBodyDefinition.hpp>
+
+#include <engine/IRenderManager.hpp>
+#include <engine/world/IWorldManager.hpp>
+#include <game/controller/IController.hpp>
+
 using namespace CubA4::object;
 
-EntityFactory::EntityFactory(IdFactoryType id, std::unique_ptr<const IEntityDefinition> &&def, entt::registry &registry, const EntityBuilderData &data) :
-	id_(id), registry_(registry), def_(std::move(def)), data_(data)
+EntityFactory::EntityFactory(IdFactoryType id, std::unique_ptr<const IEntityDefinition> &&def,
+	entt::registry &registry, EntityBuilderData &data, Managers managers) :
+	id_(id), registry_(registry), def_(std::move(def)), data_(data), managers_(managers)
 {
 	
 }
@@ -27,8 +37,13 @@ std::shared_ptr<Entity> EntityFactory::create(IdWorldType idWorld, IdWorldType i
 	const CubA4::world::GlobalPosition &pos) const
 {
 	auto handle = registry_.create();
+	auto entity = std::make_shared<Entity>(registry_, handle);
 	registry_.emplace<Transform>(handle, pos);
 	registry_.emplace<WorldInfo>(handle);
+	registry_.emplace<InternalEntityInfo>(handle, entity);
+
+	// TODO: connect to handler?
+
 	registry_.patch<WorldInfo>(handle, [this, idWorld, idDimension](auto &worldInfo)
 	{
 		worldInfo.factoryId = id_;
@@ -44,7 +59,24 @@ std::shared_ptr<Entity> EntityFactory::create(IdWorldType idWorld, IdWorldType i
 	{
 		preparePhysics(handle, *data_.physicsDefinition);
 	}
-	return std::make_shared<Entity>(registry_, handle);
+
+	if (data_.attachCamera && !managers_.renderManager.expired())
+	{
+		auto worldManager = managers_.renderManager.lock()->getWorldManager();
+		auto camera = worldManager->createCamera();
+		registry_.emplace<CameraComponent>(handle, camera);
+	}
+
+	if (data_.controllerFactory && !managers_.controller.expired())
+	{
+		auto controller = managers_.controller.lock();
+		auto entityRules = std::make_unique<EntityControllerRules>(entity, data_.controllerRules);
+		auto contextActionsEntity = controller->getRootActions()->addContextActions(std::move(entityRules), std::make_tuple<EntityArg>(entity));
+		data_.controllerFactory(*contextActionsEntity);
+		registry_.emplace<ControllerComponent>(handle, contextActionsEntity);
+	}
+
+	return entity;
 }
 
 void EntityFactory::preparePhysics(entt::entity handle, const CubA4::physics::IPhysicsEntityDefinition &def) const

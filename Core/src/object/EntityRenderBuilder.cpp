@@ -8,7 +8,8 @@ EntityRenderBuilder::EntityRenderBuilder(EntityBuilderData &data) :
 
 }
 
-void EntityRenderBuilder::addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model)
+IEntityRenderBuilder &EntityRenderBuilder::addModel(std::shared_ptr<const CubA4::render::engine::model::IRenderModel> model)
 {
 	data_.renderModel = model;
+	return *this;
 }

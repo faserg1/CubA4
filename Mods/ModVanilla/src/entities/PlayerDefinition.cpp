@@ -2,6 +2,7 @@
 #include <object/IEntityRenderBuilder.hpp>
 #include <object/IEntityFactoryBuilder.hpp>
 #include <physics/IPhysicsEntityDefinition.hpp>
+#include <controller/PlayerController.hpp>
 using namespace CubA4::object;
 
 PlayerDefinition::PlayerDefinition(std::shared_ptr<const ModelType> model, std::shared_ptr<CubA4::physics::IPhysicsEntityDefinition> physicsDef) :
@@ -19,13 +20,21 @@ PlayerDefinition::IdType PlayerDefinition::getId() const
 
 std::wstring PlayerDefinition::getName() const
 {
-	return L"Игрок";
+	return L"Player";
 }
 
 void PlayerDefinition::onComponentStage(IEntityFactoryBuilder &builder) const
 {
 	if (physicsDef_)
 		builder.applyPhysicsDefinition(*physicsDef_);
+
+	builder
+		.attachCamera()
+		.attachController(nullptr, [](CubA4::object::EntityContextActions &actions)
+		{
+			actions.addHandler(std::make_shared<PlayerController>());
+		})
+		;
 }
 
 void PlayerDefinition::onRenderPrepareStage(IEntityRenderBuilder &builder) const

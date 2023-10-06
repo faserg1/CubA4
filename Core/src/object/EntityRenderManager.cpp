@@ -2,6 +2,7 @@
 #include <object/components/RenderInfoComponent.hpp>
 #include <object/components/WorldInfo.hpp>
 #include <object/components/Transform.hpp>
+#include <object/components/CameraComponent.hpp>
 #include <engine/pipeline/IRenderEntitySubscriber.hpp>
 using namespace CubA4::object;
 using namespace CubA4::world;
@@ -38,6 +39,13 @@ void EntityRenderManager::onRenderEntityUpdated(entt::registry &registry, entt::
 		auto [transform, worldInfo, render] = registry.get<Transform, WorldInfo, RenderInfoComponent>(entity);
 		sub->onEntityUpdated(transform, worldInfo, render);
 	});
+
+	if (auto cameraComponent = registry.try_get<CameraComponent>(entity))
+	{
+		auto transform = registry.get<Transform>(entity);
+		// TODO: update camera rotation
+		cameraComponent->camera->setPosition(transform.position - GlobalPosition(0.5f, 0.f, 0.f));
+	}
 }
 
 void EntityRenderManager::onRenderEntityRemoved(entt::registry &registry, entt::entity entity)

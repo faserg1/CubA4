@@ -59,6 +59,7 @@ namespace CubA4
 		std::shared_ptr<const core::IEnvironment> getEnvironment() const override;
 		std::shared_ptr<audio::IAudioManager> getAudioManager() const override;
 		std::shared_ptr<const game::IGame> getGame() const override;
+		std::shared_ptr<game::IGame> getGame();
 		std::shared_ptr<core::IRuntime> getRuntime() override;
 
 		std::shared_ptr<object::EntityManager> getEntityManager();

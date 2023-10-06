@@ -13,6 +13,15 @@ namespace CubA4::physics
 	class IPhysicsEntityDefinition; 
 }
 
+namespace CubA4::render::engine
+{
+	class IRenderManager;
+}
+
+namespace CubA4::game::controller
+{
+	class IController;
+}
 namespace CubA4::object
 {
 	struct EntityBuilderData;
@@ -20,9 +29,16 @@ namespace CubA4::object
 	class EntityFactory : public virtual IEntityFactory
 	{
 	public:
+		struct Managers
+		{
+			std::weak_ptr<CubA4::render::engine::IRenderManager> renderManager;
+			std::weak_ptr<CubA4::game::controller::IController> controller;
+		};
+
 		using IdFactoryType = CubA4::core::IIdentityiMap::IdType;
 		using IdWorldType = CubA4::core::IIdentityiMap::IdType;
-		EntityFactory(IdFactoryType id, std::unique_ptr<const IEntityDefinition> &&def, entt::registry &registry, const EntityBuilderData &data);
+		EntityFactory(IdFactoryType id, std::unique_ptr<const IEntityDefinition> &&def, entt::registry &registry,
+			EntityBuilderData &data, Managers managers);
 
 		IdType getId() const override;
 		std::wstring getName() const override;
@@ -36,6 +52,8 @@ namespace CubA4::object
 		entt::registry &registry_;
 		std::unique_ptr<const IEntityDefinition> def_;
 		EntityBuilderData data_;
+
+		const Managers managers_;
 
 		mutable IdFactoryType idGenerator_;
 	};

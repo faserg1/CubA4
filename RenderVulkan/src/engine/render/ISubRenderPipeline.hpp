@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <memory>
+#include <string>
+#include <array>
 #include <vulkan/vulkan.h>
 
 namespace CubA4::render::engine::pipeline
@@ -13,6 +15,8 @@ namespace CubA4::render::engine::pipeline
 
 		virtual ~ISubRenderPipeline() = default;
 
+		virtual std::string debugName() const  = 0;
+		virtual std::array<float, 4> debugColor() const = 0;
 		virtual void onIterate() = 0;
 		virtual void executeFrom(VkCommandBuffer primaryCmdBuffer) = 0;
 

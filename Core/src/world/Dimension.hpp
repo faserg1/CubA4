@@ -10,6 +10,7 @@
 #include <util/SubscriptionHelper.hpp>
 #include <physics/IPhysicsWorld.hpp>
 #include <object/Entity.hpp>
+#include <util/EntityKeyHash.hpp>
 
 namespace CubA4::world
 {
@@ -18,6 +19,9 @@ namespace CubA4::world
 	class Dimension : public virtual IDimension
 	{
 		friend class WorldControl;
+		using IdFactoryType = decltype(CubA4::object::WorldInfo::factoryId);
+		using IdEntityType = decltype(CubA4::object::WorldInfo::entityId);
+		using PairKey = std::pair<IdFactoryType, IdEntityType>;
 	public:
 		Dimension(Core &core, World &world, const CubA4::world::IDimensionDescription &description, std::unique_ptr<physics::IPhysicsWorld> &&physicalWorld);
 
@@ -47,7 +51,7 @@ namespace CubA4::world
 		std::shared_ptr<Chunk> findChunk(CubA4::world::ChunkPos pos);
 
 		void addEntity(std::shared_ptr<CubA4::object::Entity> entity);
-		void removeEntity(CubA4::object::Entity::IdType id);
+		void removeEntity(const CubA4::object::IEntity &entity);
 	private:
 		Core &core_;
 		World &world_;
@@ -61,7 +65,8 @@ namespace CubA4::world
 		std::unordered_map<const CubA4::world::ChunkPos, std::shared_ptr<CubA4::world::Chunk>, CubA4::util::ChunkPosHash> loadedChunks_;
 		std::unordered_set<CubA4::world::ChunkPos, CubA4::util::ChunkPosHash> activeChunks_;
 
-		std::unordered_map<CubA4::object::Entity::IdType, std::shared_ptr<CubA4::object::Entity>> entites_;
+		// TODO: use factory+entity ids
+		std::unordered_map<PairKey, std::shared_ptr<CubA4::object::Entity>, CubA4::util::FactoryAndEntityIdHash> entites_;
 	};
 }
 

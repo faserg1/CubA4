@@ -96,6 +96,11 @@ std::shared_ptr<const game::IGame> Core::getGame() const
 	return game_;
 }
 
+std::shared_ptr<game::IGame> Core::getGame()
+{
+	return game_;
+}
+
 std::shared_ptr<core::IRuntime> Core::getRuntime()
 {
 	return runtime_;

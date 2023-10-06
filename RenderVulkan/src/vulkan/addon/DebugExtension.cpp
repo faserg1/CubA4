@@ -39,7 +39,7 @@ DebugExtension::~DebugExtension()
 
 std::vector<std::string> DebugExtension::names() const
 {
-	return { VK_EXT_DEBUG_UTILS_EXTENSION_NAME, VK_EXT_DEBUG_REPORT_EXTENSION_NAME };
+	return { VK_EXT_DEBUG_UTILS_EXTENSION_NAME };
 }
 
 void DebugExtension::init(std::shared_ptr<const Instance> instance)
@@ -83,7 +83,7 @@ void DebugExtension::createDebugUtils(std::shared_ptr<const Instance> instance)
 		const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
 		void *pUserData) -> VkBool32
 	{
-		auto *loggerTagged = (ILoggerTagged*)pUserData;
+		auto *loggerTagged = reinterpret_cast<ILoggerTagged*>(pUserData);
 		LogLevel level;
 		switch (messageSeverity)
 		{
