@@ -3,6 +3,7 @@
 #include <SDL_vulkan.h>
 #include <stdexcept>
 #include <algorithm>
+#include <fmt/format.h>
 #include <info/IApplicationInfo.hpp>
 #include <info/IVersion.hpp>
 #include "addon/InstanceExtension.hpp"
@@ -27,8 +28,8 @@ namespace CubA4
 	}
 }
 
-InstanceBuilder::InstanceBuilder(std::shared_ptr<const IApplicationInfo> info) :
-	data_(std::make_shared<InstanceBuilderData>()), info_(info)
+InstanceBuilder::InstanceBuilder(std::shared_ptr<logging::ILogger> logger, std::shared_ptr<const IApplicationInfo> info) :
+	logger_(logger), data_(std::make_shared<InstanceBuilderData>()), info_(info)
 {
 	memset(&(*data_), 0, sizeof(InstanceBuilderData));
 	data_->instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -71,6 +72,17 @@ std::shared_ptr<const Instance> InstanceBuilder::build()
 	data_->instanceInfo.enabledLayerCount = static_cast<uint32_t>(cStrLayers.size());
 	data_->instanceInfo.ppEnabledLayerNames = cStrLayers.data();
 
+	uint32_t queryApiVersion = 0;
+	if (vkEnumerateInstanceVersion(&queryApiVersion) == VK_SUCCESS)
+	{
+		auto major = VK_VERSION_MAJOR(queryApiVersion);
+		auto minor = VK_VERSION_MINOR(queryApiVersion);
+		auto patch = VK_VERSION_PATCH(queryApiVersion);
+		auto msg = fmt::format("The queried Vulkan API version is '{}.{}.{}'.", major, minor, patch);
+		logger_->log(CubA4::logging::LogSourceSystem::Render, "INSTANCE_BUILDER", CubA4::logging::LogLevel::Info, msg);
+		logger_->flush();
+	}
+
 	VkInstance instance;
 	VkResult resultCreate = vkCreateInstance(&data_->instanceInfo, nullptr, &instance);
 	if (resultCreate != VK_SUCCESS)
@@ -95,6 +107,6 @@ void InstanceBuilder::fillAppInfo()
 	data_->appInfo.pApplicationName = info_->name().c_str();
 	auto &appVer = info_->version();
 	data_->appInfo.applicationVersion = VK_MAKE_VERSION(appVer.major(), appVer.minor(), appVer.patch());
-	data_->appInfo.apiVersion = VK_MAKE_VERSION(1, 2, 0);
+	data_->appInfo.apiVersion = VK_API_VERSION_1_3;
 }
 

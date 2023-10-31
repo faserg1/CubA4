@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include <world/IWorldControl.hpp>
-#include <physics/IPhysicsEntityControl.hpp>
 #include <object/IEntity.hpp>
 #include <object/IEntityFactory.hpp>
 #include <core/IIdentityiMap.hpp>
@@ -19,7 +18,6 @@ namespace CubA4::game
 		virtual ~IGameControl() = default;
 		virtual bool requestWorldChange(const std::string &worldId, const std::string &dimId) = 0;
 		virtual CubA4::world::IWorldControl &getWorldControl() = 0;
-		virtual CubA4::physics::IPhysicsEntityControl &getPhysicsEntityControl() = 0;
 		// TODO: make co_async?
 		virtual std::shared_ptr<object::IEntity> requestSpawn(std::shared_ptr<const object::IEntityFactory> factory, IdType dimensionId,
 			const CubA4::world::GlobalPosition &pos) = 0;

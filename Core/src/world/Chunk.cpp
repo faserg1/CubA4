@@ -94,7 +94,8 @@ std::vector<CubA4::world::BlockAt> Chunk::getBlocksAt(world::BlockInChunkPos pos
 					.blockId = container->getBlockId(),
 					.dataId = container->getBlockData(pos),
 					.pos = pos,
-					.layer = container->getLayer()
+					.layer = container->getLayer(),
+					.containerId = container->getId()
 				});
 			}
 		}
@@ -121,7 +122,8 @@ CubA4::world::BlockAt Chunk::getBlockAt(world::BlockInChunkPos pos, world::Layer
 					.blockId = container->getBlockId(),
 					.dataId = container->getBlockData(pos),
 					.pos = pos,
-					.layer = container->getLayer()
+					.layer = container->getLayer(),
+					.containerId = container->getId()
 				};
 			}
 		}
@@ -203,12 +205,37 @@ void Chunk::removeContainer(size_t idContainer)
 {
 	auto pred = [idContainer](auto container) -> bool { return container->getId() == idContainer; };
 	if (auto it = std::find_if(containers_.begin(), containers_.end(), pred); it != containers_.end())
+	{
+		onContainerRemoved(*it);
 		containers_.erase(it);
+	}
+		
+}
+
+std::shared_ptr<IChunkBBaseContainer> Chunk::getContainer(size_t idContainer)
+{
+	auto pred = [idContainer](auto container) -> bool { return container->getId() == idContainer; };
+	auto it = std::find_if(containers_.begin(), containers_.end(), pred);
+	if (it != containers_.end())
+		return *it;
+	return nullptr;
 }
 
 size_t Chunk::allocateIdContainer()
 {
 	return genId_++;
+}
+
+void Chunk::erase()
+{
+	auto tf = [](auto sContainer) -> size_t { return sContainer->getId(); };
+	std::vector<size_t> ids = containers_
+		| ranges::views::transform(tf)
+		| ranges::to_vector;
+	for (auto id : ids)
+	{
+		removeContainer(id);
+	}
 }
 
 void Chunk::onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container)

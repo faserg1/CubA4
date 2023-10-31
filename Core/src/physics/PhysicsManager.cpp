@@ -40,10 +40,16 @@ IPhysicsFactory &PhysicsManager::getPhysicsFactory() const
 	return *factory_;
 }
 
-void PhysicsManager::iterate(float delta)
+void PhysicsManager::start()
 {
-	for (auto world : worlds_)
-		world->getWorld()->stepSimulation(delta);
+	physicsRun_ = true;
+	physicsThread_ = std::thread(&PhysicsManager::loop, this);
+}
+
+void PhysicsManager::stop()
+{
+	physicsRun_ = false;
+	physicsThread_.join();
 }
 
 void PhysicsManager::onWorldCreated(PhysicsWorld *world)
@@ -56,4 +62,22 @@ void PhysicsManager::onWorldDeleted(PhysicsWorld *world)
 {
 	if (auto it = std::find(worlds_.begin(), worlds_.end(), world); it != worlds_.end())
 		worlds_.erase(it);
+}
+
+void PhysicsManager::loop()
+{
+	using namespace std::chrono_literals;
+	using Clock = std::chrono::steady_clock;
+	using FloatSeconds = std::chrono::duration<float>;
+	auto last = Clock::now();
+	while (physicsRun_)
+	{
+		std::this_thread::sleep_until(last + 1s / 60);
+		auto current = Clock::now();
+		auto interval = current - last;
+		last = current;
+		auto delta = std::chrono::duration_cast<FloatSeconds>(interval).count();
+		for (auto world : worlds_)
+			world->stepSimulation(delta);
+	}
 }

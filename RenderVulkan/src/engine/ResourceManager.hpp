@@ -17,6 +17,11 @@ namespace CubA4
 
 		namespace engine
 		{
+			namespace memory
+			{
+				class QueuedOperations;
+			}
+
 			class ResourceManager
 			{
 			public:
@@ -28,6 +33,7 @@ namespace CubA4
 				vulkan::sVkDescriptorSetLayout getWorldLayout() const;
 				std::vector<vulkan::sVkDescriptorSetLayout> getBuiltInLayouts() const;
 				vulkan::sVkDescriptorPool getBuiltInPool() const;
+				memory::QueuedOperations &getQueuedOperations() const;
 
 				std::shared_ptr<resources::IResource> getCache(resources::Path path) const;
 			protected:
@@ -36,6 +42,7 @@ namespace CubA4
 				std::shared_ptr<const ICore> core_;
 				vulkan::sVkDescriptorSetLayout worldLayout_;
 				vulkan::sVkDescriptorPool builtInPool_;
+				std::unique_ptr<memory::QueuedOperations> queuedOperations_;
 			private:
 				void createBuildInDescriptorSetLayouts();
 				void createBuiltInDescriptorPool();

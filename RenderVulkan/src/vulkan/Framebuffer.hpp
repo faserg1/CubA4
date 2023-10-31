@@ -25,7 +25,7 @@ namespace CubA4::render::vulkan
 	{
 	public:
 		explicit Framebuffer(std::shared_ptr<const Device> device, std::vector<std::shared_ptr<FramebufferImage>> attachments,
-			VkRenderPass renderPass, VkCommandBuffer cmdBuffer);
+			VkRenderPass renderPass, VkCommandBuffer cmdBuffer, uint32_t index);
 		~Framebuffer();
 
 		FramebufferState getState() const;
@@ -55,6 +55,7 @@ namespace CubA4::render::vulkan
 		Fence fence_;
 		std::shared_ptr<const Semaphore> renderDoneSemaphore_;
 		VkCommandBuffer cmdBuffer_;
+		uint32_t index_;
 
 		VkFramebuffer framebuffer_;
 

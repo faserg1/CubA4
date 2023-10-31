@@ -25,6 +25,11 @@ void AudioTrack::stop()
 	source_->stop();
 }
 
+void AudioTrack::setVolume(float volume)
+{
+	source_->setVolume(volume);
+}
+
 void AudioTrack::setPosition(const CubA4::world::GlobalPosition &pos)
 {
 	source_->setPosition(pos);

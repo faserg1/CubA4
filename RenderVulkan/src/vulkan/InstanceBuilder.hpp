@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <info/IApplicationInfo.hpp>
+#include <logging/ILogger.hpp>
 
 namespace CubA4
 {
@@ -23,7 +24,7 @@ namespace CubA4
 			class InstanceBuilder
 			{
 			public:
-				explicit InstanceBuilder(std::shared_ptr<const info::IApplicationInfo> info);
+				explicit InstanceBuilder(std::shared_ptr<logging::ILogger> logger, std::shared_ptr<const info::IApplicationInfo> info);
 				~InstanceBuilder();
 
 				void addLayer(addon::InstanceLayer &layer);
@@ -31,6 +32,7 @@ namespace CubA4
 				std::shared_ptr<const Instance> build();
 				void destroy(std::shared_ptr<const Instance> instance);
 			protected:
+				std::shared_ptr<logging::ILogger> logger_;
 			private:
 				void fillAppInfo();
 

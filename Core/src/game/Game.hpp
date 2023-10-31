@@ -27,6 +27,7 @@ namespace CubA4::game
 		std::shared_ptr<const CubA4::game::controller::IController> getController() const override;
 		std::shared_ptr<CubA4::game::controller::IController> getController() override;
 		CubA4::object::IEntityRenderManager *getEntityRenderManager() const override;
+		CubA4::object::IEntityManager *getEntityManager() const override;
 
 		void run();
 		void stop();

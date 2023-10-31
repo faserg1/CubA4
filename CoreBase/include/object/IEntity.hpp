@@ -2,6 +2,11 @@
 
 #include <core/IIdentityiMap.hpp>
 
+namespace CubA4::physics
+{
+	class IPhysicsEntityControllerWrapper;
+}
+
 namespace CubA4::object
 {
 	struct CameraComponent;
@@ -16,6 +21,7 @@ namespace CubA4::object
 		virtual IdType getFactoryId() const = 0;
 
 		virtual CameraComponent *getCameraComponent() = 0;
+		virtual std::shared_ptr<CubA4::physics::IPhysicsEntityControllerWrapper> getPhysicsController() = 0;
 
 		virtual void enableControls() = 0;
 		virtual void disableControls() = 0;

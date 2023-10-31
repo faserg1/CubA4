@@ -4,7 +4,7 @@
 #include <world/IChunk.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
 #include <Core.hpp>
-#include <future>
+#include <taskflow/taskflow.hpp>
 
 namespace CubA4::physics
 {
@@ -35,11 +35,12 @@ namespace CubA4::physics
 		using BlockDataId = decltype(CubA4::world::BlockData::id);
 		using IdPair = std::pair<BlockId, BlockDataId>;
 	public:
-		ChunkCollision(CubA4::Core &core, std::shared_ptr<const CubA4::world::IChunk> chunk, btDiscreteDynamicsWorld &dynamicWorld);
+		ChunkCollision(CubA4::Core &core, std::shared_ptr<const CubA4::world::IChunk> chunk,
+			btDiscreteDynamicsWorld &dynamicWorld, tf::Taskflow &chunkCompilation);
 		~ChunkCollision();
 
 	private:
-		void initChunkCollision(std::shared_ptr<const CubA4::world::IChunk> chunk);
+		void initChunkCollision(std::shared_ptr<const CubA4::world::IChunk> chunk, tf::Taskflow &chunkCompilation);
 		std::unique_ptr<btConvexShape> createByDefinition(const CubA4::physics::IBlockPhysicsDefinition &def, const CubA4::world::BlockData &data);
 	private:
 		CubA4::Core &core_;
@@ -47,7 +48,6 @@ namespace CubA4::physics
 		std::unique_ptr<btCollisionObject> chunkObject_;
 		std::unique_ptr<btCompoundShape> chunkShape_;
 		std::unordered_map<IdPair, std::unique_ptr<btConvexShape>, BlockAndBlockDataIdHash> blockShapes_;
-		std::future<void> chunkCompilation_;
 
 		btMatrix3x3 basis_;
 	};

@@ -28,12 +28,14 @@ namespace CubA4::render::vulkan
 }
 
 Device::Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue renderQueue, VkQueue transmitQueue,
-	std::vector<std::string> extensions, VkPhysicalDeviceFeatures2 enabledFeatures) :
-	device_(device), physicalDevice_(physicalDevice), marker_(*this), extensions_(extensions), enabledFeatures_(enabledFeatures)
+	std::vector<std::string> extensions, std::unique_ptr<DeviceEnabledFeaturesHolder> enabledFeatures) :
+	device_(device), physicalDevice_(physicalDevice), marker_(*this), extensions_(extensions), enabledFeatures_(std::move(enabledFeatures))
 {
 	renderQueue_.queue = renderQueue;
 	transmitQueue_.queue = transmitQueue;
 	marker_.setName(device_, "Default logical device");
+	marker_.setName(renderQueue, "Default render queue");
+	marker_.setName(transmitQueue, "Default transmit");
 }
 
 Device::~Device()
@@ -83,7 +85,7 @@ const std::vector<std::string> &Device::getEnabledExtensions() const
 
 const VkPhysicalDeviceFeatures2 &Device::getEnabledFeatures() const
 {
-	return enabledFeatures_;
+	return enabledFeatures_->enabledFeatures;
 }
 
 DebugMarker &Device::getMarker() const

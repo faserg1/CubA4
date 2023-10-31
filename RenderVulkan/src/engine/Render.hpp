@@ -7,6 +7,7 @@
 #include <util/ISubscription.hpp>
 #include <vulkan/FramebuffersBuilder.hpp>
 #include <vulkan/Framebuffer.hpp>
+#include <vulkan/QueryPool.hpp>
 #include <tools/SpinLock.hpp>
 #include <engine/render/ISubRenderPipeline.hpp>
 #include <engine/framebuffer/FramebufferManager.hpp>
@@ -59,7 +60,7 @@ namespace CubA4::render
 
 			void onAcquireFailed(std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 			void onAcquire(uint32_t imgIndex);
-			void record(std::shared_ptr<vulkan::Framebuffer> framebuffer);
+			void record(std::shared_ptr<vulkan::Framebuffer> framebuffer, uint32_t imgIndex);
 			std::shared_ptr<const vulkan::Semaphore> send(std::shared_ptr<vulkan::Framebuffer> framebuffer, std::shared_ptr<const vulkan::Semaphore> awaitSemaphore);
 
 			std::shared_ptr<const config::IRenderConfig> getConfig() const;
@@ -70,6 +71,9 @@ namespace CubA4::render
 			const std::shared_ptr<RenderPassManager> renderPassManager_;
 			const std::shared_ptr<FramebufferManager> framebufferManager_;
 			const std::shared_ptr<const config::IRenderConfig> config_;
+
+			std::shared_ptr<vulkan::QueryPool> queryPool_;
+			uint32_t queryIndex_ = 0; //TODO: ???????????????????????
 
 			std::vector<std::pair<std::unique_ptr<ISubpipeline>, SubpipelineVersion>> subPipelines_;
 

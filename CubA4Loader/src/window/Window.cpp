@@ -34,6 +34,28 @@ bool Window::isFullscreen()
 
 void Window::setFullscreen(bool fullscreen)
 {
+	if (fullscreen == fullscreenMode_)
+		return;
+
+	/*if (fullscreen)
+	{
+		SDL_GetWindowPosition(window_, &savedCoords_.x, &savedCoords_.y);
+		SDL_GetWindowSize(window_, &savedCoords_.sizeX, &savedCoords_.sizeY);
+
+		// set window as display size
+		
+		auto displayIdx = SDL_GetWindowDisplayIndex(window_);
+		SDL_Rect bounds;
+		SDL_GetDisplayBounds(displayIdx, &bounds);
+
+		SDL_SetWindowSize(window_, bounds.w, bounds.h);
+	}
+	else
+	{
+		SDL_SetWindowPosition(window_, savedCoords_.x, savedCoords_.y);
+		SDL_SetWindowSize(window_, savedCoords_.sizeX, savedCoords_.sizeY);
+	}*/
+
 	fullscreenMode_ = fullscreen;
 	SDL_SetWindowFullscreen(window_, (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 }

@@ -1,15 +1,19 @@
 #pragma once
 
+#include <memory>
 #include <engine/world/ICamera.hpp>
 #include <glm/glm.hpp>
 
 namespace CubA4::render::engine::world
 {
+	class WorldManager;
+
 	class Camera :
-		public virtual ICamera
+		public virtual ICamera,
+		public std::enable_shared_from_this<Camera>
 	{
 	public:
-		explicit Camera();
+		explicit Camera(std::weak_ptr<WorldManager> worldManager);
 		~Camera();
 
 		void setActive(bool active);
@@ -21,10 +25,14 @@ namespace CubA4::render::engine::world
 
 		const glm::mat4 &getViewMatrix() const;
 		const CubA4::world::ChunkPos &getChunkPos() const;
+
+		Ray getRay(uint64_t x, uint64_t y) const override;
+		Ray getRay() const override;
 	protected:
 		void updateMatrix();
 		glm::vec3 calculateDirection() const;
 	private:
+		std::weak_ptr<WorldManager> worldManager_;
 		bool active_ = false;
 
 		float roll_ = 0;

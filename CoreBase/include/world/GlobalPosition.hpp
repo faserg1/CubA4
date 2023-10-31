@@ -141,7 +141,7 @@ namespace CubA4::world
 			return std::make_tuple(chunkPos_, blockPosition_, inBlockPos_);
 		}
 	protected:
-		template <class CoodTypeInside, CoodTypeInside Min, CoodTypeInside Max, class CoordTypeOutside>
+		template <class CoodTypeInside, CoodTypeInside Min, CoodTypeInside Max, class CoordTypeOutside, bool UnderZero = false>
 		constexpr void clampWith(CoodTypeInside &coord, CoordTypeOutside &outside)
 		{
 			constexpr const auto Length = Max - Min;
@@ -155,30 +155,37 @@ namespace CubA4::world
 			}
 			else if (coord <= Min)
 			{
+				
 				auto abs = std::abs(coord + Min);
 				auto rem = std::fmod(abs, Length);
+				// TODO: think about just floor???
 				auto count = (abs - rem) / Length;
+				// under 0 logic???
+				if (UnderZero && coord < 0)
+				{
+					count++;
+				}
 				coord += static_cast<CoodTypeInside>(count * Length);
 				outside -= static_cast<CoordTypeOutside>(count);
 			}
 		}
-		template <class CoodTypeInside, CoodTypeInside Min, CoodTypeInside Max, class CoordTypeOutside>
+		template <class CoodTypeInside, CoodTypeInside Min, CoodTypeInside Max, class CoordTypeOutside, bool UnderZero = false>
 		constexpr void clampWith(BasePos<CoodTypeInside> &coords, BasePos<CoordTypeOutside> &outside)
 		{
-			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside>(coords.x, outside.x);
-			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside>(coords.y, outside.y);
-			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside>(coords.z, outside.z);
+			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside, UnderZero>(coords.x, outside.x);
+			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside, UnderZero>(coords.y, outside.y);
+			clampWith<CoodTypeInside, Min, Max, CoordTypeOutside, UnderZero>(coords.z, outside.z);
 		}
 		void clampGlobal(BasePos<long double> globalPos)
 		{
 			clampWith<long double, 0.l, 1.l>(globalPos, blockPosition_);
 			inBlockPos_ = convertPos<float>(globalPos);
-			clampWith<decltype(BlockInChunkPos::x), 0, ChunkSize>(blockPosition_, chunkPos_);
+			clampWith<decltype(BlockInChunkPos::x), 0, ChunkSize, decltype(ChunkPos::x), true>(blockPosition_, chunkPos_);
 		}
 		void clampPos()
 		{
 			clampWith<float, 0.f, 1.f>(inBlockPos_, blockPosition_);
-			clampWith<decltype(BlockInChunkPos::x), 0, ChunkSize>(blockPosition_, chunkPos_);
+			clampWith<decltype(BlockInChunkPos::x), 0, ChunkSize, decltype(ChunkPos::x), true>(blockPosition_, chunkPos_);
 		}
 	private:
 		ChunkPos chunkPos_ = {};

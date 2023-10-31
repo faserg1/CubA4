@@ -39,3 +39,9 @@ IEntityFactoryBuilder &EntityFactoryBuilder::attachChunkAnchor(bool render)
 	data_.chunkRenderAnchor = render;
 	return *this;
 }
+
+IEntityFactoryBuilder &EntityFactoryBuilder::setupTick(TickTypes types)
+{
+	data_.tickTypes = types;
+	return *this;
+}

@@ -65,6 +65,12 @@ void RenderGameHandler::onLoadedChunksUpdated()
 	recompileWorld();
 }
 
+void RenderGameHandler::onChunkUpdated(const CubA4::world::ChunkPos &chunkPos)
+{
+	auto chunk = currentDimension_->findChunk(chunkPos);
+	worldUpdater_->pushChunks({chunk});
+}
+
 void RenderGameHandler::onEntityAdded(Transform &tr, WorldInfo &wi, RenderInfoComponent &render)
 {
 	if (wi.worldId != currentWorldId_ || wi.dimensionId != currentDimensionId_)

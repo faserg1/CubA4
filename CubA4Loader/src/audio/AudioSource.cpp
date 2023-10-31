@@ -46,6 +46,11 @@ void AudioSource::stop()
 	alSourceStop(sourceId_);
 }
 
+void AudioSource::setVolume(float volume)
+{
+	alSourcef(sourceId_, AL_GAIN, volume);
+}
+
 void AudioSource::setPosition(const CubA4::world::GlobalPosition &pos)
 {
 	auto floatPos = pos.globalPos<float>();

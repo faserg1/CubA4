@@ -1,25 +1,27 @@
 #include <vulkan/Framebuffer.hpp>
 #include <vector>
 #include <algorithm>
+#include <fmt/format.h>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
 Framebuffer::Framebuffer(std::shared_ptr<const Device> device,
     std::vector<std::shared_ptr<FramebufferImage>> attachments,
-    VkRenderPass renderPass, VkCommandBuffer cmdBuffer) :
+    VkRenderPass renderPass, VkCommandBuffer cmdBuffer, uint32_t index) :
         device_(device), fence_(device), renderDoneSemaphore_(Semaphore::create(device)), cmdBuffer_(cmdBuffer),
+		index_(index),
         attachments_(attachments),
         dirty_(true)
 {
     std::vector<VkImageView> viewAttachments(attachments_.size());
 
-	device_->getMarker().setName(renderDoneSemaphore_->getSemaphore(), "[Framebuffer] renderDoneSemaphore");
+	device_->getMarker().setName(renderDoneSemaphore_->getSemaphore(), fmt::format("[Framebuffer] renderDoneSemaphore #{}", index_));
+	device_->getMarker().setName(fence_.getFence(), fmt::format("[Framebuffer] fence #{}", index_));
 
     std::transform(attachments_.begin(), attachments_.end(), viewAttachments.begin(), [](std::shared_ptr<FramebufferImage> framebufferImage) -> VkImageView
     {
         return framebufferImage->getImageView();
     });
-
 
     VkFramebufferCreateInfo framebufferCreateInfo = {};
     framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -36,6 +38,9 @@ Framebuffer::Framebuffer(std::shared_ptr<const Device> device,
         //TODO: [OOKAMI] Exception, etc
         return;
     }
+
+	auto fbName = fmt::format("Default framebuffer #{}", index_);
+	device_->getMarker().setName(framebuffer_, fbName);
 
     state_.store(FramebufferState::Free);
 }

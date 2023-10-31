@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <object/EntityControllerTypes.hpp>
+#include <object/TickTypes.hpp>
 
 namespace CubA4::render::engine::model
 {
@@ -26,11 +27,13 @@ namespace CubA4::object
 		const CubA4::physics::IPhysicsEntityDefinition *physicsDefinition = nullptr;
 		std::shared_ptr<IEntityHandler> handler;
 
-		bool attachCamera;
+		bool attachCamera = false;
 		std::shared_ptr<CubA4::game::controller::IContextActionsRules> controllerRules;
 		ControllerFactory controllerFactory;
 
-		bool chunkAnchor;
-		bool chunkRenderAnchor;
+		bool chunkAnchor = false;
+		bool chunkRenderAnchor = false;
+
+		TickTypes tickTypes = +TickType::None;
 	};
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <vulkan/Device.hpp>
+#include <engine/memory/MemoryTypes.hpp>
 #include <mutex>
 
 namespace tf
@@ -15,13 +16,6 @@ namespace tf
 
 namespace CubA4::render::engine::memory
 {
-	enum class BufferBarrierType
-	{
-		None,
-		Vertex,
-		Uniform,
-	};
-
 	// TODO: batch copy commands
 
 	class MemoryHelper

@@ -5,8 +5,10 @@
 #include <controller/PlayerController.hpp>
 using namespace CubA4::object;
 
-PlayerDefinition::PlayerDefinition(std::shared_ptr<const ModelType> model, std::shared_ptr<CubA4::physics::IPhysicsEntityDefinition> physicsDef) :
-	model_(model), physicsDef_(std::move(physicsDef))
+PlayerDefinition::PlayerDefinition(std::shared_ptr<const CubA4::ICore> core, std::shared_ptr<const ModelType> model,
+	std::shared_ptr<CubA4::physics::IPhysicsEntityDefinition> physicsDef,
+	std::shared_ptr<const CubA4::mod::ModControl> modControl) :
+	core_(core), model_(model), physicsDef_(std::move(physicsDef)), modControl_(modControl)
 {
 
 }
@@ -30,9 +32,9 @@ void PlayerDefinition::onComponentStage(IEntityFactoryBuilder &builder) const
 
 	builder
 		.attachCamera()
-		.attachController(nullptr, [](CubA4::object::EntityContextActions &actions)
+		.attachController(nullptr, [this](CubA4::object::EntityContextActions &actions)
 		{
-			actions.addHandler(std::make_shared<PlayerController>());
+			actions.addHandler(std::make_shared<PlayerController>(core_, modControl_));
 		})
 		;
 }

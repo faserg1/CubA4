@@ -9,7 +9,7 @@ namespace CubA4::world
 	public:
 		virtual void onActiveChunksUpdated() {}
 		virtual void onLoadedChunksUpdated() {}
-		virtual void onChunkUpdated(const CubA4::world::ChunkPos &chunk) {}
+		virtual void onChunkUpdated(const CubA4::world::ChunkPos &chunkPos) {}
 	protected:
 		explicit IDimensionSubscriber() = default;
 		virtual ~IDimensionSubscriber() = default;

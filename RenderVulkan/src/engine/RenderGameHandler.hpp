@@ -39,6 +39,7 @@ namespace CubA4::render::engine
 
 		void onActiveChunksUpdated() override;
 		void onLoadedChunksUpdated() override;
+		void onChunkUpdated(const CubA4::world::ChunkPos &chunkPos) override;
 
 		void onEntityAdded(CubA4::object::Transform &tr, CubA4::object::WorldInfo &wi, CubA4::object::RenderInfoComponent &render) override;
 		void onEntityUpdated(CubA4::object::Transform &tr, CubA4::object::WorldInfo &wi, CubA4::object::RenderInfoComponent &render) override;

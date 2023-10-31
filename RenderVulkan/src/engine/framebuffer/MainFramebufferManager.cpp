@@ -1,4 +1,5 @@
 #include <engine/framebuffer/MainFramebufferManager.hpp>
+#include <fmt/format.h>
 using namespace CubA4::render::engine;
 using namespace CubA4::render::vulkan;
 
@@ -34,10 +35,12 @@ void MainFramebufferManager::onSwapchainUpdateInternal(std::shared_ptr<const vul
 	});
 
 	framebuffers_ = builder.createFramebuffers(swapchain, renderPass_.lock());
+	size_t fmNum = 0;
 	for (auto framebuffer : framebuffers_)
 	{
 		auto cmdBuffer = framebuffer->getCommandBuffer();
-		device_->getMarker().setName(cmdBuffer, "Main cmd buffer");
+		auto debugName = fmt::format("Main cmd buffer #{}", fmNum++);
+		device_->getMarker().setName(cmdBuffer, debugName);
 	}
 
 	attachmentsCount_ = builder.getAttachmentsCount();

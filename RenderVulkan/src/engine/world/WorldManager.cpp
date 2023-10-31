@@ -2,9 +2,10 @@
 #include "../ResourceManager.hpp"
 #include "../../vulkan/Device.hpp"
 #include "../../vulkan/Memory.hpp"
-#include "../memory/MemoryAllocator.hpp"
-#include "../memory/MemoryManager.hpp"
-#include "../memory/MemoryHelper.hpp"
+#include <engine/memory/MemoryAllocator.hpp>
+#include <engine/memory/MemoryManager.hpp>
+#include <engine/memory/MemoryHelper.hpp>
+#include <engine/memory/QueuedOperations.hpp>
 
 #include <engine/world/Camera.hpp>
 #include <world/Position.hpp>
@@ -39,7 +40,7 @@ WorldManager::~WorldManager()
 
 std::shared_ptr<ICamera> WorldManager::createCamera()
 {
-	return std::make_shared<Camera>();
+	return std::make_shared<Camera>(shared_from_this());
 }
 
 void WorldManager::setActiveCamera(std::shared_ptr<ICamera> camera)
@@ -61,6 +62,11 @@ void WorldManager::setFieldOfView(float degrees)
 {
 	worldData_.projectionFov = static_cast<float>(degrees * glm::pi<float>() / 360);
 	updateProjectionMatrix();
+}
+
+Ray WorldManager::getRayFrom(std::shared_ptr<const ICamera> camera) const
+{
+	return getRayFrom(static_cast<uint64_t>(worldData_.projectionWidth) / 2, static_cast<uint64_t>(worldData_.projectionHeight) / 2);
 }
 
 Ray WorldManager::getRayFrom(uint64_t x, uint64_t y, std::shared_ptr<const ICamera> camera) const
@@ -107,10 +113,31 @@ void WorldManager::onFrameUpdate()
 		return;
 	const auto &matrix = activeCamera->getViewMatrix();
 	const auto &chunkPos = activeCamera->getChunkPos();
-	memoryHelper_->updateBuffer(&chunkPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform).wait();
+
 	VkDeviceSize matrixSize = sizeof(float) * 16;
-	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
-	memoryHelper_->updateBuffer(glm::value_ptr(matrix), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
+	VkDeviceSize matrixOffset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16);
+
+	// memoryHelper_->updateBuffer(&chunkPos, worldBuffer_->get(), 0, sizeof(CubA4::world::ChunkPos), BufferBarrierType::Uniform).wait();
+
+	QueuedOperations::MemoryToBufferCopy viewChunkPos {
+		.srcMemory = &chunkPos,
+		.dst = worldBuffer_,
+		.offset = 0,
+		.size = sizeof(CubA4::world::ChunkPos),
+		.bufferBarrierType = BufferBarrierType::Uniform
+	};
+
+	QueuedOperations::MemoryToBufferCopy viewMatrix {
+		.srcMemory = glm::value_ptr(matrix),
+		.dst = worldBuffer_,
+		.offset = matrixOffset,
+		.size = matrixSize,
+		.bufferBarrierType = BufferBarrierType::Uniform
+	};
+	
+	//memoryHelper_->updateBuffer(glm::value_ptr(matrix), worldBuffer_->get(), matrixOffset, matrixSize, BufferBarrierType::Uniform).wait();
+
+	resourceManager_->getQueuedOperations().queueUpdateBuffer({viewChunkPos, viewMatrix});
 }
 
 sVkDescriptorSet WorldManager::getWorldDescriptorSet() const
@@ -196,5 +223,16 @@ void WorldManager::updateProjectionMatrix()
 	worldData_.projMatrix_[1][1] *= -1;
 	VkDeviceSize matrixSize = sizeof(float) * 16;
 	VkDeviceSize offset = memoryManager_->calcAlign(sizeof(CubA4::world::ChunkPos), 16) + matrixSize;
-	memoryHelper_->updateBuffer(glm::value_ptr(worldData_.projMatrix_), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
+
+	QueuedOperations::MemoryToBufferCopy projMatrix {
+		.srcMemory = glm::value_ptr(worldData_.projMatrix_),
+		.dst = worldBuffer_,
+		.offset = offset,
+		.size = matrixSize,
+		.bufferBarrierType = BufferBarrierType::Uniform
+	};
+
+	//memoryHelper_->updateBuffer(glm::value_ptr(worldData_.projMatrix_), worldBuffer_->get(), offset, matrixSize, BufferBarrierType::Uniform).wait();
+
+	resourceManager_->getQueuedOperations().queueUpdateBuffer({projMatrix});
 }

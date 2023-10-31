@@ -8,7 +8,7 @@ layout (location = 2) in mat4 entityTransformation;
 layout (location = 1) out vec3 outUVW;
 
 
-layout(binding = 0/*, row_major*/) uniform Matricies
+layout(set = 0, binding = 0) uniform Matricies
 {
 	ivec3 viewChunkPos;
 	//layout(offset = 16, row_major) mat4 view;
@@ -16,6 +16,12 @@ layout(binding = 0/*, row_major*/) uniform Matricies
 	layout(offset = 16) mat4 view;
 	layout(offset = 80) mat4 proj;
 } matricies;
+
+/*layout(set = 1, binding = 1) uniform
+{
+	ivec3 chunkPos;
+	layout(offset = 16) mat4 transform;
+} entityInfo;*/
 
 layout( push_constant ) uniform Constants
 {

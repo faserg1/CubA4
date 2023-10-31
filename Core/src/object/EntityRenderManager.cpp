@@ -42,9 +42,13 @@ void EntityRenderManager::onRenderEntityUpdated(entt::registry &registry, entt::
 
 	if (auto cameraComponent = registry.try_get<CameraComponent>(entity))
 	{
-		auto transform = registry.get<Transform>(entity);
-		// TODO: update camera rotation
-		cameraComponent->camera->setPosition(transform.position - GlobalPosition(0.5f, 0.f, 0.f));
+		// TODO: think what can cause it empty
+		auto transform = registry.try_get<Transform>(entity);
+		if (transform)
+		{
+			// TODO: update camera rotation
+			cameraComponent->camera->setPosition(transform->position - GlobalPosition(0.5f, 0.f, 0.f));
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 #include <engine/compilers/RenderEntityCompiler.hpp>
 #include <engine/world/RenderEntity.hpp>
 #include <engine/material/MaterialLayout.hpp>
+#include <engine/memory/QueuedOperations.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -197,8 +198,19 @@ void RenderEntityCompiler::updateEntity(const CubA4::object::Transform &tr, cons
 	updateTransforms(tr, memory);
 	data.memoryHost->flush(0, VK_WHOLE_SIZE);
 
+	VkBufferCopy region {
+		.size = data.bufferSize
+	};
+	QueuedOperations::BufferToBufferCopy copyInfo {
+		.src = data.instanceHostBuffer,
+		.dst = data.instanceDeviceBuffer,
+		.regions = {region},
+		.bufferBarrierType = BufferBarrierType::Vertex
+	};
+	renderManager_->getResourceManager()->getQueuedOperations().queueCopyBufferToBuffer({copyInfo});
+
 	// TODO: maybe do it outside?
-	memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
+	//memoryHelper_->copyBufferToBuffer(data.instanceHostBuffer->get(), data.instanceDeviceBuffer->get(), data.bufferSize).wait();
 }
 
 std::shared_ptr<RenderEntityCompiler::RenderEntity> RenderEntityCompiler::recompileEntity(std::shared_ptr<RenderEntity> entity,

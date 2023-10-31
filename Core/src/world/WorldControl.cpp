@@ -12,21 +12,33 @@ void WorldControl::requestChanges(const ChunkModificationCollection& modificatio
 {
 	auto dimension = currentWorld_->findDimension(targetDimension);
 
-	std::vector<std::pair<std::shared_ptr<Chunk>, const ChunkBModification&>> changes;
+	// TODO: ???
+	if (!dimension)
+		return;
+
+	std::vector<std::pair<std::shared_ptr<Chunk>, const ChunkBModification>> changes;
 	
 	for (const auto& mod : modifications)
 	{
 		auto chunk = dimension->findChunk(mod.pos);
+		// TODO: ???
+		if (!chunk)
+			continue;
 		if (!testLocal(chunk, mod))
 		{
 			// Return local incorrect result
 			return;
 		}
-		changes.push_back(std::make_pair(chunk, mod));
+		auto pair = std::make_pair(chunk, mod);
+		changes.push_back(pair);
 	}
-	for (auto [chunk, mod] : changes)
+	for (const auto &[chunk, mod] : changes)
 	{
 		chunkAssembler_->applyChanges(chunk, mod);
+		dimension->subscriptionHelper_.apply([chunkPos = chunk->getChunkPos()](auto *subscriber)
+		{
+			subscriber->onChunkUpdated(chunkPos);
+		});
 	}
 }
 

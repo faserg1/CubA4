@@ -10,6 +10,7 @@ namespace CubA4::physics
 		PlayerPhysicsDefinition(std::shared_ptr<const ICollistionBodyDefinition> bodyDef);
 		~PlayerPhysicsDefinition();
 
+		bool includePhysicsController() const override;
 		float getMass() const override;
 		std::shared_ptr<const ICollistionBodyDefinition> getCollisonBody() const override;
 	private:

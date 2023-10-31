@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <object/TickTypes.hpp>
 #include <base/Vector.hpp>
 #include <object/EntityControllerTypes.hpp>
 #include <game/controller/IContextActionsRules.hpp>
@@ -29,6 +30,8 @@ namespace CubA4::object
 		virtual IEntityFactoryBuilder &attachCamera() = 0;
 		virtual IEntityFactoryBuilder &attachController(ControllerRules rules, ControllerFactory controllerSetup) = 0;
 		virtual IEntityFactoryBuilder &attachChunkAnchor(bool render) = 0;
+
+		virtual IEntityFactoryBuilder &setupTick(TickTypes types) = 0;
 	protected:
 		explicit IEntityFactoryBuilder() = default;
 	};

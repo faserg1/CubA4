@@ -81,26 +81,63 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	createInfo.ppEnabledLayerNames = cStrExtensions.data();
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(cStrExtensions.size());
 	createInfo.ppEnabledExtensionNames = cStrExtensions.data();
+
+	VkPhysicalDeviceProperties2 deviceProps {};
+	deviceProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+	vkGetPhysicalDeviceProperties2(data_->choosedDevice->getPhysicalDevice(), &deviceProps);
+
+	{
+		auto major = VK_VERSION_MAJOR(deviceProps.properties.apiVersion);
+		auto minor = VK_VERSION_MINOR(deviceProps.properties.apiVersion);
+		auto patch = VK_VERSION_PATCH(deviceProps.properties.apiVersion);
+	}
 	
-	VkPhysicalDeviceFeatures2 availableFeatures = {}, enabledFeatures = {};
+	VkPhysicalDeviceFeatures2 availableFeatures = {};
 	availableFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-	enabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+
+	VkPhysicalDeviceVulkan11Features available11Features = {};
+	VkPhysicalDeviceVulkan12Features available12Features = {};
+	VkPhysicalDeviceVulkan13Features available13Features = {};
+	
+	available11Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+	available12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+	available13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+	
+	availableFeatures.pNext = &available11Features;
+	available11Features.pNext = &available12Features;
+	available12Features.pNext = &available13Features;
+	
 	vkGetPhysicalDeviceFeatures2(data_->choosedDevice->getPhysicalDevice(), &availableFeatures);
 
 	
 	std::vector<VkBool32> requiredFeatures = {
-		// TODO: [OOKAMI] Disable this?
-		availableFeatures.features.shaderInt64,
-		availableFeatures.features.fillModeNonSolid
+		availableFeatures.features.shaderInt64, // TODO: [OOKAMI] Disable this?
+		availableFeatures.features.fillModeNonSolid,
+		available13Features.synchronization2
 	};
 	if (std::any_of(requiredFeatures.begin(), requiredFeatures.end(), std::logical_not{}))
 	{
-		throw std::runtime_error("Cannot create device without shaderInt64 feature!");
+		throw std::runtime_error("Cannot create device without required features!");
 	}
-	enabledFeatures.features.shaderInt64 = VK_TRUE;
-	enabledFeatures.features.fillModeNonSolid = VK_TRUE;
-	enabledFeatures.features.samplerAnisotropy = availableFeatures.features.samplerAnisotropy;
-	createInfo.pEnabledFeatures = &enabledFeatures.features;
+
+	auto enabledFeaturesHolder = std::make_unique<DeviceEnabledFeaturesHolder>();
+	enabledFeaturesHolder->enabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	enabledFeaturesHolder->enabled11Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+	enabledFeaturesHolder->enabled12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+	enabledFeaturesHolder->enabled13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+
+	enabledFeaturesHolder->enabledFeatures.pNext = &enabledFeaturesHolder->enabled11Features;
+	enabledFeaturesHolder->enabled11Features.pNext = &enabledFeaturesHolder->enabled12Features;
+	enabledFeaturesHolder->enabled12Features.pNext = &enabledFeaturesHolder->enabled13Features;
+
+	enabledFeaturesHolder->enabledFeatures.features.shaderInt64 = VK_TRUE;
+	enabledFeaturesHolder->enabledFeatures.features.fillModeNonSolid = VK_TRUE;
+
+	enabledFeaturesHolder->enabled13Features.synchronization2 = VK_TRUE;
+
+	enabledFeaturesHolder->enabledFeatures.features.samplerAnisotropy = availableFeatures.features.samplerAnisotropy;
+	createInfo.pEnabledFeatures = &enabledFeaturesHolder->enabledFeatures.features;
+	createInfo.pNext = enabledFeaturesHolder->enabledFeatures.pNext;
 
 	float queuePriorities[2] = { 1.f, 1.f };
 	VkDeviceQueueCreateInfo qCreateInfo = {};
@@ -120,7 +157,7 @@ std::shared_ptr<const Device> DeviceBuilder::build()
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 0, &queue);
 	vkGetDeviceQueue(device, data_->queueFamilyIndex, 1, &transmitQueue);
 
-	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue, transmitQueue, extensions_, enabledFeatures);
+	return std::make_shared<Device>(device, data_->choosedDevice->getPhysicalDevice(), queue, transmitQueue, extensions_, std::move(enabledFeaturesHolder));
 }
 
 void DeviceBuilder::destroy(std::shared_ptr<const Device> device)

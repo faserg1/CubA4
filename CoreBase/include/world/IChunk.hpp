@@ -21,6 +21,7 @@ namespace CubA4::world
 		decltype(CubA4::world::BlockData::id) dataId = std::numeric_limits<decltype(CubA4::world::BlockData::id)>::max();
 		CubA4::world::BlockInChunkPos pos;
 		CubA4::world::Layer layer;
+		size_t containerId;
 	};
 
 	// Replace real block with id

@@ -16,6 +16,8 @@
 #include <engine/render/ChunkSubRenderPipeline.hpp>
 #include <engine/render/EntitySubRenderPipeline.hpp>
 
+#include <engine/memory/QueuedOperations.hpp>
+
 #include <algorithm>
 #include <stdexcept>
 #include <ctime>
@@ -198,6 +200,9 @@ void VulkanRenderEngine::loop()
 		render_->onAcquire(imgIndex);
 		renderManager_->getWorldManager()->onFrameUpdate();
 
+		auto queuedOperationsFuture = renderManager_->getResourceManager()->getQueuedOperations().executeAll();
+		queuedOperationsFuture.wait();
+
 		std::shared_ptr<const CubA4::render::vulkan::Semaphore> renderDoneSemaphore = acquireSemaphore;
 
 		for (auto &step : mainPipelines_)
@@ -283,7 +288,7 @@ std::shared_ptr<const CubA4::render::vulkan::Semaphore> VulkanRenderEngine::rend
 {
 	auto framebuffer = framebufferManager_->onAcquire(imgIndex);
 	
-	render_->record(framebuffer);
+	render_->record(framebuffer, imgIndex);
 
 	return render_->send(framebuffer, awaitSemaphore);
 }

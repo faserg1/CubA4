@@ -1,4 +1,5 @@
 #include <engine/world/Camera.hpp>
+#include <engine/world/WorldManager.hpp>
 #include <algorithm>
 #include <glm/gtc/constants.hpp>
 #include <glm/common.hpp>
@@ -11,7 +12,8 @@ using namespace CubA4::render::engine::world;
 
 constexpr const glm::vec3 up {0, 1, 0};
 
-Camera::Camera()
+Camera::Camera(std::weak_ptr<WorldManager> worldManager):
+	worldManager_(worldManager)
 {
 	
 }
@@ -77,6 +79,22 @@ void Camera::rotate(float roll, float pitch, float yaw)
         yaw += 360.f;
     pitch_ = std::clamp(pitch_, -89.f, 89.f);
     updateMatrix();
+}
+
+Ray Camera::getRay(uint64_t x, uint64_t y) const
+{
+	auto wm = worldManager_.lock();
+	if (!wm)
+		return {};
+	return wm->getRayFrom(x, y, shared_from_this());
+}
+
+Ray Camera::getRay() const
+{
+	auto wm = worldManager_.lock();
+	if (!wm)
+		return {};
+	return wm->getRayFrom(shared_from_this());
 }
 
 const glm::mat4 &Camera::getViewMatrix() const

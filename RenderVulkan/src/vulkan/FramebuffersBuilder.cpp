@@ -1,4 +1,5 @@
 #include <vulkan/FramebuffersBuilder.hpp>
+#include <fmt/format.h>
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::engine::memory;
 
@@ -71,17 +72,22 @@ std::vector<std::shared_ptr<Framebuffer>> FramebuffersBuilder::createFramebuffer
 					break;
 				}
 
-			if (info.external.size() && info.type != AttachmentInfo::Type::Present) {
+			if (info.external.size() && info.type != AttachmentInfo::Type::Present)
+			{
 				image = std::make_shared<FramebufferImage>(device_, info.external[idx], currentFormat, resolution, info.aspect);
+				device_->getMarker().setName(image->getImage(), fmt::format("Presentation image #{}", idx));
+				device_->getMarker().setName(image->getImageView(), fmt::format("Presentation image view #{}", idx));
 			}
-			else {
+			else
+			{
 				image = createImageWithMemory(currentFormat, resolution, currentUsage | info.additionalUsage, info.aspect, info.enableAA);
 			}
 
 			attachments.push_back(image);
 		}
 
-        framebuffers[idx] = std::make_shared<Framebuffer>(device_, attachments, vkRenderPass, cmdBuffers[idx]);
+		device_->getMarker().setName(cmdBuffers[idx], fmt::format("Primary command buffer for framebuffer #{}", idx));
+        framebuffers[idx] = std::make_shared<Framebuffer>(device_, attachments, vkRenderPass, cmdBuffers[idx], static_cast<uint32_t>(idx));
     }
 	
     return std::move(framebuffers);

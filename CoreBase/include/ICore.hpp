@@ -16,6 +16,14 @@
 
 namespace CubA4
 {
+	namespace render
+	{
+		namespace engine
+		{
+			class IRenderManager;
+		}
+	}
+
 	class ICore
 	{
 	public:
@@ -38,6 +46,9 @@ namespace CubA4
 		virtual std::shared_ptr<audio::IAudioManager> getAudioManager() const = 0;
 		virtual std::shared_ptr<const game::IGame> getGame() const = 0;
 		virtual std::shared_ptr<const physics::IPhysicsManager> getPhysicsManager() const = 0;
+
+		virtual std::shared_ptr<CubA4::render::engine::IRenderManager> getRenderManager() const = 0;
+
 		///Создает сообщение о критической ошибке
 		virtual void criticalException() const = 0;
 

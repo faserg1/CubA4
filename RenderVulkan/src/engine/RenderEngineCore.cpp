@@ -8,24 +8,26 @@
 #include <vulkan/vulkan.h>
 #include <algorithm>
 
-#include "../vulkan/Instance.hpp"
-#include "../vulkan/InstanceBuilder.hpp"
-#include "../vulkan/addon/InstanceLayer.hpp"
-#include "../vulkan/addon/InstanceExtension.hpp"
+#include <vulkan/Instance.hpp>
+#include <vulkan/InstanceBuilder.hpp>
+#include <vulkan/addon/InstanceLayer.hpp>
+#include <vulkan/addon/InstanceExtension.hpp>
 
-#include "../vulkan/Device.hpp"
-#include "../vulkan/DeviceBuilder.hpp"
-#include "../vulkan/addon/DeviceLayer.hpp"
-#include "../vulkan/addon/DeviceExtension.hpp"
+#include <vulkan/Device.hpp>
+#include <vulkan/DeviceBuilder.hpp>
+#include <vulkan/addon/DeviceLayer.hpp>
+#include <vulkan/addon/DeviceExtension.hpp>
 
-#include "../vulkan/addon/SDLExtension.hpp"
-#include "../vulkan/addon/DebugExtension.hpp"
+#include <vulkan/addon/SDLExtension.hpp>
+#include <vulkan/addon/DebugExtension.hpp>
 #include <vulkan/addon/SwapchainExtension.hpp>
+#include <vulkan/addon/Synchronization2Extension.hpp>
 #include <vulkan/addon/DepthStensilResolveExtension.hpp>
-#include "../vulkan/addon/StandardValidationLayer.hpp"
+#include <vulkan/addon/StandardValidationLayer.hpp>
+#include <vulkan/addon/RenderDocCaptureLayer.hpp>
 
-#include "../vulkan/Swapchain.hpp"
-#include "../vulkan/SwapchainBuilder.hpp"
+#include <vulkan/Swapchain.hpp>
+#include <vulkan/SwapchainBuilder.hpp>
 
 using namespace CubA4::logging;
 using namespace CubA4::render::engine;
@@ -105,7 +107,7 @@ void RenderEngineCore::waitDeviceIdle() const
 void RenderEngineCore::initInstance()
 {
 	if (!instanceBuilder_)
-		instanceBuilder_ = std::make_shared<InstanceBuilder>(info_);
+		instanceBuilder_ = std::make_shared<InstanceBuilder>(core_->getLogger(), info_);
 	if (instance_)
 		throw std::runtime_error("Already initialized");
 	auto addExt = [=](std::shared_ptr<InstanceExtension> ext)
@@ -134,6 +136,9 @@ void RenderEngineCore::initInstance()
 
 	auto vkStdLayer = std::make_shared<StandardValidationLayer>();
 	addLayer(vkStdLayer);
+
+	auto renderDocCaptureLayer = std::make_shared<RenderDocCaptureLayer>();
+	//addLayer(renderDocCaptureLayer);
 #endif
 
 	instance_ = instanceBuilder_->build();
@@ -165,8 +170,10 @@ void RenderEngineCore::initDevice()
 		deviceAddons_.push_back(ext);
 	};
 	auto vkSwapChainExt = std::make_shared<SwapchainExtension>(deviceBuilder_->getPhysicalDevice());
+	//auto vkSync2Ext = std::make_shared<Synchronization2Extension>(deviceBuilder_->getPhysicalDevice());
 	auto vkDepthStensilResolveExt = std::make_shared<DepthStensilResolveExtension>(deviceBuilder_->getPhysicalDevice());
 	addExt(vkSwapChainExt);
+	//addExt(vkSync2Ext);
 	addExt(vkDepthStensilResolveExt);
 	device_ = deviceBuilder_->build();
 	std::for_each(deviceAddons_.begin(), deviceAddons_.end(),

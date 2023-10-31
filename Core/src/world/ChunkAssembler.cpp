@@ -12,14 +12,22 @@ ChunkAssembler::ChunkAssembler(CubA4::core::IEnvironment &env) :
 	
 }
 
-ChunkAssembler::~ChunkAssembler()
-{
-	
-}
+ChunkAssembler::~ChunkAssembler() = default;
 
 void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModification &mod)
 {
 	auto &dataProvider = chunk->getDataProvider();
+	for (const auto &removeBlockChange : mod.remove)
+	{
+		auto blockAt = chunk->getBlockAt(removeBlockChange.pos, removeBlockChange.layer);
+		auto container = std::dynamic_pointer_cast<ChunkBMutable>(chunk->getContainer(blockAt.containerId));
+		auto hasBlock = container->hasBlockAt(blockAt.pos);
+		container->deleteBlockAt(blockAt.pos);
+		auto &blockDataStorage = dataProvider.getBlockDataStorage(blockAt.blockId);
+		if (!container->getBlockCount())
+			chunk->removeContainer(blockAt.containerId);
+		// TODO: remove info? data storage etc.
+	}
 	for (const auto &addBlockChange : mod.add)
 	{
 		auto containers = chunk->getChunkBContainers(addBlockChange.blockId);
@@ -47,7 +55,8 @@ void ChunkAssembler::applyChanges(std::shared_ptr<Chunk> chunk, const ChunkBModi
 		auto data = blockDataStorage.getOrAdd(addBlockChange.data);
 		choosedContainer->setBlockAt(addBlockChange.pos, data->id);
 	}
-	// TODO: implement remove, mod
+
+	// TODO: implement mod
 }
 
 std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
@@ -71,7 +80,7 @@ std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
 			else
 			{
 				// Pass the right id
-				choosedContainer = std::make_shared<ChunkBMutable>(0, info.blockId, layerPos);
+				choosedContainer = std::make_shared<ChunkBMutable>(chunk->allocateIdContainer(), info.blockId, layerPos);
 				chunk->addContainer(choosedContainer);
 			}
 			for (auto pos : addInfo.positions)
@@ -91,7 +100,7 @@ std::shared_ptr<Chunk> ChunkAssembler::createChunk(const ChunkBGeneration &gen)
 			else
 			{
 				// Pass the right id
-				choosedContainer = std::make_shared<ChunkBMutable>(0, info.blockId, layerPos);
+				choosedContainer = std::make_shared<ChunkBMutable>(chunk->allocateIdContainer(), info.blockId, layerPos);
 				chunk->addContainer(choosedContainer);
 			}
 			// TODO: impl

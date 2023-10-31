@@ -20,10 +20,20 @@ using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::engine::pipeline;
 using namespace CubA4::render::vulkan;
 
+constexpr uint32_t queryTimestampCount = 4;
+
 Render::Render(std::shared_ptr<const Device> device, std::shared_ptr<RenderPassManager> rpManager, std::shared_ptr<FramebufferManager> framebufferManager, std::shared_ptr<const config::IRenderConfig> config) :
-	device_(device), renderPassManager_(rpManager), framebufferManager_(framebufferManager), config_(config)
+	device_(device), renderPassManager_(rpManager), framebufferManager_(framebufferManager), config_(config),
+	queryPool_(std::make_shared<QueryPool>(device, VK_QUERY_TYPE_TIMESTAMP, queryTimestampCount, VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT))
 {
-	
+	// TODO: allocate query buffers in count of 4
+	// record them immidiatly for timestamps, reset
+
+
+	// another approuch:
+	// allocate 1 sim command buffer?
+	// allocate 1 query, do the separate cycle that will wait for this query infinitly and update two atomics values:
+	// difference and prev timestamp
 }
 
 Render::~Render()
@@ -70,7 +80,7 @@ void Render::onAcquire(uint32_t imgIndex)
 	onIterate();
 }
 
-void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
+void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer, uint32_t imgIndex)
 {
 	if (!framebuffer->isRecordAwait())
 		return;
@@ -93,9 +103,13 @@ void Render::record(std::shared_ptr<vulkan::Framebuffer> framebuffer)
 	renderPassBeginInfo.framebuffer = vkFramebuffer;
 	renderPassBeginInfo.renderPass = renderPassManager_->getMainRenderPass()->getRenderPass();
 
-	VkClearValue colorAttachmentClearValue = {};
-	float clrClearFloat[4] = { 0.2f,0.3f,0.4f,0.f };
-	memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
+	VkClearValue colorAttachmentClearValue = {
+		.color = {
+			.float32 = { 0.2f, 0.3f,0.4f,0.f }
+		}
+	};
+	//colorAttachmentClearValue.color.float32 = { 0.2f, 0.3f,0.4f,0.f };
+	//memcpy(colorAttachmentClearValue.color.float32, clrClearFloat, sizeof(float) * 4);
 
 	VkClearValue depthAttachmentsClearValue = {};
 	depthAttachmentsClearValue.depthStencil.depth = 1.f;

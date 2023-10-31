@@ -4,14 +4,10 @@
 #include <memory>
 #include <world/IChunk.hpp>
 #include <engine/world/ICamera.hpp>
+#include <engine/world/Ray.hpp>
 
 namespace CubA4::render::engine::world
 {
-	struct Ray
-	{
-		CubA4::world::GlobalPosition position;
-		CubA4::world::BasePos<float> direction;
-	};
 
 	class IWorldManager
 	{
@@ -21,6 +17,7 @@ namespace CubA4::render::engine::world
 		virtual void setFieldOfView(float degrees) = 0;
 
 		virtual Ray getRayFrom(uint64_t x, uint64_t y, std::shared_ptr<const ICamera> camera = {}) const = 0;
+		virtual Ray getRayFrom(std::shared_ptr<const ICamera> camera = {}) const = 0;
 	protected:
 		explicit IWorldManager() = default;
 		virtual ~IWorldManager() = default;

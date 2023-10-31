@@ -9,6 +9,11 @@ PlayerPhysicsDefinition::PlayerPhysicsDefinition(std::shared_ptr<const ICollisti
 
 PlayerPhysicsDefinition::~PlayerPhysicsDefinition() = default;
 
+bool PlayerPhysicsDefinition::includePhysicsController() const
+{
+	return true;
+}
+
 float PlayerPhysicsDefinition::getMass() const
 {
 	return 0.5f;

@@ -16,6 +16,8 @@ namespace CubA4::object
 		IEntityFactoryBuilder &attachCamera() override;
 		IEntityFactoryBuilder &attachController(ControllerRules rules, ControllerFactory controllerSetup) override;
 		IEntityFactoryBuilder &attachChunkAnchor(bool render) override;
+
+		IEntityFactoryBuilder &setupTick(TickTypes types) override;
 	private:
 		EntityBuilderData &data_;
 	};

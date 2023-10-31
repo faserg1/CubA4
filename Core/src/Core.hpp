@@ -66,7 +66,7 @@ namespace CubA4
 		std::shared_ptr<const physics::IPhysicsManager> getPhysicsManager() const override;
 		std::shared_ptr<physics::PhysicsManager> getPhysicsManager();
 
-		std::shared_ptr<render::engine::IRenderManager> getRenderManager() const;
+		std::shared_ptr<render::engine::IRenderManager> getRenderManager() const override;
 		const render::IRenderInfo *getRenderInfo() const;
 
 		void setApplicationModeFlags(ApplicationModeFlags flags) override;

@@ -17,6 +17,7 @@ namespace CubA4::audio
 		virtual void play() = 0;
 		virtual void stop() = 0;
 
+		virtual void setVolume(float volume) = 0;
 		virtual void setPosition(const CubA4::world::GlobalPosition &pos) = 0;
 		virtual void setVelocity(const CubA4::Vector3 &velocity) = 0;
 	protected:

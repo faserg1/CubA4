@@ -38,8 +38,11 @@ namespace CubA4::world
 
 		void addContainer(std::shared_ptr<IChunkBBaseContainer> container);
 		void removeContainer(size_t idContainer);
+		std::shared_ptr<IChunkBBaseContainer> getContainer(size_t idContainer);
 
 		size_t allocateIdContainer();
+
+		void erase();
 	protected:
 		void onContainerAdded(std::shared_ptr<const IChunkBBaseContainer> container);
 		void onContainerRemoved(std::shared_ptr<const IChunkBBaseContainer> container);

@@ -22,6 +22,14 @@ namespace CubA4::window
 	private:
 		const uint32_t flags_;
 		bool fullscreenMode_;
+
+		struct {
+			int x;
+			int y;
+			int sizeX;
+			int sizeY;
+		} savedCoords_;
+
 		///Оригинальное SDL окно
 		SDL_Window *window_;
 	};

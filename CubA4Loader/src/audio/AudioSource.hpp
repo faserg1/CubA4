@@ -19,6 +19,7 @@ namespace CubA4::audio
 		void play() override;
 		void stop() override;
 
+		void setVolume(float volume) override;
 		void setPosition(const CubA4::world::GlobalPosition &pos) override;
 		void setVelocity(const CubA4::Vector3 &velocity) override;
 

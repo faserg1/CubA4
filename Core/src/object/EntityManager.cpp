@@ -6,9 +6,13 @@
 #include <object/EntityBuilderData.hpp>
 #include <object/IEntityHandler.hpp>
 
+#include <object/components/WorldInfo.hpp>
 #include <object/components/InternalEntityInfo.hpp>
 #include <object/components/Transform.hpp>
 #include <object/components/HandlerComponent.hpp>
+
+#include <world/World.hpp>
+#include <world/Dimension.hpp>
 
 using namespace CubA4::object;
 
@@ -16,6 +20,28 @@ EntityManager::EntityManager(CubA4::Core &core) :
 	core_(core), entityRenderManager_(createRenderManager())
 {
 	registerSignals();
+}
+
+std::shared_ptr<const CubA4::world::IWorld> EntityManager::getCurrentWorld(IEntity &iEntity) const
+{
+	auto entity = dynamic_cast<Entity*>(&iEntity);
+	if (!entity)
+		return nullptr;
+	auto &registry = entity->getRegistry();
+	auto handle = entity->getEntity();
+	auto &worldInfo = registry_.get<WorldInfo>(handle);
+	return core_.getEnvironment()->getObjectT<CubA4::world::World>(worldInfo.worldId);
+}
+
+std::shared_ptr<const CubA4::world::IDimension> EntityManager::getCurrentDimension(IEntity &iEntity) const
+{
+	auto entity = dynamic_cast<Entity*>(&iEntity);
+	if (!entity)
+		return nullptr;
+	auto &registry = entity->getRegistry();
+	auto handle = entity->getEntity();
+	auto &worldInfo = registry_.get<WorldInfo>(handle);
+	return core_.getEnvironment()->getObjectT<CubA4::world::Dimension>(worldInfo.dimensionId);
 }
 
 std::shared_ptr<IEntityFactory> EntityManager::registerEntity(IdType factoryId, std::unique_ptr<const IEntityDefinition> &&def)
@@ -46,6 +72,11 @@ std::shared_ptr<IEntityFactory> EntityManager::registerEntity(IdType factoryId, 
 entt::registry &EntityManager::getRegistry()
 {
 	return registry_;
+}
+
+void EntityManager::iterate()
+{
+
 }
 
 EntityRenderManager &EntityManager::getEntityRenderManager()

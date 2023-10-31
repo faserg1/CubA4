@@ -30,7 +30,8 @@ namespace CubA4::render
 			class Camera;
 
 			class WorldManager :
-				public virtual IWorldManager
+				public virtual IWorldManager,
+				public std::enable_shared_from_this<WorldManager>
 			{
 			public:
 				explicit WorldManager(std::shared_ptr<const vulkan::Device> device, std::shared_ptr<ResourceManager> resourceManager);
@@ -41,6 +42,7 @@ namespace CubA4::render
 				void setFieldOfView(float degrees) override;
 
 				Ray getRayFrom(uint64_t x, uint64_t y, std::shared_ptr<const ICamera> camera = {}) const override;
+				Ray getRayFrom(std::shared_ptr<const ICamera> camera = {}) const override;
 
 				void onViewportUpdate(uint64_t width, uint64_t height);
 				void onFrameUpdate();

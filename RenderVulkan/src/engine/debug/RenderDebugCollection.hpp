@@ -31,6 +31,8 @@ namespace CubA4::render::engine::debug
 
 		void addLine(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> from, CubA4::world::BasePos<float> to,
 			CubA4::ColorRGB colorFrom, CubA4::ColorRGB colorTo) override;
+
+		void addCube(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> at, float size = 1.f, CubA4::ColorRGB color = {1.f, 0.f, 0.f}) override;
 		void addLines(CubA4::world::ChunkPos chPos, const std::vector<LineInfo> &lines) override;
 		void clear() override;
 		void hide() override;

@@ -47,6 +47,7 @@ namespace CubA4::object
 			const CubA4::world::GlobalPosition &pos) const;
 	private:
 		void preparePhysics(entt::entity handle, const CubA4::physics::IPhysicsEntityDefinition &def) const;
+		void setupTicks(entt::entity handle, CubA4::object::TickTypes types) const;
 	private:
 		const IdFactoryType id_;
 		entt::registry &registry_;

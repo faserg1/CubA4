@@ -15,6 +15,11 @@ namespace CubA4::render::vulkan
 		friend class Device;
 	public:
 		template <class TVkObjectType>
+		bool setName(TVkObjectType vkObject, const std::string &name)
+		{
+			return setName<TVkObjectType>(vkObject, name.c_str());
+		}
+		template <class TVkObjectType>
 		bool setName(TVkObjectType vkObject, const char *name)
 		{
 			if (!setName_)

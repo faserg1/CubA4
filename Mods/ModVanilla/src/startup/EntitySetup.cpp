@@ -12,10 +12,11 @@ using namespace CubA4::logging;
 using namespace CubA4::resources;
 using namespace CubA4::manager;
 
-EntitySetup::EntitySetup()
+EntitySetup::EntitySetup(std::shared_ptr<const CubA4::mod::ModControl> modControl) :
+	modControl_(modControl)
 {
-
-	
+	if (!modControl)
+		throw std::runtime_error("WTF?!!");
 }
 
 EntitySetup::~EntitySetup()
@@ -47,8 +48,8 @@ void EntitySetup::init(std::shared_ptr<CubA4::core::IEnvironmentBuilder> builder
 	auto playerPhysDef = std::make_shared<CubA4::physics::PlayerPhysicsDefinition>(physBody);
 	auto cubePhysDef = std::make_shared<CubA4::physics::CubeEntityPhysicsDefinition>(physBody);
 
-	auto playerDef = std::make_unique<object::PlayerDefinition>(model, playerPhysDef);
-	auto cubeDef = std::make_unique<object::CubeEntityDefinition>(model, cubePhysDef);
+	auto playerDef = std::make_unique<object::PlayerDefinition>(core_, model, playerPhysDef, modControl_);
+	auto cubeDef = std::make_unique<object::CubeEntityDefinition>(core_, model, cubePhysDef);
 	
 	auto entityFactoryPlayer = builder->registerEntity(std::move(playerDef));
 	auto entityFactoryCube = builder->registerEntity(std::move(cubeDef));

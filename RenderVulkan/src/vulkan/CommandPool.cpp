@@ -16,11 +16,11 @@ CommandPool::~CommandPool()
 	vkDestroyCommandPool(device_->getDevice(), pool_, nullptr);
 }
 
-std::unique_ptr<const CommandPool::CommandPoolLock> CommandPool::tryLock() const
+std::unique_ptr<const CommandPool::ConstCommandPoolLock> CommandPool::tryLock() const
 {
 	if (!mutex_.try_lock())
 		return {};
-	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, true, shared_from_this());
+	return std::make_unique<CommandPool::ConstCommandPoolLock>(mutex_, true, shared_from_this());
 }
 
 std::unique_ptr<CommandPool::CommandPoolLock> CommandPool::tryLock()
@@ -30,9 +30,9 @@ std::unique_ptr<CommandPool::CommandPoolLock> CommandPool::tryLock()
 	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, true, shared_from_this());
 }
 
-std::unique_ptr<const CommandPool::CommandPoolLock> CommandPool::lock() const
+std::unique_ptr<const CommandPool::ConstCommandPoolLock> CommandPool::lock() const
 {
-	return std::make_unique<CommandPool::CommandPoolLock>(mutex_, false, shared_from_this());
+	return std::make_unique<CommandPool::ConstCommandPoolLock>(mutex_, false, shared_from_this());
 }
 
 std::unique_ptr<CommandPool::CommandPoolLock> CommandPool::lock()
@@ -65,7 +65,7 @@ VkCommandPoolCreateFlags CommandPool::getFlags() const
 	return flags_;
 }
 
-CommandPool::CommandPoolLock::CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool) :
+CommandPool::CommandPoolLock::CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<CommandPool> pool) :
 	mutex_(mutex), pool_(pool)
 {
 	if (!locked)
@@ -77,7 +77,24 @@ CommandPool::CommandPoolLock::~CommandPoolLock()
 	mutex_.unlock();
 }
 
-std::shared_ptr<const CommandPool> CommandPool::CommandPoolLock::getPool() const
+std::shared_ptr<CommandPool> CommandPool::CommandPoolLock::getPool() const
+{
+	return pool_;
+}
+
+CommandPool::ConstCommandPoolLock::ConstCommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool) :
+	mutex_(mutex), pool_(pool)
+{
+	if (!locked)
+		mutex.lock();
+}
+
+CommandPool::ConstCommandPoolLock::~ConstCommandPoolLock()
+{
+	mutex_.unlock();
+}
+
+std::shared_ptr<const CommandPool> CommandPool::ConstCommandPoolLock::getPool() const
 {
 	return pool_;
 }

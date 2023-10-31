@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <vector>
+#include <thread>
+#include <atomic>
 #include <physics/IPhysicsManager.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
 #include <Core.hpp>
@@ -27,10 +29,14 @@ namespace CubA4::physics
 		void requestApplyForce(CubA4::object::IEntity &entity) override;
 		IPhysicsFactory &getPhysicsFactory() const override;
 
-		void iterate(float delta);
+
+		void start();
+		void stop();
 		
 		void onWorldCreated(PhysicsWorld *world);
 		void onWorldDeleted(PhysicsWorld *world);
+	private:
+		void loop();
 	private:
 		CubA4::Core &core_;
 		std::shared_ptr<btDefaultCollisionConfiguration> collisionConfig_;
@@ -41,5 +47,8 @@ namespace CubA4::physics
 		std::vector<PhysicsWorld*> worlds_;
 
 		std::unique_ptr<PhysicsFactory> factory_;
+
+		std::thread physicsThread_;
+		std::atomic_bool physicsRun_ = false;
 	};
 }

@@ -117,7 +117,7 @@ void ChunkBMutable::deleteBlockAt(const world::BlockInChunkPos &pos)
 
 void ChunkBMutable::deleteBlockAt(uint32_t index)
 {
-	setBlockAt(index, std::numeric_limits<decltype(BlockData::id)>::max());
+	setBlockAt(index, BlockDataIDNone);
 }
 
 ChunkBMutable::Iterator ChunkBMutable::begin() const

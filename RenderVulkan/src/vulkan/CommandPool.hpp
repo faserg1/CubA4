@@ -12,13 +12,14 @@ namespace CubA4::render::vulkan
 	{
 	public:
 		class CommandPoolLock;
+		class ConstCommandPoolLock;
 	public:
 		explicit CommandPool(std::shared_ptr<const Device> device, VkCommandPoolCreateFlags flags);
 		~CommandPool();
 
-		std::unique_ptr<const CommandPoolLock> tryLock() const;
+		std::unique_ptr<const ConstCommandPoolLock> tryLock() const;
 		std::unique_ptr<CommandPoolLock> tryLock();
-		std::unique_ptr<const CommandPoolLock> lock() const;
+		std::unique_ptr<const ConstCommandPoolLock> lock() const;
 		std::unique_ptr<CommandPoolLock> lock();
 		VkCommandPool getPool() const;
 		bool allocate(uint32_t count, VkCommandBuffer *data, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY);
@@ -34,8 +35,18 @@ namespace CubA4::render::vulkan
 		class CommandPoolLock
 		{
 		public:
-			CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool);
+			CommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<CommandPool> pool);
 			~CommandPoolLock();
+			std::shared_ptr<CommandPool> getPool() const;
+		private:
+			std::mutex &mutex_;
+			const std::shared_ptr<CommandPool> pool_;
+		};
+		class ConstCommandPoolLock
+		{
+		public:
+			ConstCommandPoolLock(std::mutex &mutex, bool locked, std::shared_ptr<const CommandPool> pool);
+			~ConstCommandPoolLock();
 			std::shared_ptr<const CommandPool> getPool() const;
 		private:
 			std::mutex &mutex_;

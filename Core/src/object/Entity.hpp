@@ -22,6 +22,7 @@ namespace CubA4::object
 		entt::entity getEntity() const;
 
 		CameraComponent *getCameraComponent() override;
+		std::shared_ptr<CubA4::physics::IPhysicsEntityControllerWrapper> getPhysicsController() override;
 		const WorldInfo *getWorldInfoComponent() const;
 
 		void enableControls() override;

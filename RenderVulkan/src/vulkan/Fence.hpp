@@ -11,6 +11,8 @@ namespace CubA4::render::vulkan
 	{
 	public:
 		explicit Fence(std::shared_ptr<const Device> device, VkFenceCreateFlags flags = 0);
+		Fence(const Fence &old) = delete;
+		// move ctr?
 		~Fence();
 
 		VkFence getFence() const;

@@ -64,7 +64,7 @@ int AppMain::exec()
 		log_->flush();
 		return 1;
 	}
-	try
+	//try
 	{
 		if (!setup())
 		{
@@ -73,11 +73,11 @@ int AppMain::exec()
 			return 1;
 		}			
 	}
-	catch (const std::exception &ex)
-	{
-		log_->log(LogLevel::Critical, ex.what());
-		return 1;
-	}
+	//catch (const std::exception &ex)
+	//{
+	//	log_->log(LogLevel::Critical, ex.what());
+	//	return 1;
+	//}
 	///////////////////////////
 	AppStartup startup(*this, core_, renderLoader_->getCurrentRenderInfo()->getRenderEngine());
 

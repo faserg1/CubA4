@@ -10,6 +10,14 @@ namespace CubA4::render::vulkan
 {
 	class DebugMarker;
 
+	struct DeviceEnabledFeaturesHolder
+	{
+		VkPhysicalDeviceFeatures2 enabledFeatures = {};
+		VkPhysicalDeviceVulkan11Features enabled11Features = {};
+		VkPhysicalDeviceVulkan12Features enabled12Features = {};
+		VkPhysicalDeviceVulkan13Features enabled13Features = {};
+	};
+
 	class IQueue
 	{
 	public:
@@ -28,7 +36,8 @@ namespace CubA4::render::vulkan
 	class Device
 	{
 	public:
-		explicit Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue, VkQueue transmit, std::vector<std::string> extensions, VkPhysicalDeviceFeatures2 enabledFeatures);
+		explicit Device(VkDevice device, VkPhysicalDevice physicalDevice, VkQueue queue, VkQueue transmit,
+			std::vector<std::string> extensions, std::unique_ptr<DeviceEnabledFeaturesHolder> enabledFeatures);
 		~Device();
 
 		VkDevice getDevice() const;
@@ -45,7 +54,7 @@ namespace CubA4::render::vulkan
 		VkPhysicalDevice physicalDevice_;
 
 		std::vector<std::string> extensions_;
-		VkPhysicalDeviceFeatures2 enabledFeatures_;
+		const std::unique_ptr<DeviceEnabledFeaturesHolder> enabledFeatures_;
 		struct QueueData
 		{
 			VkQueue queue;

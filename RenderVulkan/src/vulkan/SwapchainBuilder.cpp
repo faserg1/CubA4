@@ -28,6 +28,8 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build(std::shared_ptr<const Swapcha
 	std::shared_ptr<const Surface> surface = surface_.lock();
 	if (!surface)
 		throw std::runtime_error("Can't get surface for swapchain!");
+
+	auto surfaceCaps = surface->getCapabilities();
 	VkSwapchainCreateInfoKHR swapchainInfo = {};
 	swapchainInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	swapchainInfo.surface = surface->getSurface();
@@ -35,10 +37,10 @@ std::shared_ptr<Swapchain> SwapchainBuilder::build(std::shared_ptr<const Swapcha
 	swapchainInfo.imageFormat = getFormat();
 	swapchainInfo.presentMode = getPresentMode();
 	swapchainInfo.imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
-	swapchainInfo.imageExtent = surface->getCapabilities().currentExtent;
+	swapchainInfo.imageExtent = surfaceCaps.currentExtent;
 	swapchainInfo.imageArrayLayers = 1;
 	swapchainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-	swapchainInfo.preTransform = surface->getCapabilities().currentTransform;
+	swapchainInfo.preTransform = surfaceCaps.currentTransform;
 	swapchainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	swapchainInfo.clipped = VK_FALSE;
 	if (oldSwapchain)

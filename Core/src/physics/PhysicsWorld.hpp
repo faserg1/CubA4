@@ -9,6 +9,8 @@
 #include <world/IDimensionSubscriber.hpp>
 #include <Core.hpp>
 #include <entt/entt.hpp>
+#include <taskflow/taskflow.hpp>
+#include <mutex>
 
 namespace CubA4::world
 {
@@ -29,15 +31,19 @@ namespace CubA4::physics
 		~PhysicsWorld();
 
 		void init(CubA4::world::Dimension &dimension);
-		void rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const override;
+		CubA4::world::RayTestResult closestBlockRayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const override;
 
 		btDiscreteDynamicsWorld *getWorld();
+		void stepSimulation(float delta);
 	protected:
 		void onLoadedChunksUpdated() override;
+		void onChunkUpdated(const CubA4::world::ChunkPos &chunkPos) override;
 
 	private:
 		void onPhysicalBodyAdded(entt::registry &registry, entt::entity entity);
 		void onPhysicalBodyRemoved(entt::registry &registry, entt::entity entity);
+
+		void prepareTaskflowForMutexLock(tf::Taskflow &flow);
 	private:
 		CubA4::Core &core_;
 		PhysicsManager &manager_;
@@ -50,5 +56,8 @@ namespace CubA4::physics
 
 		entt::connection added_;
 		entt::connection removed_;
+
+		std::mutex accessMutex_;
+		tf::Executor exec_;
 	};
 }

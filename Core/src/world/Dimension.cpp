@@ -58,9 +58,9 @@ std::vector<CubA4::world::ChunkPos> Dimension::getActiveChunks()
 	return std::move(result);
 }
 
-void Dimension::rayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const
+CubA4::world::RayTestResult Dimension::closestBlockRayTest(CubA4::world::GlobalPosition from, CubA4::world::GlobalPosition to) const
 {
-	physicalWorld_->rayTest(from, to);
+	return physicalWorld_->closestBlockRayTest(from, to);
 }
 
 const IWorld &Dimension::getWorld() const

@@ -29,7 +29,10 @@ void RenderEngineWorldPipeline::pushChunks(std::vector<std::shared_ptr<const Cub
 		compileChunk.emplace([this, chunk, data = data_]{
 			auto compiledChunk = chunkCompiler_->compileChunk(chunk, data);
 			if (!compiledChunk)
+			{
+				dropChunk(chunk->getChunkPos());
 				return;
+			}
 			updateChunk(compiledChunk);
 		});
 		exec_.run(std::move(compileChunk));
@@ -82,4 +85,11 @@ void RenderEngineWorldPipeline::dropChunk(const CubA4::world::ChunkPos &chunkPos
 	auto toRemove = chunks_.find(chunkPos);
 	if (toRemove != chunks_.end())
 		chunks_.erase(toRemove);
+
+	auto chunks = chunks_ | ranges::views::values | ranges::to<std::vector>;
+	
+	subHelper_.apply([chunks](auto *sub)
+	{
+		sub->chunksUpdated(chunks);
+	});
 }

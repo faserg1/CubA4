@@ -4,8 +4,8 @@
 #include <physics/IPhysicsEntityDefinition.hpp>
 using namespace CubA4::object;
 
-CubeEntityDefinition::CubeEntityDefinition(std::shared_ptr<const ModelType> model, std::shared_ptr<CubA4::physics::IPhysicsEntityDefinition> physicsDef) :
-	model_(model), physicsDef_(std::move(physicsDef))
+CubeEntityDefinition::CubeEntityDefinition(std::shared_ptr<const CubA4::ICore> core, std::shared_ptr<const ModelType> model, std::shared_ptr<CubA4::physics::IPhysicsEntityDefinition> physicsDef) :
+	core_(core), model_(model), physicsDef_(std::move(physicsDef))
 {
 
 }

@@ -4,12 +4,14 @@
 #include <vector>
 #include <ICore.hpp>
 #include <resources/IResourcesManager.hpp>
+#include <engine/memory/QueuedOperations.hpp>
 using namespace CubA4::render::engine;
+using namespace CubA4::render::engine::memory;
 using namespace CubA4::render::vulkan;
 using namespace CubA4::render::vulkan::util;
 
 ResourceManager::ResourceManager(std::shared_ptr<const Device> device, std::shared_ptr<const ICore> core) :
-	device_(device), core_(core)
+	device_(device), core_(core), queuedOperations_(std::make_unique<QueuedOperations>(device))
 {
 	createBuildInDescriptorSetLayouts();
 	createBuiltInDescriptorPool();
@@ -33,6 +35,11 @@ std::vector<sVkDescriptorSetLayout> ResourceManager::getBuiltInLayouts() const
 sVkDescriptorPool ResourceManager::getBuiltInPool() const
 {
 	return builtInPool_;
+}
+
+QueuedOperations &ResourceManager::getQueuedOperations() const
+{
+	return *queuedOperations_;
 }
 
 std::shared_ptr<CubA4::resources::IResource> ResourceManager::getCache(resources::Path path) const

@@ -24,8 +24,8 @@ std::shared_ptr<const Semaphore> Presentaion::getAcquireSignalSemaphore() const
 uint32_t Presentaion::acquire(std::shared_ptr<const vulkan::Swapchain> swapchain)
 {
 	uint32_t imageIndex = 0;
-	if (vkAcquireNextImageKHR(device_->getDevice(), swapchain->getSwapchain(), timeout_,
-		acquireSignalSemaphore_->getSemaphore(), VK_NULL_HANDLE, &imageIndex) != VK_SUCCESS)
+	if (auto result = vkAcquireNextImageKHR(device_->getDevice(), swapchain->getSwapchain(), timeout_,
+		acquireSignalSemaphore_->getSemaphore(), VK_NULL_HANDLE, &imageIndex); result != VK_SUCCESS)
 	{
 		//TODO: [OOKAMI] Разберись с этим...
 		return UINT32_MAX;
@@ -52,7 +52,7 @@ void Presentaion::send(std::shared_ptr<const vulkan::Swapchain> swapchain, uint3
 
 	auto q = device_->getQueue();
 
-	if (vkQueuePresentKHR(q->get(), &info) != VK_SUCCESS)
+	if (auto result = vkQueuePresentKHR(q->get(), &info); result != VK_SUCCESS)
 	{
 		//TODO: [OOKAMI] Разберись с этим...
 	}

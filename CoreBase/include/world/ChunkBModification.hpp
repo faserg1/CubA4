@@ -32,8 +32,32 @@ namespace CubA4::world
 			CubA4::world::BlockInChunkPos pos;
 			CubA4::world::Layer layer;
 		};
+
 		std::vector<AddInfo> add;
 		std::vector<ModifyInfo> mod;
 		std::vector<RemoveInfo> remove;
+
+
+		ChunkBModification(CubA4::world::ChunkPos &chunkPos) :
+			pos(chunkPos)
+		{
+
+		}
+
+		ChunkBModification(const ChunkBModification &old)
+		{
+			pos = old.pos;
+			remove = old.remove;
+			add = old.add;
+			mod = old.mod;
+		}
+
+		ChunkBModification(const ChunkBModification &&old)
+		{
+			pos = old.pos;
+			remove = old.remove;
+			add = old.add;
+			mod = old.mod;
+		}
 	};
 }

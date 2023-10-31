@@ -7,8 +7,7 @@ using namespace CubA4::game;
 
 GameControl::GameControl(Core &core, CubA4::game::Game &game) :
 	core_(core), game_(game),
-	worldControl_(std::make_unique<world::WorldControl>(core)),
-	physicsEntityControl_(std::make_unique<CubA4::physics::PhysicsEntityControl>())
+	worldControl_(std::make_unique<world::WorldControl>(core))
 {
 
 }
@@ -41,11 +40,6 @@ bool GameControl::requestWorldChange(const std::string &worldId, const std::stri
 CubA4::world::IWorldControl &GameControl::getWorldControl()
 {
 	return *worldControl_;
-}
-
-CubA4::physics::IPhysicsEntityControl &GameControl::getPhysicsEntityControl()
-{
-	return *physicsEntityControl_;
 }
 
 std::shared_ptr<CubA4::object::IEntity> GameControl::requestSpawn(std::shared_ptr<const CubA4::object::IEntityFactory> iFactory, IdType dimensionId,

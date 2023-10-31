@@ -9,6 +9,11 @@ CubeEntityPhysicsDefinition::CubeEntityPhysicsDefinition(std::shared_ptr<const I
 
 CubeEntityPhysicsDefinition::~CubeEntityPhysicsDefinition() = default;
 
+bool CubeEntityPhysicsDefinition::includePhysicsController() const
+{
+	return false;
+}
+
 float CubeEntityPhysicsDefinition::getMass() const
 {
 	return 1.f;

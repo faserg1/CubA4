@@ -1,33 +1,21 @@
-#ifndef RENDERVULKAN_INSTANCELAYER_HPP
-#define RENDERVULKAN_INSTANCELAYER_HPP
+#pragma once
 
 #include "InstanceAddon.hpp"
 #include <memory>
 
-namespace CubA4
+namespace CubA4::render::vulkan::addon
 {
-	namespace render
+	struct InstanceLayerData;
+
+	class InstanceLayer :
+		public InstanceAddon
 	{
-		namespace vulkan
-		{
-			namespace addon
-			{
-				struct InstanceLayerData;
-
-				class InstanceLayer :
-					public InstanceAddon
-				{
-				public:
-					explicit InstanceLayer();
-					~InstanceLayer();
-				protected:
-					std::vector<std::string> allNames() const override;
-				private:
-					std::shared_ptr<InstanceLayerData> data_;
-				};
-			}
-		}
-	}
+	public:
+		explicit InstanceLayer();
+		~InstanceLayer();
+	protected:
+		std::vector<std::string> allNames() const override;
+	private:
+		std::shared_ptr<InstanceLayerData> data_;
+	};
 }
-
-#endif // RENDERVULKAN_INSTANCELAYER_HPP

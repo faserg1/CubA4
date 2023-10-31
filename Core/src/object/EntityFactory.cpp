@@ -5,10 +5,13 @@
 #include <object/components/WorldInfo.hpp>
 #include <object/components/RenderInfoComponent.hpp>
 #include <object/components/PhysicalBody.hpp>
+#include <object/components/PhysicalControllerComponent.hpp>
 #include <object/components/CameraComponent.hpp>
 #include <object/components/ControllerComponent.hpp>
+#include <object/components/TickComponents.hpp>
 #include <physics/IPhysicsEntityDefinition.hpp>
 #include <physics/BoxCollisionBodyDefinition.hpp>
+#include <physics/PhysicsEntityControllerWrapper.hpp>
 
 #include <engine/IRenderManager.hpp>
 #include <engine/world/IWorldManager.hpp>
@@ -76,6 +79,9 @@ std::shared_ptr<Entity> EntityFactory::create(IdWorldType idWorld, IdWorldType i
 		registry_.emplace<ControllerComponent>(handle, contextActionsEntity);
 	}
 
+	if (data_.tickTypes && data_.handler)
+		setupTicks(handle, data_.tickTypes);
+
 	return entity;
 }
 
@@ -98,6 +104,7 @@ void EntityFactory::preparePhysics(entt::entity handle, const CubA4::physics::IP
 			auto boxDef = std::dynamic_pointer_cast<const BoxCollisionBodyDefinition>(def.getCollisonBody());
 			auto halfExtents = boxDef->getHalfExtents();
 			body.shape = std::make_unique<btBoxShape>(btVector3{halfExtents.x, halfExtents.y, halfExtents.z});
+			body.shape->setMargin(0.1f);
 			break;
 		}
 		default:
@@ -114,4 +121,23 @@ void EntityFactory::preparePhysics(entt::entity handle, const CubA4::physics::IP
 	body.collisionObject = std::make_unique<btRigidBody>(def.getMass(), body.motionState.get(), body.offsetShape.get());
 	body.collisionObject->activate();
 	registry_.emplace<PhysicalBody>(handle, std::move(body));
+
+	if (def.includePhysicsController())
+	{
+		PhysicalControllerComponent controllerWrapper
+		{
+			.wrapper = std::make_shared<PhysicsEntityControllerWrapper>(registry_, handle)
+		};
+		registry_.emplace<PhysicalControllerComponent>(handle, std::move(controllerWrapper));
+	}
+}
+
+void EntityFactory::setupTicks(entt::entity handle, CubA4::object::TickTypes types) const
+{
+	if (types & TickType::GameTick)
+		registry_.emplace<GameTick>(handle);
+	if (types & TickType::PhysicsTick)
+		registry_.emplace<PhysicsTick>(handle);
+	if (types & TickType::RenderTick)
+		registry_.emplace<RenderTick>(handle);
 }

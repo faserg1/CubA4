@@ -16,6 +16,8 @@ Controller::~Controller()
 	
 }
 
+
+// TODO: Check, if SDL call this method more than once
 void Controller::onButtonChanged(Button btn, BMods mods, bool pressed)
 {
 	if (!pressed)

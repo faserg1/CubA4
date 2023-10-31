@@ -28,6 +28,88 @@ void RenderDebugCollection::addLine(CubA4::world::ChunkPos chPos, CubA4::world::
 	addLines(chPos, lines);
 }
 
+void RenderDebugCollection::addCube(CubA4::world::ChunkPos chPos, CubA4::world::BasePos<float> at, float size, CubA4::ColorRGB color)
+{
+	std::vector<LineInfo> lines
+	{
+		LineInfo{
+			.from = at,
+			.to = at + CubA4::world::BasePos<float> {0.f, 1.f, 0.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at,
+			.to = at + CubA4::world::BasePos<float> {1.f, 0.f, 0.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 1.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 1.f, 0.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {1.f, 1.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 0.f, 0.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		/////////////////////////////////////////////////////////////////////
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 0.f, 1.f},
+			.to = at + CubA4::world::BasePos<float> {0.f, 1.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 0.f, 1.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 0.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 1.f, 1.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 1.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {1.f, 1.f, 1.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 0.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		/////////////////////////////////////////////////////////////////////
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 0.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {0.f, 0.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {0.f, 1.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {0.f, 1.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {1.f, 0.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 0.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+		LineInfo{
+			.from = at + CubA4::world::BasePos<float> {1.f, 1.f, 0.f},
+			.to = at + CubA4::world::BasePos<float> {1.f, 1.f, 1.f},
+			.colorFrom = color,
+			.colorTo = color
+		},
+	};
+	addLines(chPos, lines);
+}
+
 void RenderDebugCollection::addLines(CubA4::world::ChunkPos chPos, const std::vector<LineInfo> &lines)
 {
 	auto i = internal_.lock();

@@ -125,7 +125,7 @@ bool AppStartup::setupGame()
 			{
 				auto dimName = std::format("#{}@{}/{}", "vanilla", "testWorld", "testDimension");
 				auto dim = core->getEnvironment()->getObjectT<CubA4::world::IDimension>(dimName);
-				dim->rayTest(ray.position, CubA4::world::GlobalPosition(fPosTo));
+				dim->closestBlockRayTest(ray.position, CubA4::world::GlobalPosition(fPosTo));
 			}
 
 			auto col = debug->addCollection();

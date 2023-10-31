@@ -40,16 +40,27 @@ CubA4::object::IEntityRenderManager *Game::getEntityRenderManager() const
 	return &core_.getEntityManager()->getEntityRenderManager();
 }
 
+CubA4::object::IEntityManager *Game::getEntityManager() const
+{
+	if (!core_.getEntityManager())
+		return nullptr;
+	return core_.getEntityManager().get();
+}
+
 void Game::run()
 {
+	auto physicsManager = core_.getPhysicsManager();
+	physicsManager->start();
 	runGameLoop_ = true;
 	gameThread_ = std::thread(&Game::loop, this);
 }
 
 void Game::stop()
 {
+	auto physicsManager = core_.getPhysicsManager();
 	runGameLoop_ = false;
 	gameThread_.join();
+	physicsManager->stop();
 }
 
 void Game::setupEnvironment(std::shared_ptr<CubA4::core::Environment> env)
@@ -69,15 +80,15 @@ void Game::loop()
 		auto current = Clock::now();
 		auto interval = current - last;
 		last = current;
+		// TODO: make ticks back to integer
 		iterate(std::chrono::duration_cast<FloatSeconds>(interval).count());
 	}
 }
 
 void Game::iterate(float seconds)
 {
-	auto physicsManager = core_.getPhysicsManager();
 	auto entityManager = core_.getEntityManager();
-	physicsManager->iterate(seconds);
+	// TODO: game tick for entity
 }
 
 std::shared_ptr<controller::Controller> Game::createController()
